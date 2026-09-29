@@ -1,0 +1,81 @@
+2.5. Machine learning model selection and training
+Sixteen regression algorithms spanning six modelling families were 
+evaluated for the three targets from the seven operational parameters 
+(Table 2). The portfolio was not assembled for its own sake: each family 
+tests a falsifiable hypothesis about the structure of the bio­
+logy–membrane relationship, so the comparison is a structured hy­
+pothesis test rather than an undirected modelling exercise. Linear and 
+regularised linear models test whether the relationship is adequately 
+additive and monotonic, with regularisation additionally probing 
+whether apparent importance is an artefact of collinearity. Support 
+vector regression with an RBF kernel tests whether a smooth global non- 
+linear surface suffices. K-nearest neighbours tests whether fouling 
+behaviour is locally regular in operating space, that is whether similar 
+conditions reliably give similar responses, which is the assumption un­
+derlying any operating-window recommendation. Tree-based ensembles 
+test whether threshold effects and feature interactions dominate, as 
+classical fouling theory predicts, and the bagging-versus-boosting 
+contrast within that family tests whether variance reduction or 
+sequential bias reduction is the better response to noisy industrial sensor 
+data. A multi-layer perceptron with two hidden layers tests whether 
+hierarchical representations add anything beyond these. The pattern of 
+which families succeed and which fail is therefore itself the evidence for 
+the structure of fouling in this system, and it is reported in Section 3.1. A 
+single model was carried forward for interpretation and optimisation to 
+keep the framework consistent across the three targets. Formulations, 
+hyperparameters and training configurations for all 16 algorithms are 
+given in Section S3 and Table S2; all work was performed in Python 3.10 
+using NumPy, pandas, scikit-learn, XGBoost, LightGBM and SHAP.
+2.6. Interpretability analysis through multi-model SHAP
+SHapley Additive exPlanations (SHAP) analysis was applied across 
+all 16 models and 3 targets, giving 48 interpretability profiles. This 
+multi-model framework reveals whether different algorithms agree on 
+feature importance and exposes model-dependent bias that single-model 
+analyses cannot detect. TreeSHAP was used for the nine tree-based 
+models and KernelSHAP for the seven non-tree models, and beeswarm 
+plots, mean absolute SHAP values and dependence plots were generated 
+for each model–target combination. Because SHAP quantifies each fea­
+ture's contribution to the model output, it reflects association within the 
+training distribution rather than verified physical causation; the mech­
+anistic explanations offered in Section 3.2 are physically plausible and 
+literature-consistent interpretations, not demonstrated mechanisms.
+2.7. Optimal operating condition identification
+A multi-objective feasibility framework was used to identify oper­
+ating regions satisfying the target criteria for all three outputs simulta­
+neously. Because the seven operating variables are interdependent in 
+practice, candidates were generated so as to respect that joint structure; 
+the rationale and a comparison against independent sampling of the 
+marginal ranges are given in Supplementary Section S5. Feasibility was 
+mapped by local-covariance kernel resampling constrained to the plant's 
+real joint operating manifold: a seed hour is drawn uniformly from the 
+4593 logged observations, the local covariance of its 30 nearest neigh­
+bours in standardised input space is formed, the seed is perturbed by a 
+Gaussian increment scaled by a bandwidth factor of 0.6 applied to that 
+covariance, and the candidate is rejected if it leaves the observed mar­
+ginal range of any input or if its nearest-neighbour distance to the real 
+record exceeds the 99th percentile of real-to-real nearest-neighbour 
+distance (0.539 in standardised units). The resulting 500,000 candidates 
+have a median nearest-neighbour distance of 0.121 against 0.119 be­
+tween real hours, so the sample explores continuously around the 
+manifold without leaving it. A candidate was classed feasible only where 
+all three predictions fell within their target ranges, with predictive un­
+certainty taken from the dispersion of the 100 individual trees. Windows 
+were then defined from the conditional feasibility rate, the probability 
+that all three targets are met given the value of an input, rather than 
+from the density of feasible points, which reflects how often the plant 
+visited a region and not how well it performed there. Each input was 
+divided into deciles and the recommended band taken as the widest 
+contiguous run whose measured attainment remains within 5 percent­
+age points of the maximum, subject to a minimum support of 250 logged 
+hours; four of the seven bands are unchanged by this criterion, indi­
+cating genuinely sharp optima. Kernel density estimation (KDE), a non- 
+parametric method that reconstructs a continuous density by summing a 
+smooth kernel centred on each observation and so avoids the bin- 
+placement dependence of histograms, was used with a Gaussian kernel 
+and Scott's-rule bandwidth. Detailed algorithms are given in Supple­
+mentary Section S5.
+2.8. Evaluation metrics
+Prediction accuracy was quantified using three complementary 
+metrics: the coefficient of determination (R2), root mean squared error 
+(RMSE) and mean absolute error (MAE). Their mathematical formula­
+tions are provided in Supplementary Section S4.

@@ -1,0 +1,122 @@
+3. Machine Learning for Membrane Fouling Prediction
+3.1. Fouling Mechanisms and Modelling Context
+Membrane fouling in MBRs is a multi-scale, multi-mechanism phenomenon. Its overall
+resistance is partitioned using the resistance-in-series framework into three contributions:
+reversible cake layer formation (removable by relaxation or backwashing), irreversible
+pore blocking (requiring chemical cleaning), and adsorptive fouling within the membrane
+matrix [4]. The contribution of each mechanism depends on mixed-liquor composition and
+on the operating flux relative to the critical flux threshold. Key EPS components include
+soluble microbial products (SMP), bound EPS, and colloidal biopolymers [39]. Below
+the critical flux, fouling accumulation is gradual and largely reversible; above it, rapid
+and irreversible fouling occurs, dramatically shortening cleaning intervals and membrane
+lifetime [4,9].
+Several operational parameters govern fouling kinetics. MLSS concentration deter-
+mines the mass of material available for cake formation and influences mixed-liquor viscos-
+ity. SRT controls EPS production through its effect on biomass growth rate and substrate
+availability. HRT affects the dilution and residence time of colloidal foulant material. DO
+concentration governs the balance between aerobic and anoxic metabolic pathways, which
+shapes EPS composition. Membrane aeration intensity provides the shear stress required to
+limit cake layer growth on submerged membrane surfaces [11,12]. The interactions between
+these variables are non-linear and frequently antagonistic. For example, increasing MLSS
+improves biological treatment performance. However, it accelerates fouling, while increas-
+ing aeration reduces fouling but increases energy consumption, creating multi-objective
+trade-offs that are difficult to capture in simple mechanistic models [23].
+These operational parameters, namely MLSS, SRT, HRT, DO, and aeration intensity,
+also constitute the primary candidate feature set for ML models targeting MBR fouling
+prediction. Their selection as model inputs is therefore grounded in mechanistic under-
+standing rather than empirical convention. This linkage between process knowledge and
+feature engineering is a key strength of the hybrid modelling approaches discussed in
+Section 3.2.
+Mechanistic models, including the ASM family [34,35] and the BSM-MBR bench-
+mark [36], have substantially advanced understanding of biological kinetics and their
+coupling to membrane performance. However, their predictive accuracy under dynamic
+loading conditions is limited by several factors. These include the difficulty of character-
+izing mixed-liquor EPS fractions in real time, the strong sensitivity of model parameters
+to temperature and sludge history, and the high computational cost of full mechanistic
+simulation at operational timescales [23,40]. Osmotic MBR (OMBR) configurations in-
+troduce additional complexity by coupling the bioreactor to the forward osmosis (FO)
+membrane via an osmotic driving force, creating concentration polarization dynamics that
+further motivate data-driven approaches [22,41]. These limitations have motivated the ML
+approaches reviewed in the following subsections.
+To provide a concrete operational reference for the parameters and data streams
+discussed in the following sections, Figure 2 presents a schematic of a typical submerged
+and side-stream MBR system. The diagram shows the key unit operations. These include
+the aerated bioreactor with activated sludge mixed liquor, the submerged hollow-fiber or
+flat-sheet ultrafiltration membrane module operating under negative permeate pressure,
+the permeate extraction pump and effluent outlet, the sludge recycle line maintaining the
+target MLSS concentration, and the waste sludge outlet controlling SRT. The coarse-bubble
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 6 -->
+Membranes 2026, 16, 181
+6 of 26
+membrane aeration system provides shear stress for fouling control and for the backwash
+and chemical cleaning (CIP) circuits. The principal online sensor measurement points
+are also indicated: dissolved oxygen probes in the bioreactor, transmembrane pressure
+transducers on the permeate line, influent and permeate flow meters, online turbidity
+sensors, and temperature probes. The data pathway from these field sensors through the
+SCADA data acquisition system to the ML prediction and digital twin analytical layers
+is shown, establishing the physical and data context for the modelling work reviewed in
+Sections 3–6.
+Figure 2. Schematic of a typical submerged and side-stream wastewater membrane bioreactor
+(MBR) system.
+3.2. Shallow and Kernel-Based ML Models
+The studies reviewed in this section were selected because they met all the inclusion
+criteria defined in Section Literature Search and Study Selection, including reporting at
+least one quantitative performance metric and applying original ML methodology to MBR
+operational or experimental data. Direct benchmarking across studies is constrained by
+heterogeneity in target variables, dataset sizes, and operating conditions; performance
+metrics should therefore be interpreted within each study rather than as absolute rankings.
+Artificial neural networks were among the first ML architectures applied systemati-
+cally to MBR fouling prediction. Mirbagheri et al. compared multi-layer perceptron (MLP)
+and radial basis function (RBF) neural networks for TMP and permeability prediction in a
+pilot-scale submerged MBR, using time, TSS, COD, SRT, and MLSS as input variables across
+a 60-day operating campaign [23]. Both architectures produced satisfactory predictions,
+with RBF networks demonstrating faster convergence and reduced sensitivity to initial
+weight conditions, an important practical consideration for online model deployment. The
+study highlighted the importance of selecting input variables and ensuring diversity in
+the training dataset for generalization beyond the training period. Schmitt et al. subse-
+quently developed a backpropagation ANN for fouling prediction in an anoxic-aerobic
+MBR treating domestic wastewater. The model achieved R2 = 0.850 on held-out test data,
+reflecting the inherent variability of pilot-scale operation and the challenge of capturing
+fouling dynamics with limited input variables [25].
+Kernel-based methods, which map input data to higher-dimensional feature spaces
+to learn non-linear decision boundaries without deep architectures, have demonstrated
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 7 -->
+Membranes 2026, 16, 181
+7 of 26
+competitive performance. Hamedi et al. conducted a rigorous benchmarking study com-
+paring ANN-MLP, ANN with particle swarm optimization (ANN-PSO), gene expression
+programming (GEP), and least-squares support vector machine (LSSVM) for fouling re-
+sistance prediction in a laboratory MBR [42]. LSSVM achieved the best performance with
+R2 = 0.990 and MSE = 0.0002, substantially outperforming all ANN variants. Sensitivity
+analysis identified permeate flux and TMP as the dominant input variables, consistent with
+the resistance-in-series framework, demonstrating that ML feature importance analysis
+can recover mechanistically meaningful variable rankings. Giwa et al. applied ANN mod-
+elling to a submerged MBR treating mixed industrial and municipal wastewater in the
+UAE. They showed that feed water characteristics (conductivity, pH, suspended solids) are
+important predictors of effluent quality parameters, including COD, BOD, and turbidity.
+ANN performance depended critically on training data diversity across different loading
+conditions [43]. More recent work has confirmed and extended these findings. Nguyen et al.
+applied decision tree regression, support vector regression, and linear regression to predict
+TMP in a domestic wastewater MBR [44]. Decision tree regression achieved R2 = 0.99. This
+result must be interpreted with caution. The dataset was small and single-facility. The high
+R2 likely reflects fitting to that dataset’s specific noise structure rather than a generalizable
+fouling model. A comprehensive review by Queiroz et al. analysed 57 ML studies on MBR
+performance prediction [45]. ANNs were used in 88% of cases. The review also identified a
+critical gap: no study had used ML to predict membrane lifespan or replacement timing.
+This gap has direct economic relevance for plant operators.
+Survey studies have systematically evaluated the state of ML modelling in MBR
+research. Schmitt and Do reviewed ML approaches for MBR fouling modelling across
+30+ studies, identified data availability and representativeness as the primary constraints
+on model generalizability, and recommended long-duration continuous monitoring cam-
+paigns as the minimum dataset requirement for reliable model development [24]. Shi et al.
+reviewed ML applications across membrane filtration processes more broadly and con-
+cluded that hybrid ML–mechanistic models, which use mechanistic equations to compute
+derived input features before ML prediction, consistently outperformed purely black-box
+approaches in cross-validation studies, particularly when extrapolating beyond the training
+operating range [38].

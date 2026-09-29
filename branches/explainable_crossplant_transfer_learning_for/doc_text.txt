@@ -1,0 +1,1190 @@
+<!-- Page 1 -->
+Explainable cross-plant transfer learning for fouling prediction in 
+data-limited pilot-scale membrane bioreactors
+Xiaohang Han a,1, Liu Yang a,1, Huan Qin a, Shujuan Huang b, Han Zhang c
+, Boyan Xu a,*,  
+How Yong Ng a,d,**
+a School of Technology for Sustainability, Beijing Normal University, China
+b School of Environmental and Municipal Engineering, Qingdao University of Technology, China
+c State Key Laboratory of Urban Water Resource and Environment, Harbin Institute of Technology, China
+d Department of Civil and Environmental Engineering, National University of Singapore, Singapore
+A R T I C L E  I N F O
+Keywords:
+Pilot-scale membrane bioreactors
+Membrane fouling prediction
+Transfer learning
+Extracellular polymeric substances
+Explainable machine learning
+A B S T R A C T
+Accurate membrane fouling prediction is essential for feedforward control and low-energy operation of mem­
+brane bioreactors (MBRs). However, reliable model development for data-limited plants is constrained by sparse 
+measurements of mechanistically informative extracellular polymeric substances (EPS) and soluble microbial 
+products (SMP). Here, we developed an explainable cross-plant transfer learning framework for transmembrane 
+pressure (TMP) prediction in data-limited pilot-scale MBRs. Long short-term memory (LSTM) and extreme 
+gradient boosting (XGBoost) base models were pretrained on three data-richer source MBRs treating domestic 
+wastewater, and fine-tuned with limited data from a domestic target plant. The base models predicted source- 
+domain TMP (R2 = 0.87 and 0.86). SHapley Additive exPlanations (SHAP) identified EPS carbohydrates 
+(EPSc), EPS proteins (EPSp), and SMP proteins (SMPp) as the dominant fouling-related drivers. Direct transfer to 
+the target plant yielded limited accuracy (R2 = 0.39–0.41), suggesting that the base models did not fully capture 
+its fouling behavior. In contrast, fine-tuning improved prediction accuracy, and the fine-tuned LSTM (LSTM-FT) 
+reached R2 = 0.89 at a 40% fine-tuning ratio. SHAP and leave-one-feature-out (LOFO) analyses revealed that 
+EPSc remained the critical transferable fouling signal, whereas EPSp became increasingly important after fine- 
+tuning. This shift points to an EPSp-related fouling pathway linked to the plant's Fe-enriched influent. The 
+framework was validated on a pilot-scale MBR treating industrial wastewater, where LSTM-FT achieved R2 ≈0.9, 
+with SMPp emerging as a critical feature. Collectively, the framework preserves shared EPS-centered fouling 
+information while adaptively recalibrating plant-specific drivers, offering a practical route for mechanism- 
+informed fouling prediction in data-limited MBRs.
+1. Introduction
+Urbanization and increasing wastewater reuse requirements 
+continue to push wastewater treatment toward intensified processes, 
+which need to deliver stable, high-quality effluent within constrained 
+infrastructure footprints [1]. Membrane bioreactors (MBRs), which 
+integrate biological treatment with membrane separation, have there­
+fore been widely adopted for domestic and industrial applications, due 
+to their superior effluent quality and compact configuration. However, 
+membrane fouling remains the principal obstacle to fully realizing these 
+advantages [2]. Under constant-flux operation, fouling progressively 
+increases filtration resistance and is reflected by a rise in transmembrane 
+pressure (TMP), which in turn increases aeration and pumping demand, 
+intensifies chemical cleaning requirements, accelerates membrane 
+aging, and raises lifecycle costs [3]. Consequently, MBRs typically 
+consume more energy than conventional activated sludge processes 
+(0.4–1.6 vs. 0.3–0.8 kWh m−3) [4]. Accurate prediction of fouling evo­
+lution/TMP is therefore essential for enabling feedforward fouling 
+control and low-energy MBR operation [5,6]. Nevertheless, despite 
+substantial progress in fouling characterization and mitigation, 
+* Corresponding author.
+** Corresponding author. School of Technology for Sustainability, Beijing Normal University, China.
+E-mail addresses: xuboyan@bnu.edu.cn (B. Xu), huanghy@bnu.edu.cn (H.Y. Ng). 
+1 First Authors.
+Contents lists available at ScienceDirect
+Journal of Membrane Science
+journal homepage: www.elsevier.com/locate/memsci
+https://doi.org/10.1016/j.memsci.2026.126065
+Received 8 June 2026; Received in revised form 21 July 2026; Accepted 18 August 2026  
+Journal of Membrane Science 758 (2026) 126065 
+Available online 19 August 2026 
+0376-7388/© 2026 Elsevier B.V. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+proactive fouling management remains difficult in MBRs.
+To support proactive management, both mechanistic and data- 
+driven approaches have been explored to predict fouling evolution. 
+Mechanistic and hybrid biological–physical models can enhance inter­
+pretability, but they are often challenging to parameterize and recali­
+brate in real plants [7]. In parallel, machine learning (ML) and deep 
+learning (DL) models have emerged as attractive alternatives, because 
+they can capture nonlinear relationships among operational, 
+water-quality, and biomass-related variables [7–9]. Within this land­
+scape, tree-based ML models (e.g., gradient-boosting families such as 
+Extreme Gradient Boosting (XGBoost)) are attractive for tabular process 
+data, whereas recurrent DL architectures (e.g., long short-term memory 
+(LSTM) networks) are particularly suitable for fouling prediction, 
+because membrane fouling is an intrinsically cumulative and 
+path-dependent process, driven by temporal changes in sludge proper­
+ties and hydrodynamic conditions [10–12].
+Notably, comprehensive and rationally designed inputs for model 
+development are key to achieving accurate AI modeling [13]. However, 
+many existing TMP prediction models, particularly those developed at 
+pilot-scale/full-scale MBRs, are built primarily on routinely monitored 
+“conventional” variables, such as mixed liquor suspended solids (MLSS), 
+mixed liquor volatile suspended solids (MLVSS), hydraulic retention 
+time (HRT), and sludge retention time (SRT). Thus, the current ap­
+proaches for tracking fouling dynamics in MBRs are often insufficient 
+[14,15]. In contrast, mechanistically informative biochemical de­
+scriptors such as extracellular polymeric substances (EPS) and soluble 
+microbial products (SMP) are often missing or severely under-sampled 
+at pilot-scale/full-scale MBRs [15,16]. This is a critical limitation, 
+because extensive evidence shows that EPS and SMP, particularly their 
+proteinaceous and polysaccharide fractions, strongly influence fouling 
+propensity 
+by 
+shaping 
+cake 
+formation, 
+compressibility, 
+and 
+pore-blocking behavior [17], although humic and fulvic acids can also 
+contribute to membrane fouling [18–20]. Collectively, this evidence 
+suggests that explicitly introducing EPS and SMP as model inputs could 
+be both scientifically justified and a promising route to improve TMP 
+prediction and interpretability in MBR plants.
+Even when these key biochemical indicators are available, pilot-/ 
+full-scale MBR datasets are often still insufficient to support the devel­
+opment of robust site-specific fouling prediction models. In practice, 
+measurements of EPS and SMP fractions are usually sparse and irregular, 
+because they rely on labor-intensive laboratory analyses rather than 
+online sensing. Together with missing values, sensor errors, and outliers 
+in routine operational records and key biochemical datasets, these 
+limitations make it difficult for a single data-limited MBR plant to 
+independently train a high-quality predictive model [21,22]. Most 
+existing ML-based MBR fouling prediction models have also been 
+developed and validated using relatively long or dense plant-specific 
+historical records, leaving their cross-plant generalizability under 
+data-limited conditions insufficiently established [7,8,23]. Neverthe­
+less, different MBR plants often share comparable fouling mechanisms, 
+including cake-layer accumulation, pore blocking, and the contribution 
+of microbial products to membrane fouling. This suggests that trans­
+ferable models for fouling formation/prediction may exist across 
+MBR plants. From this perspective, transfer learning provides a prom­
+ising strategy to address both data scarcity and data silos in MBR fouling 
+prediction [24,25]. Specifically, a base model can be pretrained on 
+multi-source data from different MBR plants to learn generalized re­
+lationships among operational conditions, EPS/SMP signatures, and 
+TMP evolution. Then it could be fine-tuned using a small amount of data 
+from the target MBR to learn the plant-specific fouling drivers.
+However, cross-plant transfer learning for MBR fouling prediction is 
+not a simple model-porting problem. First, source and target MBRs may 
+differ substantially in influent composition, sludge physicochemical 
+properties, EPS/SMP profiles, metal–organic interactions, and operating 
+conditions. Moreover, even after fine-tuning, limited target plant data 
+may still be insufficient for the model to fully capture newly dominant 
+fouling drivers that were weak or absent in the source plants. Further­
+more, the success of transfer learning should not be evaluated by pre­
+dictive accuracy alone, but also by how and why physically meaningful 
+fouling signals are retained, discarded, or reweighted during transfer. 
+Explainable analyses, such as SHAP and leave-one-feature-out (LOFO) 
+analysis, are needed to determine how key EPS/SMP-related indicators 
+function as transferable fouling drivers or plant-specific recalibrated 
+signals. Prior applications of these methods to membrane-fouling pre­
+diction have focused mainly on model-level feature ranking [26]. 
+However, SHAP attributions are inherently model-dependent and lack a 
+ground truth for validation, so high predictive accuracy alone does not 
+ensure that the highlighted features reliably reflect the true fouling 
+behavior [27]. Accordingly, independent physicochemical character­
+ization, including excitation–emission matrix (EEM), liquid chroma­
+tography–organic carbon detection (LC-OCD), and foulant analysis, is 
+needed to evaluate the plausibility of these attribution shifts and support 
+their mechanistic interpretation.
+To address these gaps, this study proposes an explainable transfer 
+learning strategy for fouling prediction in pilot-scale MBRs under data- 
+limited conditions. Specifically, (1) base models (based on LSTM and 
+XGBoost) were first pretrained on multi-source datasets collected from 
+three pilot-scale MBR plants (source plants) treating domestic waste­
+water, covering diverse operating conditions, routine biochemical 
+characteristics, and key components in EPS and SMP. We then (2) fine- 
+tuned the base models using the target plant dataset to establish a 
+fouling prediction model for the data-limited target plant (treating do­
+mestic wastewater), while quantifying the relationship between fine- 
+tuning ratio and predictive performance and examining how LSTM 
+and XGBoost architectures influenced transfer performance after fine- 
+tuning. Next, (3) the transfer behavior and transferable fouling-related 
+information were examined using explainable analyses, including 
+SHAP and LOFO analyses, together with physicochemical character­
+ization by EEM, LC-OCD, and foulant analysis. These analyses were used 
+to clarify how key fouling-related indicators, particularly EPS and SMP, 
+were retained or reweighted during pretraining and fine-tuning, and 
+provided mechanistic support for these changes. Finally, (4) the 
+transfer learning framework was further examined in a pilot-scale MBR 
+treating industrial wastewater to test whether cross-plant transfer 
+learning remains feasible under a more distinct wastewater background. 
+Collectively, this study aims to provide a practical and explainable route 
+for establishing fouling prediction models in data-limited MBR facilities 
+through cross-plant transfer learning.
+2. Materials and methods
+2.1. Data collection
+A pilot-scale MBR plant treating domestic wastewater in Singapore 
+was selected as the target plant. The system received Fe-enriched 
+influent, with an Fe dosage of approximately 10–30 mg/L. It had a 
+treatment capacity of 24 m3/d and a process configuration comprising 
+pretreatment, a five-pass step-feed bioreactor with anaerobic/oxic 
+zonation, and a membrane tank (Fig. 1(a)). The TMP profile of the target 
+plant during the monitoring period is shown in Fig. 2(a), the membrane 
+module is shown in Fig. 2(b), and the detailed process and operating 
+parameters are summarized in Text S1. The target plant dataset covered 
+the period from September 2021 to June 2022. Owing to the twice- 
+weekly measurement frequency of EPS and SMP, model development 
+was based only on dates with complete matched measurements for all 
+input variables and TMP, yielding 71 valid temporally matched records. 
+This data-limited target plant setting reflected the practical monitoring 
+constraints of pilot-scale MBR operation and provided a realistic sce­
+nario for evaluating the proposed cross-plant transfer learning 
+framework.
+Three pilot-scale submerged MBR plants treating domestic waste­
+water in Singapore were selected as source plants, yielding 332 records 
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+2 
+
+
+<!-- Page 3 -->
+Fig. 1. Framework for transfer learning-based TMP prediction in MBRs: (a) treatment process of the target plant, and the associated prediction challenges: limited 
+data, missing data and noisy measurements, (b) key characteristics of the three source plants: larger dataset size, higher data quality, and similar process config­
+urations, (c) pretraining workflow of the LSTM and XGBoost models using data from the three source plants, (d) workflow for fine-tuning the base models using the 
+target plant dataset to obtain the transfer learning models, (e) model interpretability and statistical analysis using LOFO and SHAP analyses.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+3 
+
+
+<!-- Page 4 -->
+in total, including 100 records from Plant 1, 132 records from Plant 2, 
+and 100 records from Plant 3 (Fig. 1(b)). Photographs of the source 
+plants are provided in Fig. S1, and their TMP profiles during the moni­
+toring periods are shown in Fig. S2. These plants had comparable pro­
+cess configurations, consisting of anoxic/oxic biological treatment 
+followed by immersed membrane separation, with conventional sludge 
+recirculation and wasting. Detailed membrane-system characteristics 
+and operating settings are summarized in Table S1. Although the target 
+plant differed in influent composition due to upstream Fe addition, it 
+remained comparable to the source plants in overall treatment config­
+uration, with broadly similar MBR fouling mechanisms, supporting the 
+application of transfer learning between source and target plants.
+For each plant, the dataset included 11 variables: HRT, SRT, mem­
+brane flux (FLUX), total and soluble chemical oxygen demand (TCOD 
+and SCOD), MLSS, MLVSS, EPSp, EPSc, SMPp, and SMPc. TMP was 
+obtained from routine online monitoring and aligned with each sam­
+pling date for subsequent analysis.
+2.2. Physicochemical analytical methods
+HRT, SRT, and FLUX were recorded as routine operational parame­
+ters. TCOD and SCOD were determined by the APHA 5220D closed 
+reflux colorimetric method, and MLSS and MLVSS were measured ac­
+cording to Standard Methods [28]. SMP was defined as the dissolved 
+fraction of the supernatant after 0.45 μm membrane filtration and EPS 
+was extracted from the residual biomass using the heat method [29]. 
+Proteins and polysaccharides in SMP and EPS, including SMPp, SMPc, 
+EPSp, and EPSc, were quantified using the Modified Lowry Protein 
+Assay and Dubois Method, respectively [30]. Liquid chromatography­
+–organic carbon detection (LC-OCD) was employed to characterize the 
+dissolved organic matter, including biopolymers with molecular weight 
+(MW) greater than 20 kDa and low-molecular-weight (LMW) com­
+pounds with MW less than 1000 Da, such as humics, building blocks, 
+LMW acids, and LMW neutrals. The particle size distribution (PSD) of 
+mixed liquor was analyzed using a laser diffraction particle analyzer. 
+Capillary suction time (CST) was measured using a CST apparatus [31]. 
+Total organic carbon (TOC) was measured using a TOC analyzer 
+(TOC-VCSH, Shimadzu, Japan). Excitation–emission matrix (EEM) 
+spectra were measured using a fluorescence spectrophotometer [32]. 
+Total iron was measured using inductively coupled plasma optical 
+emission spectroscopy (ICP-OES).
+Fig. 2. Operational context of the target MBR plant and source–target dataset characteristics: (a) TMP profile of the target plant during the monitoring period, (b) 
+photograph of the MBR module at the target plant, (c) distributions of the operational and physicochemical variables in the three source plants and the target plant, 
+(d) mean values of these variables for each plant.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+4 
+
+
+<!-- Page 5 -->
+2.3. Data preprocessing and feature selection
+To ensure reliable model development, the raw datasets were first 
+preprocessed by outlier treatment and missing-value imputation (Text 
+S2). To place variables on comparable scales and prevent variables with 
+larger numerical ranges from dominating model training, z-score stan­
+dardization was applied during preprocessing (Text S3). The scaler was 
+fitted using the training data only, and model outputs were inverse- 
+transformed to the original scale after training.
+The final prediction target of this study was next-day TMP, whereas 
+dTMP was used only as an intermediate training target to alleviate non- 
+stationarity and improve output comparability across plants [33,34]. 
+Compared with raw TMP values, dTMP reduced inter-plant differences 
+in TMP level and produced distributions more centered around zero 
+(Fig. S3). Predicted dTMP values were then added to the current-day 
+TMP to reconstruct next-day TMP for model evaluation and 
+presentation.
+To assess source–target distribution discrepancy and overlap rele­
+vant to transfer learning, joint principal component analysis (PCA) was 
+performed using the input variables together with dTMP. The input and 
+output blocks were standardized separately and assigned equal overall 
+weights (Text S4).
+The sample-size-to-feature ratio (SFR) is an important indicator of 
+whether model complexity is appropriate for a given dataset size, and in 
+small-sample modeling an SFR greater than 10 is generally considered 
+desirable [35]. Therefore, Pearson correlation analysis was used as a 
+coarse pre-screening step (Text S5). Because the final prediction target 
+remained next-day TMP, this initial screening was performed against 
+TMP rather than dTMP. It considered both feature–target association 
+and inter-feature collinearity, but served only as a pragmatic 
+dimensionality-control procedure rather than a definitive assessment of 
+nonlinear predictive relevance.
+2.4. Construction of base models based on source plants
+Given the time-series nature of the data, the source datasets were 
+split within each plant according to chronological order rather than 
+randomly, thereby reducing the risk of information leakage between 
+temporally adjacent samples. Considering the limited sample sizes and 
+short input window, LSTM was selected as a compact recurrent archi­
+tecture for sequence learning [36]. Transformer- and TCN-based models 
+may offer advantages when larger MBR datasets or longer temporal 
+contexts are available, and systematic benchmarking under such con­
+ditions remains a direction for future work [37,38]. Accordingly, two 
+base models were developed: LSTM-base for recurrent sequence learning 
+and XGBoost-base for tree-based learning (Fig. 1(c)). LSTM-base used 
+standardized feature sequences with a sequence length of 3 time steps, 
+whereas XGBoost-base used the same three-step historical information 
+encoded as lagged features. This design ensured that the two base 
+models used the same amount of historical information, allowing a fair 
+comparison of their predictive performance. Additional implementation 
+details are provided in Text S6.
+Hyperparameters for both base models were optimized using the 
+training split of the source plant datasets. Because the data were time- 
+ordered, five-fold time-series cross-validation was combined with 
+Optuna-based hyperparameter search to prevent leakage from future 
+samples and improve the robustness of model selection. After optimi­
+zation, both base models were trained on the same training split, and the 
+trained models were saved to initialize the transfer learning models. The 
+hyperparameter search spaces, final settings, and training details are 
+provided in Table S2–S3 and Text S7.
+2.5. Construction of the baseline model for the target plant
+Before establishing transfer learning models, a baseline model was 
+developed using only the target plant dataset, and its performance was 
+compared with that of the transfer learning models. To ensure compa­
+rability, the target plant dataset was partitioned in chronological order, 
+with the first 50% used for model training and the final 50% reserved for 
+testing. Under this split, only a limited amount of target plant data was 
+available for model training. With such a small training set, a standalone 
+target-trained LSTM baseline would be more prone to unstable fitting 
+and overfitting, making the resulting comparison less reliable [39]. An 
+independent XGBoost model was therefore adopted as the baseline. It 
+was trained on the training portion of the target plant dataset using the 
+same feature set as the transfer learning models, and the scaler for the 
+target variable was fitted independently using the same training portion. 
+Detailed settings are listed in Table S4.
+2.6. Construction of transfer learning models
+For transfer learning, the target plant dataset was partitioned chro­
+nologically using the same 50:50 split: the first 50% was used as the fine- 
+tuning pool, whereas the final 50% was kept unseen during fine-tuning 
+and reserved as an independent testing set (Fig. 1(d)), thereby reducing 
+the risk of temporal information leakage. The fine-tuning ratio (FT) was 
+defined as the proportion of the total target plant dataset used for fine- 
+tuning, and was examined at 0, 10%, 20%, 30%, 40%, and 50%. The 
+exact numbers of target plant records in the fine-tuning pool, testing set, 
+and each FT setting are summarized in Table S5. The resulting transfer 
+models were denoted as LSTM-FT and XGBoost-FT. At FT = 0, no target 
+plant samples were used for fine-tuning, and the two models therefore 
+corresponded to direct transfer without target plant adaptation.
+For each nonzero FT setting, multiple fine-tuning segments of the 
+corresponding length were sampled from the fine-tuning pool to reduce 
+dependence on any single local history (Text S8). Each segment-level 
+experiment was repeated with five random seeds, and performance 
+was reported as the mean ± standard deviation across all fine-tuning 
+segments and repeated runs. LSTM-FT and XGBoost-FT were fine- 
+tuned using different update strategies, with implementation details 
+and hyperparameter settings provided in Table S6–S7 and Text S9.
+All experiments were implemented in Python 3.10.18 using relevant 
+third-party libraries. The deep-learning models were built and trained in 
+PyTorch 2.7.0. The computing environment included an Intel Core i7- 
+14700KF processor (28 logical cores), 32 GB RAM, and an NVIDIA 
+GeForce RTX 5060 Ti GPU.
+2.7. Evaluation of model performance
+Model performance was evaluated using R2, RMSE, and MAE (details 
+in Text S10). Model interpretability was examined using LOFO and 
+SHAP analyses (Fig. 1(e)), as detailed in Text S11 and Text S12, 
+respectively.
+2.8. Model adaptability under cross-scenario conditions
+Additional validation was conducted using data from a pilot-scale 
+MBR treating mixed petrochemical and pharmaceutical industrial 
+wastewater in Singapore. Detailed process configuration and operating 
+parameters are provided in Table S8. This validation was performed 
+using LSTM-FT under two fine-tuning conditions, FT = 0 and FT = 40%. 
+To maintain consistency with the main analysis, the pretrained model, 
+chronological fine-tuning/testing logic, data preprocessing procedure, 
+and model settings were kept the same. Accordingly, this test was 
+intended to assess whether the established workflow could remain 
+effective under industrial wastewater conditions, without additional 
+model optimization.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+5 
+
+
+<!-- Page 6 -->
+3. Results and discussion
+3.1. Source–target distribution and PCA analysis
+The distributions of the measured variables across the source and 
+target plants are presented in Fig. 2(c), and the corresponding average 
+values are summarized in Fig. 2(d). At the level of core operating vari­
+ables, the target plant remained within or close to the ranges of the 
+source plants (HRT of 5.5 h versus 5.0–5.5 h, SRT of 6.8 d versus 
+5.0–7.0 d, and FLUX of 25 LMH versus 25–44 LMH). Across the source 
+plants, the measured variables covered relatively broad ranges of 
+biomass-related and fouling-related properties (e.g., MLSS of 
+900–9730 mg/L, MLVSS of 639–7671 mg/L, EPSp of 25.0–658.8 mg/L, 
+EPSc of 0.0–117.1 mg/L, SMPc of 0.8–33.3 mg/L, and SMPp of 
+2.7–44.5 mg/L). By contrast, the target plant showed comparatively 
+narrower distributions for the biomass-related and fouling-related var­
+iables (e.g., MLSS of 3580–7340 mg/L, MLVSS of 3340–5920 mg/L, 
+EPSp of 73.5–469.9 mg/L, EPSc of 17.1–81.3 mg/L, SMPc of 2.6 to 
+20.1 mg/L, and SMPp of 4.8–10.8 mg/L).
+These distributional relationships were further examined by PCA 
+(Fig. 3(a)). The first two principal components explained 74.0% of the 
+total variance, indicating that the major variability in the dataset was 
+captured in a two-dimensional projection. The source plant datasets 
+showed substantial overlap, indicating broadly similar fouling-related 
+variable patterns across the source plants. By contrast, the target plant 
+dataset formed a more compact cluster with partial separation from the 
+source plants, indicating a measurable distribution shift. Importantly, a 
+clear overlap region remained between the target and source datasets. 
+This overlap provided a reasonable basis for developing base models 
+using the source plant datasets and supported the feasibility of subse­
+quent transfer learning.
+Fig. 3. Source–target data distribution, feature collinearity, and predictive performance of the base models: (a) joint PCA of the source and target plant datasets, (b) 
+feature–feature (X–X) Pearson correlation heatmap, and prediction scatter plots for (c) XGBoost-base and (d) LSTM-base.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+6 
+
+
+<!-- Page 7 -->
+3.2. Construction and evaluation of base models
+3.2.1. Correlation-based feature selection
+Feature–target (X–y) Pearson correlation analysis was further con­
+ducted, and the ranking results are shown in Fig. S4. Overall, FLUX, 
+EPSc, HRT, and SMPp showed relatively strong correlations with TMP, 
+with | rx,y
+⃒⃒values of 0.471, 0.462, 0.440, and 0.347, respectively. In 
+contrast, SCOD, SMPc, and TCOD showed weak correlations with TMP, 
+with | rx,y
+⃒⃒values all below 0.1, and were therefore excluded from the 
+reduced input set used for subsequent modeling. The remaining vari­
+ables were kept for the subsequent collinearity screening step.
+Feature–feature (X–X) Pearson correlation analysis was then per­
+formed to further control inter-feature collinearity (Fig. 3(b)). HRT was 
+strongly negatively correlated with FLUX (rxj,xk = -0.86), likely reflect­
+ing their operational coupling: HRT is inversely related to treatment 
+flow rate, whereas FLUX represents the permeate throughput per unit 
+membrane area [8]. MLSS and MLVSS showed a very strong positive 
+correlation (rxj,xk = 0.96), consistent with MLVSS representing the vol­
+atile biomass fraction of MLSS [40]. Within these two collinear feature 
+pairs, FLUX and MLVSS had higher | rx,y | values with TMP and were 
+therefore retained. Accordingly, FLUX, SRT, MLVSS, EPSc, EPSp, and 
+SMPp were retained as a reduced input set for subsequent base model 
+development.
+3.2.2. Performance evaluation of base models
+The prediction scatter plots for both base models show that most 
+training and testing points were distributed close to the line of equality, 
+indicating good agreement between the predicted and observed TMP 
+values in the source plants. XGBoost-base achieved an R2 of 0.86, an 
+RMSE of 3.01 kPa, and an MAE of 1.94 kPa on the test set (Fig. 3(c)). 
+LSTM-base showed slightly better performance, with an R2 of 0.87, an 
+RMSE of 2.86 kPa, and an MAE of 1.68 kPa (Fig. 3(d)). Larger prediction 
+deviations were observed at higher TMP values in both models, sug­
+gesting that TMP prediction became more difficult under more severe 
+fouling conditions, possibly due to intensified fouling-layer compression 
+and nonlinear fouling resistance at elevated TMP levels [41]. Overall, 
+both models captured the main TMP variations in the source datasets, 
+with LSTM-base showing a small but consistent advantage over 
+XGBoost-base.
+3.2.3. SHAP interpretation of base models and physicochemical 
+characterization
+SHAP attribution patterns were further analyzed for both base 
+models. ChatGPT-5.4 was used only as an auxiliary tool to support the 
+summarization of these attribution patterns, while the final interpreta­
+tion was performed by the authors based on the SHAP plots and corre­
+sponding feature-attribution results (Fig. 6(d)). For LSTM-base, the 
+SHAP summary plots showed that EPSc, MLVSS, EPSp, and SMPp made 
+the largest contributions (Fig. 6(a); Fig. S5), whereas FLUX and SRT 
+were comparatively less influential. XGBoost-base showed a much more 
+concentrated attribution pattern, with FLUX dominating the SHAP 
+attribution and contributing more than the other input variables (Fig. S6 
+(a); Fig. S6(b)). These results indicate that the two base models achieved 
+similar predictive performance but relied on different predictive struc­
+tures during pretraining on the source plants. The broader dependence 
+of LSTM-base on EPSc, MLVSS, EPSp, and SMPp may partly reflect the 
+greater suitability of sequence-learning architectures for variables with 
+stronger temporal continuity and gradual variation [42]. In contrast, the 
+FLUX-dominated attribution pattern in XGBoost-base was consistent 
+with the X–y correlation analysis and may partly reflect the tendency of 
+tree-based models to rely heavily on a dominant predictive signal [43,
+44]. These results were consistent with the subsequent transfer learning 
+results, which showed that XGBoost-FT achieved only limited 
+improvement compared with LSTM-FT (discussed in Section 3.3).
+Given that LSTM-base achieved strong source-domain predictive 
+performance and showed much more promise in transfer learning (dis­
+cussed in Section 3.3), the physicochemical characteristics of biomass in 
+the source plants were further examined to determine whether its 
+learned attribution pattern was consistent with real fouling mechanisms. 
+EPS and SMP were emphasized, because they were identified as 
+important features in the SHAP analysis. Specifically, EPS is more 
+closely associated with sludge flocs and membrane-associated fouling 
+[45], whereas SMP mainly represents soluble organics [46].
+Concretely, the three source plants showed a consistent EPS-related 
+signature, including a shared aromatic protein-like peak in the EPS 
+EEM spectra (Ex/Em ≈220–225/325–355 nm; Fig. 4(a)–(c)), and sludge 
+particle-size distributions dominated by particles of 20–40 μm (Fig. 4
+(d)). These features generally suggested a readily depositable sludge 
+structure that could promote cake-layer formation in MBRs [47]. 
+Moreover, the protein fraction represented by EPSp likely comprises 
+aromatic protein-like components, which could be associated with 
+sludge floc aggregation and the initial adhesion of foulants to the 
+membrane surface [48]. By comparison, EPSc may be more closely 
+related to the gel-forming and resistance-enhancing effects of the poly­
+saccharide matrix, thereby further increasing the hydraulic resistance of 
+the fouling layer [49]. The relatively high attribution of MLVSS 
+(revealed by SHAP) was also physically reasonable, as MLVSS represents 
+the biomass fraction that carries EPS and contributes to sludge deposi­
+tion on the membrane surface [3].
+Additionally, SMP from the three source plants exhibited similar 
+EEM spectral features, with a shared aromatic protein-like fluorescence 
+peak (Ex/Em ≈220–230/330–350 nm; Fig. S7(a)–(c)). These aromatic 
+protein-like SMP components may contribute to fouling development 
+through membrane-surface adsorption or retention within the devel­
+oping fouling layer, particularly during the early stage of membrane 
+fouling [50,51]. This interpretation was further supported by the 
+LC-OCD results (Fig. 4(e) and (f); Table S9), which showed that SMP in 
+the three source plants was dominated by hydrophilic DOC, with humics 
+and biopolymers as the major fractions. For each LC-OCD fraction, 
+rejection was calculated as the percentage decrease from its concen­
+tration in SMP to that in the corresponding effluent, relative to its 
+concentration in SMP. On this basis, biopolymers showed the highest 
+rejection across the three source plants, ranging from 90.0 to 95.3%. 
+These results suggest that SMPp may mainly reflect the aromatic 
+protein-like component within the biopolymer pool that was preferen­
+tially retained by the membrane and could therefore participate directly 
+in organic membrane fouling [52].
+Overall, the shared physicochemical characteristics of source plants 
+provide clear mechanism-informed support for the EPS- and SMP- 
+related attribution pattern learned by LSTM-base. This indicates that 
+the learned structure was not merely statistical but grounded in real 
+fouling-related properties. In turn, this supports the use of LSTM-base as 
+a reliable pretrained model for subsequent transfer learning.
+3.3. Transfer learning performance and interpretation
+3.3.1. Effect of fine-tuning ratio on transfer learning performance
+The effect of fine-tuning ratio (FT) on transfer learning performance 
+was examined to determine the amount of target-plant data required for 
+effective adaptation. At FT = 0, representing direct transfer without 
+target plant adaptation, the pretrained LSTM and XGBoost models 
+showed similarly low R2 values of 0.41 and 0.39, respectively, indicating 
+limited predictive power under zero-shot transfer. Together with the 
+PCA results showing a measurable source–target distribution shift, this 
+finding suggests that direct transfer alone was insufficient for reliable 
+TMP prediction in the target plant [53].
+For LSTM-FT, the largest gain occurred between FT = 0 and 
+FT = 10%, with R2 increasing from 0.41 to 0.81 (Fig. 5(a)). As FT further 
+increased, the performance improved more gradually, reaching R2, 
+RMSE, and MAE values of 0.89, 0.50 kPa, and 0.33 kPa, respectively, at 
+FT = 40% (Fig. 5(b) and (c)). At FT = 50%, the improvement relative to 
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+7 
+
+
+<!-- Page 8 -->
+FT = 40% was only marginal. In comparison, XGBoost-FT also improved 
+with increasing FT, but the gains were smaller and more gradual, with 
+Fig. 4. Physicochemical evidence supporting the EPS- and SMP-related attribution pattern learned by LSTM-base in the source plants: EEM spectra of EPS from (a) 
+Plant 1, (b) Plant 2, and (c) Plant 3; (d) sludge particle-size distributions of Plants 1–3 and the target plant; LC-OCD-derived organic fraction concentrations in (e) 
+SMP and (f) effluent from Plants 1–3.
+Fig. 5. Effect of fine-tuning ratio on target plant prediction performance and LOFO analysis: (a) R2, (b) RMSE, and (c) MAE as functions of fine-tuning ratio, (d) 
+observed versus predicted TMP values for the baseline model, XGBoost-FT, and LSTM-FT on the target plant testing set, with the transfer models evaluated at 
+FT = 40%, and (e) LOFO analysis results for LSTM-FT at FT = 40%. For each nonzero FT setting in (a)–(c), performance is reported as mean ± standard deviation 
+across all fine-tuning segments and repeated runs, using up to six contiguous segments sampled from the fine-tuning pool and five random seeds for each 
+retained segment.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+8 
+
+
+<!-- Page 9 -->
+R2 increasing from 0.39 at FT = 0 to 0.58 at FT = 40% and only slightly 
+further to 0.61 at FT = 50%. Overall, LSTM-FT showed larger perfor­
+mance gains at low FT levels than XGBoost-FT, and increasing FT 
+beyond 40% provided limited additional improvement. Because both 
+transfer models were adapted from models pretrained on the source 
+plant datasets, these performance improvements should be interpreted 
+as target plant adaptation through transfer learning under realistic data- 
+limited conditions, rather than as conventional model development 
+based solely on the 71 target plant records. In addition, for both transfer 
+models the standard deviation across the fine-tuning segments and 
+repeated runs was largest at FT = 10% and decreased at higher FT, 
+becoming small by FT = 40%. This indicates that too few target records 
+reduced the robustness of adaptation, whereas a moderate amount of 
+target data was sufficient for stable performance. Accordingly, 
+FT = 40% was selected as the representative fine-tuning condition for 
+the subsequent analyses.
+3.3.2. Performance comparison of baseline model and transfer learning 
+models
+To compare predictive performance on the target plant, the baseline 
+model (specifically trained based on target plant datasets) together with 
+LSTM-FT and XGBoost-FT was evaluated (Fig. 5(d)).
+The testing samples were mainly distributed within a TMP range of 
+approximately 19–21.5 kPa, with fewer samples at lower TMP values of 
+around 15.5–18 kPa. Within the main TMP range, LSTM-FT showed the 
+tightest clustering around the line of equality, indicating the best 
+agreement between predicted and observed TMP values. The baseline 
+model showed moderate deviations, whereas XGBoost-FT exhibited the 
+largest scatter and the most evident departure from the line of equality. 
+These patterns suggest that transfer learning improved target plant 
+prediction when implemented with LSTM, whereas XGBoost-FT did not 
+provide a performance advantage under the present setting.
+The quantitative metrics showed the same trend. Relative to the 
+baseline model, LSTM-FT reduced RMSE from 0.63 to 0.50 kPa and MAE 
+from 0.45 to 0.33 kPa, corresponding to decreases of 20.6% and 26.7%, 
+respectively, while increasing R2 from 0.82 to 0.89. By contrast, 
+XGBoost-FT increased RMSE to 0.96 kPa and MAE to 0.81 kPa, and 
+reduced R2 to 0.58. Taken together, these results indicate that LSTM-FT 
+achieved the best predictive performance under limited target plant 
+data, outperforming both the baseline model and XGBoost-FT. There­
+fore, the following sections focus on LSTM-FT to further interpret the 
+observed transfer behavior using LOFO and SHAP analyses.
+3.3.3. LOFO and SHAP interpretation of feature contributions during 
+transfer
+LOFO and SHAP analyses were used to identify the variables that 
+supported transfer performance in LSTM-FT. LOFO analysis was first 
+conducted to evaluate the effect of each input variable on LSTM-FT 
+performance at FT = 40% (Fig. 5(e)). The reference model was the 
+LSTM-FT model trained with all input variables, which achieved an MAE 
+of 0.33 kPa. Each variable was then removed individually, and the 
+resulting MAE was compared with that of the reference model using 
+paired two-sided Wilcoxon signed-rank tests (Table S10). Removing 
+EPSc caused the largest performance loss, increasing MAE to 0.37 kPa 
+(p ≤0.001), indicating that EPSc was the most important variable for 
+maintaining LSTM-FT performance. Removing EPSp or SRT also 
+increased MAE to 0.35 kPa (both p ≤0.001), whereas removing FLUX 
+caused a smaller but still significant increase (p ≤0.01). Overall, the 
+LOFO results confirmed that EPS-related variables, especially EPSc and 
+EPSp, were important for LSTM-FT performance, while SRT and FLUX 
+also showed smaller but statistically significant effects.
+SHAP analysis was further used to examine how the feature- 
+attribution pattern evolved with increasing FT. Under zero-shot trans­
+fer (FT = 0), EPSc was the top-ranked feature, contributing the largest 
+share of the total attribution, well above MLVSS and EPSp (Fig. 6(b); 
+Fig. S8(a)). This suggests that, under zero-shot transfer, the transferred 
+model retained a strongly EPSc-centered attribution pattern, reflecting 
+limited recalibration before fine-tuning. From FT = 10% to 30%, the 
+attribution pattern became more distributed, with increased attribution 
+to EPSp and more comparable contributions from EPSc, SRT, and MLVSS 
+(Fig. S9–S10). At FT = 40%, EPSc and EPSp were the two top-ranked 
+features and together accounted for more than half of the total attri­
+bution (Fig. 6(c); Fig. S8(b)), indicating a more balanced EPS-centered 
+attribution structure after fine-tuning. The feature ranking and 
+Fig. 6. SHAP attribution patterns and LLM-assisted summary for LSTM-base and LSTM-FT: SHAP summary plots of (a) LSTM-base, (b) LSTM-FT at FT = 0, (c) LSTM- 
+FT at FT = 40%, (d) LLM-assisted summary of the corresponding SHAP observations.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+9 
+
+
+<!-- Page 10 -->
+attribution structure at FT = 50% remained largely similar to those at 
+FT = 40% (Fig. S11), consistent with the limited additional performance 
+improvement beyond FT = 40%. Together with the LOFO results, these 
+findings indicate that LSTM-FT performance was mainly supported by 
+EPS-related variables, with EPSc remaining top-ranked and EPSp 
+becoming more prominent after fine-tuning.
+3.3.4. Why did transfer learning enable accurate membrane fouling 
+prediction in the target plant?
+Because SHAP and LOFO identify model-relevant variables rather 
+than causal mechanisms, the attribution changes were interpreted 
+against independent physicochemical evidence from the target plant. At 
+FT = 0, the attribution pattern remained dominated by EPSc, and the 
+model retained moderate predictive performance (R2 = 0.41), indicating 
+that the EPSc-centered predictive structure learned by the base model 
+was partially applicable to the target plant. The relatively high EPSc 
+concentration in the target plant (49.6 mg/L) further suggests that 
+polysaccharide-related fouling remained important. Elevated poly­
+saccharide content can enhance water retention and reduce sludge 
+dewaterability, thereby promoting the formation of a highly hydrated, 
+compressible, and high-resistance fouling layer. This interpretation was 
+consistent with the relatively high CST (49.45 s) and specific CST 
+(4.36 s/(g/L)) observed in the target plant (Fig. 7(a)). Taken together, 
+these results suggest that EPSc represented a shared membrane-fouling 
+matrix characteristic across plants that remained stably informative 
+during transfer prediction.
+Performance improved when FT increased to 40% (R2 = 0.89), and 
+the most notable change in the SHAP results was the rise of EPSp to the 
+second most important feature. This shift suggests that fine-tuning 
+increased model sensitivity to protein-related EPS characteristics in 
+the target plant. The EPS EEM spectrum of the target plant showed a 
+dominant aromatic protein-like peak (Fig. 7(b)), consistent with the 
+protein-related EPS signature observed in the source plants. Of note, it 
+was hypothesized that the increased importance of EPSp (aromatic 
+proteins) could be due to the Fe-enriched influent in MBRs [54]. To 
+further support this interpretation, two Fe-dosing stages in the target 
+plant were compared (Table S11). Specifically, upstream Fe was dosed 
+into the influent mixing tank before pretreatment at target dosages of 9 
+and 26 mg/L, allowing Fe accumulation and EPS compositional re­
+sponses in the MBR system to be examined. As the Fe dosage increased, 
+the sludge-associated Fe content increased from 45 to 101 mg/g-MLVSS, 
+while EPSp increased from 47.96 to 62.30 mg/g-MLVSS. These obser­
+vations suggest that Fe-enriched conditions were associated with a more 
+protein-enriched EPS composition, which may explain the increased 
+attribution of EPSp after fine-tuning. Higher EPS protein content is 
+generally associated with stronger hydrophobicity and greater floc ag­
+gregation, which may favor membrane-surface adhesion and cake-layer 
+densification [46,55]. This interpretation was consistent with the rela­
+tively high viscosity and specific viscosity of the target sludge 
+(50.03 mPa s and 9.46 mPa s/(g/L), respectively; Fig. 7(d)). Taken 
+together, the increased SHAP attribution of EPSp suggests that 
+fine-tuning recalibrated the model toward the protein-related EPS 
+characteristics that were more pronounced under the Fe-enriched con­
+ditions of the target plant.
+The two-step CIP results further supported the association between 
+the Fe-related EPS response and the composition of the retained fouling 
+layer in the target plant. During the citric acid (CA) cleaning stage, total 
+Fe increased sharply from 0.62 to 43.02 mg/L (Fig. 7(e)), indicating the 
+release of substantial Fe-bearing components from the fouling layer. 
+During the subsequent NaClO cleaning stage, TOC increased from 5.19 
+to 43.22 mg/L (Fig. 7(f)), while total Fe also increased from 1.85 to 
+11.16 mg/L, suggesting the release of oxidizable organic matter together 
+with Fe-bearing components. Together with the lower SCOD than TCOD 
+in the target plant (93 vs. 271 mg/L), these results suggest that the 
+dominant fouling layer was not formed by dissolved organics alone, but 
+was more closely associated with a sludge-bound organic matrix 
+Fig. 7. Physicochemical evidence supporting the EPS-centered attribution pattern learned by LSTM-FT in the target plant: Mixed-liquor properties, including (a) CST 
+and specific CST and (d) viscosity and specific viscosity; EEM spectra of (b) EPS and (c) SMP; (e) total iron concentrations in cleaning solutions collected during the 
+two-step clean-in-place (CIP) procedure, and (f) TOC concentrations in cleaning solutions collected during sodium hypochlorite cleaning. Before CIP, the membrane 
+unit was drained and rinsed with filtrate. The two-step CIP consisted of citric-acid cleaning (15 g/L, pH = 2.5) followed by sodium hypochlorite cleaning (1 g/L, 
+pH = 10), with samples collected immediately before and after each cleaning step. B-CA and A-CA denote samples collected before and after citric-acid cleaning, 
+respectively, whereas B-NaClO and A-NaClO denote samples collected before and after sodium hypochlorite cleaning.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+10 
+
+
+<!-- Page 11 -->
+containing Fe-related constituents.
+Furthermore, the decline in SMPp attribution after fine-tuning sug­
+gests that LSTM-FT placed less emphasis on soluble protein-related in­
+formation during target plant adaptation. Although the SMP EEM 
+spectrum of the target plant showed a pronounced low-excitation aro­
+matic protein-like feature (Fig. 7(c)), the effluent EEM exhibited broader 
+fluorescence regions (Ex/Em ≈220–250/300–460 nm) that partially 
+overlapped with the low-excitation protein-like region in SMP 
+(Fig. S12). This overlap suggests that part of the low-excitation protein- 
+like dissolved organic signal was not fully retained by the membrane 
+system. Therefore, the reduced attribution of SMPp after fine-tuning 
+does not exclude its contribution to fouling, but suggests that SMPp 
+was less closely associated with the dominant retained foulant layer in 
+the target plant than EPS-related variables.
+Taken together, LSTM fine-tuning preserved the transferable EPSc- 
+related fouling information in the target MBR plant, recalibrated the 
+target-specific EPSp-related signal, and placed less emphasis on SMPp, 
+which was less representative of the dominant fouling layer.
+3.3.5. Cross-scenario adaptability to an MBR treating industrial wastewater
+Because the preceding analysis focused mainly on the domestic MBR 
+scenario, additional validation was conducted using a pilot-scale MBR 
+treating mixed petrochemical and pharmaceutical industrial waste­
+water. This case provided a preliminary test of the established transfer 
+learning workflow under a more distinct wastewater background. 
+Compared with the domestic target plant, the industrial MBR presented 
+a more challenging transfer scenario, with a more complex influent 
+composition, higher organic loading, and disturbance-driven biomass 
+dynamics. The TMP profile of the industrial MBR showed a clear long- 
+term trend together with multiple abrupt perturbations associated 
+with real operational events (Fig. 8(a)), reflecting complex membrane- 
+fouling behavior under practical engineering conditions.
+The industrial MBR differed substantially from the source plants in 
+wastewater and sludge properties, with consistently higher TCOD, 
+SCOD, MLSS, and MLVSS (Fig. 8(b)). Importantly, despite these back­
+ground differences, EPSc (43.6 ± 20.2 mg/L) remained close to the 
+source plant range (32.3–43.5 mg/L), suggesting that EPSc-related 
+fouling information was still shared across scenarios. EPSp 
+(256.8 ± 126.7 mg/L) was also of the same order of magnitude as in the 
+source plants (184–229 mg/L), and SMPc (6.9 ± 5.0 mg/L) fell within 
+the source plant range (5.2–11.5 mg/L). These overlaps suggest that part 
+of the fouling-related information learned from the source plants could 
+still be transferred to the industrial MBR, even under a substantially 
+different wastewater background.
+Under zero-shot transfer (FT = 0), the base model achieved only 
+moderate performance in the industrial MBR (R2 = 0.46; Fig. 8(c)), 
+suggesting that the fouling-related information learned from the source 
+plants was partially applicable but insufficient to fully capture the TMP 
+dynamics in the industrial MBR. Fine-tuning with industrial MBR data 
+improved prediction performance. This validation used the same chro­
+nological fine-tuning/testing logic, pretrained model, preprocessing 
+procedure, and model settings as the main target plant analysis. At 
+FT = 40%, R2 increased to 0.89, while MAE and RMSE decreased by 
+68.6% and 54.7%, respectively, relative to FT = 0. This improvement 
+indicates that the established workflow could be adapted to the indus­
+trial wastewater background without additional model optimization.
+SHAP analysis further showed that EPSc retained the highest attri­
+bution after fine-tuning, whereas SMPp increased to the second-highest 
+attribution level (Fig. 8(d)). This pattern differed from that observed in 
+the domestic target MBR plant, where fine-tuning mainly increased the 
+attribution of EPSp. Thus, the two target cases shared stable EPSc- 
+related fouling information, but differed in the feature requiring 
+target-specific recalibration: EPSp in the Fe-enriched domestic MBR and 
+SMPp in the industrial MBR. The increased attribution of SMPp suggests 
+that fine-tuning recalibrated the model toward a more prominent solu­
+ble proteinaceous signal under the industrial wastewater background.
+The increased attribution of SMPp after fine-tuning was mechanis­
+tically plausible in the industrial MBR. SMPp was higher in the industrial 
+MBR (27.6 ± 17.4 mg/L) than in the source plants (10.8–13.8 mg/L), 
+indicating a stronger background of dissolved proteinaceous organics. 
+Previous characterization of this industrial MBR showed pronounced 
+SMP protein peaks during operational disturbances, together with de­
+creases in MLSS and MLVSS, consistent with biomass loss, cell decay, 
+and proteinaceous SMP release into the mixed liquor [56]. Moreover, 
+Fig. 8. Additional validation of the proposed transfer learning framework in an industrial wastewater MBR: (a) TMP profile with major operational events, (b) 
+summary statistics of the operational and physicochemical variables in the industrial MBR, (c) the pretrained LSTM model before and after fine-tuning, evaluated at 
+FT = 0 and FT = 40% using R2, MAE, and RMSE, and (d) mean absolute SHAP values of LSTM-FT at FT = 40%.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+11 
+
+
+<!-- Page 12 -->
+SMP in this MBR was dominated by proteins rather than carbohydrates. 
+These observations suggest that the enhanced SMPp attribution in the 
+transfer model was associated with disturbance-driven soluble protein 
+release. Such proteinaceous SMP could contribute to fouling develop­
+ment, thereby explaining the increased attribution of SMPp after 
+fine-tuning.
+Overall, this additional validation suggests that the proposed transfer 
+learning workflow remained applicable to the industrial MBR, not 
+because fouling mechanisms were identical across scenarios, but 
+because the model retained transferable EPSc-related fouling informa­
+tion while fine-tuning recalibrated the attribution structure toward the 
+dominant target-specific signal. In the domestic target MBR plant, this 
+recalibration was reflected by the increased attribution of EPSp under 
+Fe-enriched conditions, whereas in the industrial MBR, it was reflected 
+by the increased attribution of SMPp associated with disturbance-driven 
+soluble protein release. These results further support the ability of the 
+transfer learning framework to preserve transferable fouling-related 
+information while adapting to plant-specific fouling signals across 
+distinct wastewater backgrounds.
+4. Implications and outlook
+The significance of this study lies not only in improving fouling 
+prediction for a single pilot-scale MBR, but also in providing a basis for 
+more mechanism-informed prediction in data-limited plants. By trans­
+ferring knowledge learned from data-richer source plants, the LSTM 
+model achieved reliable prediction in a data-limited target plant, sug­
+gesting that data-limited plants may not need to build fouling prediction 
+systems entirely from scratch.
+More importantly, the present results suggest that indicator selection 
+for fouling prediction should begin with identifying the dominant 
+fouling processes, followed by extraction of representative fouling fin­
+gerprints for prediction. Within this framework, indicators such as EPSc 
+and EPSp appear to contain transferable fouling information across MBR 
+plants. However, these variables are expensive, labor-intensive, and 
+difficult to monitor routinely, which limits their direct practical use. A 
+more feasible direction may therefore be to translate key fouling char­
+acteristics into monitorable surrogate fingerprints; in this regard, online 
+spectral signals such as UV–vis and fluorescence fingerprints may pro­
+vide a practical basis for plant-adaptive prediction and proactive fouling 
+control [57].
+Nevertheless, several limitations remain and point to directions for 
+future work. The present models were developed from a limited number 
+of pilot-scale MBRs with relatively similar operational backgrounds. At 
+full scale, membrane fouling is further shaped by scale-dependent hy­
+drodynamics and aeration and by greater operational variability than in 
+pilot systems [58], so the pretrained relationships may not directly 
+capture full-scale fouling dynamics. For systems with substantially 
+different influent or operating conditions, the sludge and EPS/SMP 
+composition and the dominant foulants can change, weakening the 
+transferable EPS-centered signal and possibly requiring additional 
+plant-specific indicators for reliable adaptation. The framework should 
+therefore be further validated on larger datasets and extended to 
+full-scale, geographically diverse plants to establish its robustness and 
+generalizability. In addition, the prediction accuracy did not approach 
+unity, indicating that the current indicator set is still incomplete. Besides 
+organic foulants, the target plant also showed evidence of inorganic 
+contributions, particularly iron-associated fouling revealed by the CIP 
+results, which may not yet be fully captured by the present model inputs. 
+Identifying more comprehensive indicators that better capture the 
+combined effects of organic and inorganic foulants may in turn help 
+support earlier fouling warning, better timing of operational adjustment 
+and membrane cleaning, reduced energy and chemical consumption, 
+and improved process stability (Fig. S13).
+5. Conclusions
+● Reliable base models for MBR fouling prediction were developed by 
+pretraining on the three data-richer source plants. SHAP analysis 
+showed that LSTM-base learned physically meaningful fouling- 
+related patterns mainly through EPSc, EPSp, and SMPp, rather 
+than relying on a single dominant operational signal. This was sup­
+ported by the shared source plant characteristics, including EPS ar­
+omatic protein-like fluorescence, flocculated sludge particle-size 
+distributions, and preferential retention of SMP by the membrane. 
+These results indicate that LSTM-base provided a mechanistically 
+interpretable and reliable pretrained basis for subsequent cross-plant 
+transfer.
+● Fine-tuning improved TMP prediction for the target plant treating 
+domestic wastewater, with LSTM-FT achieving R2 = 0.89 at 40% FT. 
+SHAP and LOFO analyses showed that EPSc remained dominant, 
+while EPSp gained importance after fine-tuning. Under the Fe- 
+enriched condition of the target MBR plant, the increased impor­
+tance of EPSp was associated with a shift toward protein-enriched 
+EPS characteristics. Together, these findings explain why fine- 
+tuning improved prediction accuracy: it retained the transferable 
+EPSc-centered fouling basis while recalibrating the model toward Fe- 
+associated, protein-enriched EPS characteristics that were more 
+closely associated with fouling in the target plant.
+● Validation in the industrial MBR further demonstrated that the 
+framework remained effective under a markedly different fouling 
+background. Unlike the target plant treating domestic wastewater, 
+SMPp became the second most important feature in the industrial 
+MBR, reflecting a more prominent proteinaceous SMP signal linked 
+to operational disturbances and biomass decay. The continued 
+dominance of EPSc in the industrial MBR further supported the cross- 
+scenario stability of this transferable fouling basis, while the 
+increased attribution of SMPp showed that fine-tuning could adap­
+tively reweight plant-specific fouling drivers.
+●Overall, this study demonstrates that shared fouling-related infor­
+mation can be transferred across MBR plants and selectively recali­
+brated 
+with 
+limited 
+target-plant 
+data, 
+while 
+independent 
+physicochemical evidence makes this adaptation scientifically 
+interpretable. The framework therefore provides a practical foun­
+dation for reliable TMP prediction and plant-adaptive fouling deci­
+sion support in data-limited MBRs.
+CRediT authorship contribution statement
+Xiaohang Han: Conceptualization, Data curation, Formal analysis, 
+Investigation, Methodology, Software, Validation, Visualization, 
+Writing – original draft. Liu Yang: Conceptualization, Data curation, 
+Formal analysis, Investigation, Methodology, Software, Validation, 
+Visualization, Writing – original draft. Huan Qin: Data curation, 
+Investigation. Shujuan Huang: Data curation, Investigation. Han 
+Zhang: Data curation, Investigation. Boyan Xu: Conceptualization, 
+Funding acquisition, Project administration, Supervision, Writing – re­
+view & editing. How Yong Ng: Conceptualization, Funding acquisition, 
+Supervision, Writing – review & editing.
+Declaration of competing interests
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgement
+The authors gratefully acknowledge financial support from the 
+Taishan Scholar Foundation of Shandong Province under Grant No. 
+tsqn202312222. The research was also supported by National Natural 
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+12 
+
+
+<!-- Page 13 -->
+Science Foundation of China (42406133), and the Basic and Applied 
+Basic 
+Research 
+Foundation 
+of 
+Guangdong 
+Province 
+(2023A1515110786). The authors also thank the members of Professor 
+How Yong Ng's research group in Singapore (e.g., Wei Hao Loh, David 
+Imanuel Tanaka, and etc.) for their valuable assistance in collecting 
+operational data from the pilot-scale membrane bioreactor plants. The 
+data were used exclusively for AI-based modeling and simulation in this 
+study, and all sensitive, confidential, or identifying information was 
+anonymized or masked prior to analysis.
+Appendix A. Supplementary data
+Supplementary data to this article can be found online at https://doi. 
+org/10.1016/j.memsci.2026.126065.
+Data availability
+Data will be made available on request.
+References
+[1] P.L. McCarty, J. Bae, J. Kim, Domestic wastewater treatment as a net energy 
+producer–can this be achieved? Environ. Sci. Technol. 45 (17) (2011) 7100–7106, 
+https://doi.org/10.1021/es2014264.
+[2] C. Niu, X. Li, R. Dai, Z. Wang, Artificial intelligence-incorporated membrane 
+fouling prediction for membrane-based processes in the past 20 years: a critical 
+review, Water Res. 216 (2022), https://doi.org/10.1016/j.watres.2022.118299.
+[3] F. Meng, S. Zhang, Y. Oh, Z. Zhou, H.S. Shin, S.R. Chae, Fouling in membrane 
+bioreactors: an updated review, Water Res. 114 (2017) 151–180, https://doi.org/ 
+10.1016/j.watres.2017.02.006.
+[4] K. Xiao, S. Liang, X. Wang, C. Chen, X. Huang, Current state and challenges of full- 
+scale membrane bioreactor applications: a critical review, Bioresour. Technol. 271 
+(2019) 473–481, https://doi.org/10.1016/j.biortech.2018.09.061.
+[5] K.B. Newhart, R.W. Holloway, A.S. Hering, T.Y. Cath, Data-driven performance 
+analyses of wastewater treatment plants: a review, Water Res. 157 (2019) 
+498–513, https://doi.org/10.1016/j.watres.2019.03.030.
+[6] M. Faisal, K.M. Muttaqi, D. Sutanto, A.Q. Al-Shetwi, P.J. Ker, M.A. Hannan, Control 
+technologies of wastewater treatment plants: the state-of-the-art, current 
+challenges, and future directions, Renew. Sustain. Energy Rev. 181 (2023), https:// 
+doi.org/10.1016/j.rser.2023.113324.
+[7] Y. Zhu, Y. Wang, E. Zhu, Z. Ma, H. Wang, C. Chen, J. Guan, T.D. Waite, Predicting 
+membrane fouling of submerged membrane bioreactor wastewater treatment 
+plants using machine learning, Environ. Sci. Technol. 59 (20) (2025) 
+10010–10021, https://doi.org/10.1021/acs.est.4c12835.
+[8] D.J. Kovacs, Z. Li, B.W. Baetz, Y. Hong, S. Donnaz, X. Zhao, P. Zhou, H. Ding, 
+Q. Dong, Membrane fouling prediction and uncertainty analysis using machine 
+learning: a wastewater treatment plant case study, J. Membr. Sci. 660 (2022), 
+https://doi.org/10.1016/j.memsci.2022.120817.
+[9] K. Nam, S. Heo, G. Rhee, M. Kim, C. Yoo, Dual-objective optimization for energy- 
+saving and fouling mitigation in MBR plants using AI-based influent prediction and 
+an integrated biological-physical model, J. Membr. Sci. 626 (2021), https://doi. 
+org/10.1016/j.memsci.2021.119208.
+[10] M. Alvi, D. Batstone, C.K. Mbamba, P. Keymer, T. French, A. Ward, J. Dwyer, 
+R. Cardell-Oliver, Deep learning in wastewater treatment: a critical review, Water 
+Res. 245 (2023) 120518, https://doi.org/10.1016/j.watres.2023.120518.
+[11] R. Huang, C. Ma, J. Ma, X. Huangfu, Q. He, Machine learning in natural and 
+engineered water systems, Water Res. 205 (2021) 117666, https://doi.org/ 
+10.1016/j.watres.2021.117666.
+[12] H. Pang, Y. Ben, Y. Cao, S. Qu, C. Hu, Time series-based machine learning for 
+forecasting multivariate water quality in full-scale drinking water treatment with 
+various reagent dosages, Water Res. 268 (2025), https://doi.org/10.1016/j. 
+watres.2024.122777.
+[13] J.J. Zhu, A.B. Boehm, Z.J. Ren, Environmental machine learning, baseline 
+reporting, and comprehensive evaluation: the EMBRACE checklist, Environ. Sci. 
+Technol. 58 (45) (2024) 19909–19912, https://doi.org/10.1021/acs.est.4c09611.
+[14] Y. Lai, K. Xiao, Y. He, X. Liu, J. Tan, W. Xue, A. Zhang, X. Huang, Machine learning 
+for membrane bioreactor research: principles, methods, applications, and a 
+tutorial, Front. Environ. Sci. Eng. 19 (3) (2025), https://doi.org/10.1007/s11783- 
+025-1954-2.
+[15] Y. Lai, K. Xiao, Y. Tian, M. Xing, H. Ding, J. Tan, J. Zhang, Z. Peng, Y. Fan, X. Lu, 
+S. Liang, W. Xue, X. Huang, Intelligent fouling monitoring in membrane-based 
+wastewater treatment, Nat. Sustain. (2026), https://doi.org/10.1038/s41893-026- 
+01766-2.
+[16] H. Zhang, H. Jiang, J. Yin, T. Wang, W. Zeng, D. Lin, B. Xu, L. Bai, H. Liang, H. 
+Y. Ng, Biofilm response in potential difference-enhanced membrane-aerated 
+biofilm systems for accelerated antibiotic removal and ARG mitigation, Water Res. 
+285 (2025) 124154, https://doi.org/10.1016/j.watres.2025.124154.
+[17] G. Mannina, B.J. Ni, J. Makinia, J. Harmand, M. Alliet, C. Brepols, M.V. Ruano, 
+A. Robles, M. Heran, H. Gulhan, I. Rodriguez-Roda, J. Comas, Biological processes 
+modelling for MBR systems: a review of the state-of-the-art focusing on SMP and 
+EPS, Water Res. 242 (2023) 120275, https://doi.org/10.1016/j. 
+watres.2023.120275.
+[18] S. Gharibian, H. Hazrati, Towards practical integration of MBR with 
+electrochemical AOP: improved biodegradability of real pharmaceutical 
+wastewater and fouling mitigation, Water Res. 218 (2022) 118478, https://doi. 
+org/10.1016/j.watres.2022.118478.
+[19] F. Karamouz, H. Hazrati, A.B. khoshfetrat, Mitigation of fouling in membrane 
+bioreactor using the integration of electrical field and nano chitosan adsorbent, 
+Environ. Technol. Innov. 36 (2024), https://doi.org/10.1016/j.eti.2024.103774.
+[20] H. Hazrati, N. Jahanbakhshi, M. Rostamizadeh, Fouling reduction in the membrane 
+bioreactor using synthesized zeolite nano-adsorbents, J. Membr. Sci. 555 (2018) 
+455–462, https://doi.org/10.1016/j.memsci.2018.03.076.
+[21] A.H. Ba-Alawi, J. Loy-Benitez, S. Kim, C. Yoo, Missing data imputation and sensor 
+self-validation towards a sustainable operation of wastewater treatment plants via 
+deep variational residual autoencoders, Chemosphere 288 (Pt 3) (2022) 132647, 
+https://doi.org/10.1016/j.chemosphere.2021.132647.
+[22] H. Cheng, J. Wu, Y. Liu, D. Huang, A novel fault identification and root-causality 
+analysis of incipient faults with applications to wastewater treatment processes, 
+Chemometr. Intell. Lab. Syst. 188 (2019) 24–36, https://doi.org/10.1016/j. 
+chemolab.2019.03.004.
+[23] H. Zhang, L. Shi, J. Cai, X. Wang, Z. Yan, DMGTNet: a graph-temporal deep 
+learning model for membrane fouling prediction in dual-membrane wastewater 
+treatment systems, J. Membr. Sci. 736 (2025), https://doi.org/10.1016/j. 
+memsci.2025.124648.
+[24] J.-H. Wang, H.-C. Wang, Z.-W. Guo, X. Gao, F. Dong, M.S. Mahmoud, Y.-P. Chen, 
+Y. Shen, Breaking data silos: a new modeling method based on knowledge transfer- 
+enhanced between wastewater treatment plants, Process Saf. Environ. Prot. 206 
+(2026), https://doi.org/10.1016/j.psep.2025.108309.
+[25] A. Elahi, D. Shumway, M. Kowalcyk, A. Shrestha, D. Caragea, C. Caragea, 
+S. Dorevitch, Machine learning, generalization, and transfer learning for predicting 
+the exceedance of fecal indicator bacteria thresholds at beaches, Environ. Sci. 
+Technol. 59 (42) (2025) 22386–22396, https://doi.org/10.1021/acs.est.5c02835.
+[26] G. Ignacz, L. Bader, A.K. Beke, Y. Ghunaim, T. Shastry, H. Vovusha, M.R. Carbone, 
+B. Ghanem, G. Szekely, Machine learning for the advancement of membrane 
+science and technology: a critical review, J. Membr. Sci. 713 (2025), https://doi. 
+org/10.1016/j.memsci.2024.123256.
+[27] Y. Takefuji, Limitations of SHAP-based interpretations in environmental and 
+membrane filtration applications, Water Res. 288 (Pt B) (2026) 124766, https:// 
+doi.org/10.1016/j.watres.2025.124766.
+[28] A.D. Eaton, M.A.H. Franson, A.P.H. Association, A.W.W. Association, W. 
+E. Federation, Standard Methods for the Examination of Water and Wastewater, 
+American Public Health Association, 2005.
+[29] Z. Huang, S.L. Ong, H.Y. Ng, Submerged anaerobic membrane bioreactor for low- 
+strength wastewater treatment: effect of HRT and SRT on treatment performance 
+and membrane fouling, Water Res. 45 (2) (2011) 705–713, https://doi.org/ 
+10.1016/j.watres.2010.08.035.
+[30] B. Xu, T.C. Albert Ng, S. Huang, X. Shi, H.Y. Ng, Feasibility of isolated novel 
+facultative quorum quenching consortiums for fouling control in an AnMBR, Water 
+Res. 169 (2020), https://doi.org/10.1016/j.watres.2019.115251.
+[31] B. Xu, Q.A.C. Cho, T.C.A. Ng, S. Huang, H.Y. Ng, Enriched autoinducer-2 (AI-2)- 
+based quorum quenching consortium in a ceramic anaerobic membrane bioreactor 
+(AnMBR) for biofouling retardation, Water Res. 214 (2022), https://doi.org/ 
+10.1016/j.watres.2022.118203.
+[32] X. Yue, Y.K.K. Koh, H.Y. Ng, Effects of dissolved organic matters (DOMs) on 
+membrane fouling in anaerobic ceramic membrane bioreactors (AnCMBRs) 
+treating domestic wastewater, Water Res. 86 (2015) 96–107, https://doi.org/ 
+10.1016/j.watres.2015.07.038.
+[33] M. Ribeiro, K. Grolinger, H.F. ElYamany, W.A. Higashino, M.A.M. Capretz, 
+Transfer learning with seasonal and trend adjustment for cross-building energy 
+forecasting, Energy Build. 165 (2018) 352–363, https://doi.org/10.1016/j. 
+enbuild.2018.01.034.
+[34] C. Niu, B. Li, Z. Wang, Using artificial intelligence-based algorithms to identify 
+critical fouling factors and predict fouling behavior in anaerobic membrane 
+bioreactors, J. Membr. Sci. 687 (2023), https://doi.org/10.1016/j. 
+memsci.2023.122076.
+[35] J.J. Zhu, M. Yang, Z.J. Ren, Machine learning in environmental research: common 
+pitfalls and best practices, Environ. Sci. Technol. 57 (46) (2023) 17671–17689, 
+https://doi.org/10.1021/acs.est.3c00026.
+[36] X. Chen, Y. Zhang, A. Ye, J. Li, K. Hsu, S. Sorooshian, Fine-tuning long short-term 
+memory models for seamless transition in hydrological modelling: from pre- 
+training to post-application, Environ. Model. Software 186 (2025), https://doi.org/ 
+10.1016/j.envsoft.2025.106350.
+[37] J. Zhao, F. Chu, L. Xie, Y. Che, Y. Wu, A.F. Burke, A survey of transformer networks 
+for time series forecasting, Comput. Sci. Rev. 60 (2026), https://doi.org/10.1016/ 
+j.cosrev.2025.100883.
+[38] P. Lara-Benitez, M. Carranza-Garcia, J.C. Riquelme, An experimental review on 
+deep learning architectures for time series forecasting, Int. J. Neural Syst. 31 (3) 
+(2021) 2130001, https://doi.org/10.1142/S0129065721300011.
+[39] Y. Ma, Y. Qiao, M. Chen, D. Rui, X. Zhang, W. Liu, L. Ye, How small is big enough? 
+Big data-driven machine learning predictions for a full-scale wastewater treatment 
+plant, Water Res. 274 (2025), https://doi.org/10.1016/j.watres.2024.123041.
+[40] Z. Jiang, Z. Xia, S. Liu, Q. Wei, H. Fan, L. Qi, G. Liu, H. Wang, The effect of fine grits 
+and fine debris concentrations on the MLVSS/MLSS ratio of an activated sludge 
+system, J. Environ. Sci. (China) 147 (2025) 607–616, https://doi.org/10.1016/j. 
+jes.2023.10.032.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+13 
+
+
+<!-- Page 14 -->
+[41] E. Poorasgari, T. Vistisen Bugge, M. Lykkegaard Christensen, M. Koustrup 
+Jørgensen, Compressibility of fouling layers in membrane bioreactors, J. Membr. 
+Sci. 475 (2015) 65–70, https://doi.org/10.1016/j.memsci.2014.09.056.
+[42] J. Pyo, Y. Pachepsky, S. Kim, A. Abbas, M. Kim, Y.S. Kwon, M. Ligaray, K.H. Cho, 
+Long short-term memory models of water quality in inland water environments, 
+Water Res. X 21 (2023) 100207, https://doi.org/10.1016/j.wroa.2023.100207.
+[43] S. Wang, H. Peng, S. Liang, Prediction of estuarine water quality using 
+interpretable machine learning approach, J. Hydrol. 605 (2022), https://doi.org/ 
+10.1016/j.jhydrol.2021.127320.
+[44] A.J. Atkinson, M.D. Armstrong, J.T. Eskew, O. Coronell, 2-Aminoimidazole reduces 
+fouling and improves membrane performance, J Memb Sci 629 (2021), https://doi. 
+org/10.1016/j.memsci.2021.119262.
+[45] R. Chen, Y. Nie, Y. Hu, R. Miao, T. Utashiro, Q. Li, M. Xu, Y.-Y. Li, Fouling 
+behaviour of soluble microbial products and extracellular polymeric substances in 
+a submerged anaerobic membrane bioreactor treating low-strength wastewater at 
+room temperature, J. Membr. Sci. 531 (2017) 1–9, https://doi.org/10.1016/j. 
+memsci.2017.02.046.
+[46] H. Lin, M. Zhang, F. Wang, F. Meng, B.-Q. Liao, H. Hong, J. Chen, W. Gao, A critical 
+review of extracellular polymeric substances (EPSs) in membrane bioreactors: 
+characteristics, roles in membrane fouling and control strategies, J. Membr. Sci. 
+460 (2014) 110–125, https://doi.org/10.1016/j.memsci.2014.02.034.
+[47] L.-g. Shen, Q. Lei, J.-R. Chen, H.-C. Hong, Y.-M. He, H.-J. Lin, Membrane fouling in 
+a submerged membrane bioreactor: impacts of floc size, Chem. Eng. J. 269 (2015) 
+328–334, https://doi.org/10.1016/j.cej.2015.02.002.
+[48] S. Wang, X. Lu, L. Zhang, J. Guo, H. Zhang, Characterization of the initial fouling 
+layer on the membrane surface in a membrane bioreactor: effects of permeation 
+drag, Membranes 9 (9) (2019), https://doi.org/10.3390/membranes9090121.
+[49] D.W. Gao, Z.D. Wen, B. Li, H. Liang, Membrane fouling related to microbial 
+community and extracellular polymeric substances at different temperatures, 
+Bioresour. Technol. 143 (2013) 172–177, https://doi.org/10.1016/j. 
+biortech.2013.05.127.
+[50] Y. Tian, Z. Li, Y. Ding, Y. Lu, Identification of the change in fouling potential of 
+soluble microbial products (SMP) in membrane bioreactor coupled with worm 
+reactor, Water Res. 47 (6) (2013) 2015–2024, https://doi.org/10.1016/j. 
+watres.2013.01.026.
+[51] Y. Ding, Z. Guo, Z. Liang, X. Hou, Z. Li, D. Mu, C. Ge, C. Zhang, C. Jin, Long-term 
+investigation into the membrane fouling behavior in anaerobic membrane 
+bioreactors for municipal wastewater treatment operated at two different 
+temperatures, Membranes 10 (9) (2020), https://doi.org/10.3390/ 
+membranes10090231.
+[52] T. Kakuda, R. Naito, A. Suzuki, A. Hafuka, K. Kimura, Quantitative and qualitative 
+variations of biopolymers in a pilot-scale membrane bioreactor treating municipal 
+wastewater throughout 3 years of operation, J. Environ. Manag. 328 (2023) 
+116863, https://doi.org/10.1016/j.jenvman.2022.116863.
+[53] H. Cao, X. Xie, Z. Xiao, W. Liu, Transferability of machine learning models for 
+geogenic contaminated groundwaters, Environ. Sci. Technol. 58 (20) (2024) 
+8783–8791, https://doi.org/10.1021/acs.est.4c01327.
+[54] Y. Gao, Y. Mao, L. Kong, L. Sun, S. Fu, W. Zhan, W. Zuo, Elucidating the role of 
+ferric chloride on carbon capture from low-strength municipal wastewater in high- 
+rate activated sludge process: parameter optimization and crucial mechanism, 
+J. Clean. Prod. 452 (2024), https://doi.org/10.1016/j.jclepro.2024.142248.
+[55] T. Peng, Y. Wang, J. Wang, F. Fang, P. Yan, Z. Liu, Effect of different forms and 
+components of EPS on sludge aggregation during granulation process of aerobic 
+granular sludge, Chemosphere 303 (Pt 2) (2022) 135116, https://doi.org/ 
+10.1016/j.chemosphere.2022.135116.
+[56] Q. Su, Y. Zhong, J.C.J. Rui, M. Ding, T.C.A. Ng, B. Xu, H.Y. Ng, Stability and 
+durability of polymeric membranes in membrane bioreactors for industrial 
+wastewater treatment, J. Environ. Chem. Eng. 13 (6) (2025), https://doi.org/ 
+10.1016/j.jece.2025.120356.
+[57] Y. Lai, Y. Xu, X. Liu, K. Xiao, F. Qu, S. Liang, W. Xue, X. Huang, Feedforward 
+fouling control guided by online UV and fluorescence spectral early warning for 
+low-energy operation of membrane bioreactor, Water Res. 297 (2026), https://doi. 
+org/10.1016/j.watres.2026.125715.
+[58] F. Delrue, A.E. Stricker, M. Mietton-Peuchot, Y. Racault, Relationships between 
+mixed liquor properties, operating conditions and fouling on two full-scale MBR 
+plants, Desalination 272 (1–3) (2011) 9–19, https://doi.org/10.1016/j. 
+desal.2010.12.056.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+14 

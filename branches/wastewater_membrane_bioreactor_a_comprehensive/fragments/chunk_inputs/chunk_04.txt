@@ -1,0 +1,214 @@
+4. Explainable Artificial Intelligence in MBR Applications
+4.1. The Explainability Imperative in Regulated Water Systems
+The adoption of ML in regulated water treatment environments faces a challenge that
+does not arise in most commercial ML applications: operators and regulators require not
+only accurate predictions but also interpretable justification for model-driven recommenda-
+tions. In a manufacturing setting, a black-box ML system that reduces costs can be adopted
+solely on performance grounds. In a water utility, the bar is higher. An ML system that
+recommends reducing membrane aeration must demonstrate that the recommendation is
+physically sound, that it will not cause irreversible fouling under current conditions, and
+that it will not result in permit violations. All of this must be verifiable within the timeframe
+of the operating shift [29,51]. In regulated water treatment environments, the practical
+adoption of ML recommendations depends not only on predictive performance but also on
+operator trust, engineering plausibility, and the ability to document decision rationale.
+Rudin [51] argues, in a widely cited analysis, that in high-stakes sequential decision-
+making domains, inherently interpretable models should be preferred over post-hoc ex-
+planations of black-box models whenever the mapping is sufficiently complex. However,
+the non-linear, multi-variable, temporally dependent nature of MBR fouling dynamics
+generally exceeds the representational capacity of interpretable models (e.g., logistic regres-
+sion, decision trees) to achieve adequate predictive accuracy for operational use, making
+post-hoc XAI explanations of high-performing black-box models the pragmatic choice for
+the field [48]. XAI methods bridge this gap by providing explanations in a form that do-
+main experts can evaluate, validate against process knowledge, and act upon, enabling the
+combination of black-box predictive power with the interpretability required for regulated
+deployment [29].
+4.2. SHAP: Dominant XAI Framework in MBR Studies
+SHAP (SHapley Additive exPlanations) [52], grounded in cooperative game theory,
+has emerged as the dominant XAI framework applied to MBR studies. Across XAI-inclusive
+publications identified in this review, SHAP was the most frequently applied method by a
+considerable margin. SHAP assigns each feature a contribution value equal to its expected
+marginal contribution across all possible feature subsets. This provides three desirable
+properties for engineering applications: local accuracy (SHAP values sum to the model
+output), consistency (features with larger marginal effects receive larger SHAP values),
+and missingness (absent features contribute zero). These properties make SHAP values
+directly interpretable as feature-level contributions to each prediction, enabling both local
+(per-prediction) and global (dataset-wide) model explanations [53].
+Across the limited MBR studies that have applied SHAP or related feature-attribution
+methods, operational variables such as MLSS, SRT, HRT, and aeration intensity frequently
+emerge among the most influential predictors. However, their relative rankings vary across
+datasets, plant configurations, and modelling objectives. A recent full-scale study by Liang
+et al. applied CatBoost combined with XAI to an MBR treating food processing wastewa-
+ter [49]. CatBoost achieved R2 = 0.8374. XAI analysis identified the food-to-microorganism
+(F/M) ratio and MLSS as the two most influential fouling predictors. This finding is con-
+sistent with mechanistic understanding. It also demonstrates that XAI-informed ML can
+provide actionable guidance for full-scale MBR operations, not only for controlled lab or
+pilot systems. To illustrate how SHAP outputs translate into operator actions, consider
+a hypothetical but physically realistic scenario at a municipal MBR plant. Note: the nu-
+merical values below are illustrative. They are not extracted from a specific published
+dataset. They are consistent with operational ranges and SHAP output structures reported
+in Liang et al. and Kovacs et al. A Random Forest model predicts a TMP exceedance within
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 12 -->
+Membranes 2026, 16, 181
+12 of 26
+four hours. The SHAP explanation for this prediction identifies four feature contributions.
+MLSS = +2.1 kPa: mixed liquor concentration near its upper operating limit is the domi-
+nant risk driver. HRT = +1.4 kPa: short retention time is increasing organic loading to the
+membrane. Aeration intensity = −0.8 kPa: the current scouring rate is partially mitigating
+fouling risk. Feed flow rate = +0.6 kPa: elevated influent flow is compressing the cake
+layer. The SHAP values sum to the model output, confirming local accuracy. An operator
+reading this explanation identifies immediately that MLSS is the dominant risk factor. The
+current aeration rate is providing partial protection. The actionable response is to increase
+membrane scouring aeration and prepare for a relaxation cycle. This explanation uses
+the same process variables that operators monitor routinely. No specialist ML knowledge
+is required to act on it. This is the practical value of XAI in MBR operations: it tells the
+operator which specific condition is driving the risk and by how much [17,25,42]. This
+consistency is not merely a validation of known process understanding; it provides quanti-
+tative evidence that the ML models have learned physically meaningful representations of
+fouling dynamics rather than spurious correlations. In studies where SHAP global rankings
+diverge from mechanistic expectations. For example, when a SCADA timestamp feature is
+of high importance, it serves as an early warning of overfitting or data leakage, which can
+be detected and corrected before deployment [17,53].
+Local SHAP values, computed for individual predictions, enable per-event expla-
+nation at the operational level. When a predictive model forecasts an imminent TMP
+exceedance, the associated SHAP values identify which specific process conditions are
+driving the prediction for that time step. An example being a combination of elevated MLSS
+(positive SHAP contribution), reduced HRT (positive), and adequate aeration (negative,
+stabilizing) with magnitudes that allow the operator to evaluate whether the prediction is
+consistent with their knowledge of the current operating state. Without interpretable local
+explanations, operators may be less willing to rely on model recommendations in safety or
+compliance-sensitive contexts [29].
+Newhart et al. demonstrated the value of data-driven monitoring frameworks for MBR
+operational management, establishing that ML models trained on routine SCADA sensor
+streams can detect process upsets and deviations that precede measurable performance
+degradation [17]. Their work provided foundational evidence for integrating ML-based
+process monitoring into the MBR control infrastructure and identified the sensor variables
+most informative for state estimation. Viet and Jang applied AI-based predictive models
+to an OMBR system, demonstrating that draw solution concentration, feed water pH,
+and conductivity were the primary determinants of water flux and fouling resistance,
+with model predictions achieving R2 = 0.92–0.98 [22]. These feature-importance findings
+are consistent with the osmotic-driving-force principles governing OMBR performance,
+confirming that ML-derived variable rankings can recover a mechanistically correct process
+understanding even in complex coupled systems.
+Progressive evolution of SHAP values across an MBR filtration cycle provides opera-
+tional insights not accessible from static feature importance rankings. As fouling accumu-
+lates during a filtration cycle, SHAP attributions for flux setpoint and MLSS tend to increase
+monotonically, reflecting the growing cake resistance. In contrast, the SHAP contribution
+of membrane aeration may plateau or decrease as the cake layer transitions from a loose,
+shear-removable deposit to a compacted gel layer where scouring becomes less effective.
+Monitoring these temporal SHAP profiles in real time provides early warning indicators of
+the transition from manageable to critical fouling, enabling proactive intervention before
+TMP reaches cleaning thresholds [17,53].
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 13 -->
+Membranes 2026, 16, 181
+13 of 26
+4.3. LIME, Partial Dependence Plots, and Gradient-Based Methods
+LIME (Local Interpretable Model-agnostic Explanations) generates locally linear sur-
+rogate models around individual predictions by perturbing input features and observing
+the effect on the model’s output [27]. For each prediction to be explained, LIME samples
+a neighborhood around the input point, weights samples by their proximity to the origi-
+nal input, and fits a simple interpretable model (typically linear regression or a shallow
+decision tree) to the sampled outputs. The coefficients of this local surrogate model explain
+the black-box model’s local behavior. LIME’s key advantage is computational efficiency:
+explanations can be generated in milliseconds, making it suitable for real-time operational
+dashboards where explanation latency is a constraint. Its limitation is inconsistency: expla-
+nations for similar inputs can vary significantly due to random sampling, and the choice of
+neighborhood radius affects explanation stability. The application of LIME specifically to
+MBR fouling and process control models is an emerging area of the literature with limited
+peer-reviewed examples, and a systematic comparison of LIME and SHAP performance in
+MBR contexts is a gap for future research.
+Partial dependence plots (PDP) and individual conditional expectation (ICE) curves
+provide a global visualization of the marginal relationship between individual input fea-
+tures and model predictions [48]. PDPs show the expected model output as a function
+of a target feature, marginalized over the distribution of all other features; ICE curves
+disaggregate this by showing the relationship for each sample, revealing heterogeneity in
+the feature effect that is hidden in the averaged PDP. In MBR applications, PDP analysis
+of MLSS concentration typically reveals a non-linear threshold pattern, with fouling rates
+remaining relatively stable at MLSS below 10–12 g/L before increasing steeply, consistent
+with the empirically observed transition from dilute suspension dynamics to viscous, non-
+Newtonian sludge behavior above this concentration. ICE analysis further reveals that this
+threshold shifts with temperature and SRT, reflecting seasonal and operational variations
+in sludge filterability that complicate fixed-setpoint control [48].
+Gradient-based attribution methods, originally developed for deep learning in com-
+puter vision and natural language processing, quantify the sensitivity of model outputs to
+input perturbations by analytically differentiating the computational graph [28,54]. Meth-
+ods including vanilla gradients, integrated gradients (which average gradients along a
+path from a reference baseline to the actual input), and guided backpropagation have
+been applied to temporal neural network architectures, such as LSTMs and convolutional-
+recurrent hybrids, in water system monitoring applications. For MBR TMP prediction
+with LSTM models, gradient attribution maps identify which time steps carry the highest
+predictive information for the current TMP state. This typically corresponds to the 2–8 h
+immediately preceding the prediction window. This provides insight into the characteristic
+timescales of cake layer formation and consolidation, which are relevant for maintenance
+scheduling [28]. The application of these methods in MBR-specific deep learning models
+represents a frontier research area with significant practical potential. Table 3 summarizes
+the five principal XAI methods identified across the reviewed literature, comparing their
+explanation scope, model compatibility, computational cost, and MBR applications.
+While XAI methods address the interpretability barrier to ML adoption, a parallel
+operational challenge in MBR systems concerns energy efficiency. Aeration for membrane
+scouring and biological treatment represents the dominant energy expenditure, and its
+optimization depends on the same complex, non-linear process relationships that ML
+models are well-suited to capture. The following section examines the evidence base for
+ML-driven energy optimization and establishes clear benchmarks against which future
+progress can be measured.
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 14 -->
+Membranes 2026, 16, 181
+14 of 26
+Table 3. XAI methods applied in MBR and related water treatment studies: characteristics and applications.
+XAI Method
+Explanation
+Scope
+Model
+Compatibility
+Comp. Cost
+Applications in
+MBR/Water Treatment
+References
+SHAP
+Local + Global
+Model-agnostic
+Medium–High
+Fouling prediction,
+energy optimization,
+effluent quality
+[17,53]
+LIME
+Local
+Model-agnostic
+Low–Medium
+Anomaly detection,
+water quality
+classification
+[27,55]
+PDP/ICE
+Global
+Model-agnostic
+Low
+Feature threshold
+identification, operating
+curve analysis
+[48]
+Integrated
+Gradients
+Local (temporal)
+Neural networks
+Low
+LSTM fouling forecasting,
+temporal attribution
+[28,54]
+ANCHORS
+Local
+(rule-based)
+Model-agnostic
+High
+Conceptual: operational
+rule extraction
+[27]

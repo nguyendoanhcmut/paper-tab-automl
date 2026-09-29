@@ -1,0 +1,429 @@
+3. Results and discussion
+3.1. ML model prediction performance
+3.1.1. Output prediction performance
+The predictive performance of all 16 models was evaluated for TMP, 
+permeate flow and membrane tank water level. Fig. 4 shows the R2 
+heatmap and predicted-versus-observed scatter across model–target 
+combinations, revealing a clear hierarchy in both model capability and 
+target predictability: TMP was predicted most accurately, followed by 
+permeate flow and then water level. Effluent quality was deliberately 
+excluded as a target. Permeate TOC is measured by an online analyser 
+whose 0.03–1000 ppb range leaves it near its detection limit for most of 
+the record, because the UF membrane retains essentially all suspended 
+and high-molecular-weight material, so the signal is dominated by 
+analyser noise. More fundamentally, UF permeate quality in a sub­
+merged MBR is governed by membrane integrity, a step-change phe­
+nomenon associated with fibre breakage rather than a continuous 
+function of the variables considered here, making it an integrity- 
+monitoring problem rather than a regression target. The three targets 
+selected instead are those the operator can trade against one another 
+hourly.
+Table 2 
+Summary of 16 machine learning algorithms across six model families.
+Model family
+Algorithms
+Count
+Linear
+Linear Regression
+1
+Regularised Linear
+Ridge, Lasso, Elastic Net
+3
+Support Vector 
+Machine
+SVR (RBF kernel)
+1
+Instance-based
+K-Nearest Neighbours
+1
+Ensemble Tree
+Decision Tree, Random Forest, Extra Trees, Bagging, 
+AdaBoost, Gradient Boosting, Hist Gradient 
+Boosting, XGBoost, LightGBM
+9
+Neural Network
+Multi-Layer Perceptron
+1
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+5 
+
+
+<!-- Page 6 -->
+For TMP, tree-based ensembles were clearly superior. Extra Trees 
+achieved the highest accuracy (R2 = 0.988, RMSE = 0.010 bar, MAE =
+0.005 bar), followed by Bagging, Random Forest and LightGBM (0.978 
+each) and XGBoost (0.977) (Fig. 4, Fig. S1), all five above R2 = 0.97. The 
+strong predictability of TMP is physically interpretable: in submerged 
+systems TMP is governed by fouling resistance, which develops pro­
+gressively with MLSS, aeration scouring intensity and SRT-dependent 
+sludge characteristics, and all of these were supplied to the models 
+directly [28,29,35,36]. TMP is also measured as suction pressure on the 
+permeate side, giving a more stable signal and a higher signal-to-noise 
+ratio than pressurised configurations [35].
+Permeate flow prediction followed a similar model ranking but with 
+moderately lower R2 values. Extra Trees again led (R2 = 0.933, RMSE =
+0.066 m3/min, MAE = 0.052 m3/min), with Bagging (R2 = 0.910), 
+Random Forest (R2 = 0.909), XGBoost (R2 = 0.906), and Hist Gradient 
+Boosting (R2 = 0.899) completing the top five (Fig. 4 and Fig. S2). The 
+reduced accuracy compared to TMP is consistent with the mechanics of 
+MBR operation. Permeate flow is influenced not only by the state of 
+membrane fouling but also by operator-controlled setpoints, backwash 
+cycling, and transient hydraulic disturbances that may not be fully 
+captured by the hourly-averaged input parameters [23–26]. The influ­
+ence of intermittent aeration scouring on instantaneous permeate flow 
+introduces variability that high-fidelity models cannot fully account for 
+based solely on the available biological and operational features.
+Membrane tank water level proved the most challenging target, the 
+best model reaching R2 = 0.908 (Extra Trees, RMSE 0.341%, MAE 
+0.227% under the random partition), with the leading ensembles be­
+tween 0.82 and 0.91 and all other families substantially below. The 
+ordering across the three targets has a direct physical reading. TMP is 
+the most predictable because it integrates fouling resistance over hours 
+to days, and the variables governing that accumulation, principally SRT 
+and MLSS, are slowly varying and were measured directly. Permeate 
+flow is intermediate because it is only partly a membrane property, 
+being set also by throughput demand, backwash cycling and short hy­
+draulic transients that hourly averaging cannot resolve [57–59]. Water 
+level is least predictable because it is a fast hydraulic state governed by 
+the instantaneous balance of influent, permeate extraction, internal 
+recirculation, sludge wasting and level-controlled pump logic, several of 
+which act over minutes and none of which is a model input. The gradient 
+therefore ranks the targets by how far their dynamics are captured by 
+Fig. 4. (A) Test R2 heatmap of all 16 models and predicted vs. actual scatter plot of the Extra Tree model across three target variables: (B1) TMP, (B2) permeate flow, 
+and (B3) membrane tank water level. Blue indicates low R2 values, and red indicates high R2 values in the heatmap. Scatter colour indicates residual magnitude; the 
+dashed line represents perfect prediction; shaded bands indicate ±5% and ± 10% error tolerance. In the heatmap each cell is one model-target combination and 
+redder is more accurate; in the scatter panels points should fall on the dashed 1:1 line, and the shaded bands are the 5% and 10% error tolerances. (For interpretation 
+of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+6 
+
+
+<!-- Page 7 -->
+slow biological state rather than fast control action, implying that 
+model-based planning is most reliable for TMP while water level is 
+better managed by the fast levers identified in Section 3.3. Level accu­
+racy remains operationally useful even so, with MAE below 0.23% 
+against a 2% control window.
+3.1.2. Model comparison, consistency and independent validation
+A large and systematic gap separated linear from non-linear models 
+across all three targets (Table 3). Linear and Ridge Regression reached 
+R2 of only 0.499 for TMP, 0.469 for flow and 0.195 for water level, the 
+regularised variants slightly worse as aggressive shrinkage removed 
+small but informative coefficients, while the best ensembles exceeded 
+0.90 on all three. This is the structured hypothesis test anticipated in 
+Section 2.5: the failure of the additive family together with the success of 
+recursive partitioning is evidence that the biology–membrane relation­
+ship is governed by thresholds and interactions rather than proportional 
+effects, consistent with fouling theory in which cake resistance accel­
+erates beyond critical MLSS, aeration shows diminishing returns above a 
+critical scouring velocity, and F/M and SRT interact non-additively 
+[25,29,36,38]. Within the ensemble family the bagging variants 
+consistently outperformed sequential boosting, although XGBoost 
+(0.977) and LightGBM (0.978) nearly matched them for TMP. AdaBoost 
+was markedly worse on every target (0.781, 0.655, 0.308), consistent 
+with the sensitivity of adaptive reweighting to the sensor artefacts of 
+industrial SCADA data, and the advantage of Extra Trees over Random 
+Forest is attributable to the additional randomisation of split thresholds. 
+Among non-tree non-linear models KNN performed strongly (0.969, 
+0.894, 0.813), indicating that membrane response is locally regular in 
+operating space, the property that makes an operating-window recom­
+mendation meaningful at all. Only the Decision Tree for water level 
+showed substantial overfitting (0.890 against 0.650), and the 20-split 
+analysis (Table S3, Figs. S4–S6) confirmed Extra Trees as the best 
+model on mean R2 and the lowest RMSE and MAE for all three targets.
+Transfer to a physically distinct membrane system was assessed on 
+an independent set of 4593 hourly observations from a parallel B stream 
+in the same facility, operating under different influent conditions and 
+with an independent fouling history (Fig. S7). Extra Trees, applied 
+without retraining, achieved R2 = 0.996, 0.980 and 0.972 for TMP, flow 
+and water level (Table S4, Fig. 5A–C), with near-zero mean errors and 
+error standard deviations of 0.014 bar, 0.052 m3/min and 0.306% 
+(Fig. 5D). The TMP error distribution is slightly right-skewed (skewness 
+1.025), indicating occasional underestimation under extreme fouling, 
+which is the conservative direction operationally because it prompts 
+earlier rather than later cleaning. The B stream runs over the same 
+calendar period and shares the same influent, so this establishes transfer 
+across membrane trains rather than across time; temporal transfer is 
+addressed next.
+Taken together, the primary test-set performance, the 20-split 
+robustness analysis and the parallel-stream validation identify Extra 
+Trees as the best model for all three targets, and it was carried forward 
+for the interpretability analysis in Section 3.2 and the optimisation in 
+Section 3.3. Using one model for all three targets keeps the operational 
+framework and the feature-importance interpretation consistent across 
+the three performance indicators.
+3.1.3. Robustness of the model selection to the validation design
+Model selection for a full-scale plant record should not rest on a 
+single partition, so the choice of Extra Trees was tested under four in­
+dependent designs: the conventional random 70/30 partition, a blocked 
+design in which contiguous blocks are allocated as whole units so that 
+coverage of the operating envelope is preserved while adjacent hours are 
+separated, a strictly chronological partition, and the independent par­
+allel B stream. The outcome is a strong one. Extra Trees ranks first in 
+eight of the nine model–design–target combinations and first for every 
+target under both the random and the 24-h blocked designs (Table S10), 
+and accuracy under 24-h blocking remains high for a full-scale industrial 
+system, with R2 = 0.830 for TMP corresponding to an RMSE of 0.036 bar 
+against an operating range of 0.43 bar and a mean absolute error of 
+16.3% of the interquartile range of the measured series. Because the 
+record is a continuously logged hourly series and therefore autocorre­
+lated by construction, blocked and random values are reported side by 
+side throughout; the dependence structure, the full per-model results 
+and the divergence between R2 and absolute error as blocks lengthen are 
+given in Supplementary Section S6 and Fig. S17. More important than 
+absolute accuracy is the stability of the conclusions: SRT remains the 
+first-ranked driver of TMP and of water level under random, blocked 24- 
+h, blocked 168-h and chronological training alike, so the process con­
+clusions are properties of the plant record rather than of any particular 
+partition.
+The chronological partition deserves separate comment, because as 
+usually implemented it describes a deployment scenario no plant would 
+adopt: it fits the model once on the first seven months and applies it 
+frozen to the following four, although every new hour reaches the his­
+torian within the hour and refitting Extra Trees on the entire record 
+takes about a second. Refitting at a fixed interval on all data logged so 
+far, with every prediction still made strictly ahead of the data used to 
+produce it, resolves the result. Out-of-time accuracy improves mono­
+tonically as the interval shortens, and at a daily refit R2 on the withheld 
+final 30% reaches 0.871 for TMP, 0.580 for water level and 0.574 for 
+permeate flow, with TMP predicted to 0.008 bar, an 80% reduction 
+Table 3 
+Test set performance of 16 machine learning models for three target variables (TMP, permeate flow, membrane tank water level). Models ranked by mean R2 across 
+targets; best values in each column are underlined.
+Model
+TMP (bar)
+Flow (m3/min)
+Level (%)
+R2
+RMSE
+MAE
+ΔR2
+R2
+RMSE
+MAE
+ΔR2
+R2
+RMSE
+MAE
+ΔR2
+Extra Trees
+0.988
+0.010
+0.005
+0.012
+0.933
+0.066
+0.052
+0.067
+0.908
+0.341
+0.227
+0.092
+Bagging
+0.978
+0.014
+0.006
+0.019
+0.910
+0.076
+0.059
+0.076
+0.839
+0.450
+0.282
+0.140
+Random Forest
+0.978
+0.014
+0.006
+0.019
+0.909
+0.077
+0.059
+0.076
+0.839
+0.450
+0.282
+0.140
+XGBoost
+0.977
+0.014
+0.007
+0.022
+0.906
+0.078
+0.061
+0.081
+0.843
+0.444
+0.292
+0.143
+LightGBM
+0.978
+0.014
+0.008
+0.015
+0.898
+0.081
+0.063
+0.048
+0.822
+0.473
+0.321
+0.109
+Hist Grad. Boost.
+0.976
+0.014
+0.008
+0.016
+0.899
+0.081
+0.064
+0.048
+0.839
+0.450
+0.312
+0.094
+KNN
+0.969
+0.016
+0.007
+0.011
+0.894
+0.083
+0.063
+0.036
+0.813
+0.485
+0.298
+0.062
+MLP Neural Net.
+0.951
+0.020
+0.011
+0.003
+0.861
+0.095
+0.074
+0.022
+0.756
+0.554
+0.387
+0.015
+Decision Tree
+0.942
+0.022
+0.010
+0.042
+0.785
+0.118
+0.086
+0.096
+0.650
+0.663
+0.383
+0.240
+GBoosting
+0.937
+0.023
+0.014
+0.011
+0.824
+0.107
+0.084
+0.024
+0.698
+0.616
+0.437
+0.059
+SVR
+0.893
+0.030
+0.016
+−0.005
+0.771
+0.122
+0.092
+0.004
+0.498
+0.794
+0.458
+0.034
+AdaBoost
+0.781
+0.042
+0.037
+0.002
+0.655
+0.150
+0.120
+0.023
+0.308
+0.932
+0.796
+−0.020
+Lin Regression
+0.499
+0.064
+0.045
+0.015
+0.469
+0.185
+0.147
+0.010
+0.195
+1.006
+0.696
+0.001
+Rid Regression
+0.499
+0.064
+0.045
+0.015
+0.469
+0.185
+0.147
+0.010
+0.195
+1.006
+0.696
+0.001
+ElasticNet
+0.480
+0.065
+0.046
+0.005
+0.435
+0.192
+0.151
+0.008
+0.159
+1.028
+0.735
+−0.001
+Las Regression
+0.440
+0.068
+0.049
+0.000
+0.393
+0.199
+0.158
+0.007
+0.117
+1.053
+0.767
+−0.002
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+7 
+
+
+<!-- Page 8 -->
+against the frozen model (Fig. S17D, Table S12). Temporal generalisa­
+tion is therefore governed by the refresh schedule rather than by any 
+intrinsic limit of the model, and the deployment recommendation is 
+concrete: refit on the accumulated record at least weekly, and daily 
+where the historian connection makes it free.

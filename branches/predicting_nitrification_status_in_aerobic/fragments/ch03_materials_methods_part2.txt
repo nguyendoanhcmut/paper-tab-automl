@@ -1,0 +1,95 @@
+2.2.5. Statistical correlation analysis for inputs determination
+Based on the preliminary input feature selections by qualitative analysis in Section 2.2.2, Spearman’s rank correlation was used to 
+assess statistical relationships between inputs and outputs. This nonparametric method quantifies the strength of monotonic associ­
+ations between variables without assuming normal distribution, making it suitable for nonlinear yet monotonic classification contexts 
+(Hastie et al., 2009). Statistical significance was determined using p-values. Specifically, the p-value indicates the probability of 
+obtaining the observed Spearman correlation coefficient, or a more extreme value, under the null hypothesis that no monotonic 
+relationship exists between the variables. A p-value < 0.05 was used to reject the null hypothesis and confirm a significant correlation. 
+The "spearmanr" function (SciPy, Python) computed coefficients and p-values for all variable pairs. (Van Rossum and Drake, 2009).
+2.2.6. Model-based interpretability: interpretable ML algorithms
+To predict the nitrification status in the MBR and ensure stable operations, this study considered not only the statistical accuracy of 
+ML methods but also integrated algorithm-specific characteristics. In ML, bias stems from simplifying assumptions, while variance 
+reflects sensitivity to fluctuations in the training data (Reynaert et al., 2023). Minimizing one typically increases the other (Belkin 
+et al., 2019).
+Fig. 3. Splitting strategy for training, validation and test groups.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+5 
+
+
+<!-- Page 6 -->
+Previous studies have indicated that simpler models generally offer advantages for small datasets, including reduced overfitting 
+risk, improved interpretability, and lower computational demands (Reynaert et al., 2023; Wang et al., 2025). For small, non-temporal 
+datasets, complex structures such as artificial neural networks can increase the risk of overfitting (Chiroma et al., 2019).
+Therefore, three interpretable algorithms with distinct bias–variance properties were selected. The logistic regression and decision 
+tree-based models are normally cited as simulatable, i.e., interpretable (Breiman et al., 2017; Murdoch et al., 2019). 
+– Logistic regression (LR): High bias, low variance. Applies logit transformation to linear regression for binary probability pre­
+diction, handling continuous/categorical variables with high interpretability and simple structure (Hosmer et al., 2013).
+– Random forest classification (RF): Intermediate bias-variance tradeoff. An ensemble method aggregating multiple decision trees 
+via voting, improving accuracy and noise resistance for high-dimensional data (Breiman, 2001).
+– Extreme gradient boosting classification (XGB): Low bias, high variance. An optimized implementation of the gradient boosting 
+algorithm with successive decision trees, each correcting the errors of its predecessor to minimize the loss function and improve 
+predictive performance. Compared to traditional gradient boosting decision trees, XGB introduces enhancements such as regula­
+rization, parallel computing, and custom loss function definition (Chen and Guestrin, 2016).
+All models were implemented using scikit-learn 1.0.2 (Python 3.9.13), with hyperparameters optimized via grid search.
+2.2.7. Evaluation metrics and hyperparameter tuning criteria
+The performance of the classification models was evaluated using a confusion matrix, contrasting predicted outcomes ("Sufficient"/ 
+"Insufficient") against actual conditions. The “Positive” label indicated sufficient nitrification, while the “Negative” label indicated 
+insufficient nitrification, as defined in Section 2.1 Key metrics included true positives (TP: correctly classified sufficient nitrification), 
+false positives (FP: erroneously classified sufficient under insufficient conditions), false negatives (FN: insufficient misclassifications 
+despite actual sufficiency), and true negatives (TN: accurate classified as insufficient). Section 2.2.1
+Minimizing the FPR was crucial for ensuring safe effluent water quality. For instance, in a control system integrated with this 
+nitrification monitoring model, when insufficient nitrification occurs, more air should be supplied. However, if an FP occurs, the model 
+incorrectly predicts sufficient nitrification, leading the control system to refrain from adding additional oxygen and unsafe effluent 
+unsuitable for reuse. Meanwhile, a higher TPR was necessary to detect sufficient nitrification under conventional operation conditions, 
+reducing operational costs by preventing unnecessary oxygen supply triggered by FN.
+Besides, optimizing solely for low FPR could severely reduce TPR, as indicated in previous studies (Reynaert et al., 2023; Salvia 
+et al., 2021; Yang et al., 2019). Therefore, a balanced approach considering both TPR (Eq. 1) and FPR (Eq. 2) was adopted, with 
+precision (Eq. 3) serving as a key optimization metric. Precision reflects the proportion of TP predictions among all positive predictions 
+The TRP, FPR, and precision were calculated using the following equations: 
+TPR =
+TP
+TP + FN
+(1) 
+FPR =
+FP
+FP + TN
+(2) 
+Precision =
+TP
+TP + FP
+(3) 
+Although precision was prioritized during hyperparameter tuning, accuracy, representing the proportion of correct predictions out 
+of all cases, was also used for model evaluation in test groups: 
+Accuracy =
+TP + TN
+TP + TN + FP + FN
+(4) 
+Finally, the stability of model performance was evaluated on the test dataset by calculating 95 % confidence intervals for accuracy, 
+precision, recall, and F1 score using 1000-times bootstrap resampling, following standard practices in machine learning validation.
+2.2.8. Post hoc interpretability
+Despite the inherent interpretability of decision tree-based methods, complex models necessitate post hoc interpretation (Murdoch 
+et al., 2019).
+Feature importance quantifies the contributions of input variables, aiding model’s interpretability improvement and guiding data 
+collection strategies for enhanced performance. In LR, feature coefficients are derived by minimizing the loss function (negative log- 
+likelihood) using optimization methods such as gradient descent (Hastie et al., 2009). They indicate the strength and direction of each 
+feature’s linear relationship with the target variable (Murphy, 2012). For RF, feature importance is assessed by the reduction in 
+impurity (e.g., Gini index) when a feature is used to split a node. Scores are averaged across all trees, capturing the overall contribution 
+of each feature to the model (Liaw and Wiener, 2002). The feature importance in XGB is typically calculated using the Gain method. 
+This method sums up and normalizes the gains from all splits involving a feature to compute its importance score (Chen and Guestrin, 
+2016).
+SHAP analysis was implemented to leverage game theory to assign each feature an importance value for specific predictions. SHAP 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+6 
+
+
+<!-- Page 7 -->
+values satisfy efficiency (prediction = base value + sum of feature contributions), symmetry, and additivity axioms, providing 
+consistent local and global interpretability (Lundberg and Lee, 2017).
+Furthermore, pairwise feature relationships were visualized via kernel density estimation (KDE) and pairwise feature plot. KDE 
+could nonparametrically approximate continuous probability density functions by smoothing observed data points via symmetric 
+kernel functions and bandwidth parameters (Scott, 2015). Pairwise feature plots, implemented as scatterplot matrices, reveal corre­
+lation and clustering patterns between features (Pekalska et al., 2005). It can help understand model classification performance by 
+visualizing the confusion matrix (Waskom, 2021).
+All analyses were implemented in Python 3.9.13 (Van Rossum and Drake, 2009).

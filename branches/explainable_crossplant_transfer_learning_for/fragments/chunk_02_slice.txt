@@ -1,0 +1,207 @@
+2. Materials and methods
+2.1. Data collection
+A pilot-scale MBR plant treating domestic wastewater in Singapore 
+was selected as the target plant. The system received Fe-enriched 
+influent, with an Fe dosage of approximately 10–30 mg/L. It had a 
+treatment capacity of 24 m3/d and a process configuration comprising 
+pretreatment, a five-pass step-feed bioreactor with anaerobic/oxic 
+zonation, and a membrane tank (Fig. 1(a)). The TMP profile of the target 
+plant during the monitoring period is shown in Fig. 2(a), the membrane 
+module is shown in Fig. 2(b), and the detailed process and operating 
+parameters are summarized in Text S1. The target plant dataset covered 
+the period from September 2021 to June 2022. Owing to the twice- 
+weekly measurement frequency of EPS and SMP, model development 
+was based only on dates with complete matched measurements for all 
+input variables and TMP, yielding 71 valid temporally matched records. 
+This data-limited target plant setting reflected the practical monitoring 
+constraints of pilot-scale MBR operation and provided a realistic sce­
+nario for evaluating the proposed cross-plant transfer learning 
+framework.
+Three pilot-scale submerged MBR plants treating domestic waste­
+water in Singapore were selected as source plants, yielding 332 records 
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+2 
+
+
+<!-- Page 3 -->
+Fig. 1. Framework for transfer learning-based TMP prediction in MBRs: (a) treatment process of the target plant, and the associated prediction challenges: limited 
+data, missing data and noisy measurements, (b) key characteristics of the three source plants: larger dataset size, higher data quality, and similar process config­
+urations, (c) pretraining workflow of the LSTM and XGBoost models using data from the three source plants, (d) workflow for fine-tuning the base models using the 
+target plant dataset to obtain the transfer learning models, (e) model interpretability and statistical analysis using LOFO and SHAP analyses.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+3 
+
+
+<!-- Page 4 -->
+in total, including 100 records from Plant 1, 132 records from Plant 2, 
+and 100 records from Plant 3 (Fig. 1(b)). Photographs of the source 
+plants are provided in Fig. S1, and their TMP profiles during the moni­
+toring periods are shown in Fig. S2. These plants had comparable pro­
+cess configurations, consisting of anoxic/oxic biological treatment 
+followed by immersed membrane separation, with conventional sludge 
+recirculation and wasting. Detailed membrane-system characteristics 
+and operating settings are summarized in Table S1. Although the target 
+plant differed in influent composition due to upstream Fe addition, it 
+remained comparable to the source plants in overall treatment config­
+uration, with broadly similar MBR fouling mechanisms, supporting the 
+application of transfer learning between source and target plants.
+For each plant, the dataset included 11 variables: HRT, SRT, mem­
+brane flux (FLUX), total and soluble chemical oxygen demand (TCOD 
+and SCOD), MLSS, MLVSS, EPSp, EPSc, SMPp, and SMPc. TMP was 
+obtained from routine online monitoring and aligned with each sam­
+pling date for subsequent analysis.
+2.2. Physicochemical analytical methods
+HRT, SRT, and FLUX were recorded as routine operational parame­
+ters. TCOD and SCOD were determined by the APHA 5220D closed 
+reflux colorimetric method, and MLSS and MLVSS were measured ac­
+cording to Standard Methods [28]. SMP was defined as the dissolved 
+fraction of the supernatant after 0.45 μm membrane filtration and EPS 
+was extracted from the residual biomass using the heat method [29]. 
+Proteins and polysaccharides in SMP and EPS, including SMPp, SMPc, 
+EPSp, and EPSc, were quantified using the Modified Lowry Protein 
+Assay and Dubois Method, respectively [30]. Liquid chromatography­
+–organic carbon detection (LC-OCD) was employed to characterize the 
+dissolved organic matter, including biopolymers with molecular weight 
+(MW) greater than 20 kDa and low-molecular-weight (LMW) com­
+pounds with MW less than 1000 Da, such as humics, building blocks, 
+LMW acids, and LMW neutrals. The particle size distribution (PSD) of 
+mixed liquor was analyzed using a laser diffraction particle analyzer. 
+Capillary suction time (CST) was measured using a CST apparatus [31]. 
+Total organic carbon (TOC) was measured using a TOC analyzer 
+(TOC-VCSH, Shimadzu, Japan). Excitation–emission matrix (EEM) 
+spectra were measured using a fluorescence spectrophotometer [32]. 
+Total iron was measured using inductively coupled plasma optical 
+emission spectroscopy (ICP-OES).
+Fig. 2. Operational context of the target MBR plant and source–target dataset characteristics: (a) TMP profile of the target plant during the monitoring period, (b) 
+photograph of the MBR module at the target plant, (c) distributions of the operational and physicochemical variables in the three source plants and the target plant, 
+(d) mean values of these variables for each plant.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+4 
+
+
+<!-- Page 5 -->
+2.3. Data preprocessing and feature selection
+To ensure reliable model development, the raw datasets were first 
+preprocessed by outlier treatment and missing-value imputation (Text 
+S2). To place variables on comparable scales and prevent variables with 
+larger numerical ranges from dominating model training, z-score stan­
+dardization was applied during preprocessing (Text S3). The scaler was 
+fitted using the training data only, and model outputs were inverse- 
+transformed to the original scale after training.
+The final prediction target of this study was next-day TMP, whereas 
+dTMP was used only as an intermediate training target to alleviate non- 
+stationarity and improve output comparability across plants [33,34]. 
+Compared with raw TMP values, dTMP reduced inter-plant differences 
+in TMP level and produced distributions more centered around zero 
+(Fig. S3). Predicted dTMP values were then added to the current-day 
+TMP to reconstruct next-day TMP for model evaluation and 
+presentation.
+To assess source–target distribution discrepancy and overlap rele­
+vant to transfer learning, joint principal component analysis (PCA) was 
+performed using the input variables together with dTMP. The input and 
+output blocks were standardized separately and assigned equal overall 
+weights (Text S4).
+The sample-size-to-feature ratio (SFR) is an important indicator of 
+whether model complexity is appropriate for a given dataset size, and in 
+small-sample modeling an SFR greater than 10 is generally considered 
+desirable [35]. Therefore, Pearson correlation analysis was used as a 
+coarse pre-screening step (Text S5). Because the final prediction target 
+remained next-day TMP, this initial screening was performed against 
+TMP rather than dTMP. It considered both feature–target association 
+and inter-feature collinearity, but served only as a pragmatic 
+dimensionality-control procedure rather than a definitive assessment of 
+nonlinear predictive relevance.
+2.4. Construction of base models based on source plants
+Given the time-series nature of the data, the source datasets were 
+split within each plant according to chronological order rather than 
+randomly, thereby reducing the risk of information leakage between 
+temporally adjacent samples. Considering the limited sample sizes and 
+short input window, LSTM was selected as a compact recurrent archi­
+tecture for sequence learning [36]. Transformer- and TCN-based models 
+may offer advantages when larger MBR datasets or longer temporal 
+contexts are available, and systematic benchmarking under such con­
+ditions remains a direction for future work [37,38]. Accordingly, two 
+base models were developed: LSTM-base for recurrent sequence learning 
+and XGBoost-base for tree-based learning (Fig. 1(c)). LSTM-base used 
+standardized feature sequences with a sequence length of 3 time steps, 
+whereas XGBoost-base used the same three-step historical information 
+encoded as lagged features. This design ensured that the two base 
+models used the same amount of historical information, allowing a fair 
+comparison of their predictive performance. Additional implementation 
+details are provided in Text S6.
+Hyperparameters for both base models were optimized using the 
+training split of the source plant datasets. Because the data were time- 
+ordered, five-fold time-series cross-validation was combined with 
+Optuna-based hyperparameter search to prevent leakage from future 
+samples and improve the robustness of model selection. After optimi­
+zation, both base models were trained on the same training split, and the 
+trained models were saved to initialize the transfer learning models. The 
+hyperparameter search spaces, final settings, and training details are 
+provided in Table S2–S3 and Text S7.
+2.5. Construction of the baseline model for the target plant
+Before establishing transfer learning models, a baseline model was 
+developed using only the target plant dataset, and its performance was 
+compared with that of the transfer learning models. To ensure compa­
+rability, the target plant dataset was partitioned in chronological order, 
+with the first 50% used for model training and the final 50% reserved for 
+testing. Under this split, only a limited amount of target plant data was 
+available for model training. With such a small training set, a standalone 
+target-trained LSTM baseline would be more prone to unstable fitting 
+and overfitting, making the resulting comparison less reliable [39]. An 
+independent XGBoost model was therefore adopted as the baseline. It 
+was trained on the training portion of the target plant dataset using the 
+same feature set as the transfer learning models, and the scaler for the 
+target variable was fitted independently using the same training portion. 
+Detailed settings are listed in Table S4.
+2.6. Construction of transfer learning models
+For transfer learning, the target plant dataset was partitioned chro­
+nologically using the same 50:50 split: the first 50% was used as the fine- 
+tuning pool, whereas the final 50% was kept unseen during fine-tuning 
+and reserved as an independent testing set (Fig. 1(d)), thereby reducing 
+the risk of temporal information leakage. The fine-tuning ratio (FT) was 
+defined as the proportion of the total target plant dataset used for fine- 
+tuning, and was examined at 0, 10%, 20%, 30%, 40%, and 50%. The 
+exact numbers of target plant records in the fine-tuning pool, testing set, 
+and each FT setting are summarized in Table S5. The resulting transfer 
+models were denoted as LSTM-FT and XGBoost-FT. At FT = 0, no target 
+plant samples were used for fine-tuning, and the two models therefore 
+corresponded to direct transfer without target plant adaptation.
+For each nonzero FT setting, multiple fine-tuning segments of the 
+corresponding length were sampled from the fine-tuning pool to reduce 
+dependence on any single local history (Text S8). Each segment-level 
+experiment was repeated with five random seeds, and performance 
+was reported as the mean ± standard deviation across all fine-tuning 
+segments and repeated runs. LSTM-FT and XGBoost-FT were fine- 
+tuned using different update strategies, with implementation details 
+and hyperparameter settings provided in Table S6–S7 and Text S9.
+All experiments were implemented in Python 3.10.18 using relevant 
+third-party libraries. The deep-learning models were built and trained in 
+PyTorch 2.7.0. The computing environment included an Intel Core i7- 
+14700KF processor (28 logical cores), 32 GB RAM, and an NVIDIA 
+GeForce RTX 5060 Ti GPU.
+2.7. Evaluation of model performance
+Model performance was evaluated using R2, RMSE, and MAE (details 
+in Text S10). Model interpretability was examined using LOFO and 
+SHAP analyses (Fig. 1(e)), as detailed in Text S11 and Text S12, 
+respectively.
+2.8. Model adaptability under cross-scenario conditions
+Additional validation was conducted using data from a pilot-scale 
+MBR treating mixed petrochemical and pharmaceutical industrial 
+wastewater in Singapore. Detailed process configuration and operating 
+parameters are provided in Table S8. This validation was performed 
+using LSTM-FT under two fine-tuning conditions, FT = 0 and FT = 40%. 
+To maintain consistency with the main analysis, the pretrained model, 
+chronological fine-tuning/testing logic, data preprocessing procedure, 
+and model settings were kept the same. Accordingly, this test was 
+intended to assess whether the established workflow could remain 
+effective under industrial wastewater conditions, without additional 
+model optimization.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+5 
+
+
+<!-- Page 6 -->

@@ -1,0 +1,204 @@
+6. Digital Twin Frameworks for MBR Systems
+6.1. Architecture, Components, and Maturity Tiers
+The digital twin concept was first formally articulated in manufacturing by Grieves [30]
+and has since been elaborated across diverse industrial domains, including aerospace, en-
+ergy infrastructure, and smart manufacturing [32]. Fuller et al. identify three essential
+components shared across industrial DT implementations: a physical entity with instru-
+mented sensing and actuation; a virtual entity that models the physical system across
+relevant timescales; and a data connection layer enabling continuous state synchroniza-
+tion between physical and virtual domains [31]. The virtual entity must be multi-fidelity.
+It combines high-accuracy physics-based models for slowly varying system states with
+faster data-driven models for dynamic operational variables. This balance maintains both
+computational feasibility and predictive accuracy [33].
+For MBR systems, this DT framework has three layers. The first is the physical
+plant: its SCADA network, online sensors (DO, turbidity, pressure transducers, flow
+meters), and actuators (blowers, pumps, valves). The second is a hierarchical virtual
+model incorporating ASM mechanistic sub-models [34,35], resistance-in-series fouling
+models [36], ML-based dynamic TMP predictors trained on operational data [22,26], SHAP-
+based feature attribution modules [53], and energy balance sub-models [14,56]. The third
+is a real-time data pipeline, potentially cloud-hosted, that synchronizes sensor readings
+to the virtual model and feeds model outputs back to the control system [37]. Wang
+et al. review DT applications across the entire wastewater treatment lifecycle, identify
+MBR fouling management and aeration optimization as the highest-value integration
+targets, and demonstrate that DT approaches can generate plant-wide energy savings and
+effluent quality improvements through coordinated optimization of biological, filtration,
+and chemical dosing subprocesses.
+In practice, MBR digital twin implementations can be stratified into three capability
+tiers, reflecting increasing integration depth and autonomous decision-making. Tier I
+(Descriptive) twins monitor and visualize real-time plant state through sensor dashboards,
+alarm management systems, and historical trend analysis, capabilities that are already
+commercially available and deployed at many full-scale MBR installations [5,15]. The
+rapid growth of DT research in the water sector supports this framing. A recent review of
+147 studies spanning 2015 to May 2025 found that DT publications in the sector grew from
+one in 2015 to 41 in 2024 [60]. Of those 147 studies, 41 addressed wastewater treatment.
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 17 -->
+Membranes 2026, 16, 181
+17 of 26
+This growth confirms that DT technology is moving from conceptual proposals toward
+structured implementation frameworks. Rodríguez-Alonso et al. demonstrated a practi-
+cal microservices-based DT platform for a full wastewater treatment plant. It provides a
+concrete Tier I/II deployment reference using edge computing architecture [61]. Tier II
+(Predictive) twins forecast future plant states using trained ML models, including TMP
+trajectory, effluent quality, and energy demand 12–72 h ahead. This enables proactive
+rather than reactive operational decisions. This tier has been demonstrated in BSM-MBR
+simulation studies [24,36] and validated in isolation with full-scale data [26]. Tier III (Pre-
+scriptive) twins autonomously generate, evaluate, and implement operational decisions.
+These include aeration setpoint adjustments, flux control, and cleaning schedule optimiza-
+tion. Closed-loop simulation evaluates predicted consequences before any physical action
+is taken. No full-scale MBR implementation of Tier III with XAI integration has been
+documented in the literature, representing the primary frontier for the field [33,37].
+6.2. XAI Integration in Digital Twin Decision Architecture
+One of the most important architectural advances in higher-maturity MBR digital twins
+is the integration of explainable AI (XAI) modules as decision-support and transparency
+layers between the prediction engine and downstream human or control actions, improving
+interpretability, trust, and operational usability [62,63]. This explanation can be presented
+to the operator in interpretable visual formats such as a SHAP waterfall chart or a local
+ranked bar plot. It may also be translated into user-oriented summary text, enabling the
+operator to assess whether the prediction is plausible given the current process state before
+deciding whether to act on it [64].
+First, within future DT-enabled MBR control architectures, the XAI layer could provide
+a near-real-time audit trail by logging the explanatory context associated with model-
+informed recommendations, thereby improving traceability, accountability, and post hoc
+review during internal audits, compliance assessments, or regulatory inspections [65].
+Second, it enables informed operator override. Rather than simply accepting or rejecting
+an ML recommendation, operators can use the SHAP attribution to identify which specific
+variables are driving the prediction. They can then assess whether those variables reflect
+the true process state or a measurement artefact, enabling informed human oversight rather
+than blind rejection [17,66]. Third, shifts in explanation patterns, such as marked changes
+in SHAP ranking distributions, may also serve as interpretable warning signals of concept
+drift or operation outside the model’s familiar regime, thereby triggering human review
+before continued automated control [48,67].
+The data and decision flow within a Tier II/III MBR digital twin with embedded XAI
+operates through five stages. In the first stage, raw sensor streams, including dissolved
+oxygen, transmembrane pressure, permeate flux, turbidity, temperature, and membrane
+aeration flow rate, are transmitted from the physical plant via SCADA at one-minute
+intervals to the DT data layer, where they are quality-checked, gap-filled by interpolation,
+and stored in a time-series database. In the second stage, a trained ML prediction engine,
+such as a random forest or LSTM model for TMP forecasting and a gradient boosting
+model for effluent quality estimation, generates predictions 12 to 72 h ahead from the
+current and recent sensor history. In the third stage, a SHAP-based explanation module
+computes per-feature attribution values for each prediction in real time, producing a ranked
+contribution plot that identifies which process variables are driving the current forecast
+and by how much. In the fourth stage, both the prediction and its SHAP explanation are
+presented on an interpretable operator dashboard, enabling informed human review before
+any control action is executed. In the fifth stage, accepted recommendations are passed
+to the control layer, which adjusts aeration setpoints, flux targets, or cleaning schedules
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 18 -->
+Membranes 2026, 16, 181
+18 of 26
+as required, and the prediction, together with its explanation, is automatically logged to
+an audit trail for regulatory traceability and post-event review. This architecture ensures
+that XAI is structurally embedded in the decision pipeline rather than functioning as an
+optional post-hoc module.
+Tao et al. [32] and Barricelli et al. [33] both identify interpretability as a fundamental
+design requirement for trustworthy industrial digital twins. They note that unexplained
+model recommendations under novel process conditions, even if quantitatively correct,
+will be systematically overridden by conservative operators. This negates the operational
+value of the twin. The incorporation of XAI into DT architecture is therefore not merely
+a regulatory convenience but a functional requirement for achieving the operator trust
+necessary for the transition from Tier II advisory to Tier III prescriptive operation. The con-
+vergence of ML prediction, XAI transparency, and mechanistic model consistency checking
+within a unified DT architecture represents the most complete available framework for
+intelligent, trustworthy MBR operation at the current state of the art [37]. Table 5 presents
+a structured overview of the three DT maturity tiers applicable to MBR systems, from
+descriptive monitoring through to closed-loop prescriptive control.
+Table 5. Digital twin maturity tiers for MBR systems with capability and implementation characteristics.
+Tier
+Capabilities
+Data
+Requirements
+Implementation
+Complexity
+Status in MBR
+Literature
+References
+I—Descriptive
+Real-time monitoring,
+dashboards, alarm
+management
+SCADA,
+online sensors
+Low
+Commercially
+deployed
+[5,15]
+II—Predictive
+TMP forecast, effluent
+quality prediction,
+fault detection,
+12–72 h ahead
+SCADA + lab an-
+alytics + trained
+ML
+Medium
+Validated in
+simulation and
+full-scale data
+[24,26,36]
+III—Prescriptive
+Closed-loop
+autonomous
+optimization, what-if
+scenario testing, XAI
+decision justification
+Full DT + actua-
+tors + XAI + safety
+validation
+High
+No full-scale
+MBR
+deployment
+documented
+[33,37]
+The three tiers can also be characterized by their evidence status. Tier I is commercially
+deployed at full municipal and industrial scale worldwide [5,15] and therefore represents
+validated operational technology. Tier II has been demonstrated in BSM-MBR simulation
+studies [36] and validated using full-scale SCADA datasets (Kovacs et al., 2022 [26]),
+but has not yet been deployed as a continuously operating closed-loop advisory system
+in a commissioned plant; its evidence status is therefore simulation-to-full-scale data
+validation. Tier III remains at the conceptual and architectural proposal stage: no full-scale
+MBR implementation combining Tier III prescriptive control with integrated XAI decision
+justification has been documented in the peer-reviewed literature as of December 2025. The
+transition from Tier II to Tier III represents the field’s primary frontier and is directly linked
+to the research gaps discussed in Section 7.
+To synthesize the current state of the field across application domains and deployment
+dimensions, Figure 3 presents a qualitative heat map of research maturity for ML, XAI, and
+digital twin applications in wastewater MBR systems.
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 19 -->
+Membranes 2026, 16, 181
+19 of 26
+Figure 3. Research maturity heat map for intelligent wastewater membrane bioreactor (MBR) studies.
+The figure provides a qualitative synthesis of the reviewed literature across major application domains
+and deployment dimensions, indicating that fouling prediction is the most mature area.
+In the heat map, each cell represents a qualitative maturity rating based on three
+criteria: the volume of peer-reviewed evidence available, the availability of full-scale
+operational validation, and the extent of documented deployment in commissioned water
+treatment facilities. High-rated cells indicate substantial evidence base supported by
+multiple independent studies with consistent results. Moderate-rated cells indicate an
+emerging evidence base that includes at least some pilot or full-scale validation. Emerging
+cells indicate that the application area is recognized, but evidence is confined to conceptual
+proposals, simulation studies, or a small number of laboratory-scale demonstrations. Low-
+rated cells indicate that no peer-reviewed evidence for that combination was identified in
+the structured search.
+Three patterns are immediately apparent. First, fouling prediction shows the strongest
+evidence base and predictive maturity, both rated High, reflecting the substantial body of
+ML literature reviewed in Section 3. Nevertheless, its interpretability integration, full-scale
+validation, and deployment readiness are all rated Emerging, indicating that predictive
+capability has substantially outpaced practical implementation. Second, XAI-supported
+interpretation shows a high-rating for-interpretability integration, as expected for a technol-
+ogy whose primary function is interpretability, but Low full-scale validation and Emerging
+deployment readiness, confirming that XAI application in MBR systems remains largely
+an academic exercise. Third, digital twin deployment shows the lowest overall maturity
+profile, with Emerging or Low ratings across all five dimensions, reflecting the absence of
+full-scale operational deployments documented in the peer-reviewed literature. Each low-
+maturity cell in the figure maps directly to one or more of the nine research gaps identified
+in Section 7, providing a visual roadmap for prioritizing future research investment.

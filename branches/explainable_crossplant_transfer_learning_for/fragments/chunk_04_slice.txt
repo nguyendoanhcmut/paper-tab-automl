@@ -1,0 +1,296 @@
+3.3. Transfer learning performance and interpretation
+3.3.1. Effect of fine-tuning ratio on transfer learning performance
+The effect of fine-tuning ratio (FT) on transfer learning performance 
+was examined to determine the amount of target-plant data required for 
+effective adaptation. At FT = 0, representing direct transfer without 
+target plant adaptation, the pretrained LSTM and XGBoost models 
+showed similarly low R2 values of 0.41 and 0.39, respectively, indicating 
+limited predictive power under zero-shot transfer. Together with the 
+PCA results showing a measurable source–target distribution shift, this 
+finding suggests that direct transfer alone was insufficient for reliable 
+TMP prediction in the target plant [53].
+For LSTM-FT, the largest gain occurred between FT = 0 and 
+FT = 10%, with R2 increasing from 0.41 to 0.81 (Fig. 5(a)). As FT further 
+increased, the performance improved more gradually, reaching R2, 
+RMSE, and MAE values of 0.89, 0.50 kPa, and 0.33 kPa, respectively, at 
+FT = 40% (Fig. 5(b) and (c)). At FT = 50%, the improvement relative to 
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+7 
+
+
+<!-- Page 8 -->
+FT = 40% was only marginal. In comparison, XGBoost-FT also improved 
+with increasing FT, but the gains were smaller and more gradual, with 
+Fig. 4. Physicochemical evidence supporting the EPS- and SMP-related attribution pattern learned by LSTM-base in the source plants: EEM spectra of EPS from (a) 
+Plant 1, (b) Plant 2, and (c) Plant 3; (d) sludge particle-size distributions of Plants 1–3 and the target plant; LC-OCD-derived organic fraction concentrations in (e) 
+SMP and (f) effluent from Plants 1–3.
+Fig. 5. Effect of fine-tuning ratio on target plant prediction performance and LOFO analysis: (a) R2, (b) RMSE, and (c) MAE as functions of fine-tuning ratio, (d) 
+observed versus predicted TMP values for the baseline model, XGBoost-FT, and LSTM-FT on the target plant testing set, with the transfer models evaluated at 
+FT = 40%, and (e) LOFO analysis results for LSTM-FT at FT = 40%. For each nonzero FT setting in (a)–(c), performance is reported as mean ± standard deviation 
+across all fine-tuning segments and repeated runs, using up to six contiguous segments sampled from the fine-tuning pool and five random seeds for each 
+retained segment.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+8 
+
+
+<!-- Page 9 -->
+R2 increasing from 0.39 at FT = 0 to 0.58 at FT = 40% and only slightly 
+further to 0.61 at FT = 50%. Overall, LSTM-FT showed larger perfor­
+mance gains at low FT levels than XGBoost-FT, and increasing FT 
+beyond 40% provided limited additional improvement. Because both 
+transfer models were adapted from models pretrained on the source 
+plant datasets, these performance improvements should be interpreted 
+as target plant adaptation through transfer learning under realistic data- 
+limited conditions, rather than as conventional model development 
+based solely on the 71 target plant records. In addition, for both transfer 
+models the standard deviation across the fine-tuning segments and 
+repeated runs was largest at FT = 10% and decreased at higher FT, 
+becoming small by FT = 40%. This indicates that too few target records 
+reduced the robustness of adaptation, whereas a moderate amount of 
+target data was sufficient for stable performance. Accordingly, 
+FT = 40% was selected as the representative fine-tuning condition for 
+the subsequent analyses.
+3.3.2. Performance comparison of baseline model and transfer learning 
+models
+To compare predictive performance on the target plant, the baseline 
+model (specifically trained based on target plant datasets) together with 
+LSTM-FT and XGBoost-FT was evaluated (Fig. 5(d)).
+The testing samples were mainly distributed within a TMP range of 
+approximately 19–21.5 kPa, with fewer samples at lower TMP values of 
+around 15.5–18 kPa. Within the main TMP range, LSTM-FT showed the 
+tightest clustering around the line of equality, indicating the best 
+agreement between predicted and observed TMP values. The baseline 
+model showed moderate deviations, whereas XGBoost-FT exhibited the 
+largest scatter and the most evident departure from the line of equality. 
+These patterns suggest that transfer learning improved target plant 
+prediction when implemented with LSTM, whereas XGBoost-FT did not 
+provide a performance advantage under the present setting.
+The quantitative metrics showed the same trend. Relative to the 
+baseline model, LSTM-FT reduced RMSE from 0.63 to 0.50 kPa and MAE 
+from 0.45 to 0.33 kPa, corresponding to decreases of 20.6% and 26.7%, 
+respectively, while increasing R2 from 0.82 to 0.89. By contrast, 
+XGBoost-FT increased RMSE to 0.96 kPa and MAE to 0.81 kPa, and 
+reduced R2 to 0.58. Taken together, these results indicate that LSTM-FT 
+achieved the best predictive performance under limited target plant 
+data, outperforming both the baseline model and XGBoost-FT. There­
+fore, the following sections focus on LSTM-FT to further interpret the 
+observed transfer behavior using LOFO and SHAP analyses.
+3.3.3. LOFO and SHAP interpretation of feature contributions during 
+transfer
+LOFO and SHAP analyses were used to identify the variables that 
+supported transfer performance in LSTM-FT. LOFO analysis was first 
+conducted to evaluate the effect of each input variable on LSTM-FT 
+performance at FT = 40% (Fig. 5(e)). The reference model was the 
+LSTM-FT model trained with all input variables, which achieved an MAE 
+of 0.33 kPa. Each variable was then removed individually, and the 
+resulting MAE was compared with that of the reference model using 
+paired two-sided Wilcoxon signed-rank tests (Table S10). Removing 
+EPSc caused the largest performance loss, increasing MAE to 0.37 kPa 
+(p ≤0.001), indicating that EPSc was the most important variable for 
+maintaining LSTM-FT performance. Removing EPSp or SRT also 
+increased MAE to 0.35 kPa (both p ≤0.001), whereas removing FLUX 
+caused a smaller but still significant increase (p ≤0.01). Overall, the 
+LOFO results confirmed that EPS-related variables, especially EPSc and 
+EPSp, were important for LSTM-FT performance, while SRT and FLUX 
+also showed smaller but statistically significant effects.
+SHAP analysis was further used to examine how the feature- 
+attribution pattern evolved with increasing FT. Under zero-shot trans­
+fer (FT = 0), EPSc was the top-ranked feature, contributing the largest 
+share of the total attribution, well above MLVSS and EPSp (Fig. 6(b); 
+Fig. S8(a)). This suggests that, under zero-shot transfer, the transferred 
+model retained a strongly EPSc-centered attribution pattern, reflecting 
+limited recalibration before fine-tuning. From FT = 10% to 30%, the 
+attribution pattern became more distributed, with increased attribution 
+to EPSp and more comparable contributions from EPSc, SRT, and MLVSS 
+(Fig. S9–S10). At FT = 40%, EPSc and EPSp were the two top-ranked 
+features and together accounted for more than half of the total attri­
+bution (Fig. 6(c); Fig. S8(b)), indicating a more balanced EPS-centered 
+attribution structure after fine-tuning. The feature ranking and 
+Fig. 6. SHAP attribution patterns and LLM-assisted summary for LSTM-base and LSTM-FT: SHAP summary plots of (a) LSTM-base, (b) LSTM-FT at FT = 0, (c) LSTM- 
+FT at FT = 40%, (d) LLM-assisted summary of the corresponding SHAP observations.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+9 
+
+
+<!-- Page 10 -->
+attribution structure at FT = 50% remained largely similar to those at 
+FT = 40% (Fig. S11), consistent with the limited additional performance 
+improvement beyond FT = 40%. Together with the LOFO results, these 
+findings indicate that LSTM-FT performance was mainly supported by 
+EPS-related variables, with EPSc remaining top-ranked and EPSp 
+becoming more prominent after fine-tuning.
+3.3.4. Why did transfer learning enable accurate membrane fouling 
+prediction in the target plant?
+Because SHAP and LOFO identify model-relevant variables rather 
+than causal mechanisms, the attribution changes were interpreted 
+against independent physicochemical evidence from the target plant. At 
+FT = 0, the attribution pattern remained dominated by EPSc, and the 
+model retained moderate predictive performance (R2 = 0.41), indicating 
+that the EPSc-centered predictive structure learned by the base model 
+was partially applicable to the target plant. The relatively high EPSc 
+concentration in the target plant (49.6 mg/L) further suggests that 
+polysaccharide-related fouling remained important. Elevated poly­
+saccharide content can enhance water retention and reduce sludge 
+dewaterability, thereby promoting the formation of a highly hydrated, 
+compressible, and high-resistance fouling layer. This interpretation was 
+consistent with the relatively high CST (49.45 s) and specific CST 
+(4.36 s/(g/L)) observed in the target plant (Fig. 7(a)). Taken together, 
+these results suggest that EPSc represented a shared membrane-fouling 
+matrix characteristic across plants that remained stably informative 
+during transfer prediction.
+Performance improved when FT increased to 40% (R2 = 0.89), and 
+the most notable change in the SHAP results was the rise of EPSp to the 
+second most important feature. This shift suggests that fine-tuning 
+increased model sensitivity to protein-related EPS characteristics in 
+the target plant. The EPS EEM spectrum of the target plant showed a 
+dominant aromatic protein-like peak (Fig. 7(b)), consistent with the 
+protein-related EPS signature observed in the source plants. Of note, it 
+was hypothesized that the increased importance of EPSp (aromatic 
+proteins) could be due to the Fe-enriched influent in MBRs [54]. To 
+further support this interpretation, two Fe-dosing stages in the target 
+plant were compared (Table S11). Specifically, upstream Fe was dosed 
+into the influent mixing tank before pretreatment at target dosages of 9 
+and 26 mg/L, allowing Fe accumulation and EPS compositional re­
+sponses in the MBR system to be examined. As the Fe dosage increased, 
+the sludge-associated Fe content increased from 45 to 101 mg/g-MLVSS, 
+while EPSp increased from 47.96 to 62.30 mg/g-MLVSS. These obser­
+vations suggest that Fe-enriched conditions were associated with a more 
+protein-enriched EPS composition, which may explain the increased 
+attribution of EPSp after fine-tuning. Higher EPS protein content is 
+generally associated with stronger hydrophobicity and greater floc ag­
+gregation, which may favor membrane-surface adhesion and cake-layer 
+densification [46,55]. This interpretation was consistent with the rela­
+tively high viscosity and specific viscosity of the target sludge 
+(50.03 mPa s and 9.46 mPa s/(g/L), respectively; Fig. 7(d)). Taken 
+together, the increased SHAP attribution of EPSp suggests that 
+fine-tuning recalibrated the model toward the protein-related EPS 
+characteristics that were more pronounced under the Fe-enriched con­
+ditions of the target plant.
+The two-step CIP results further supported the association between 
+the Fe-related EPS response and the composition of the retained fouling 
+layer in the target plant. During the citric acid (CA) cleaning stage, total 
+Fe increased sharply from 0.62 to 43.02 mg/L (Fig. 7(e)), indicating the 
+release of substantial Fe-bearing components from the fouling layer. 
+During the subsequent NaClO cleaning stage, TOC increased from 5.19 
+to 43.22 mg/L (Fig. 7(f)), while total Fe also increased from 1.85 to 
+11.16 mg/L, suggesting the release of oxidizable organic matter together 
+with Fe-bearing components. Together with the lower SCOD than TCOD 
+in the target plant (93 vs. 271 mg/L), these results suggest that the 
+dominant fouling layer was not formed by dissolved organics alone, but 
+was more closely associated with a sludge-bound organic matrix 
+Fig. 7. Physicochemical evidence supporting the EPS-centered attribution pattern learned by LSTM-FT in the target plant: Mixed-liquor properties, including (a) CST 
+and specific CST and (d) viscosity and specific viscosity; EEM spectra of (b) EPS and (c) SMP; (e) total iron concentrations in cleaning solutions collected during the 
+two-step clean-in-place (CIP) procedure, and (f) TOC concentrations in cleaning solutions collected during sodium hypochlorite cleaning. Before CIP, the membrane 
+unit was drained and rinsed with filtrate. The two-step CIP consisted of citric-acid cleaning (15 g/L, pH = 2.5) followed by sodium hypochlorite cleaning (1 g/L, 
+pH = 10), with samples collected immediately before and after each cleaning step. B-CA and A-CA denote samples collected before and after citric-acid cleaning, 
+respectively, whereas B-NaClO and A-NaClO denote samples collected before and after sodium hypochlorite cleaning.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+10 
+
+
+<!-- Page 11 -->
+containing Fe-related constituents.
+Furthermore, the decline in SMPp attribution after fine-tuning sug­
+gests that LSTM-FT placed less emphasis on soluble protein-related in­
+formation during target plant adaptation. Although the SMP EEM 
+spectrum of the target plant showed a pronounced low-excitation aro­
+matic protein-like feature (Fig. 7(c)), the effluent EEM exhibited broader 
+fluorescence regions (Ex/Em ≈220–250/300–460 nm) that partially 
+overlapped with the low-excitation protein-like region in SMP 
+(Fig. S12). This overlap suggests that part of the low-excitation protein- 
+like dissolved organic signal was not fully retained by the membrane 
+system. Therefore, the reduced attribution of SMPp after fine-tuning 
+does not exclude its contribution to fouling, but suggests that SMPp 
+was less closely associated with the dominant retained foulant layer in 
+the target plant than EPS-related variables.
+Taken together, LSTM fine-tuning preserved the transferable EPSc- 
+related fouling information in the target MBR plant, recalibrated the 
+target-specific EPSp-related signal, and placed less emphasis on SMPp, 
+which was less representative of the dominant fouling layer.
+3.3.5. Cross-scenario adaptability to an MBR treating industrial wastewater
+Because the preceding analysis focused mainly on the domestic MBR 
+scenario, additional validation was conducted using a pilot-scale MBR 
+treating mixed petrochemical and pharmaceutical industrial waste­
+water. This case provided a preliminary test of the established transfer 
+learning workflow under a more distinct wastewater background. 
+Compared with the domestic target plant, the industrial MBR presented 
+a more challenging transfer scenario, with a more complex influent 
+composition, higher organic loading, and disturbance-driven biomass 
+dynamics. The TMP profile of the industrial MBR showed a clear long- 
+term trend together with multiple abrupt perturbations associated 
+with real operational events (Fig. 8(a)), reflecting complex membrane- 
+fouling behavior under practical engineering conditions.
+The industrial MBR differed substantially from the source plants in 
+wastewater and sludge properties, with consistently higher TCOD, 
+SCOD, MLSS, and MLVSS (Fig. 8(b)). Importantly, despite these back­
+ground differences, EPSc (43.6 ± 20.2 mg/L) remained close to the 
+source plant range (32.3–43.5 mg/L), suggesting that EPSc-related 
+fouling information was still shared across scenarios. EPSp 
+(256.8 ± 126.7 mg/L) was also of the same order of magnitude as in the 
+source plants (184–229 mg/L), and SMPc (6.9 ± 5.0 mg/L) fell within 
+the source plant range (5.2–11.5 mg/L). These overlaps suggest that part 
+of the fouling-related information learned from the source plants could 
+still be transferred to the industrial MBR, even under a substantially 
+different wastewater background.
+Under zero-shot transfer (FT = 0), the base model achieved only 
+moderate performance in the industrial MBR (R2 = 0.46; Fig. 8(c)), 
+suggesting that the fouling-related information learned from the source 
+plants was partially applicable but insufficient to fully capture the TMP 
+dynamics in the industrial MBR. Fine-tuning with industrial MBR data 
+improved prediction performance. This validation used the same chro­
+nological fine-tuning/testing logic, pretrained model, preprocessing 
+procedure, and model settings as the main target plant analysis. At 
+FT = 40%, R2 increased to 0.89, while MAE and RMSE decreased by 
+68.6% and 54.7%, respectively, relative to FT = 0. This improvement 
+indicates that the established workflow could be adapted to the indus­
+trial wastewater background without additional model optimization.
+SHAP analysis further showed that EPSc retained the highest attri­
+bution after fine-tuning, whereas SMPp increased to the second-highest 
+attribution level (Fig. 8(d)). This pattern differed from that observed in 
+the domestic target MBR plant, where fine-tuning mainly increased the 
+attribution of EPSp. Thus, the two target cases shared stable EPSc- 
+related fouling information, but differed in the feature requiring 
+target-specific recalibration: EPSp in the Fe-enriched domestic MBR and 
+SMPp in the industrial MBR. The increased attribution of SMPp suggests 
+that fine-tuning recalibrated the model toward a more prominent solu­
+ble proteinaceous signal under the industrial wastewater background.
+The increased attribution of SMPp after fine-tuning was mechanis­
+tically plausible in the industrial MBR. SMPp was higher in the industrial 
+MBR (27.6 ± 17.4 mg/L) than in the source plants (10.8–13.8 mg/L), 
+indicating a stronger background of dissolved proteinaceous organics. 
+Previous characterization of this industrial MBR showed pronounced 
+SMP protein peaks during operational disturbances, together with de­
+creases in MLSS and MLVSS, consistent with biomass loss, cell decay, 
+and proteinaceous SMP release into the mixed liquor [56]. Moreover, 
+Fig. 8. Additional validation of the proposed transfer learning framework in an industrial wastewater MBR: (a) TMP profile with major operational events, (b) 
+summary statistics of the operational and physicochemical variables in the industrial MBR, (c) the pretrained LSTM model before and after fine-tuning, evaluated at 
+FT = 0 and FT = 40% using R2, MAE, and RMSE, and (d) mean absolute SHAP values of LSTM-FT at FT = 40%.
+X. Han et al.                                                                                                                                                                                                                                     
+Journal of Membrane Science 758 (2026) 126065 
+11 
+
+
+<!-- Page 12 -->
+SMP in this MBR was dominated by proteins rather than carbohydrates. 
+These observations suggest that the enhanced SMPp attribution in the 
+transfer model was associated with disturbance-driven soluble protein 
+release. Such proteinaceous SMP could contribute to fouling develop­
+ment, thereby explaining the increased attribution of SMPp after 
+fine-tuning.
+Overall, this additional validation suggests that the proposed transfer 
+learning workflow remained applicable to the industrial MBR, not 
+because fouling mechanisms were identical across scenarios, but 
+because the model retained transferable EPSc-related fouling informa­
+tion while fine-tuning recalibrated the attribution structure toward the 
+dominant target-specific signal. In the domestic target MBR plant, this 
+recalibration was reflected by the increased attribution of EPSp under 
+Fe-enriched conditions, whereas in the industrial MBR, it was reflected 
+by the increased attribution of SMPp associated with disturbance-driven 
+soluble protein release. These results further support the ability of the 
+transfer learning framework to preserve transferable fouling-related 
+information while adapting to plant-specific fouling signals across 
+distinct wastewater backgrounds.

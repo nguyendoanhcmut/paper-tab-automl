@@ -1,0 +1,224 @@
+<!-- Page 1 -->
+Interpretable prediction of coagulant dosage in drinking water treatment 
+plant based on automated machine learning and SHAP method
+Liyan Feng a, Ying Zhang a,*, Xiaoting Wei d, Mengyuan Wang a, Zhiguang Niu a,  
+Chenchen Wang b,c,**
+a School of Environmental Science & Engineering, Tianjin University, Tianjin 300350, China
+b School of Environmental and Municipal Engineering, Tianjin Chengjian University, Tianjin 300384, China
+c Tianjin Key Laboratory of Aquatic Science and Technology, Tianjin Chengjian University, Tianjin 300384, China
+d Tianjin Teda Jinlian Water Supply Co., Ltd., Tianjin 300457, China
+A R T I C L E  I N F O
+Editor: Guangming Jiang
+Keywords:
+Automated machine learning
+SHAP interpretability
+Random Forest
+Coagulant
+Water treatment
+A B S T R A C T
+Accurate prediction of coagulant dosing is critical to ensure the efficiency and cost-effectiveness of the water 
+treatment process. This study developed an accurate prediction model for coagulant dosing in drinking water 
+treatment plants using automated machine learning (AutoML) and enhanced its transparency with the SHAP 
+(Shapley Additive explanation) method. Results showed that the Random Forest (RF) model developed by 
+AutoML outperformed the best single Gradient Boosting Tree model, with a 37 % lower RMSE of 0.89, a 52 % 
+lower MAE of 0.47, and a 5 % higher R2 of 0.96. The RF model has the potential to save 10.25 % of coagulant 
+dosage per year, specifically, 222 kg/d of PACl at a cost of 180.7 yuan/d for Yangtze River water, and 225 kg/ 
+d at a cost of 183.2 yuan/d for Luan River water, while ensuring a more stable water quality in the treated water. 
+SHAP analysis identified conductivity, ammonia nitrogen, chemical oxygen demand, and temperature of raw 
+water as key factors affecting PACl dosage, which significantly impacts treated water pH. The combination of 
+AutoML and SHAP method applied to intelligent water management, can bolster water treatment efficiency and 
+management practices, resulting in noteworthy environmental, economic, and social benefits.
+1. Introduction
+With the rapid development of water treatment technologies, the 
+issues of energy consumption and carbon emissions are becoming 
+increasingly prominent [1,2]. In order to achieve the goal of green and 
+low-carbon, traditional processes have been continuously optimized, 
+but they are still subject to technical and economic constraints: 
+adsorption technology is difficult to regenerate; photocatalytic deep 
+mineralization is limited by the efficiency; and microwave catalytic ef­
+ficiency is high, but the cost of the equipment is high [3–6]. Meanwhile, 
+the complexity of the water treatment process places higher demands on 
+the chemical dosing accuracy, especially in coagulation, whose oper­
+ating cost accounts for a high proportion of the total cost of water plants 
+[7,8], and multivariate (water temperature, pH, etc.), nonlinear dy­
+namic response, and real-time disturbances make it difficult for tradi­
+tional empirical models to balance dosing accuracy and energy 
+efficiency [9,10]. Therefore, determining the optimal coagulant dosage 
+based on raw water quality and established treated water quality criteria 
+is critical to ensure water treatment effectiveness and to realize eco­
+nomic and environmental benefits [11].
+Traditional manual dosing is highly subjective, resulting in high drug 
+consumption and difficult to adapt to large-scale production, resulting in 
+insufficient stability of water control and regulatory lag [12]. Mecha­
+nistic models, on the other hand, struggle to capture the complex re­
+actions and nonlinear relationships within the coagulation process, 
+thereby limiting their practical applicability [13]. Alternatively, data- 
+driven models utilizing machine learning can construct black-box 
+models for nonlinear, multivariate dynamic systems by learning from 
+limited datasets [14]. However, current models have limitations in 
+simulating and predicting anticoagulant dosing, particularly in terms of 
+generalizability and convergence [15]. Among the existing methods for 
+coagulation dosing prediction, DL-MV relies on parameter tuning for 
+high-precision prediction [16]; PSO-SVR optimization requires manu­
+ally preset parameters [17]; and GA-RF architectures are hardened and 
+* Corresponding author.
+** Corresponding author at: School of Environmental and Municipal Engineering, Tianjin Chengjian University, Tianjin 300384, China.
+E-mail addresses: yzhang_n@tju.edu.cn (Y. Zhang), wcc12122008@163.com (C. Wang). 
+Contents lists available at ScienceDirect
+Journal of Water Process Engineering
+journal homepage: www.elsevier.com/locate/jwpe
+https://doi.org/10.1016/j.jwpe.2025.107925
+Received 25 January 2025; Received in revised form 1 May 2025; Accepted 9 May 2025  
+Journal of Water Process Engineering 75 (2025) 107925 
+Available online 15 May 2025 
+2214-7144/© 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+have high computational requirements [18]. These methods generally 
+have two limitations: first, they rely on manual intervention, making it 
+difficult to automate the adjustment of complex nonlinear water quality 
+relationships; second, they adhere to a single optimization paradigm and 
+lack dynamic synergistic mechanisms, resulting in limited predictive 
+efficiency and generalizability.
+Automated Machine Learning (AutoML) builds efficient ML pipelines 
+by automating the entire process [19], and its distributed frameworks (e. 
+g., TPOT) enable fully automated model filtering to reduce development 
+costs and labor dependency [20]. Studies have shown that AutoML ex­
+cels in hyperparameter optimization and complex constraint solving 
+[21–24]. TPOT improves accuracy by 15–20 % without feature reduc­
+tion for 50-dimensional water quality data [25]. The H2O framework 
+accurately predicts biological nutrient removal in wastewater [26], and 
+TPOT outperforms traditional ML by 1.4 % in the lake water quality 
+classification task [27]. Nevertheless, its exploration and application in 
+coagulation agent dosing prediction have not yet been extensively 
+pursued.
+While some studies have used advanced ML techniques, their black- 
+box nature limits interpretability and hinders practical application in 
+water treatment plants, where operational transparency is critical. The 
+SHapley Additive exPlanations (SHAP) method proposed by Lundberg 
+and Lee [28], which significantly improves model transparency, credi­
+bility, and decision making by quantifying the marginal contribution of 
+features to model predictions and identifying key influences and their 
+interaction effects through global and local analysis [29]. The SHAP 
+method has been applied in many fields [30–34] and has been used with 
+high accuracy for surface water quality prediction [35–37]. However, 
+this method has not been applied to coagulant dosage prediction.
+Based on existing research, this study applies the interpretable 
+AutoML framework to coagulation dose prediction for the first time, 
+constructs the prediction system through automated model selection 
+and hyper-parameter optimization, and integrates the SHAP method to 
+achieve the global feature importance and local decision interpretation 
+of the black-box model. By using real-time data and historical infor­
+mation, it ensures that the coagulation process can be accurately 
+controlled while maintaining treated water quality standards, facili­
+tating future technological advances and upgrades in the water treat­
+ment industry.
+2. Materials and methods
+2.1. Data acquisition and preprocessing
+The data utilized in this study were sourced from a water treatment 
+plant located in Tianjin, China. This plant receives water from two pri­
+mary sources: the Luanhe River (for December, January and February 
+annually), diverted from Hebei Province, and the Yangtze River (from 
+March to November annually), originating from the Danjiangkou 
+Reservoir in Hubei Province. The water treatment process involves pre- 
+treatment, enhanced conventional treatment, and a combination of ul­
+traviolet and chlorine disinfection. The daily treatment capacity of the 
+water plant is 17.5 wt/d, and the hydraulic retention time is relatively 
+stable at 25.56 min. The plant uses two types of coagulants: ferric 
+chloride and PACl, which are dosed during the pretreatment and 
+blending stages, respectively. Water quality parameters and coagulant 
+dosing data were collected daily from October 2022 to May 2024, 
+totaling 1339 data points. These data were randomly divided into a 
+training set (1071 entries) and a test set (268 entries) in an 8: 2 ratio. The 
+feature variables consist of inflow rate (WTR) and water quality in­
+dicators such as temperature (T), pH, turbidity (NTU), and electrical 
+conductivity (EC), and chemical oxygen demand determined by potas­
+sium permanganate (CODMn) for both raw water (RW) and treated water 
+(TW), with ammonia nitrogen (NH3−N) being considered only for raw 
+water. Based on practical plant operations and professional evaluations, 
+the dosing amounts of the two coagulants are comparable, with a 
+maximum discrepancy not exceeding 5 mg/L. Therefore, PACl was used 
+as the only target variable for accurate simulation of coagulant dosing in 
+this study.
+During data collection, the occurrence of detection errors and dosing 
+system malfunctions resulted in the raw data set containing problems 
+such as missing values and noise. Therefore, preprocessing is essential to 
+improve data reliability, model performance, and decision quality [38]. 
+In this study, the K-nearest neighbor (KNN, k = 4) estimation model was 
+used to deal with missing data, which balances interpolation stability 
+and global representativeness, and provides better data retention for 
+non-randomly missing key parameters (e.g., water temperature, 
+ammonia nitrogen). The interpolation effect in the range of k = 1–10 
+was searched through the grid and the mean square error (MSE) was 
+used as the evaluation criterion, and the results showed that the MSE 
+was minimized on the test set at k = 4. In addition, noise and random 
+errors were mitigated using a moving average filter with a window size 
+of n = 5, determined based on an autocorrelation function (ACF) anal­
+ysis, a value that effectively captures short-term fluctuations in water 
+quality parameters while avoiding excessive smoothing that leads to 
+peak attenuation [39].
+To investigate the correlations between various features such as 
+WTR, raw water quality indicators, treated water quality indicators, and 
+coagulant dosage, we used the Spearman rank correlation coefficient 
+(rs) method, which is known for its low sensitivity to nonlinear re­
+lationships and outliers. By excluding features with low correlations, we 
+reduced redundant features to reduce the input dimensionality of the 
+model, thereby improving both the operational efficiency and general­
+ization capabilities of the model. A flowchart illustrating the modeling 
+methodology is shown in Fig. 1.
+2.2. Automated machine learning
+AutoML is a technique for automating the machine learning process 
+through algorithms, including feature engineering, algorithm selection, 
+and hyperparameter optimization [40]. Its primary goal is to reduce the 
+need for human intervention while improving model performance. In 
+this study, the Tree-based Pipeline Optimization Tool (TPOT), an 
+AutoML tool based on genetic programming, is used to automate model 
+construction. TPOT is an open source Python-based AutoML library 
+(version 0.11.7) with underlying dependencies on Scikit-Learn (version 
+1.0.2), DEAP (Distributed Evolutionary Algorithms Framework), and 
+extensions such as XGBoost [27]. The model runs in a Python 3.8 
+environment, and the full configuration code for TPOT is open source.
+In this study, the TPOT framework is adopted to automate the design 
+of machine learning pipelines, whose core mechanisms are: iterative 
+optimization based on tree-structured coding of genetic programming, 
+integration of Scikit-Learn multi-algorithms with predefined hyper- 
+parameter space to balance the search efficiency; and screening of the 
+Pareto-optimal pipeline by repeating the 10-fold cross-validation (run 
+independently for 3 times) to ensure the model generalization perfor­
+mance [41].
+2.3. SHAP interpretability method
+The SHAP methodology encompasses Kernel SHAP, Deep SHAP, and 
+Tree SHAP [42]. This study used the Tree SHAP package in Python 3.9 to 
+analyze the importance, dependencies, and interactions of features. The 
+modules and functions used in Python are listed in Table 1. The average 
+absolute SHAP values were used to evaluate the importance of different 
+factors in determining the dosage amount. By summing the average 
+absolute SHAP values for all relevant environmental parameters, their 
+combined impact on dosing strategies was quantified. Dependency plots 
+of SHAP values revealed interactions between features and their col­
+lective contribution to the prediction of dosing strategies for the coag­
+ulation process [43]. Two typical samples were selected to generate 
+local interpretability plots, waterfall plots, and decision plots in order to 
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+2 
+
+
+<!-- Page 3 -->
+illustrate feature importance and decision-making mechanisms within 
+the samples.
+2.4. Model evaluation
+Root mean square error (RMSE), mean absolute error (MAE), and 
+coefficient of determination (R2) were used as evaluation metrics to 
+assess the reliability and accuracy of the predictive models [44]. RMSE 
+assesses the degree of discrepancy between predicted and actual values 
+within a sample set [45]. It has an increased sensitivity to outliers and 
+acts as a metric of model accuracy by calculating the average size of 
+prediction errors. MAE reflects the average discrepancy between pre­
+dicted and actual values, with values closer to zero indicating superior 
+model performance [10]. R2 quantifies the fit of model predictions to 
+actual data, assessing the robustness and reliability of the model. A value 
+of R2 approaching one indicates a higher correlation between the 
+dependent and independent variables, which indicates a better model fit 
+and consequently smaller prediction errors [46].

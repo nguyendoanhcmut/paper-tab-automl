@@ -1,0 +1,343 @@
+1. Introduction
+The semiconductor manufacturing industry is one of the most water- 
+intensive sectors globally [1–6], consuming between 1400 and 4200 L of 
+ultrapure water per square centimeter of fabricated wafer [7–10]. As 
+device geometries shrink and production volumes rise, securing supply 
+while managing contaminated effluent has become critical, and the 
+effluent itself demands multi-barrier treatment [11–13]: organic com­
+pounds from photoresist processes, ionic contaminants from etching and 
+cleaning, and colloidal particles from polishing must all be removed, 
+with each unit process operating reliably to safeguard the ones down­
+stream [9,14]. Membrane bioreactors (MBRs) have become the 
+preferred solution because they combine biological degradation with 
+high-efficiency membrane separation in one compact process. In a 
+submerged configuration, ultrafiltration (UF) membranes sit directly in 
+the activated sludge bioreactor in place of a secondary clarifier, pro­
+ducing permeate largely free of suspended solids, bacteria and high- 
+molecular-weight organics. The configuration gives effluent quality 
+* Corresponding author at: Department of Global Smart City, Sungkyunkwan University (SKKU), (16419) 2066, Seobu-ro, Jangan-gu, Suwon, Gyeonggi-do, Re­
+public of Korea.
+E-mail addresses: junyujae@naver.com (Y. Jeon), nguyenducanh@g.skku.edu (D.A. Nguyen), toikimanh@gmail.com (K.A.N. Thi), thainq@g.skku.edu
+(Q.T. Nong), amjang@skku.edu (A. Jang). 
+Contents lists available at ScienceDirect
+Journal of Water Process Engineering
+journal homepage: www.elsevier.com/locate/jwpe
+https://doi.org/10.1016/j.jwpe.2026.110865
+Received 9 July 2026; Received in revised form 17 August 2026; Accepted 29 August 2026  
+Journal of Water Process Engineering 92 (2026) 110865 
+Available online 7 September 2026 
+2214-7144/© 2026 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+independent of sludge settleability, a smaller footprint, operation at 
+elevated mixed liquor suspended solids (MLSS), and decoupling of solids 
+retention time (SRT) from hydraulic retention time (HRT), which en­
+riches slow-growing nitrifiers and enhances nutrient removal [15–19].
+In semiconductor wastewater reclamation, MBRs act as the pre­
+treatment barrier upstream of reverse osmosis (RO) polishing [20,21], 
+and the quality of the UF permeate sets the fouling trajectory of the 
+downstream RO membranes [22,23]. Fouling remains the dominant 
+operational constraint, and it is more complex in submerged MBRs than 
+in pressure-driven standalone UF because the membrane sits in mixed 
+liquor carrying biomass, extracellular polymeric substances (EPS), sol­
+uble microbial products (SMP) and colloidal organic matter [24–26]. Its 
+rate is set by an interacting group of factors: MLSS and sludge rheology 
+govern cake formation, the food-to-microorganism (F/M) ratio and SRT 
+control EPS and SMP production, aeration supplies the shear that miti­
+gates cake build-up, and HRT modulates organic loading [27–29]. 
+Semiconductor wastewater imposes a fouling signature unlike munic­
+ipal streams in three respects. The organic load is dominated not by 
+readily biodegradable substrate but by photoresist strippers, developers, 
+solvents and chelating agents, a recalcitrant fraction of which adsorbs 
+preferentially onto PVDF to form a poorly reversible layer [30–34]. 
+Chemical–mechanical polishing contributes silica and sub-micron 
+abrasive colloids that seed a dense, low-porosity cake [35–37]. And 
+loading follows the fab's batch production calendar rather than diurnal 
+human activity, so organic and nitrogen pulses arrive on a schedule that 
+is steep and only weakly predictable from the wastewater side. Because 
+carbon is often limited for denitrification in these nitrogen-rich streams, 
+glucose dosing becomes a routine control lever that couples the carbon- 
+to‑nitrogen balance directly to fouling [38,39]. Together these features 
+place the plant in an extended-aeration, high-SRT regime in which 
+conventional short-SRT heuristics do not transfer, and they create a non- 
+linear process landscape that defies simple correlation and rule-based 
+optimisation.
+Ubiquitous SCADA sensing and advances in machine learning (ML) 
+have opened data-driven prediction and optimisation of MBR operation 
+[40–42]. Artificial neural networks have predicted TMP from MLSS, flux 
+and aeration rate [43]; random forest and gradient boosting have pre­
+dicted fouling in pilot-scale MBRs with R2 above 0.90 [44]; long short- 
+term memory networks have captured the temporal dynamics of TMP 
+[45]; support vector regression and random forest have been applied to 
+permeate quality [46]; and XGBoost has related operating conditions to 
+fouling rates in municipal MBRs with reported R2 of 0.94–0.97 [47]. 
+Three limitations hinder translation into industrial practice. Most 
+studies use laboratory- or pilot-scale systems fed synthetic or municipal 
+wastewater [48,49], which cannot reproduce full-scale complexity, 
+where feedwater composition follows manufacturing schedules, clean­
+ing residuals perturb the biology and equipment degradation introduces 
+non-stationarity [50]. Most treat the model as a black box, reporting 
+accuracy while offering little insight into which parameters govern 
+membrane performance [51,52], and without that transparency a model 
+cannot inform decisions or earn the trust of the operators who must act 
+on it. And, less often acknowledged, hourly plant records are strongly 
+autocorrelated, so the random train–test partitions used almost univer­
+sally in this literature place near-duplicate observations on both sides of 
+the split, making reported accuracies difficult to read as performance on 
+genuinely unseen operating conditions.
+Two gaps follow. The first concerns interpretability. Explainable 
+artificial intelligence methods, principally SHAP and partial dependence 
+plots, have been applied across wastewater treatment, including aera­
+tion control, nutrient removal and anaerobic digestion monitoring, but 
+their application to MBR fouling is limited and confined to single models 
+and narrow parameter ranges. What is missing is multi-model inter­
+pretability, in which SHAP is applied across algorithmic families to 
+expose model-dependent bias in the importance rankings [53]; such bias 
+matters because different architectures can assign conflicting impor­
+tance to the same variable [54], so the recommendation depends on 
+which model is consulted, a phenomenon documented for RO systems 
+but not for MBRs. The second gap concerns the step from prediction to 
+guidance. Existing ML-based optimisation of membrane processes either 
+pairs a trained model with a search algorithm to locate point optima 
+[55], or derives qualitative guidance from feature importance without 
+formal optimisation [56]. The first returns single solutions without 
+indicating how robust they are or how wide the feasible envelope is; the 
+second gives understanding without quantitative bounds. Neither 
+approach, moreover, takes account of the fact that the operating vari­
+ables of a full-scale plant are strongly interdependent, so that a feasible 
+region is informative only if it is mapped over the joint operating space 
+the facility can actually reach. For semiconductor MBR systems, where 
+biology and filtration are coupled through shared variables such as 
+MLSS, SRT and aeration, a unified framework is needed that treats TMP, 
+permeate flow and membrane tank level simultaneously and that sam­
+ples only states the plant can actually reach.
+This study introduces an interpretable artificial intelligence frame­
+work for optimising MBR operation in semiconductor wastewater 
+treatment, developed from 4593 hourly measurements collected over 
+306 consecutive days at a full-scale industrial facility in Asan City, Re­
+public of Korea. The MBR, comprising submerged PVDF ultrafiltration 
+membranes integrated with a multi-stage biological process, is the 
+pretreatment step ahead of RO polishing in a reclamation train rated at 
+1125 m3/h. Unlike laboratory datasets acquired under controlled con­
+ditions, the analysis uses SCADA records that carry the full complexity of 
+industrial operation, including variable organic loading from upstream 
+manufacturing, routine maintenance and recovery cleaning events, and 
+progressive membrane ageing over the record.
+The complete framework is set out stage by stage in Fig. 1, and the 
+work makes three contributions. First, it provides the most compre­
+hensive ML benchmarking reported for semiconductor-wastewater 
+MBRs, sixteen algorithms across six families predicting TMP, permeate 
+flow and membrane tank level simultaneously, evaluated under four 
+validation designs so that genuine predictive skill is separated from the 
+accuracy conferred by temporal autocorrelation. Second, it applies 
+SHAP across all sixteen models and distinguishes consensus process 
+conclusions from artefacts of a particular learner, a distinction unavai­
+lable from the single-model analyses that dominate this literature. Third, 
+it maps the feasible operating region by manifold-constrained resam­
+pling rather than independent sampling of marginal ranges, and vali­
+dates the resulting window against the plant's measured attainment rate 
+and out of time on months the models never saw. The framework is 
+directly transferable in method, though quantitative windows are site- 
+specific and require retraining on facility data.
+2. Models and methods
+2.1. System description and data collection
+The experimental data were collected from a full-scale submerged 
+membrane bioreactor (MBR) system at a semiconductor wastewater 
+treatment plant in Asan City, Republic of Korea. The facility utilizes an 
+anoxic–oxic–anoxic–oxic (A-O-A-O) biological configuration, followed 
+by submerged UF membranes, which combine biological nutrient 
+removal with solid–liquid separation in a single integrated process. The 
+MBR system operates at a design capacity of 1125 m3/h, treating 
+semiconductor fabrication wastewater before it is sent to the down­
+stream reverse osmosis system. The UF system consists of 9700 poly­
+vinylidene 
+fluoride 
+(PVDF) 
+hollow-fibre 
+membrane 
+modules 
+manufactured by SUEZ, providing a total membrane area of 329,800 m2. 
+Detailed system specifications and sensor information are available in 
+Section S1 and Table S1 of the supplementary document.
+The membrane tank and biological reactor volumes are reported 
+here for the first time so that the hydraulic terms can be reproduced. The 
+A-O-A-O bioreactor has working volumes of 3841 m3 for the anoxic 
+zones and 8604 m3 for the oxic zones, together with a 376 m3 pH 
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+2 
+
+
+<!-- Page 3 -->
+adjustment tank and a 1437 m3 membrane tank. The HRT used in this 
+study refers to the hydraulic retention time of the oxic tanks and is 
+recorded as a virtual parameter (VP) automatically calculated by the 
+plant control system. The mean HRT over the study period was 7.33 h.
+Data was collected continuously from 1 January 2025 to 3 November 
+2025, spanning 306 consecutive operational days. Process parameters 
+were logged at five-minute intervals by the plant's supervisory control 
+and data acquisition (SCADA) system and aggregated to hourly aver­
+ages, giving 4593 hourly observations after exclusion of chemical 
+cleaning-in-place (CIP) periods, comprising maintenance cleaning (MC) 
+and recovery cleaning (RC) events, which do not represent normal 
+fouling behaviour. Because the record covers ten consecutive months 
+rather than a full annual cycle, no seasonal decomposition was 
+attempted and no seasonal effect is claimed anywhere in this work; the 
+long-timescale variation present in the record is treated as progressive 
+operational drift, principally membrane ageing and the evolving 
+cleaning history, rather than as a seasonal signal.
+2.2. Process parameters and operating ranges
+Seven input parameters describing biological treatment conditions 
+and membrane operating state were monitored continuously: glucose 
+dosing rate (Glu, a surrogate for supplemental organic loading), mixed 
+liquor suspended solids (MLSS), aeration rate (Air), food-to- 
+microorganism ratio (F/M), the ratio of total organic carbon to total 
+nitrogen (C/N), hydraulic retention time (HRT) and sludge retention 
+time (SRT). Three target variables were predicted: transmembrane 
+pressure (TMP) as the primary fouling indicator, permeate flow rate 
+(Flow) as the measure of productive output, and membrane tank water 
+level (Level) as an indicator of hydraulic balance. The abbreviations 
+defined in this paragraph, namely Glu, MLSS, Air, F/M, C/N, HRT, SRT, 
+TMP, Flow and Level, are used consistently thereafter in the text, tables 
+and figures, including the abstract and keywords. The carbon- 
+to‑nitrogen ratio is measured as TOC/TN; the two terms denote the same 
+quantity and only C/N is used hereafter. Table 1 summarises the sta­
+tistical characteristics of all measured parameters.
+2.3. Data preprocessing and standardisation
+Following quality control, input features and output targets were 
+standardised using z-score normalization to ensure that all variables 
+contributed equally to model training, regardless of their original 
+measurement scales. The visualization and distribution of features 
+before and after normalization are shown in Fig. 2.
+Standardisation parameters were computed exclusively from the 
+training partition and applied to the test set to prevent information 
+leakage; the formulation is given in Supplementary Section S2. The step 
+also clarifies the structure of the record. The time series of Flow, TMP 
+and Level show substantial short-term variability together with slower 
+drift, so the system exhibits both gradual operational movement and 
+abrupt transitions across all three outputs (Fig. 2A). Standardisation 
+preserves the shape of each empirical distribution, including skewness, 
+multimodality and tail behaviour (Fig. 2B), while placing variables 
+Fig. 1. Workflow of the interpretable machine-learning framework, from SCADA acquisition through model benchmarking and multi-design validation, cross-model 
+SHAP interpretability, manifold-constrained feasibility sampling and conditional-rate window derivation, to the three independent validations and the resulting 
+operating protocol. Follow the numbered stages left to right and top to bottom; the three purple boxes are independent checks on the result, and the green bar is the 
+operating protocol they support. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Table 1 
+The statistical characteristics of all measured parameters.
+Feature
+Count
+Mean
+Std
+Min
+Max
+Glu (L/min)
+4593
+0.6775
+0.1807
+0.4027
+1.3515
+MLSS (mg/L)
+4593
+4889.5
+1075.2
+1919.4
+7628.8
+Air (m3/h)
+4593
+5945.7
+534.5
+4469.1
+7268.3
+F/M (1/day)
+4593
+0.0275
+0.0078
+0.0118
+0.0658
+C/N ratio
+4593
+9.4314
+2.2581
+4.8040
+17.5029
+HRT (h)
+4593
+7.3346
+0.7947
+5.8738
+11.0411
+SRT (day)
+4593
+87.828
+14.564
+43.323
+108.333
+TMP (bar)
+4593
+−0.122
+0.090
+−0.462
+−0.034
+Flow (m3/min)
+4593
+1.817
+0.257
+0.618
+2.289
+Level (lv) (%)
+4593
+65.774
+1.114
+64.005
+73.942
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+3 
+
+
+<!-- Page 4 -->
+whose raw ranges and units differ substantially on a common zero- 
+mean, unit-variance scale so that their magnitudes and variability 
+become directly comparable.
+The Pearson correlation matrices before and after normalization 
+confirm that z-scoring leaves the linear relationships among variables 
+unchanged (Fig. 3), preserving dependencies such as the negative as­
+sociation between TMP and Flow, the coupling between Level and 
+loading-related variables, and the hydraulic relationships involving HRT 
+and SRT that jointly constrain Flow and Level. The correlations 
+involving Level emphasise its role as an integrative state variable 
+reflecting both hydraulic conditions and biomass accumulation rather 
+than a purely independent target.
+2.4. Data split and robustness evaluation
+Because a continuously logged hourly record carries temporal 
+structure by construction, validation was deliberately made more 
+demanding than a single partition, and four complementary schemes 
+were applied. A random 70/30 partition (3215 training and 1378 test 
+samples) is the design used throughout this literature and is retained for 
+comparability with it. A multi-split analysis over 20 independent 
+random partitions, retraining all 16 models each time, quantifies the 
+variability attributable to partitioning. Blocked partitions divide the 
+record into contiguous blocks of 1, 6, 24, 72, 168, 336 and 720 h and 
+assign whole blocks at random, preserving coverage of the operating 
+envelope while separating adjacent hours, so that generalisation from 
+one operating day to another is measured directly. And a strictly chro­
+nological partition trains on the first 70% and tests on the final 30%, 
+Fig. 2. (A) Time series and (B) distribution of the input and output features of the MBR mainstream (1) before and (2) after normalization. Input features are in blue; 
+output features are in red. The upper row is the raw time series and the lower row the same variables after standardisation; comparing them shows that scaling 
+changes magnitude but not shape. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Fig. 3. Relationship of the input and output features of the MBR mainstream (A) before and (B) after normalization. Each cell is a pairwise Pearson correlation, so 
+darker cells mark the variable pairs that move together; comparing the two panels shows that standardisation leaves those relationships unchanged.
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+4 
+
+
+<!-- Page 5 -->
+with a purged variant discarding a one-week gap at the boundary. An 
+independent set of 4593 hourly observations from a parallel B stream 
+within the same facility assesses transfer to a physically distinct mem­
+brane system without retraining. Standardisation statistics were 
+computed on the training fold only in every design. The dependence 
+structure of the record and the full results under each design are tabu­
+lated in Supplementary Tables S9 to S12.

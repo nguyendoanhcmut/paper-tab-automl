@@ -1,0 +1,998 @@
+<!-- Page 1 -->
+Research article
+Empowerment of accurate modeling of anaerobic membrane bioreactors by 
+automated machine learning
+Junjie Yu a,1, Zhonghua Zheng a,1
+, Jialing Ni b,c, Jiayuan Ji d,*
+a Department of Earth and Environmental Sciences, The University of Manchester, Manchester, M13 9PL, UK
+b Research Center for Advanced Science and Technology, The University of Tokyo, Tokyo, 153-8904, Japan
+c UTokyo LCA Center for Future Strategy, The University of Tokyo, Tokyo, 153-8904, Japan
+d Institute for Future Initiatives, The University of Tokyo, Tokyo, 113-8654, Japan
+A R T I C L E  I N F O
+Keywords:
+Small datasets
+Wastewater treatment
+Prediction modeling
+Feature importance
+Data-driven modeling
+Auto tuning
+A B S T R A C T
+Machine learning (ML) is a promising approach for anaerobic membrane bioreactor (AnMBR) modeling. How­
+ever, its complexity poses challenges for researchers who lack expertise in ML. To address the challenges of 
+model selection and hyperparameter optimization in ML, we employed automated machine learning (AutoML) to 
+model the removal of chemical oxygen demand (COD) in AnMBR treating municipal wastewater. The results 
+show that AutoML achieved better modeling performance than previously applied deep neural models, with a 
+mean absolute percentage error of 3.11%. We further investigated the impact of expanding the feature set and 
+increasing the amount of data on modeling performance. The results demonstrate that the features of operation 
+time can improve performance. However, adding more data does not markedly contribute to ML-based modeling. 
+An analysis of ensemble feature importance indicates that the concentration of COD in influent is the most 
+important feature for predicting the removal of COD. This study demonstrates the efficacy of AutoML for 
+modeling AnMBRs and provides insights into the modeling of wastewater treatment processes with small 
+datasets.
+1. Introduction
+In the near future, humans will use and pollute freshwater at levels 
+where water scarcity could limit food production, ecosystem func­
+tioning, and urban water supply (Jury and Vaux, 2007). The water in­
+dustry has identified wastewater as a viable and sustainable source of 
+resource recovery (Winkler and van Loosdrecht, 2022), and activated 
+sludge is at the core of wastewater treatment technologies (van Loos­
+drecht and Brdjanovic, 2014). Among the wastewater treatment tech­
+nologies, the anaerobic membrane bioreactor (AnMBR) is a promising 
+solution because of its low operational cost, reduced waste sludge pro­
+duction, and high potential for energy recovery (Ho and Sung, 2010; 
+Pretel et al., 2015; Robles et al., 2022). By integrating anaerobic 
+digestion with membrane filtration, AnMBRs not only achieves effective 
+wastewater treatment but also facilitates resource recovery, such as 
+biogas production, rendering it an effective technology for a circular 
+economy and sustainable development (Krzeminski et al., 2017; 
+Moideen et al., 2023). Additionally, AnMBRs offer a fast start-up and a 
+smaller footprint for wastewater treatment (Robles et al., 2018). How­
+ever, the development of AnMBRs primarily relies on laboratory ex­
+periments, followed by pilot-scale trial (Q. Li et al., 2024; Z. Li et al., 
+2024; Ren et al., 2024). Operating such systems generally consumes 
+large amounts of chemical reagents, needs professional equipment 
+support (Li et al., 2022), and requires months to years, rendering them 
+time- and resource-intensive. These constraints on laboratory resources 
+and space further limit the number and duration of reactor runs, 
+impeding the development of AnMBRs.
+To overcome these constraints, data-driven modeling, particularly 
+machine learning (ML), has gained considerable attention as a tool for 
+advancing AnMBR technologies and processes (Li et al., 2022; Robles 
+et al., 2018; Wang and Li, 2024). ML models enable simulations of 
+reactor performance by utilizing operational parameters and influent 
+water quality as inputs and predicting effluent water quality as outputs 
+(Li et al., 2022; Mahanna et al., 2024; Pal et al., 2024). This approach 
+facilitates the analysis of the complex relationships between influent and 
+effluent characteristics and offers valuable insights into reactor 
+* Corresponding author.
+E-mail addresses: kikaen@ifi.u-tokyo.ac.jp, kikaen@tohoku.ac.jp (J. Ji). 
+1 These authors contributed equally to this work.
+Contents lists available at ScienceDirect
+Journal of Environmental Management
+journal homepage: www.elsevier.com/locate/jenvman
+https://doi.org/10.1016/j.jenvman.2026.128801
+Received 12 December 2025; Received in revised form 21 January 2026; Accepted 30 January 2026  
+Journal of Environmental Management 401 (2026) 128801 
+Available online 9 February 2026 
+0301-4797/© 2026 The Authors. Published by Elsevier Ltd. This is an open access article under the CC BY-NC-ND license ( http://creativecommons.org/licenses/by- 
+nc-nd/4.0/ ). 
+
+
+<!-- Page 2 -->
+operation and performance optimization. In addition, ML-based simu­
+lations provide a cost-effective alternative to traditional experimental 
+methods, enabling the evaluation of numerous potential operational 
+scenarios with minimal resource consumption. Such capabilities are 
+particularly valuable for guiding the design and operation of AnMBR 
+systems, particularly in contexts where real-world experiments are 
+impractical or resource constrained.
+However, the application of ML in AnMBR modeling remains chal­
+lenging. One major obstacle is the significant heterogeneity of AnMBR 
+systems, which stems from variations in the microbial community 
+structures, physical configurations, and influent water quality. These 
+factors fundamentally affect reactor performance and resource recovery 
+efficiency. For instance, Ji et al. (2020) observed that the membrane 
+pore size in an AnMBR can influence the effluent chemical oxygen de­
+mand (COD) concentrations and the reactor's microbial composition (Ji 
+et al., 2020), thereby affecting the effluent quality and resource recovery 
+efficiency. This variability limits the development of generalized ML 
+models that can be reliably applied to different reactors and environ­
+mental conditions. Instead, ML models often require customization to 
+account for the unique configurations of individual reactors. This de­
+mands for tailored modeling for flexible and adaptive approaches for 
+ML-driven AnMBR optimization. Another complication is that devel­
+oping effective ML models for AnMBR systems involves a series of 
+complex tasks, including ML algorithm selection and hyperparameter 
+optimization, which typically require substantial ML expertise (He et al., 
+2021; Karmaker (“Santu”) et al., 2021). To address these challenges, 
+automated machine learning (AutoML) has emerged as a promising 
+solution to reduce the complexity of repetitive tasks in ML pipelines 
+(Truong et al., 2019). Although ML models have been implemented in 
+MBRs, their real-world uptake remains limited. AutoML has been 
+highlighted as a promising method for facilitating the practical 
+deployment of ML models (Lai et al., 2024). In particular, AutoML 
+automates key steps, such as ML algorithm selection and hyper­
+parameter optimization, thereby reducing the technical complexity and 
+time required for developing high-performance ML models. In addition, 
+by democratizing access to ML techniques, AutoML has the potential to 
+empower a wider range of users to leverage data-driven approaches in 
+AnMBR development, thereby fostering broader adoption and innova­
+tion in this field (Li et al., 2021).
+This study aims to leverage an AutoML framework for rapid 
+modeling of the complex nonlinear dynamics of the AnMBR during 
+wastewater treatment. Within the proposed rapid modeling framework, 
+we investigated the impact of increasing the features (predictive vari­
+ables) and training dataset size on the model performance by comparing 
+the results with those of existing models based on neural networks. 
+Additionally, we proposed an ensemble learning interpretation frame­
+work to explain the AutoML-based model. The findings of this study 
+contribute to the broader application of AutoML in wastewater treat­
+ment reactor modeling and provide valuable guidance for developing 
+effective models for AnMBR systems.
+2. Methods
+The overall workflow includes data collection from on-site lab-scale 
+experiments, AutoML model development with different inputs, and 
+ensemble ranking analysis of feature importance (Fig. 1). Data collection 
+is described in Section 2.1. AutoML model development is detailed in 
+Section 2.2 and 2.3, and feature importance calculations and analyses 
+are presented in Section 2.4.
+2.1. Data
+The data were obtained from two AnMBRs that operated continu­
+ously in long-term experiments treating municipal sewage (Ji et al., 
+Fig. 1. Overview of the workflow. (a) Flowchart of AnMBR experiment. (b) Modeling framework. T-R: reactor operation temperature; pH-in: influent pH; T-in: 
+influent temperature; T-env: environment temperature; COD-in: influent chemical oxygen demand; OD: operation days; ORP: oxidation-reduction potential; HRTs: 
+hydraulic retention times; MLSS: mixed liquor suspended solids; MLVSS: mixed liquor volatile suspended solids; FLMAL: the automated machine learning package; 
+FCN: fully connected network; CNN: convolutional neural network; and DenseNet: densely connected convolutional network. Tree-based, permutation, and SHAP 
+indicate different interpretation methods for machine learning models.
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+2 
+
+
+<!-- Page 3 -->
+2020, 2021a, 2021b). The volume of each reactor was 20 L, and the 
+reactors were installed at a wastewater treatment plant (WWTP) for 
+better access to raw municipal sewage. The membrane modules used in 
+both AnMBRs were hollow fiber polyvinylidene difluoride membranes, 
+but with pore sizes of 0.4 μ m and 0.05 μ m. The operating temperature 
+was maintained between 20 ◦C and 25 ◦C using water baths (NTT-20S, 
+EYELA, Japan). Hydraulic retention times (HRTs) of 4–24 h were 
+applied to AnMBR1, whereas HRTs of 10–24 h were applied to AnMBR2. 
+Additional details, including the basic water quality of the raw munic­
+ipal wastewater, experimental equipment, and conditions, have been 
+reported in previous studies (Ji et al., 2020, 2021a, 2021b). The COD, 
+mixed liquor suspended solids (MLSS), and mixed liquor volatile sus­
+pended solids (MLVSS) were measured by standard methods 
+(Bridgewater et al., 2017). The MLSS and MLVSS data were sampled 
+weekly, and these data were filled using linear interpolation to match 
+the frequency of COD data. The oxidation-reduction potential (ORP) of 
+the anaerobically activated sludge was measured using an ORP meter 
+(TOADKK, RM-30P, Japan). A total of 11 features were included in this 
+study, including the reactor operation days (OD; Unit: day), reactor 
+operation temperature (T-R; Unit: ◦C), influent temperature (T-in; Unit: 
+◦C), environment temperature (T-env; Unit: ◦C), influent pH (pH-in; 
+Unitless), influent COD (COD-in; Unit: mg/L), flux (Unit: m/day), ORP 
+(Unit: mV), HRT (Unit: hour), MLSS (Unit: mg/L), and MLVSS (Unit: 
+mg/L). The output was the COD removal rate (COD-re; Unit: %). The 
+total sample size of this dataset was 185, which was divided into training 
+and testing sets using a 9:1 split ratio (166:19) in previous study (Li 
+et al., 2022). The above data was obtained by running the reactors in 
+50–414 days.
+We designed comparative studies to investigate: (1) the permanence 
+of AutoML, (2) the impact of feature selection on modeling performance, 
+and (3) the effects of data volume (Fig. 1). First, for comparing with the 
+previous models, we used the same training set and testing data as in a 
+previous study that applied deep learning models, in which T-R, T-in, T- 
+env, pH-in, COD-in, and flux were used as inputs and COD-re was used as 
+a label (Li et al., 2022). The results of deep learning networks from Li 
+et al. (2022), including a fully connected network (FCN), a convolu­
+tional neural network (CNN), and a densely connected convolutional 
+network (DenseNet), were adopted. These existing models serve as 
+baselines (Fig. 1). Subsequently, we examined feature contribution by 
+integrating OD, ORP, HRT, MLSS, and MLVSS (more feature modeling 
+experiment in Fig. 1). These variables were analysed through both in­
+dividual and combined inclusion to delineate their effects on modeling 
+performance. Lastly, to explore whether the size of the training dataset 
+would improve ML model performance, we used additional data 
+collected from longer operational times of the same AnMBRs (more data 
+modeling experiment in Fig. 1). The sample size of the additional data 
+was 135, which was obtained by running the reactors in 7–546 days. In 
+addition to benchmarking against Li et al. (2022), we employed 10-fold 
+cross-validation to evaluate the AutoML models. During 10-fold 
+cross-validation, 10 independent models were trained, with each itera­
+tion using a distinct 90% training and 10% testing split. This approach 
+assesses the variance in model performance and ensures that the re­
+ported results are robust to data perturbations.
+2.2. Modeling
+The model of AnMBR is constructed as follows: 
+Y = fθ(X),
+(1) 
+where Y is the COD-re, X is the matrix of input features, and fθ is the 
+model parameterized with θ. Data-driven modeling aims to estimate the 
+optimal set of parameters, θ, that best represents the given data.
+However, identifying suitable model parameters can be difficult 
+because the process often depends on appropriately configuring hyper­
+parameters (e.g., learning rate, batch size, epochs for neural networks, 
+estimator number, learning rate, and maximum depth of tree for tree- 
+based models) to guide the learning process. Hyperparameters are set­
+tings that influence the training process and model performance but are 
+not learned through the training process.
+Hyperparameter tuning is a crucial step in optimizing the model's 
+performance. Common methods for hyperparameter optimization 
+include grid search, random search, Bayesian optimization, and genetic 
+algorithms. Although these methods assist in hyperparameter tuning, 
+they often require substantial ML expertise and computational re­
+sources, which limit their accessibility. Consequently, AutoML has been 
+developed to streamline the process of hyperparameter tuning and make 
+it more accessible.
+In this study, we employed a Fast Library for AutoML and tuning 
+(FLAML), supporting fast and economical automatic tuning for machine 
+learning (Wang et al., 2021b). This library selects a search order opti­
+mized for both computational cost and model error, iteratively selecting 
+the models, hyperparameters, sample size, and resampling strategy. 
+FLAML demonstrated remarkable performance, outperforming other 
+leading libraries of AutoML (e.g., Auto-sklearn, H2O AutoML, and 
+Alpine Meadow) (Wang et al., 2021b). Studies from environmental 
+sciences, atmospheric sciences, and climate sciences are benefited from 
+this package (Dong et al., 2025; Xia et al., 2023; Zheng et al., 2023). As 
+tree-based models are suitable for tabular data, they were selected as 
+base candidates for the FLAML model selection process, including the 
+random forests (RF) (Breiman, 2001), extremely randomized trees 
+(Geurts et al., 2006), XGBoost (a scalable end-to-end tree boosting sys­
+tem) (Chen and Guestrin, 2016), LightBGM (a highly efficient gradient 
+boosting decision tree) (Ke et al., 2017), and Catboost (gradient boosting 
+with categorical features support) (Dorogush et al., 2018). FLAML im­
+plements a Cost-Frugal Optimization (CFO) strategy, which starts with a 
+low-cost configuration (e.g., small model size) and iteratively moves to 
+more complex configurations only when the performance gain justifies 
+the additional computational cost (Wu et al., 2021). Thus, this method 
+can control cost during the optimization process compared to traditional 
+hyperparameters optimization processes. Further, BlendSearch was 
+applied by default, which is a hierarchical search algorithm that com­
+bines global exploration with local optimization to minimize the total 
+cost spent in finding good configurations (Wang et al., 2021a). The 
+optimization process was constrained by a global time budget of 300 s. 
+The optimization will be terminated when time budget is exhausted. To 
+prevent overfitting, we adopted a 5-fold cross-validation strategy with a 
+mean squared error (MSE) criterion during each AutoML optimization. 
+Notably, the search spaces for the select learners above are dynamically 
+included the number of estimators, number of leaves, learning rate, and 
+regularization parameters. The specific search ranges were then deter­
+mined by CFO strategy based on the training dataset size. The optimal 
+sets of hyperparameters and settings of all models are provided in 
+Supporting Information.
+2.3. Evaluation
+The evaluation metrics utilized in this study included the MSE, mean 
+absolute error (MAE), root mean squared error (RMSE), mean absolute 
+percentage error (MAPE), and coefficient of determination (R2), which 
+were calculated as follows: 
+MAE = 1
+n
+∑
+n
+i=1
+⃒⃒⃒⃒⃒yi −̂yi|,
+(2) 
+RMSE =
+̅̅̅̅̅̅̅̅̅̅
+MSE
+√
+=
+̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+1
+n
+∑
+n
+i=1
+(yi −̂yi)2
+√
+,
+(3) 
+MAPE = 1
+n
+∑
+n
+i=1
+⃒⃒⃒⃒⃒
+yi −̂yi
+yi
+|*100,
+(4) 
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+3 
+
+
+<!-- Page 4 -->
+R2 = 1 −
+∑
+n
+i=1
+(yi −̂yi)2
+∑
+n
+i=1
+(yi −y)2 ,
+(5) 
+where yi and y∧i are the observations and model predictions, respec­
+tively, and n is the number of samples. MAE is the average of the ab­
+solute differences between yi and y∧i. RMSE is the square root of the 
+mean of the squared differences between yi and y∧i. It assigns higher 
+weights to larger errors owing to the squaring of errors compared with 
+MAE. RMSE and MAE represent the precision of model predictions. 
+MAPE is the average percentage difference between yi and y∧i. An R2 
+value of one signifies a perfect fit of the model to the data. When R2 
+value is close to zero, it indicates that the model has minimal explana­
+tory power over the target variable. When R2 value is negative, it in­
+dicates that prediction error exceeds the inherent variance of the 
+dataset. In general, the R2 value is better when closer to 1. Notably, the 
+units of MAE and RMSE in this study are percentages (%) (same as the 
+output unit), and the unit of MAPE is also percentage (%) (relative error 
+that calculated by equation (4)).
+While error metrics (e.g., RMSE) assess the overall predictive per­
+formance, they do not explicitly quantify the agreement between the 
+predicted values and the ground truth (Martin Bland and Altman, 1986). 
+Therefore, to evaluate the concordance between the predicted COD 
+removal efficiency and the ground truth, the Bland-Altman analysis was 
+performed (Martin Bland and Altman, 1986). The Bland-Altman method 
+analyses the difference between the two methods against their average. 
+In this study, the difference is calculated as the ground truth subtracting 
+the prediction. A non-zero difference reveals that the model generally 
+overestimates (difference <0) or underestimates (difference >0) the 
+measurement. If the limits of agreement did not exceed the profession­
+ally acceptable value range and 95% of the differences lie within 95% 
+limits of agreement, then the consistency of the two methods was 
+considered to be good (Li et al., 2022). The 95% limits of agreement 
+were determined by adding and subtracting 1.96 standard deviations to 
+the mean difference.
+2.4. Ablation studies
+We conducted ablation studies to evaluate the contributions of 
+different features to the performances of the ML models. An ablation 
+study is a technique used to assess the impact of specific components (e. 
+g., features, parameters, or data) by removing or modifying them and 
+observing the resulting changes in model performance. Specifically, we 
+assessed the impact of OD, ORP, HRT, MLSS, and MLVSS on model 
+performance. By comparing the performance of models with and 
+without specific features, we can infer how these features influence 
+modeling. Additionally, given that we collected more data than the 
+previous study, we investigated the effect of this extended dataset on 
+modeling performance. Throughout the ablation studies, the training 
+and testing data, as well as the model training parameters, were main­
+tained consistently with the previous setup.
+2.5. Feature ranking score
+We developed an ensemble framework using ranking score tailored 
+for AutoML tasks. This framework combines tree-based feature impor­
+tance, permutation feature importance, and shapley additive explana­
+tions (SHAP) values (Schreck et al., 2023; Yu et al., 2025; Zheng et al., 
+2023), and produces an ensemble score with feature importance 
+ranking. This approach provides a more balanced assessment by 
+combining multiple perspectives, rather than relying on a single 
+method.
+In tree-based models, feature importance is derived directly from the 
+structure of the models. For example, in RF, importance is calculated 
+using the Gini importance, which measures the normalized reduction in 
+the Gini criterion contributed by each feature. In this paper, this method 
+is referred to as a tree-based method.
+The permutation method calculates feature importance by evalu­
+ating the change in model performance when the values of a feature are 
+randomly shuffled (Breiman, 2001), which can be applied to any model 
+using tabular data. Specifically, the importance of feature j is defined as 
+ij = s −1
+K
+∑
+K
+k=1
+sk,j,
+(6) 
+where ij represents the importance of feature j, s represents the reference 
+model score (RMSE), and sk,j represents the model score after shuffling 
+feature j at kth repetition. K is the total number of repetitions (30).
+In addition, we employed SHAP, a model-agnostic framework for 
+explaining predictions based on Shapley values (Lundberg et al., 2018; 
+Lundberg and Lee, 2017). The SHAP method calculates the contribution 
+of each feature to the output of the model (SHAP value) as follows: 
+ϕi(f, x) =
+∑
+S⊆Sall\{i}
+|S|!(M −|S| −1)!
+M!
+[fx(S ∪{i}) −fx(S)],
+(7) 
+where ϕi(f, x) represents the SHAP value for feature i, f(S) represents the 
+model output for a subset of features S (S ⊆(0, 1)M), and M represents 
+the set of all M input variables. |S| is the number of nonzero entries in S, 
+and the summation iterates over all possible feature subsets. The 
+contribution of feature i is determined by comparing the model output 
+with and without this feature, weighted by the subset size.
+The feature importance metrics obtained from the aforementioned 
+methods are difficult to compare because of their different underlying 
+principles. To address this, we introduced a “ranking score” metric to 
+standardize the comparison of feature importance across the methods 
+(Zheng et al., 2023). Feature importance values obtained from each 
+method were sorted in ascending order, and each feature received a 
+ranking corresponding to its position in the order-list. Specifically, the 
+least important feature has a lowest score (1), and the second least 
+important is 2, with higher scores given to increasingly important fea­
+tures. This process ensured that the ranking scores ranged from one 
+(indicating the least important feature) to the total number of features 
+(indicating the most important feature). By normalizing the feature 
+importance values in this manner, the feature importance from the 
+different methods was consistent, facilitating direct comparison.
+3. Results and discussion
+3.1. AutoML for efficient AnMBR modeling
+We constructed the AutoML model on the same dataset (including 
+features and targets) as Li et al. (2022) and benchmarked its perfor­
+mance against their results. The results showed that AutoML achieves 
+competitive performance compared to the reported results of previous 
+deep learning models (FCN, CNN, and DenseNet) (Table 1 and Fig. 2). 
+The negative R2 values observed for previously deep learning architec­
+tures may originate from overfitting, limited dataset size, lack of rele­
+vant features, and model suitability for the task (Jiang et al., 2025). By 
+using AutoML, the R2 value increased from negative to positive, high­
+lighting a marked improvement in model performance. Further, we 
+evaluated the AutoML using 10-fold cross-validation. The narrow RMSE 
+confidence interval (±0.33%) validates the robustness of AutoML. 
+Notably, tree-based models were used as base learners for the AutoML 
+tasks. These models exhibit notable differences from neural networks, 
+particularly in handling tabular data (Grinsztajn et al., 2022; 
+Shwartz-Ziv and Armon, 2022). Existing evidence also suggests that 
+tree-based algorithms often outperform deep learning methods when 
+applied to structured tabular data and do not require extensive data 
+preprocessing (McElfresh et al., 2023). Consequently, the adoption of 
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+4 
+
+
+<!-- Page 5 -->
+tree-based AutoML not only enhances the model accuracy but also im­
+proves the efficiency of the AnMBR modeling workflow.
+Furthermore, Bland-Altman analysis was employed to evaluate the 
+consistency between predictions and observations (the ground truth), 
+providing insights into the predictive accuracy and stability of the 
+models. It shows the average difference (bias) and calculates the limits 
+of agreement, which capture the expected range for most differences. A 
+wider limit of agreement boundary indicates poorer consistency be­
+tween the model and the observations. The AutoML results were 
+distributed in a lower limit of agreement range than those of the deep 
+learning models, with a more uniform error distribution (Fig. 3). This 
+suggests that the AutoML approach yields more consistent and stable 
+predictions. In our analysis, the majority of data points were within the 
+95% confidence interval, demonstrating a strong agreement between 
+the observed values and model predictions.
+For the deep learning models, a trend was observed in which the 
+difference between the predicted and observed values decreased as the 
+mean value increased. By contrast, the AutoML results displayed no 
+discernible pattern, with differences evenly distributed across the range 
+of mean values, highlighting the stability and robustness of AutoML. It is 
+noteworthy that all the analysis results show a positive mean difference 
+(Fig. 3). This indicates a systematic tendency to underestimate the COD 
+removal rate using these models. This underestimation may be attrib­
+uted to the imbalanced data distribution between the training and 
+testing sets. Additionally, data-driven models tend to smooth out the 
+noise introduced by measurement uncertainty and the dynamic nature 
+of the biological process. Despite this, the AutoML achieved an RMSE of 
+3.09(%), which is lower than the standard deviation of the experimental 
+COD removal efficiency reported in long-term AnMBR operations 
+(Robles et al., 2022; Uman et al., 2021). This result indicates that the 
+model's overall accuracy is sufficient to describe the AnMBR dynamics. 
+However, as we discussed, overfitting, limited dataset size, model suit­
+ability for the task, and testing methods affect the performance, thus the 
+comparison results are indicative rather than definitive.
+3.2. Improved ML performance with operation time as a feature
+The treatment efficiency of the AnMBR is not only affected by T-R, T- 
+in, T-env, pH-in, COD-in, and flux but also by the reactor operation 
+conditions. For instance, the microbial community structure and activity 
+in an AnMBR are key factors that affect its efficiency (Hu et al., 2017; Xie 
+et al., 2014). However, measuring microbial community structure is a 
+difficult task because it is time-consuming and costly, which restricts the 
+availability of community structure data. Consequently, this limitation 
+may also hinder data-driven AnMBR modeling from effectively uncov­
+ering the underlying mechanisms.
+Based on the hypothesis that additional information may correlate 
+with operation time, we incorporated reactor OD into the modeling 
+process, assuming that OD may be a potential proxy for the microbial 
+dynamics. The inclusion of OD resulted in a substantial improvement in 
+model performance compared to the baseline feature set (T-R, T-in, T- 
+env, pH-in, COD-in, and flux) (Fig. 4 and Fig. S1), with the mean of R2 
+value increasing from 0.44 to 0.55 and mean of RMSE decreasing from 
+2.47 to 2.20 (Fig. 4). Spearman correlation analysis indicates a weak 
+association between OD and the target variable, suggesting a low like­
+lihood of data leakage (see supplementary material). Thus, such 
+enhancement suggests that the additional information carried by OD 
+may have been effectively learned by the ML model. It is important to 
+note that rather than being a direct causal parameter, OD acts as a 
+surrogate variable capturing unmeasured temporal dynamics inherent 
+to the AnMBRs process. This includes the gradual acclimatization of the 
+microbial community (e.g., biofilm development) and the cumulative 
+Table 1 
+Model performance and comparison.
+RMSE (%) 
+a
+MAE (%) a
+MAPE (%) 
+b
+R2
+Evaluation 
+Methods
+AutoML
+2.47 
+[2.14, 
+2.81]
+1.90 
+[1.68, 
+2.11]
+2.19 
+[1.93, 
+2.46]
+0.44 
+[0.22, 
+0.65]
+10-fold CV c
+AutoML
+3.09
+2.76
+3.11
+0.47
+Li et al. 
+(2022) d
+FCN
+6.29
+5.71
+6.49
+−1.19
+Li et al. 
+(2022) d
+CNN
+5.98
+5.34
+6.02
+−0.97
+Li et al. 
+(2022) d
+Dense
+4.69
+4.34
+4.93
+−0.21
+Li et al. 
+(2022) d
+a The unit is equal to COD-re (%).
+b The unit is percentage according to equation (4).
+c The error metrics are reported as the mean and 95% confidence intervals of 
+the error metrics from 10-fold cross validation (CV) using Student's t-based 
+distribution.
+d The model was evaluated by splitting the data using the method from Li et al. 
+(2022).
+Fig. 2. Model prediction results and comparison with actual measured values.
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+5 
+
+
+<!-- Page 6 -->
+changes in membrane surface properties over time. By incorporating this 
+temporal dimension, the model effectively learns such non-stationary 
+behaviors of the reactor during long-term operation. Furthermore, the 
+inclusion of the OD may pose a challenge for extrapolation. Despite the 
+good performance observed in this study, tree-based models often 
+struggle to make reliable predictions beyond the training data range.
+The inclusion of ORP, HRT, MLSS, and MLVSS data did not markedly 
+contribute to the model performance. When OD, ORP, HRT, MLSS, and 
+MLVSS were used simultaneously to train the model, the overall effect 
+was similar to that of the inclusion of OD alone. The Bland-Altman 
+analysis showed that incorporating OD into the model reduced the dif­
+ferences between the prediction and ground truth, rendering the dif­
+ference more evenly distributed around zero compared to models 
+without operation time (Fig. 5 and Fig. S2). This further confirms that 
+including the operation time improves the modeling performance, 
+whereas adding other input parameters yields only a limited improve­
+ment. The limited contribution of typically parameters (e.g., ORP, HRT, 
+MLSS, and MLVSS) likely reflects the specific constraints of the data to 
+this study, such as measurement frequency and signal-to-noise ratio, 
+rather than a lack of physical and biological relevance. Additionally, 
+feature collinearity may have masked their importance, as the model 
+could derive sufficient information from other correlated predictors. 
+These results highlight the importance of feature selection for modeling.
+3.3. Impact of data volume on predictive performance
+ML-based modeling is a data-driven approach whose performance 
+primarily depends on the quality and quantity of data (Fan and Shi, 
+2022; Liu et al., 2023). However, when applied to experimental datasets, 
+ML has inherent challenges in terms of data availability and reliability. 
+Fig. 3. Bland-Altman analysis of (a) AutoML, (b) FCN, (c) CNN, and (d) Dense. The difference of COD-re is calculated by ground truth substrates prediction. The 
+values of the central line are the mean difference of COD-re. The three horizontal lines in each plot, from top to bottom, represent the upper limit of agreement (mean 
+difference + 1.96 × standard deviation), the mean difference, and the lower limit of agreement (mean difference - 1.96 × standard deviation). The results were 
+obtained using the same dataset from Li et al. (2022).
+Fig. 4. Model performance with different input features. Baseline indicates using T-R, T-in, T-env, pH-in, COD-in, and flux as features. Error bar is the 95% con­
+fidence intervals of the error metrics from 10-fold cross validation.
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+6 
+
+
+<!-- Page 7 -->
+Laboratory experiments often yield small sample sizes because of con­
+straints such as time, cost, and space availability. Moreover, the exper­
+imental data are susceptible to various sources of error, including 
+human and instrumental errors. These limitations increase the difficulty 
+of applying ML-based modeling approaches effectively. Furthermore, 
+the ability of a small, high-quality dataset to yield better inferences than 
+a larger, low-quality one is often debatable (Faraway and Augustin, 
+2018; Kokol et al., 2022). To explore this, we examined the impact of 
+increasing the amount of experimental data on AnMBR modeling. We 
+incorporated additional data and compared the results using the same 
+testing sets to ensure uniform evaluation. The additional data originated 
+from the same AnMBR reactors, but with a different operational time 
+range. We utilized the original dataset (M1, 50–414 d) and the extended 
+dataset (M2, 7–546 d) to establish three validation schemes based on 
+10-fold cross-validation (Fig. 6). First, M1T1 represents the baseline 
+performance using standard cross-validation on M1, in which T1 in­
+dicates the testing data were split from M1. Second, for M2T1, the 
+additional data was integrated into the training folds only, allowing the 
+model to learn from a broader range (M2) while being tested on the T1. 
+Finally, M2T2 involves standard cross-validation on the full M2 dataset, 
+in which T2 was split from M2.
+A comparison between the M1T1 and M2T1 groups indicated that 
+adding more data decreased the R2 value and increased RMSE, MAE and 
+MAPE (Fig. 6). A comparison between M1T1 and M2T2 also showed that 
+adding more data increased the prediction error, with M2T2 showing 
+worse modeling performance (Fig. 6). These findings suggest that the 
+addition of more data is not necessarily beneficial for modeling. A likely 
+explanation is that data collected under varying experimental conditions 
+Fig. 5. Bland-Altman analysis of AutoML models. (a) Baseline, (b) add OD, (c) add OD, ORP, HRT, MLSS, and MLVSS, and (d) add all without OD in the feature. The 
+difference of COD-re is calculated by ground truth minus prediction. The values of the central line are the mean difference of COD-re. The three horizontal lines in 
+each plot, from top to bottom, represent the upper limit of agreement (mean difference + 1.96 × standard deviation), the mean difference, and the lower limit of 
+agreement (mean difference - 1.96 × standard deviation).
+Fig. 6. Impact of dataset size on model performance. M1: original dataset with 50–414 operation days. M2: extended dataset with 7–546 operation days. M1T1: the 
+baseline performance using standard cross-validation on M1. M2T1: the additional data was integrated into the training folds only. M2T2: standard cross-validation 
+on the full M2 dataset.
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+7 
+
+
+<!-- Page 8 -->
+introduce variability, biases, and specific errors, which collectively 
+degrade the model performance. Spearman's correlation analysis of M1 
+and M2 further revealed that the features in M2 were less correlated 
+with COD removal than those in M1 (Figure S3 and Figure S4). In other 
+words, the relevance of data is important for modeling. The irrelevance 
+of data may stem from distribution shift in influent/AnMBR states or 
+unmeasured disturbances, which can introduce noise that outweighs the 
+benefits of a larger sample size. Therefore, the degrading performance 
+with larger datasets should be interpreted as a signal of including the 
+irrelevant data. This result highlights the need for data curation that 
+prioritize high-quality and context-specific data rather than broad but 
+indiscriminate data aggregation.
+These results highlight the importance of carefully considering the 
+data sources, quality, and applicability when applying ML to small 
+experimental datasets. Increasing the volume of data without account­
+ing for heterogeneity or relevance to the modeling can lead to dimin­
+ished model accuracy and robustness. Future studies should focus on 
+methods to effectively integrate multi-source data while mitigating po­
+tential biases, ensuring the reliability and precision of ML models for 
+experimental applications.
+3.4. Ensemble feature-based importance analysis
+Using the ranking score approach (Section 2.4) to evaluate feature 
+importance, the results of the three methods indicated that COD-in was 
+the most important feature of all models (Fig. 7). For the model without 
+OD and trained without additional data, T-env appeared to be the sec­
+ond most important feature (Fig. 7 (a)), whereas for the model without 
+OD but trained with additional data, pH-in became the second most 
+important feature (Fig. 7 (e)). When the OD was included, it became the 
+second most important feature, highlighting its important role in the 
+modeling process (Fig. 7(c–g)). Overall, the COD-in is reasonable for the 
+most important feature for predicting the COD removal of AnMBR as it 
+can be served as an important indicator of reactor loading. In contrast, 
+other features, such as ambient temperature, influent temperature, and 
+pH, exhibited lower importance in the model, suggesting that these 
+environmental parameters have a limited impact on the AnMBR 
+performance.
+According to Fig. 7(b–d, f, h), significant differences exist in the 
+feature importance rankings among the interpretation methods. For 
+instance, the results of the model trained with additional data showed 
+notable discrepancies for T-env, flux, and pH-in across the different 
+interpretation methods. Because determining the optimal interpretation 
+method is difficult, we recommend employing a ranking score that in­
+tegrates the results of multiple methods to ensure robustness. In addi­
+tion, we examined the changes in feature importance when additional 
+data were included. The results indicated substantial shifts in feature 
+importance rankings, deviating significantly from the results of model 
+trained with additional data. The interpretation results of the model 
+trained with the additional data (Fig. 7 (h)) were not identical to those of 
+the original model (Fig. 7 (f)). The methods selected for interpretation 
+were based on the structure and prediction of the models. Thus, the 
+deviations between them can be attributed to the incorporation of 
+additional data that may introduce noise into the model, potentially 
+reducing the predictive performance. This result supports the findings in 
+Section 3.3 indicating that the additional data used in this study did not 
+contribute to developing a robust AnMBR ML model.
+The variability of feature importance reflects the uncertainty asso­
+ciated with different mathematical methods for calculating the feature 
+importance. However, despite these fluctuations, the top-tier features 
+(COD-in and/or OD) consistently ranked highest across methods and 
+models. This consistently suggests that while the lower-ranked variables 
+carry uncertainty, the identification of the primary features is robust. 
+The dominance of COD-in highlights the sensitivity to COD loadings, 
+suggesting that COD-in can be a warning signal for COD-re prediction. 
+For instance, when a high COD load is detected, the system can auto­
+matically reduce the inflow rate to give the biological process more time 
+to treat the water. The importance of OD underscores the non-stationary 
+nature of the AnMBR process (e.g., membrane fouling and biomass 
+maturation). This implies that process monitoring should not rely solely 
+on instantaneous sensor readings but must also incorporate time- 
+dependent maintenance schedules.
+3.5. Limitations and future perspectives
+While this study indicates AutoML as a potential tool for AnMBR 
+modeling with limited data, several limitations warrant attention. First, 
+although AutoML outperformed previous models under the identical 
+fixed data split strategy, these results should be interpreted as indicative 
+within this specific experimental setup rather than definitively superior 
+across all models and scenarios. Second, the observation that certain 
+features (e.g., MLSS and MLVSS) contributed less to the model should 
+not be interpreted as the physical or biological aspect, but reflects 
+modeling results. Thus, these findings represent statistical feature 
+importance, not mechanistic causality. Third, the performance failed to 
+improve with a larger dataset does not imply data volume being useless. 
+Instead, it underscores the critical importance of data consistency and 
+quality over mere quantity, highlighting the impact of distribution shifts 
+in dynamic processes of AnMBR treating wastewater. Finally, this study 
+provides deterministic point estimates. To further enhance operational 
+decision-making, future works could integrate probabilistic approaches. 
+Such approaches can provide prediction intervals and quantify 
+Fig. 7. Ranking score of models. (a) model trained with original data, (c) model 
+trained with original data and additional data, (e) same as (a) with OD added in 
+the feature, and (g) same as (c) with OD in the feature. (b), (d), (f), and (h) are 
+the components of the ranking score of (a), (c), (e), and (g), respectively.
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+8 
+
+
+<!-- Page 9 -->
+uncertainty, offering more comprehensive information for biological 
+wastewater treatment modeling.
+4. Conclusions
+Modeling wastewater treatment processes deepens mechanisms 
+insight and reduces experimental resources. However, practitioners 
+without data-driven expertise often struggle with model selection and 
+tuning, limiting the practical application of machine learning. To 
+address this challenge, this study applied AutoML to AnMBR modeling 
+in wastewater treatment. The results demonstrated that AutoML 
+improved modeling performance compared to the previous study. An in- 
+depth investigation of input features and data volume revealed that the 
+features selected through modeling significantly improved the capa­
+bility of ML to model the AnMBR process. By incorporating reactor OD, 
+the R2 value further increased. However, increasing data volume did not 
+consistently enhance model performance, underscoring the importance 
+of data quality in wastewater treatment modeling. Based on these 
+findings, using AnMBR modeling as a case study, this work demonstrates 
+the efficiency and convenience of AutoML in small-sample modeling and 
+ablation analysis. Furthermore, an integrated feature importance anal­
+ysis method was proposed to evaluate the feature importance for 
+AutoML model applications. Overall, this study provides new perspec­
+tives and references for advancing the application of AutoML in waste­
+water treatment, especially for modeling in data-scarce scenarios such as 
+laboratory-scale and pilot-scale experiments.
+CRediT authorship contribution statement
+Junjie Yu: Writing – original draft, Visualization, Software, Inves­
+tigation. Zhonghua Zheng: Writing – review & editing, Resources, 
+Methodology, Investigation. Jialing Ni: Writing – review & editing, 
+Resources. Jiayuan Ji: Writing – review & editing, Writing – original 
+draft, Methodology, Investigation, Funding acquisition, Data curation, 
+Conceptualization.
+Declaration of competing interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgements
+This study was supported by JSPS KAKENHI (Grant No. 
+JP24K17380). Part of the dataset construction work was supported by 
+the Japan Construction Information Center Foundation (Grant No. 
+2022-7). Z.Z. appreciates the support provided by the academic start-up 
+funds from the Department of Earth and Environmental Sciences at the 
+University of Manchester. The authors acknowledge Editage for 
+providing professional English language editing services.
+Appendix A. Supplementary data
+Supplementary data to this article can be found online at https://doi. 
+org/10.1016/j.jenvman.2026.128801.
+Data availability
+The authors do not have permission to share data.
+References
+Breiman, L., 2001. Random forests. Mach. Learn. 45, 5–32. https://doi.org/10.1023/A: 
+1010933404324.
+Bridgewater, L.L., Baird, R.B., Eaton, A.D., Rice, E.W., 2017. American public health 
+association, American water works association, water environment Federation. 
+Standard Methods for the Examination of Water and Wastewater, 23rd edition. 
+American Public Health Association, Washington, DC. 
+Chen, T., Guestrin, C., 2016. XGBoost: a scalable tree boosting system. In: Proceedings of 
+the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data 
+Mining, KDD ’16. Association for Computing Machinery, New York, NY, USA, 
+pp. 785–794. https://doi.org/10.1145/2939672.2939785.
+Dong, W., Yuan, H., Lin, W., Liu, Z., Xiang, J., Wei, Z., Li, L., Li, Q., Dai, Y., 2025. 
+A global urban tree leaf area index dataset for urban climate modeling. Sci. Data 12, 
+426. https://doi.org/10.1038/s41597-025-04729-y.
+Dorogush, A.V., Ershov, V., Gulin, A., 2018. CatBoost: gradient boosting with categorical 
+features support. https://doi.org/10.48550/arXiv.1810.11363.
+Fan, F.J., Shi, Y., 2022. Effects of data quality and quantity on deep learning for protein- 
+ligand binding affinity prediction. Bioorg. Med. Chem. 72, 117003. https://doi.org/ 
+10.1016/j.bmc.2022.117003.
+Faraway, J.J., Augustin, N.H., 2018. When small data beats big data. Role Stat. Era Big 
+Data 136, 142–145. https://doi.org/10.1016/j.spl.2018.02.031.
+Geurts, P., Ernst, D., Wehenkel, L., 2006. Extremely randomized trees. Mach. Learn 63, 
+3–42. https://doi.org/10.1007/s10994-006-6226-1.
+Grinsztajn, L., Oyallon, E., Varoquaux, G., 2022. Why do tree-based models still 
+outperform deep learning on typical tabular data? In: Koyejo, S., Mohamed, S., 
+Agarwal, A., Belgrave, D., Cho, K., Oh, A. (Eds.), Advances in Neural Information 
+Processing Systems. Curran Associates, Inc., pp. 507–520
+He, X., Zhao, K., Chu, X., 2021. AutoML: a survey of the state-of-the-art. Knowl.-Based 
+Syst. 212, 106622. https://doi.org/10.1016/j.knosys.2020.106622.
+Ho, J., Sung, S., 2010. Methanogenic activities in anaerobic membrane bioreactors 
+(AnMBR) treating synthetic municipal wastewater. Bioresour. Technol. 101, 
+2191–2196. https://doi.org/10.1016/j.biortech.2009.11.042.
+Hu, D., Su, H., Chen, Z., Cui, Y., Ran, C., Xu, J., Xiao, T., Li, X., Wang, H., Tian, Y., 
+Ren, N., 2017. Performance evaluation and microbial community dynamics in a 
+novel AnMBR for treating antibiotic solvent wastewater. Bioresour. Technol. 243, 
+218–227. https://doi.org/10.1016/j.biortech.2017.06.095.
+Ji, J., Chen, Y., Hu, Y., Ohtsu, A., Ni, J., Li, Y., Sakuma, S., Hojo, T., Chen, R., Li, Y.-Y., 
+2021a. One-year operation of a 20-L submerged anaerobic membrane bioreactor for 
+real domestic wastewater treatment at room temperature: pursuing the optimal HRT 
+and sustainable flux. Sci. Total Environ. 775, 145799. https://doi.org/10.1016/j. 
+scitotenv.2021.145799.
+Ji, J., Ni, J., Ohtsu, A., Isozumi, N., Hu, Y., Du, R., Chen, Y., Qin, Y., Kubota, K., Li, Y.-Y., 
+2021b. Important effects of temperature on treating real municipal wastewater by a 
+submerged anaerobic membrane bioreactor: removal efficiency, biogas, and 
+microbial community. Bioresour. Technol. 336, 125306. https://doi.org/10.1016/j. 
+biortech.2021.125306.
+Ji, J., Sakuma, S., Ni, J., Chen, Y., Hu, Y., Ohtsu, A., Chen, R., Cheng, H., Qin, Y., 
+Hojo, T., Kubota, K., Li, Y.-Y., 2020. Application of two anaerobic membrane 
+bioreactors with different pore size membranes for municipal wastewater treatment. 
+Sci. Total Environ. 745, 140903. https://doi.org/10.1016/j.scitotenv.2020.140903.
+Jiang, F., Zheng, Z., Coe, H., Healy, R.M., Poulain, L., Gros, V., Zhang, H., Li, W., Liu, D., 
+West, M., Topping, D., Riemer, N., 2025. Integrating simulations and observations: a 
+foundation model for estimating the aerosol mixing state index. ACS EST Air 2, 
+877–890. https://doi.org/10.1021/acsestair.4c00329.
+Jury, W.A., Vaux, H.J., 2007. The emerging global water crisis: managing scarcity and 
+conflict between water users. In: Advances in Agronomy. Elsevier, pp. 1–76. https:// 
+doi.org/10.1016/S0065-2113(07)95001-4.
+Karmaker (“Santu”), S.K., Hassan, Md.M., Smith, M.J., Xu, L., Zhai, C., 
+Veeramachaneni, K., 2021. AutoML to date and beyond: challenges and 
+opportunities. ACM Comput. Surv. 54. https://doi.org/10.1145/3470918.
+Ke, G., Meng, Q., Finley, T., Wang, T., Chen, W., Ma, W., Ye, Q., Liu, T.-Y., 2017. 
+LightGBM: a highly efficient gradient boosting decision tree. In: Advances in Neural 
+Information Processing Systems. Curran Associates, Inc.
+Kokol, P., Kokol, M., Zagoranski, S., 2022. Machine learning on small size samples: a 
+synthetic knowledge synthesis. Sci. Prog. 105, 00368504211029777. https://doi. 
+org/10.1177/00368504211029777.
+Krzeminski, P., Leverette, L., Malamis, S., Katsou, E., 2017. Membrane bioreactors – a 
+review on recent developments in energy reduction, fouling control, novel 
+configurations, LCA and market prospects. J. Membr. Sci. 527, 207–227. https://doi. 
+org/10.1016/j.memsci.2016.12.010.
+Lai, Y., Xiao, K., He, Y., Liu, X., Tan, J., Xue, W., Zhang, A., Huang, X., 2024. Machine 
+learning for membrane bioreactor research: principles, methods, applications, and a 
+tutorial. Front. Environ. Sci. Eng. 19, 34. https://doi.org/10.1007/s11783-025- 
+1954-2.
+Li, G., Ji, J., Ni, J., Wang, S., Guo, Y., Hu, Y., Liu, S., Huang, S.-F., Li, Y.-Y., 2022. 
+Application of deep learning for predicting the treatment performance of real 
+municipal wastewater based on one-year operation of two anaerobic membrane 
+bioreactors. Sci. Total Environ. 813, 151920. https://doi.org/10.1016/j. 
+scitotenv.2021.151920.
+Li, Q., Zhao, W., Cui, S., Gadow, S.I., Qin, Y., Li, Y.-Y., 2024. Synergetic association of 
+hydroxyapatite-mediated biofilm and suspended sludge enhances resilience of 
+partial nitrification/anammox (PN/A) system treating high-strength anaerobic 
+membrane bioreactor (AnMBR) permeate. Bioresour. Technol. 412, 131391. https:// 
+doi.org/10.1016/j.biortech.2024.131391.
+Li, Y., Wang, Z., Xie, Y., Ding, B., Zeng, K., Zhang, C., 2021. AutoML: from methodology 
+to application. In: Proceedings of the 30th ACM International Conference on 
+Information & Knowledge Management, Cikm ’21. Association for Computing 
+Machinery, New York, NY, USA, pp. 4853–4856. https://doi.org/10.1145/ 
+3459637.3483279.
+Li, Z., Jiang, T., Zhao, P., Qu, D., Liu, X., 2024. Enhanced DCH4 recovery via wave pulse 
+mixing coupled in-situ hydrophobic membrane in AnMBR treating municipal 
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+9 
+
+
+<!-- Page 10 -->
+wastewater. Resour. Conserv. Recycl. 209, 107773. https://doi.org/10.1016/j. 
+resconrec.2024.107773.
+Liu, Y., Yang, Z., Zou, X., Ma, S., Liu, D., Avdeev, M., Shi, S., 2023. Data quantity 
+governance for machine learning in materials science. Natl. Sci. Rev. 10. https://doi. 
+org/10.1093/nsr/nwad125 nwad125. 
+Lundberg, S.M., Lee, S.-I., 2017. A unified approach to interpreting model predictions. In: 
+Proceedings of the 31st International Conference on Neural Information Processing 
+Systems, NIPS’17. Curran Associates Inc., Red Hook, NY, USA, pp. 4768–4777.
+Lundberg, S.M., Nair, B., Vavilala, M.S., Horibe, M., Eisses, M.J., Adams, T., Liston, D.E., 
+Low, D.K.-W., Newman, S.-F., Kim, J., Lee, S.-I., 2018. Explainable machine-learning 
+predictions for the prevention of hypoxaemia during surgery. Nat. Biomed. Eng. 2, 
+749–760. https://doi.org/10.1038/s41551-018-0304-0.
+Mahanna, H., El-Rashidy, N., Kaloop, M.R., El-Sapakh, S., Alluqmani, A., Hassan, R., 
+2024. Prediction of wastewater treatment plant performance through machine 
+learning techniques. Desalination Water Treat. 319, 100524. https://doi.org/ 
+10.1016/j.dwt.2024.100524.
+Martin Bland, J., Altman, DouglasG., 1986. Statistical methods for assessing agreement 
+between two methods of clinical measurement. Lancet 327, 307–310. https://doi. 
+org/10.1016/S0140-6736(86)90837-8.
+McElfresh, D., Khandagale, S., Valverde, J., Prasad C, V., Ramakrishnan, G., 
+Goldblum, M., White, C., 2023. When do neural nets outperform boosted trees on 
+tabular data? In: Oh, A., Naumann, T., Globerson, A., Saenko, K., Hardt, M., 
+Levine, S. (Eds.), Advances in Neural Information Processing Systems. Curran 
+Associates, Inc., pp. 76336–76369
+Moideen, S.N.F., Krishnan, S., Li, Y.-Y., Hassim, M.H., Kamyab, H., Nasrullah, M., Din, M. 
+F.M., Halim, K.A., Chaiprapat, S., 2023. Performance evaluation and energy 
+potential analysis of anaerobic membrane bioreactor (AnMBR) in the treatment of 
+simulated milk wastewater. Chemosphere 317, 137923. https://doi.org/10.1016/j. 
+chemosphere.2023.137923.
+Pal, R., Arcamo, L., Farnood, R., 2024. Predicting the occurrence of substituted and 
+unsubstituted, polycyclic aromatic compounds in coking wastewater treatment plant 
+effluent using machine learning regression. Chemosphere 361, 142476. https://doi. 
+org/10.1016/j.chemosphere.2024.142476.
+Pretel, R., Dur´an, F., Robles, A., Ruano, M.V., Ribes, J., Serralta, J., Ferrer, J., 2015. 
+Designing an AnMBR-based WWTP for energy recovery from urban wastewater: the 
+role of primary settling and anaerobic digestion. Sep. Purif. Technol. 156, 132–139. 
+https://doi.org/10.1016/j.seppur.2015.09.047.
+Ren, L., Chen, X., Wu, J., Huang, S., Williams, A., Su, Q., 2024. Study on membrane 
+fouling mechanisms and mitigation strategies in a pilot-scale anaerobic membrane 
+bioreactor (P-AnMBR) treating digestate. Water Res. 263, 122166. https://doi.org/ 
+10.1016/j.watres.2024.122166.
+Robles, ´A., Jim´enez-Benítez, A., Gim´enez, J.B., Dur´an, F., Ribes, J., Serralta, J., Ferrer, J., 
+Rogalla, F., Seco, A., 2022. A semi-industrial scale AnMBR for municipal wastewater 
+treatment at ambient temperature: performance of the biological process. Water Res. 
+215, 118249. https://doi.org/10.1016/j.watres.2022.118249.
+Robles, ´A., Ruano, M.V., Charfi, A., Lesage, G., Heran, M., Harmand, J., Seco, A., 
+Steyer, J.-P., Batstone, D.J., Kim, J., Ferrer, J., 2018. A review on anaerobic 
+membrane bioreactors (AnMBRs) focused on modelling and control aspects. 
+Bioresour. Technol. 270, 612–626. https://doi.org/10.1016/j.biortech.2018.09.049.
+Schreck, J.S., Petzke, W., Jim´enez, P.A., Brummet, T., Knievel, J.C., James, E., 
+Kosovi´c, B., Gagne, D.J., 2023. Machine learning and VIIRS satellite retrievals for 
+skillful fuel moisture content monitoring in wildfire management. Remote Sens. 15, 
+3372. https://doi.org/10.3390/rs15133372.
+Shwartz-Ziv, R., Armon, A., 2022. Tabular data: deep learning is not all you need. Inf. 
+Fusion 81, 84–90. https://doi.org/10.1016/j.inffus.2021.11.011.
+Truong, A., Walters, A., Goodsitt, J., Hines, K., Bruss, C.B., Farivar, R., 2019. Towards 
+automated machine learning: evaluation and comparison of AutoML approaches and 
+tools. In: 2019 IEEE 31st International Conference on Tools with Artificial 
+Intelligence (ICTAI), pp. 1471–1479. https://doi.org/10.1109/ICTAI.2019.00209.
+Uman, A.E., Bair, R.A., Yeh, D.H., 2021. Assessment of an anaerobic membrane 
+bioreactor (AnMBR) treating medium-strength synthetic wastewater under cyclical 
+membrane operation. Membranes 11. https://doi.org/10.3390/ 
+membranes11060415.
+van Loosdrecht, M.C.M., Brdjanovic, D., 2014. Anticipating the next century of 
+wastewater treatment. Science 344, 1452–1453. https://doi.org/10.1126/ 
+science.1255183.
+Wang, C., Wu, Q., Huang, S., Saied, A., 2021a. Economical hyperparameter optimization 
+with blended search strategy. In: The Ninth International Conference on Learning 
+Representations (ICLR 2021).
+Wang, C., Wu, Q., Weimer, M., Zhu, E.Eric, 2021b. FLAML: a fast and lightweight 
+AutoML library. Presented at the Fourth Conference on Machine Learning and 
+Systems (MLSys 2021).
+Wang, T., Li, Y.-Y., 2024. Predictive modeling based on artificial neural networks for 
+membrane fouling in a large pilot-scale anaerobic membrane bioreactor for treating 
+real municipal wastewater. Sci. Total Environ. 912, 169164. https://doi.org/ 
+10.1016/j.scitotenv.2023.169164.
+Winkler, M.-K.H., van Loosdrecht, M.C.M., 2022. Intensifying existing urban wastewater. 
+Science 375, 377–378. https://doi.org/10.1126/science.abm3900.
+Wu, Q., Wang, C., Huang, S., 2021. Frugal optimization for cost-related hyperparameters. 
+Proc. Thirty-Fifth AAAI Conf. Artif. Intell. AAAI-21. https://doi.org/10.48550/ 
+arXiv.2005.01571.
+Xia, Xinran, Fu, D., Shao, W., Jiang, R., Wu, S., Zhang, P., Yang, D., Xia, Xiangao, 2023. 
+Retrieving precipitable water vapor over land from satellite passive microwave 
+radiometer measurements using automated machine learning. Geophys. Res. Lett. 
+50. https://doi.org/10.1029/2023GL105197 e2023GL105197. 
+Xie, Z., Wang, Z., Wang, Q., Zhu, C., Wu, Z., 2014. An anaerobic dynamic membrane 
+bioreactor (AnDMBR) for landfill leachate treatment: performance and microbial 
+community identification. Bioresour. Technol. 161, 29–39. https://doi.org/ 
+10.1016/j.biortech.2014.03.014.
+Yu, J., Zheng, Z., Lindley, S., Zhao, L., Wang, C., Wu, Q., Li, L., Topping, D.O., Schreck, J. 
+S., Gagne, D.J., Oleson, K.W., 2025. Leveraging automated machine learning 
+(AutoML) for urban climate emulation. Big Data Earth Syst 1, 100040. https://doi. 
+org/10.1016/j.bdes.2025.100040.
+Zheng, Z., Fiore, A.M., Westervelt, D.M., Milly, G.P., Goldsmith, J., Karambelas, A., 
+Curci, G., Randles, C.A., Paiva, A.R., Wang, C., Wu, Q., Dey, S., 2023. Automated 
+machine learning to evaluate the information content of tropospheric trace gas 
+columns for fine particle estimates over India: a modeling testbed. J. Adv. Model. 
+Earth Syst. 14, 17727–17741. https://doi.org/10.1029/2022ms003099.
+J. Yu et al.                                                                                                                                                                                                                                       
+Journal of Environmental Management 401 (2026) 128801 
+10 

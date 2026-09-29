@@ -1,0 +1,88 @@
+2. Material and methods
+2.1. Experiment method
+Synthetic greywater was prepared following Ongena et al. (2023) using Korean commercial personal care products, detergents, and 
+Fig. 2. Flowchart of data-driven model development and evaluation for nitrification process monitoring.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+3 
+
+
+<!-- Page 4 -->
+literature-derived compositions. The overall synthetic greywater contained 405 ± 70 mg L−1 of chemical oxygen demand (COD), 
+20 ± 3 mg L−1 of NH+
+4 −N and 21 ± 5 mg L−1 of total nitrogen (TN). The remainder of the COD and TN not provided by the personal 
+care products and detergents was approximated by adding acetate and ammonium chloride. Fresh batches were prepared daily with 
+tap water.
+Two parallel 10 L MBRs were inoculated with activated sludge sampled from an Anaerobic-Anoxic-Oxic wastewater treatment 
+plant (Incheon, Korea) and operated for 235 days. Each contained two 0.56-μm SiC flat-sheet membranes (0.165 m² surface area; 
+Fig. 1). Continuous aeration maintained DO at 5.1 ± 2.2 mg L⁻¹ . Greywater feeding and permeate extraction were conducted 
+continuously, with timer-controlled relaxation (0.06 L min⁻¹). The operational strategy for the two parallel MBRs involved three 
+phases of adjusted net flux and aeration to enhance greywater treatment, particularly ammonia removal (Fig. 1). Initially low ammonia 
+removal under a flux of 2.9 L/(m²⋅h) and aeration of 2.0 L/min prompted an increase in aeration to 6.0 L/min in Phase 2 to improve 
+nitrification efficiency. Phase 3 involved an increase in flux to 6.9 L/(m²⋅h) to further test hydraulic stability. Biocarriers (10 % 
+packing ratio) were added to MBR-2 in phase 3 to try to reduce membrane fouling under high flux and promote anoxic zones for 
+enhancing simultaneous nitrification-denitrification, enabling comparative performance evaluation with MBR-1. The 10 % packing 
+ratio was selected to balance fouling control with operational safety, avoiding abrasion and energy issues associated with higher loads 
+(Noor et al., 2023; Rahman et al., 2023). These intentional variations in flux, aeration, and biocarriers addition diversified operational 
+conditions, enriching the dataset to enhance the machine learning model’s generalizability across multiple scenarios.
+Influent, effluent and reactor water quality were analyzed daily as described in supplementary information (SI) 1.
+2.2. Data-driven modelling
+Fig. 2 presents the comprehensive flow-chart adopted for developing data-driven models to monitor the nitrification process in the 
+MBR. Additionally, result analysis and future perspectives are elaborated in Sections 3 and 4.
+2.2.1. Binary classification: nitrification process evaluation
+To effectively predict nitrification status, the relationship between the concentrations of NO₃⁻-N, NO₂⁻-N, and NH₄⁺-N in the reactor 
+must be understood. In the simultaneous nitrification and denitrification process within the MBR, the concentration of NO3
+- -N typically 
+exceeds that of NO2
+- -N and NH4
++-N under sufficient aeration, which is a key factor for effective nitrogen conversion and removal (Huang 
+et al., 2022; Paetkau and Cicek, 2011). Therefore, sufficient nitrification was defined as the condition in which the concentration of 
+NO3
+- -N exceeds the combined concentrations of NO2
+- -N and NH4
++-N, labeled as “Positive”; otherwise, the condition was labeled as 
+“Negative”. The primary goal of the data-driven model for treatment process prediction was to classify whether nitrification was 
+sufficient or insufficient.
+2.2.2. Qualitative analysis of inputs selection
+Three data categories were collected during the experiment: 1 > Hydraulic: hydraulic retention time (HRT) and sludge retention 
+time (SRT); 2 > Operational: transmembrane pressure (TMP), air/influent/effluent flow rates, gross/net flux, flux recovery; 3 > Water 
+quality: COD, TN, NH₄⁺-N, NO₃⁻-N, NO₂⁻-N (in influent, effluent, and mixed liquor in the reactor), TSS (influent/effluent), and DO, 
+MLSS, MLVSS in the reactor. Removal efficiency was also calculated for each parameter. Input features were selected from the 
+perspective of practical deployment, including: 1> Direct measurability, 2> Commercial sensor compatibility, 3> Operational rele­
+vance (e.g., TMP).
+Indirect variables (SRT, removal efficiencies) were excluded. Water quality parameters (DO, COD, TN, NH₄⁺-N, NO₃⁻-N, NO₂⁻-N) 
+and operational factors (flow rates, air flow, TMP) were initially considered. However, > 50 % DO data absence led to its exclu­
+sion—simulating probe failure scenarios. Air flow rate was retained as an oxygen proxy. Online sensor compatibility was prioritized to 
+enhance model applicability and robustness. Influent water quality was excluded due to sensor reliability concerns: complex matrices 
+cause fouling on sensors and sensor degradation (e.g., Ag/AgCl electrodes dissolution) (Ching et al., 2022; Haimi et al., 2013). Effluent 
+NO₂⁻-N was also excluded due to measurement instability versus stable NO₃⁻-N. TMP was included to monitor membrane performance, 
+contributing to long-term operation monitoring. Finally, the dataset was refined by removing inappropriate variables and simplifying 
+the inputs to facilitate dataset splitting.
+2.2.3. Data preprocessing
+From 128 datasets collected over 235 days from dual MBRs, eight incomplete entries were excluded. Biocarriers were added to one 
+reactor in Phase 3 to enable denitrification (Fig. 1), altering parameter relationships. To evaluate cross-scenario applicability, 23 data 
+groups from Phase 3 were used as an independent test group for models trained exclusively on 97 no-biocarrier data groups (activated 
+sludge only). The 97 data groups were utilized for training, validation, and testing of the model’s performance in predicting nitrifi­
+cation with activated sludge only. This approach assessed performance under altered operational conditions. Given inherent influent 
+variability in onsite greywater systems, outliers were intentionally retained to evaluate model robustness against operational fluc­
+tuations, reflecting real-world dynamics.
+2.2.4. Dataset splitting strategy
+The preprocessed dataset comprised 120 groups of data, daily measurements reflecting operational manipulations. The data 
+exhibited an inherent imbalance in label distribution due to controlled changes in treatment conditions. For each reactor, the airflow 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+4 
+
+
+<!-- Page 5 -->
+rate was maintained at 2.0 L/min until day 111 and increased to 6.0 L/min thereafter to enhance the nitrification treatment. Similarly, 
+the influent flow rate was predominantly 11.7 ML/min before the 149th day and increased to 20.6 ML/min afterward. Given these 
+temporal shifts, a simple chronological split of the data could not fairly evaluate model performance. To ensure a representative 
+assessment, the training and test sets were constructed strategically to encompass these operational variations, as illustrated in Fig. 3.
+Given the imbalanced air flow and influent flow rates, every fourth data point was selected to form the test set, constituting 20 % of 
+the data (8 positive & 11 negative labels). The remaining 80 % (28 positive & 50 negative labels) were used for training and validation, 
+maintaining distinct distributional characteristics to assess model generalization. Hyperparameter optimization employed stratified 5- 
+fold cross-validation (Scikit-Learn’s StratifiedKFold), ensuring balanced class representation in each fold for enhanced reliability with 
+imbalanced dataset (Szeghalmy and Fazekas, 2023; Zeng and Martinez, 2000). Additionally, 23 datasets from the biocarrier-added 
+condition (Section 2.2 ; 15 positive and 8 negative labels) were used to test cross-scenario robustness under divergent label distri­
+butions. Section 2.1
