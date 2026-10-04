@@ -301,15 +301,6 @@
       color: var(--text-muted);
       margin-top: 2px;
     }
-      width: 380px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      transition: transform 0.25s ease;
-      z-index: 15;
-    }
     .sidebar-search-area {
       padding: 14px 16px;
       border-bottom: 1px solid var(--border);
@@ -454,6 +445,7 @@
       overflow: hidden;
       background: var(--bg);
     }
+    /* Stage Header and Compact Mode */
     .stage-header {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -462,6 +454,30 @@
       flex-direction: column;
       gap: 12px;
       flex-shrink: 0;
+      transition: padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  gap 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.15s;
+    }
+    .stage-header.compact {
+      padding: 6px 16px;
+      gap: 0;
+    }
+    .stage-header-main {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+      max-height: 160px;
+      opacity: 1;
+      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.22s ease,
+                  margin 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .stage-header.compact .stage-header-main {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      margin: 0 !important;
+      pointer-events: none;
     }
     .stage-title-row {
       display: flex;
@@ -475,6 +491,50 @@
       letter-spacing: -0.02em;
       line-height: 1.35;
       color: var(--text);
+    }
+    .compact-title-wrap {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+      max-width: 550px;
+    }
+    .stage-header.compact .compact-title-wrap {
+      display: flex;
+    }
+    .compact-title-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.01em;
+    }
+    .header-toggle-btn {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+    }
+    .header-toggle-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .header-toggle-btn:active {
+      transform: scale(0.95);
+    }
+    @media (max-width: 900px) {
+      .compact-title-wrap { display: none !important; }
     }
     .audit-badge {
       flex-shrink: 0;
@@ -906,16 +966,22 @@
 
     <!-- Main Stage -->
     <main class="stage">
-      <div class="stage-header">
-        <div class="stage-title-row">
-          <h1 class="stage-title" id="stageTitle">Select a research paper</h1>
-          <div class="audit-badge" title="Four-gate lineage audit passed with zero structural errors">0 Defect Lineage Verified</div>
-        </div>
-        <div class="stage-meta-row">
-          <span class="paper-year-pill" id="stageYearPill">📅 09/2026</span>
-          <span id="stageMetaInfo">17 pp • 11 figs</span>
+      <div class="stage-header" id="stageHeader">
+        <div class="stage-header-main" id="stageHeaderMain">
+          <div class="stage-title-row">
+            <h1 class="stage-title" id="stageTitle">Select a research paper</h1>
+            <div class="audit-badge" title="Four-gate lineage audit passed with zero structural errors">0 Defect Lineage Verified</div>
+          </div>
+          <div class="stage-meta-row" id="stageMetaRow">
+            <span class="paper-year-pill" id="stageYearPill">📅 09/2026</span>
+            <span id="stageMetaInfo">17 pp • 11 figs</span>
+          </div>
         </div>
         <div class="stage-controls-row">
+          <div class="compact-title-wrap" id="compactTitleWrap">
+            <span class="paper-year-pill" id="compactYearPill">📅 09/2026</span>
+            <span class="compact-title-text" id="compactTitleText" title="">Select a research paper</span>
+          </div>
           <div class="view-tabs" id="viewTabs">
             <button class="view-tab active" data-view="mindmap">🧠 Mind Map</button>
             <button class="view-tab" data-view="tree">📖 Knowledge Tree</button>
@@ -923,6 +989,7 @@
             <button class="view-tab" data-view="audit">🛡️ Lineage & Audit</button>
           </div>
           <div class="stage-external-actions">
+            <button class="btn-icon header-toggle-btn" id="headerToggleBtn" title="Thu gọn / Mở rộng tiêu đề">▲</button>
             <a class="btn-icon" id="openTabBtn" target="_blank" href="#">Open Tab ↗</a>
             <button class="btn-icon" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
           </div>
@@ -1664,6 +1731,11 @@
     const floatingCollapseIcon = document.getElementById('floatingCollapseIcon');
     const stageYearPill = document.getElementById('stageYearPill');
     const stageMetaInfo = document.getElementById('stageMetaInfo');
+    const stageHeader = document.getElementById('stageHeader');
+    const compactTitleWrap = document.getElementById('compactTitleWrap');
+    const compactTitleText = document.getElementById('compactTitleText');
+    const compactYearPill = document.getElementById('compactYearPill');
+    const headerToggleBtn = document.getElementById('headerToggleBtn');
 
     // Sidebar Collapse Engine
     const STORAGE_KEY_SIDEBAR = 'hub-sidebar-collapsed';
@@ -1677,8 +1749,14 @@
         sidebarToggleText.textContent = 'Mở danh mục';
         floatingCollapseBtn.classList.add('is-collapsed');
         floatingCollapseIcon.textContent = '▶';
-        floatingCollapseBtn.title = 'Mở danh mục (Ctrl+B hoặc \)';
-        sidebarToggleBtn.title = 'Mở danh mục (Ctrl+B hoặc \)';
+        floatingCollapseBtn.title = 'Mở danh mục (Ctrl+B hoặc \\)';
+        sidebarToggleBtn.title = 'Mở danh mục (Ctrl+B hoặc \\)';
+
+        if (stageHeader) stageHeader.classList.add('compact');
+        if (headerToggleBtn) {
+          headerToggleBtn.textContent = '▼';
+          headerToggleBtn.title = 'Mở rộng tiêu đề';
+        }
       } else {
         sidebar.classList.remove('collapsed');
         sidebarToggleBtn.classList.remove('is-collapsed');
@@ -1686,8 +1764,14 @@
         sidebarToggleText.textContent = 'Thu gọn';
         floatingCollapseBtn.classList.remove('is-collapsed');
         floatingCollapseIcon.textContent = '◀';
-        floatingCollapseBtn.title = 'Thu gọn danh mục (Ctrl+B hoặc \)';
-        sidebarToggleBtn.title = 'Thu gọn danh mục (Ctrl+B hoặc \)';
+        floatingCollapseBtn.title = 'Thu gọn danh mục (Ctrl+B hoặc \\)';
+        sidebarToggleBtn.title = 'Thu gọn danh mục (Ctrl+B hoặc \\)';
+
+        if (stageHeader) stageHeader.classList.remove('compact');
+        if (headerToggleBtn) {
+          headerToggleBtn.textContent = '▲';
+          headerToggleBtn.title = 'Thu gọn tiêu đề';
+        }
       }
     }
 
@@ -1703,6 +1787,13 @@
 
     if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', toggleSidebar);
     if (floatingCollapseBtn) floatingCollapseBtn.addEventListener('click', toggleSidebar);
+    if (headerToggleBtn) {
+      headerToggleBtn.addEventListener('click', () => {
+        const isCompact = stageHeader.classList.toggle('compact');
+        headerToggleBtn.textContent = isCompact ? '▼' : '▲';
+        headerToggleBtn.title = isCompact ? 'Mở rộng tiêu đề' : 'Thu gọn tiêu đề';
+      });
+    }
 
     document.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1768,8 +1859,13 @@
     async function selectPaper(paper) {
       selectedPaper = paper;
       stageTitle.textContent = paper.title;
+      if (compactTitleText) {
+        compactTitleText.textContent = paper.title;
+        compactTitleText.title = paper.title;
+      }
       const dateLabel = paper.pub_date || paper.year || '';
       if (stageYearPill) stageYearPill.textContent = `📅 ${dateLabel}`;
+      if (compactYearPill) compactYearPill.textContent = `📅 ${dateLabel}`;
       if (stageMetaInfo) stageMetaInfo.textContent = `${paper.pages} pp • ${paper.figures} figs • ${paper.tags.join(' • ')}`;
       figCountBadge.textContent = paper.figures;
       renderCatalog();
