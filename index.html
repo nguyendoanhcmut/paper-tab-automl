@@ -170,6 +170,138 @@
     /* Left Sidebar: Paper Catalog */
     .sidebar {
       width: 380px;
+      min-width: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.25s ease,
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 15;
+      overflow: hidden;
+      position: relative;
+    }
+    .sidebar.collapsed {
+      width: 0 !important;
+      min-width: 0 !important;
+      border-right-width: 0 !important;
+      border-right-color: transparent !important;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .sidebar-inner {
+      width: 380px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    /* Sidebar Toggle Buttons */
+    .sidebar-toggle-btn {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 11px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .sidebar-toggle-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.2);
+    }
+    .sidebar-toggle-btn:active {
+      transform: scale(0.96);
+    }
+    .sidebar-toggle-btn .toggle-icon {
+      font-size: 11px;
+      line-height: 1;
+    }
+    .sidebar-toggle-btn.is-collapsed {
+      background: rgba(var(--primary-rgb), 0.12);
+      border-color: rgba(var(--primary-rgb), 0.35);
+      color: var(--primary);
+    }
+
+    /* Floating Edge Collapse Tab */
+    .floating-collapse-btn {
+      position: absolute;
+      top: 14px;
+      left: 367px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 25;
+      font-size: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+    }
+    .floating-collapse-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: scale(1.1);
+      box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.3);
+    }
+    .floating-collapse-btn:active {
+      transform: scale(0.92);
+    }
+    .floating-collapse-btn.is-collapsed {
+      left: 10px;
+      background: var(--surface);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Publication Year Pill */
+    .paper-year-pill {
+      font-family: "Geist Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 1px 7px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    [data-theme="light"] .paper-year-pill {
+      color: #0284c7;
+      background: #e0f2fe;
+      border-color: rgba(2, 132, 199, 0.25);
+    }
+
+    .stage-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+      width: 380px;
       background: var(--surface);
       border-right: 1px solid var(--border);
       display: flex;
@@ -724,6 +856,10 @@
         AutoML & MBR Research Hub
         <span class="brand-badge">branche_v2</span>
       </div>
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Thu gọn / Mở danh mục (Ctrl+B hoặc \)">
+        <span class="toggle-icon" id="sidebarToggleIcon">◀</span>
+        <span class="toggle-text" id="sidebarToggleText">Thu gọn</span>
+      </button>
     </div>
 
     <div class="stats-pills">
@@ -742,9 +878,15 @@
   <!-- App Shell -->
   <div class="app-shell">
 
+    <!-- Floating Edge Toggle -->
+    <button class="floating-collapse-btn" id="floatingCollapseBtn" title="Thu gọn / Mở danh mục (Ctrl+B hoặc \)">
+      <span id="floatingCollapseIcon">◀</span>
+    </button>
+
     <!-- Sidebar: Paper Selector -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-search-area">
+      <div class="sidebar-inner">
+        <div class="sidebar-search-area">
         <div class="search-input-wrap">
           <span class="search-icon">🔍</span>
           <input type="text" id="searchInput" placeholder="Search papers, methods, tags...">
@@ -758,7 +900,8 @@
           <span class="tag-chip" data-tag="Review">Review</span>
         </div>
       </div>
-      <div class="papers-list" id="papersList"></div>
+        <div class="papers-list" id="papersList"></div>
+      </div>
     </aside>
 
     <!-- Main Stage -->
@@ -767,6 +910,10 @@
         <div class="stage-title-row">
           <h1 class="stage-title" id="stageTitle">Select a research paper</h1>
           <div class="audit-badge" title="Four-gate lineage audit passed with zero structural errors">0 Defect Lineage Verified</div>
+        </div>
+        <div class="stage-meta-row">
+          <span class="paper-year-pill" id="stageYearPill">📅 09/2026</span>
+          <span id="stageMetaInfo">17 pp • 11 figs</span>
         </div>
         <div class="stage-controls-row">
           <div class="view-tabs" id="viewTabs">
@@ -915,7 +1062,9 @@
       }
     ],
     "html_file": "an_interpretable_artificial_intelligence_framework/an_interpretable_artificial_intelligence_framework_branches.html",
-    "md_file": "an_interpretable_artificial_intelligence_framework/an_interpretable_artificial_intelligence_framework_branches.md"
+    "md_file": "an_interpretable_artificial_intelligence_framework/an_interpretable_artificial_intelligence_framework_branches.md",
+    "year": 2026,
+    "pub_date": "09/2026"
   },
   {
     "id": 2,
@@ -956,7 +1105,9 @@
       }
     ],
     "html_file": "automated_machine_learning_and_shapbased/automated_machine_learning_and_shapbased_branches.html",
-    "md_file": "automated_machine_learning_and_shapbased/automated_machine_learning_and_shapbased_branches.md"
+    "md_file": "automated_machine_learning_and_shapbased/automated_machine_learning_and_shapbased_branches.md",
+    "year": 2025,
+    "pub_date": "12/2025"
   },
   {
     "id": 3,
@@ -1015,7 +1166,9 @@
       }
     ],
     "html_file": "chemometric_analysis_river_water_quality/chemometric_analysis_river_water_quality_branches.html",
-    "md_file": "chemometric_analysis_river_water_quality/chemometric_analysis_river_water_quality_branches.md"
+    "md_file": "chemometric_analysis_river_water_quality/chemometric_analysis_river_water_quality_branches.md",
+    "year": 2019,
+    "pub_date": "02/2019"
   },
   {
     "id": 4,
@@ -1062,7 +1215,9 @@
       }
     ],
     "html_file": "elucidating_response_effects_of_anammoxbased/elucidating_response_effects_of_anammoxbased_branches.html",
-    "md_file": "elucidating_response_effects_of_anammoxbased/elucidating_response_effects_of_anammoxbased_branches.md"
+    "md_file": "elucidating_response_effects_of_anammoxbased/elucidating_response_effects_of_anammoxbased_branches.md",
+    "year": 2026,
+    "pub_date": "06/2026"
   },
   {
     "id": 5,
@@ -1121,7 +1276,9 @@
       }
     ],
     "html_file": "empowerment_of_accurate_modeling_of/empowerment_of_accurate_modeling_of_branches.html",
-    "md_file": "empowerment_of_accurate_modeling_of/empowerment_of_accurate_modeling_of_branches.md"
+    "md_file": "empowerment_of_accurate_modeling_of/empowerment_of_accurate_modeling_of_branches.md",
+    "year": 2026,
+    "pub_date": "02/2026"
   },
   {
     "id": 6,
@@ -1186,7 +1343,9 @@
       }
     ],
     "html_file": "explainable_crossplant_transfer_learning_for/explainable_crossplant_transfer_learning_for_branches.html",
-    "md_file": "explainable_crossplant_transfer_learning_for/explainable_crossplant_transfer_learning_for_branches.md"
+    "md_file": "explainable_crossplant_transfer_learning_for/explainable_crossplant_transfer_learning_for_branches.md",
+    "year": 2026,
+    "pub_date": "08/2026"
   },
   {
     "id": 7,
@@ -1251,7 +1410,9 @@
       }
     ],
     "html_file": "interpretable_prediction_of_coagulant_dosage/interpretable_prediction_of_coagulant_dosage_branches.html",
-    "md_file": "interpretable_prediction_of_coagulant_dosage/interpretable_prediction_of_coagulant_dosage_branches.md"
+    "md_file": "interpretable_prediction_of_coagulant_dosage/interpretable_prediction_of_coagulant_dosage_branches.md",
+    "year": 2025,
+    "pub_date": "05/2025"
   },
   {
     "id": 8,
@@ -1299,7 +1460,9 @@
       }
     ],
     "html_file": "machine_learning_for_membrane_bioreactor/machine_learning_for_membrane_bioreactor_branches.html",
-    "md_file": "machine_learning_for_membrane_bioreactor/machine_learning_for_membrane_bioreactor_branches.md"
+    "md_file": "machine_learning_for_membrane_bioreactor/machine_learning_for_membrane_bioreactor_branches.md",
+    "year": 2024,
+    "pub_date": "12/2024"
   },
   {
     "id": 9,
@@ -1352,7 +1515,9 @@
       }
     ],
     "html_file": "predicting_nitrification_status_in_aerobic/predicting_nitrification_status_in_aerobic_branches.html",
-    "md_file": "predicting_nitrification_status_in_aerobic/predicting_nitrification_status_in_aerobic_branches.md"
+    "md_file": "predicting_nitrification_status_in_aerobic/predicting_nitrification_status_in_aerobic_branches.md",
+    "year": 2025,
+    "pub_date": "09/2025"
   },
   {
     "id": 10,
@@ -1417,7 +1582,9 @@
       }
     ],
     "html_file": "predictive_framework_for_membrane_fouling/predictive_framework_for_membrane_fouling_branches.html",
-    "md_file": "predictive_framework_for_membrane_fouling/predictive_framework_for_membrane_fouling_branches.md"
+    "md_file": "predictive_framework_for_membrane_fouling/predictive_framework_for_membrane_fouling_branches.md",
+    "year": 2025,
+    "pub_date": "07/2025"
   },
   {
     "id": 11,
@@ -1452,7 +1619,9 @@
       }
     ],
     "html_file": "wastewater_membrane_bioreactor_a_comprehensive/wastewater_membrane_bioreactor_a_comprehensive_branches.html",
-    "md_file": "wastewater_membrane_bioreactor_a_comprehensive/wastewater_membrane_bioreactor_a_comprehensive_branches.md"
+    "md_file": "wastewater_membrane_bioreactor_a_comprehensive/wastewater_membrane_bioreactor_a_comprehensive_branches.md",
+    "year": 2026,
+    "pub_date": "05/2026"
   }
 ];
 
@@ -1488,6 +1657,63 @@
     const lightboxTitle = document.getElementById('lightboxTitle');
     const lightboxCaption = document.getElementById('lightboxCaption');
     const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+    const sidebarToggleText = document.getElementById('sidebarToggleText');
+    const floatingCollapseBtn = document.getElementById('floatingCollapseBtn');
+    const floatingCollapseIcon = document.getElementById('floatingCollapseIcon');
+    const stageYearPill = document.getElementById('stageYearPill');
+    const stageMetaInfo = document.getElementById('stageMetaInfo');
+
+    // Sidebar Collapse Engine
+    const STORAGE_KEY_SIDEBAR = 'hub-sidebar-collapsed';
+    let isCollapsed = localStorage.getItem(STORAGE_KEY_SIDEBAR) === 'true';
+
+    function updateSidebarUI(collapsed) {
+      if (collapsed) {
+        sidebar.classList.add('collapsed');
+        sidebarToggleBtn.classList.add('is-collapsed');
+        sidebarToggleIcon.textContent = '▶';
+        sidebarToggleText.textContent = 'Mở danh mục';
+        floatingCollapseBtn.classList.add('is-collapsed');
+        floatingCollapseIcon.textContent = '▶';
+        floatingCollapseBtn.title = 'Mở danh mục (Ctrl+B hoặc \)';
+        sidebarToggleBtn.title = 'Mở danh mục (Ctrl+B hoặc \)';
+      } else {
+        sidebar.classList.remove('collapsed');
+        sidebarToggleBtn.classList.remove('is-collapsed');
+        sidebarToggleIcon.textContent = '◀';
+        sidebarToggleText.textContent = 'Thu gọn';
+        floatingCollapseBtn.classList.remove('is-collapsed');
+        floatingCollapseIcon.textContent = '◀';
+        floatingCollapseBtn.title = 'Thu gọn danh mục (Ctrl+B hoặc \)';
+        sidebarToggleBtn.title = 'Thu gọn danh mục (Ctrl+B hoặc \)';
+      }
+    }
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 900) {
+        sidebar.classList.toggle('open');
+      } else {
+        isCollapsed = !isCollapsed;
+        localStorage.setItem(STORAGE_KEY_SIDEBAR, isCollapsed ? 'true' : 'false');
+        updateSidebarUI(isCollapsed);
+      }
+    }
+
+    if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', toggleSidebar);
+    if (floatingCollapseBtn) floatingCollapseBtn.addEventListener('click', toggleSidebar);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B')) {
+        e.preventDefault();
+        toggleSidebar();
+      } else if (e.key === '\\') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    });
 
     // Theme Engine
     const savedTheme = localStorage.getItem('hub-theme') || 'dark';
@@ -1516,9 +1742,13 @@
       filtered.forEach(p => {
         const item = document.createElement('div');
         item.className = `paper-item ${p.id === selectedPaper.id ? 'active' : ''}`;
+        const dateLabel = p.pub_date || p.year || '';
         item.innerHTML = `
           <div class="paper-item-top">
-            <span class="paper-id-pill">#${p.id}</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="paper-id-pill">#${p.id}</span>
+              ${dateLabel ? `<span class="paper-year-pill">📅 ${dateLabel}</span>` : ''}
+            </div>
             <span class="paper-meta-pill">${p.pages} pp • ${p.figures} figs</span>
           </div>
           <div class="paper-item-title">${p.title}</div>
@@ -1538,6 +1768,9 @@
     async function selectPaper(paper) {
       selectedPaper = paper;
       stageTitle.textContent = paper.title;
+      const dateLabel = paper.pub_date || paper.year || '';
+      if (stageYearPill) stageYearPill.textContent = `📅 ${dateLabel}`;
+      if (stageMetaInfo) stageMetaInfo.textContent = `${paper.pages} pp • ${paper.figures} figs • ${paper.tags.join(' • ')}`;
       figCountBadge.textContent = paper.figures;
       renderCatalog();
 
@@ -1761,8 +1994,11 @@
     });
 
     // Initialize
+    updateSidebarUI(isCollapsed && window.innerWidth > 900);
     renderCatalog();
-    selectPaper(papersCatalog[0]);
+    if (papersCatalog.length > 0) {
+      selectPaper(papersCatalog[0]);
+    }
   </script>
 </body>
 </html>
