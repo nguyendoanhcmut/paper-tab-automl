@@ -1,0 +1,89 @@
+import json
+
+skeleton = {
+  "doc_slug": "predicting_nitrification_status_in_aerobic",
+  "doc_title": "Predicting nitrification status in aerobic membrane bioreactors by interpretable machine learning models",
+  "doc_type": "paper",
+  "domain": "general",
+  "max_heading_level": 4,
+  "sections": [
+    { "line": 0, "level": 2, "title": "Abstract" },
+    { "line": 38, "level": 2, "title": "1. Introduction" },
+    { "line": 113, "level": 2, "title": "2. Material and methods" },
+    { "line": 114, "level": 3, "title": "2.1. Experiment method" },
+    { "line": 141, "level": 3, "title": "2.2. Data-driven modelling" },
+    { "line": 144, "level": 4, "title": "2.2.1. Binary classification: nitrification process evaluation" },
+    { "line": 158, "level": 4, "title": "2.2.2. Qualitative analysis of inputs selection" },
+    { "line": 173, "level": 4, "title": "2.2.3. Data preprocessing" },
+    { "line": 181, "level": 4, "title": "2.2.4. Dataset splitting strategy" },
+    { "line": 201, "level": 4, "title": "2.2.5. Statistical correlation analysis for inputs determination" },
+    { "line": 209, "level": 4, "title": "2.2.6. Model-based interpretability: interpretable ML algorithms" },
+    { "line": 235, "level": 4, "title": "2.2.7. Evaluation metrics and hyperparameter tuning criteria" },
+    { "line": 270, "level": 4, "title": "2.2.8. Post hoc interpretability" },
+    { "line": 296, "level": 2, "title": "3. Results analysis: data-driven model prediction" },
+    { "line": 297, "level": 3, "title": "3.1. MBR performance and data collection" },
+    { "line": 308, "level": 3, "title": "3.2. Input features determination" },
+    { "line": 325, "level": 3, "title": "3.3. Nitrification status prediction without biocarriers addition" },
+    { "line": 472, "level": 3, "title": "3.4. Cross-scenario test" },
+    { "line": 498, "level": 2, "title": "4. Discussion and future perspective of sustainable operation" },
+    { "line": 499, "level": 3, "title": "4.1. Data limitation and data collection" },
+    { "line": 534, "level": 3, "title": "4.2. Trade-offs of input features for data-driven model structure" },
+    { "line": 548, "level": 3, "title": "4.3. Model transferability improvement" },
+    { "line": 571, "level": 3, "title": "4.4. Data-driven sustainable control" },
+    { "line": 617, "level": 2, "title": "5. Conclusions" },
+    { "line": 654, "level": 2, "title": "Appendix A. Supporting information" }
+  ],
+  "figure_ids": {
+    "fig_01": 114,
+    "fig_02": 144,
+    "fig_03": 181,
+    "fig_04": 325,
+    "fig_05": 325,
+    "fig_06": 571
+  },
+  "drop_figures": [],
+  "exercises": [],
+  "rule_index": [
+    { "title": "2.2.1. Binary classification: nitrification process evaluation", "page": 4 },
+    { "title": "2.2.4. Dataset splitting strategy", "page": 4 },
+    { "title": "2.2.5. Statistical correlation analysis for inputs determination", "page": 5 },
+    { "title": "2.2.6. Model-based interpretability: interpretable ML algorithms", "page": 5 },
+    { "title": "2.2.7. Evaluation metrics and hyperparameter tuning criteria", "page": 6 },
+    { "title": "2.2.8. Post hoc interpretability", "page": 6 },
+    { "title": "4.4. Data-driven sustainable control", "page": 12 }
+  ],
+  "global_lexicon": {
+    "core_thesis": "An interpretable machine learning framework employing logistic regression, random forest, and XGBoost with six sensor-compatible features enables robust monitoring of nitrification efficacy in aerobic membrane bioreactors for greywater reuse, demonstrating cross-scenario transferability to biocarrier-amended systems while mitigating overfitting risks through SHAP and stability analysis.",
+    "key_terms": [
+      { "term": "MBR", "definition": "Membrane Bioreactor combining biological treatment (heterotrophic oxidation and autotrophic nitrification) with membrane filtration." },
+      { "term": "Greywater", "definition": "Domestic wastewater excluding toilet contributions, accounting for ~70% of residential sewage." },
+      { "term": "Nitrification", "definition": "Two-step biological oxidation converting ammonium (NH4+-N) into nitrite (NO2--N) and subsequently nitrate (NO3--N)." },
+      { "term": "Sufficient Nitrification", "definition": "Operational condition where effluent NO3--N concentration exceeds the sum of NO2--N and NH4+-N (positive label)." },
+      { "term": "LR", "definition": "Logistic Regression, a linear model with high bias and low variance applying logit transformation for probabilistic binary classification." },
+      { "term": "RF", "definition": "Random Forest, an ensemble bagging algorithm aggregating multiple decision trees to balance bias and variance." },
+      { "term": "XGB", "definition": "Extreme Gradient Boosting, a sequential decision-tree boosting algorithm with low bias, regularization, and high variance." },
+      { "term": "SHAP", "definition": "SHapley Additive exPlanations, a game-theoretic interpretability framework providing local waterfall and global beeswarm feature attributions." },
+      { "term": "TPR", "definition": "True Positive Rate (Sensitivity / Recall), the proportion of true sufficient nitrification states correctly identified: TP / (TP + FN)." },
+      { "term": "FPR", "definition": "False Positive Rate, the proportion of insufficient nitrification states misclassified as sufficient: FP / (FP + TN)." },
+      { "term": "Precision", "definition": "The proportion of true sufficient states among all positive predictions: TP / (TP + FP); prioritized to avoid under-aeration." },
+      { "term": "TMP", "definition": "Transmembrane Pressure, an operational indicator of membrane filtration resistance and fouling." },
+      { "term": "Biocarrier", "definition": "Polyvinylidene fluoride (PVDF) carriers added to MBR to facilitate simultaneous nitrification-denitrification (SND)." },
+      { "term": "KDE", "definition": "Kernel Density Estimation, a non-parametric method smoothing probability density distributions of input features." }
+    ],
+    "key_entities": [
+      "Aerobic MBR",
+      "PVDF Biocarriers",
+      "Logistic Regression (LR)",
+      "Random Forest (RF)",
+      "Extreme Gradient Boosting (XGB)",
+      "TreeSHAP",
+      "Dual MBR Setup"
+    ]
+  },
+  "global_context_pack": "# Global Context Pack: Predicting Nitrification Status in Aerobic Membrane Bioreactors by Interpretable Machine Learning Models\n\n## Core Thesis\nAn interpretable machine learning framework employing logistic regression (LR), random forest (RF), and extreme gradient boosting (XGB) enables reliable soft-sensor monitoring of nitrification status in decentralized aerobic membrane bioreactors (MBRs) treating greywater, showing robust precision (>0.85) with six sensor-compatible features and demonstrating transferability (precision=0.87 with RF) to biocarrier-augmented simultaneous nitrification-denitrification configurations.\n\n## Output Language Policy\nEnglish. Maintain standard scientific nomenclature, mathematical equations in KaTeX format, and precise chemical designations (NH4+-N, NO2--N, NO3--N, COD, TMP).\n\n## Key Terminology and Acronyms\n- **MBR (Membrane Bioreactor)**: Compact on-site wastewater treatment combining activated sludge biology with membrane separation.\n- **Greywater Reuse**: Decentralized treatment of non-toilet residential sewage (~70% total volume).\n- **Nitrification Status**: Binary classification where NO3--N > (NO2--N + NH4+-N) denotes 'Sufficient' (Positive), and otherwise 'Insufficient' (Negative).\n- **Optimization Strategy**: Precision maximization (TP / (TP + FP)) to minimize False Positive Rate (FPR), preventing dangerous under-aeration.\n- **Models**: Logistic Regression (high bias, low variance), Random Forest (ensemble bagging, balanced), XGBoost (gradient boosting, low bias).\n- **Interpretability**: Model-based analysis and post hoc methods including SHAP (beeswarm and waterfall plots) and Kernel Density Estimation (KDE).\n- **Cross-Scenario Validation**: Testing models trained on activated sludge only against a hybrid MBR amended with PVDF biocarriers performing simultaneous nitrification and denitrification.\n\n## Document Structure Overview\n- **Abstract**: Overview of MBR greywater reuse challenges, soft sensor framework, precision-oriented model evaluation, and cross-scenario findings.\n- **1. Introduction**: Decentralized greywater potential, limitations of static DO/PID controls, sensor fouling issues, and need for interpretable ML soft sensors.\n- **2. Material and methods**:\n  - 2.1: Dual MBR experimental configuration (MBR-1 control, MBR-2 with biocarriers), synthetic greywater composition, operating phases.\n  - 2.2: Data-driven modelling workflow (Fig. 2) comprising:\n    - 2.2.1: Binary classification criterion for nitrification status.\n    - 2.2.2: Input feature qualitative selection (measurability, sensor compatibility, operational relevance).\n    - 2.2.3: Data cleaning and partitioning of 120 groups across 235 days.\n    - 2.2.4: Splitting strategy (80/20 train/test split, stratified 5-fold CV) accounting for airflow and influent shifts (Fig. 3).\n    - 2.2.5: Spearman rank correlation analysis for feature validation.\n    - 2.2.6: Bias-variance trade-offs across LR, RF, and XGB algorithms.\n    - 2.2.7: Confusion matrix evaluation metrics, precision optimization, and 1000-iteration bootstrap resampling.\n    - 2.2.8: Post hoc interpretability via feature coefficients/gain, SHAP axioms, and pairwise KDE plots.\n- **3. Results analysis: data-driven model prediction**:\n  - 3.1: Treatment performance and biomass dynamics (COD >85-90%, NH4+-N removal up to 95%).\n  - 3.2: Selection of six input features (airflow, influent flow, TMP, effluent COD, NO3--N, NH4+-N).\n  - 3.3: Baseline prediction without biocarriers; discussion of test TPR declines due to class imbalance and feature shifts; SHAP global and local waterfall attribution (Fig. 4).\n  - 3.4: Cross-scenario testing on biocarrier MBR (RF precision reaches 0.87; trade-offs in FPR).\n- **4. Discussion and future perspective of sustainable operation**:\n  - 4.1: Constraints of experimental sample sizes, TPR-FPR optimization curves, and staged synthetic-to-real wastewater validation roadmap.\n  - 4.2: Feature selection trade-offs, hydraulic time lags, and need for distributed DO monitoring.\n  - 4.3: Transfer learning enhancement pathways (data-centric, pre-trained models, modular architectures).\n  - 4.4: Automated feedback control flowchart (Fig. 5) adapting aeration rates in incremental steps.\n- **5. Conclusions**: Summary of precision, transferability, key nitrogen predictors, and deployment framework.\n- **Appendix A. Supporting information**: Reference to supplementary materials."
+}
+
+out_path = r"C:\antgravity workplace\ML\PAPER TAB AUTOML\branche_v2\predicting_nitrification_status_in_aerobic\skeleton.json"
+with open(out_path, "w", encoding="utf-8") as f:
+    json.dump(skeleton, f, indent=2, ensure_ascii=False)
+print("skeleton.json written successfully.")

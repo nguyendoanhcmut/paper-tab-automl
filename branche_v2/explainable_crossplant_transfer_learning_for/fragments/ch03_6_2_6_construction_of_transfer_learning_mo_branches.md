@@ -1,0 +1,22 @@
+### 2.6. Construction of transfer learning models
+
+- Tập dữ liệu của nhà máy mục tiêu (target plant dataset) được phân chia theo trình tự thời gian (chronologically) theo cùng tỷ lệ $50:50$ phục vụ xây dựng mô hình học chuyển giao (transfer learning):
+  - $50\%$ dữ liệu đầu tiên theo dòng thời gian được phân bổ làm nhóm mẫu dùng cho tinh chỉnh (fine-tuning pool).
+  - $50\%$ dữ liệu cuối cùng được giữ kín hoàn toàn (unseen) trong suốt quá trình tinh chỉnh và dành riêng làm tập kiểm tra độc lập (independent testing set) (Fig. 1(d)).
+  - Chiến lược phân chia theo trình tự thời gian giúp giảm thiểu rủi ro rò rỉ thông tin theo chuỗi thời gian (temporal information leakage).
+- Tỷ lệ tinh chỉnh ($\text{FT}$ - fine-tuning ratio) được định nghĩa là tỷ lệ phần trăm của tổng tập dữ liệu nhà máy mục tiêu được sử dụng cho quá trình tinh chỉnh:
+  - Tỷ lệ $\text{FT}$ được khảo sát tại các mức giá trị: $0$, $10\%$, $20\%$, $30\%$, $40\%$ và $50\%$.
+  - Số lượng bản ghi dữ liệu cụ thể của nhà máy mục tiêu trong nhóm tinh chỉnh (fine-tuning pool), tập kiểm tra (testing set) và tại từng thiết lập $\text{FT}$ được tóm tắt trong Bảng S5 (Table S5).
+- Các mô hình học chuyển giao thu được được ký hiệu là LSTM-FT và XGBoost-FT:
+  - Tại mốc $\text{FT} = 0$, không có mẫu dữ liệu nào của nhà máy mục tiêu được sử dụng cho việc tinh chỉnh mô hình.
+  - Tại điều kiện $\text{FT} = 0$, hai mô hình tương ứng với phương thức chuyển giao trực tiếp (direct transfer) mà không qua quá trình thích ứng với nhà máy mục tiêu (without target plant adaptation).
+- Quá trình tinh chỉnh với các thiết lập $\text{FT}$ khác không áp dụng phương pháp lấy mẫu phân đoạn nhằm triệt tiêu sự phụ thuộc vào chuỗi lịch sử cục bộ:
+  - Đối với mỗi mức thiết lập $\text{FT}$ khác không ($\text{FT} \neq 0$), nhiều phân đoạn tinh chỉnh (fine-tuning segments) với độ dài tương ứng được lấy mẫu từ nhóm tinh chỉnh (fine-tuning pool) nhằm giảm sự phụ thuộc vào bất kỳ một chuỗi lịch sử cục bộ đơn lẻ nào (Text S8).
+  - Mỗi thử nghiệm ở cấp độ phân đoạn (segment-level experiment) được lặp lại với $5$ hạt giống ngẫu nhiên (random seeds).
+  - Hiệu năng dự báo của mô hình được báo cáo dưới dạng giá trị trung bình $\pm$ độ lệch chuẩn ($\text{mean} \pm \text{standard deviation}$) trên toàn bộ các phân đoạn tinh chỉnh và các lượt chạy lặp lại.
+- Mô hình LSTM-FT và XGBoost-FT được tinh chỉnh theo các chiến lược cập nhật (update strategies) phân hóa riêng biệt:
+  - Chi tiết triển khai kỹ thuật và các thiết lập siêu tham số (hyperparameter settings) của hai mô hình được trình bày trong Bảng S6–S7 (Table S6–S7) và Text S9.
+- Môi trường phần mềm và cấu hình phần cứng phục vụ tính toán:
+  - Toàn bộ các thử nghiệm được lập trình thực thi bằng ngôn ngữ Python $3.10.18$ cùng các thư viện bên thứ ba liên quan.
+  - Các mô hình học sâu (deep-learning models) được xây dựng và huấn luyện bằng thư viện PyTorch $2.7.0$.
+  - Hệ thống tính toán (computing environment) trang bị bộ vi xử lý Intel Core i7-14700KF ($28$ nhân logic / logical cores), bộ nhớ RAM $32\text{ GB}$, và bộ xử lý đồ họa NVIDIA GeForce RTX 5060 Ti GPU.

@@ -1,0 +1,30 @@
+### 3.1.4. Application of Normality Check
+
+- Kiểm định phân phối chuẩn Shapiro–Wilk (Shapiro–Wilk normality test) được thực hiện cho từng đặc trưng (feature) nhằm đánh giá các đặc tính phân phối (distributional properties) của tập dữ liệu:
+  - Giá trị thống kê kiểm định (test statistic) dao động trong khoảng từ $0$ đến $1$, trong đó các giá trị càng tiệm cận $1$ biểu thị mức độ tương đồng càng cao với phân phối chuẩn (normal distribution).
+  - Ngưỡng giá trị $p$ ($p\text{-value threshold}$) bằng $0.05$ được sử dụng để xác định ý nghĩa thống kê (statistical significance):
+    - Giá trị $p > 0.05$ biểu thị việc không đủ cơ sở để bác bỏ giả thuyết không (failure to reject the null hypothesis), qua đó xác nhận đặc trưng tuân theo phân phối chuẩn (confirming normality).
+    - Giá trị $p < 0.05$ biểu thị việc bác bỏ giả thuyết không, xác nhận đặc trưng có sự sai lệch mang ý nghĩa thống kê so với phân phối chuẩn.
+- Kết quả kiểm định phân phối chuẩn xác định $\text{F/M}$ là biến duy nhất thỏa mãn giả định phân phối chuẩn ($p = 0.0518 > 0.05$), trong khi toàn bộ các đặc trưng còn lại gồm $\text{SV30}$, $\text{SVI}$, $\text{MLSSs}$ (hình ghi $\text{MLSS}$), $\text{DO}$, $\text{pH}$, nhiệt độ ($\text{temperature}$) (hình ghi $\text{Temp.}$), thông lượng ($\text{flux}$), $\text{COD RM}$, $\text{TMP}$ và $\text{Spec. Flux}$ đều có $p < 0.05$:
+  - **Hình 3.** Kết quả kiểm định phân phối chuẩn Shapiro–Wilk cho các thông số MBR
+    - <img src="assets/fig_04_p15.png" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Đồ thị Q-Q trực quan hóa độ bám phân phối chuẩn: duy nhất $\text{F/M}$ bám sát đường thẳng lý thuyết, $10$ đặc trưng còn lại phân tán lệch rõ rệt.
+    - **Từ đâu mà thấy được**
+      - Trục Ox: Phân vị lý thuyết (`Theoretical quantiles`), dải từ $-2.5$ đến $2.5$; Trục Oy: Giá trị có thứ tự (`Ordered Values`).
+      - Tiêu đề từng khung hình hiển thị giá trị kiểm định: $\text{F/M}$ đạt $p = 0.0518$ (`Normality: True`); $10$ đặc trưng còn lại có $p < 0.05$ (`Normality: False`).
+      - Lưu ý: hình ghi MLSS và Temp., văn bản ghi MLSSs và temperature.
+- Các giá trị $p$ dưới ngưỡng $0.05$ của $10$ biến số khẳng định sự sai lệch có ý nghĩa thống kê so với phân phối chuẩn (statistically significant deviations from normality):
+  - Giá trị $p$ chi tiết cho từng biến không tuân theo phân phối chuẩn trên đồ thị kiểm định:
+    - $\text{SV30}$: $p = 0.0000$ (`Normality: False`).
+    - $\text{pH}$: $p = 0.0000$ (`Normality: False`).
+    - Nhiệt độ ($\text{Temp.}$): $p = 0.0000$ (`Normality: False`).
+    - Thông lượng ($\text{Flux}$): $p = 0.0000$ (`Normality: False`).
+    - Hiệu suất loại bỏ COD ($\text{COD RM}$): $p = 0.0000$ (`Normality: False`).
+    - $\text{SVI}$: $p = 0.0002$ (`Normality: False`).
+    - Oxy hòa tan ($\text{DO}$): $p = 0.0003$ (`Normality: False`).
+    - Thông lượng riêng ($\text{Spec. Flux}$): $p = 0.0003$ (`Normality: False`).
+    - Nồng độ chất rắn lơ lửng trong bùn hoạt tính ($\text{MLSS}$): $p = 0.0116$ (`Normality: False`).
+    - Áp suất xuyên màng ($\text{TMP}$): $p = 0.0266$ (`Normality: False`).
+- Kết quả kiểm định xác nhận phần lớn các biến số trong tập dữ liệu không tuân theo phân phối chuẩn, đòi hỏi phải áp dụng các kỹ thuật tiền xử lý dữ liệu thích hợp để xử lý độ lệch (skewness) và tính phi chuẩn (non-normality).
+- Kết quả kiểm tra phân phối chuẩn nhấn mạnh sự cần thiết của việc tích hợp các phép biến đổi đặc trưng (feature transformations) và kỹ thuật tiền xử lý phù hợp (như chuẩn hóa robust - Robust Scaling) khi xây dựng các mô hình dự đoán.

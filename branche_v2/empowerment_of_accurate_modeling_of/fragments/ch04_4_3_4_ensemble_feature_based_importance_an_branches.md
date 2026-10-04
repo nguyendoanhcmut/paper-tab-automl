@@ -1,0 +1,34 @@
+### 3.4. Ensemble feature-based importance analysis
+
+- Đánh giá bằng phương pháp điểm xếp hạng (ranking score approach, Section 2.4) từ ba kỹ thuật giải thích xác định $\text{COD-in}$ là đặc trưng quan trọng nhất trên mọi mô hình:
+  - **Hình 7. Điểm xếp hạng tầm quan trọng đặc trưng của các mô hình**
+    - ![assets/fig_07_p8.jpeg](assets/fig_07_p8.jpeg)
+    - **Hình này chứng minh điều gì**
+      - $\text{COD-in}$ giữ vị trí chi phối cao nhất trên toàn bộ các cấu hình mô hình; $\text{OD}$ trở thành đặc trưng quan trọng thứ hai khi được đưa vào; các phương pháp giải thích đơn lẻ thể hiện sự phân kỳ thứ bậc đối với các đặc trưng phụ.
+    - **Từ đâu mà thấy được**
+      - Panel (a), (c), (e), (g): Biểu đồ thanh xếp hạng tổng hợp (Ranking Score); thanh $\text{COD-in}$ đạt giá trị cao nhất ($17\text{--}21$); khi có $\text{OD}$ ((c), (g)), $\text{OD}$ luôn xếp thứ hai ($17$).
+      - Panel (b), (d), (f), (h): Biểu đồ radar phân rã thành phần từ 3 phương pháp (Tree-based, Permutation, SHAP) trên thang điểm $0\text{--}6$, thể hiện sự phân tán thứ bậc ở các biến môi trường phụ.
+  - Thứ hạng các đặc trưng tiếp theo phụ thuộc vào sự hiện diện của thời gian vận hành ($\text{OD}$) và việc bổ sung dữ liệu:
+    - Đối với mô hình không chứa $\text{OD}$ và huấn luyện trên dữ liệu gốc, nhiệt độ môi trường ($\text{T-env}$) là đặc trưng quan trọng thứ hai (Hình 7(a)).
+    - Đối với mô hình không chứa $\text{OD}$ nhưng huấn luyện với dữ liệu bổ sung, $\text{pH}$ dòng vào ($\text{pH-in}$) trở thành đặc trưng quan trọng thứ hai (Hình 7(e)).
+    - Khi $\text{OD}$ được đưa vào tập đặc trưng, $\text{OD}$ trở thành đặc trưng quan trọng thứ hai trong cả hai trường hợp dữ liệu, khẳng định vai trò cốt lõi của thời gian vận hành trong quá trình mô hình hóa (Hình 7(c–g)).
+  - $\text{COD-in}$ giữ vai trò hợp lý là biến quan trọng nhất để dự đoán hiệu suất loại bỏ $\text{COD}$ ($\text{COD-re}$) của $\text{AnMBR}$ vì đây là chỉ thị trực tiếp cho tải trọng nạp của bể phản ứng (reactor loading).
+  - Các thông số môi trường gồm nhiệt độ môi trường ($\text{T-env}$), nhiệt độ dòng vào ($\text{T-in}$) và $\text{pH}$ thể hiện độ quan trọng thấp hơn, cho thấy các thông số môi trường này có tác động hạn chế đến hiệu suất của $\text{AnMBR}$.
+- Các phương pháp giải thích ghi nhận sự phân kỳ đáng kể về thứ bậc quan trọng đặc trưng, đòi hỏi phải áp dụng phương pháp điểm xếp hạng tổ hợp:
+  - Theo Hình 7(b–d, f, h), thứ hạng đặc trưng khác biệt rõ rệt giữa ba phương pháp giải thích (Tree-based, Permutation và SHAP).
+  - Mô hình huấn luyện với dữ liệu bổ sung bộc lộ sự bất đồng lớn giữa các phương pháp giải thích đối với $\text{T-env}$, $\text{flux}$ và $\text{pH-in}$.
+  - Do việc xác định một phương pháp giải thích tối ưu duy nhất là rất khó khăn, nghiên cứu khuyến nghị sử dụng điểm xếp hạng (ranking score) tích hợp kết quả từ nhiều phương pháp nhằm bảo đảm tính ổn định và độ tin cậy.
+- Việc bổ sung thêm dữ liệu làm thay đổi đáng kể thứ hạng tầm quan trọng của đặc trưng do đưa thêm nhiễu vào mô hình:
+  - Thứ hạng tầm quan trọng của đặc trưng thay đổi đáng kể khi bổ sung dữ liệu, sai lệch rõ rệt so với mô hình dữ liệu gốc.
+  - Kết quả giải thích của mô hình huấn luyện với dữ liệu bổ sung (Hình 7(h)) không đồng nhất với kết quả của mô hình gốc (Hình 7(f)).
+  - Các phương pháp giải thích được lựa chọn dựa trên cấu trúc và dự đoán của mô hình, do đó sự sai lệch bắt nguồn từ việc dữ liệu bổ sung đưa nhiễu vào mô hình, có khả năng làm giảm hiệu suất dự đoán.
+  - Kết quả này củng cố các phát hiện tại Section 3.3 rằng dữ liệu bổ sung không đóng góp vào việc phát triển một mô hình học máy $\text{AnMBR}$ có độ tin cậy và tính ổn định cao.
+- Sự biến thiên của độ quan trọng đặc trưng phản ánh độ bất định toán học, nhưng các đặc trưng nhóm đầu ($\text{COD-in}$ và $\text{OD}$) duy trì thứ hạng nhất quán cao nhất:
+  - Sự dao động trong độ quan trọng phản ánh tính bất định gắn liền với các công thức toán học khác nhau dùng để tính toán mức độ đóng góp của biến.
+  - Bất chấp các biến động ở biến thứ cấp, các đặc trưng nhóm đầu ($\text{COD-in}$ và/hoặc $\text{OD}$) luôn đạt thứ hạng cao nhất một cách nhất quán trên mọi phương pháp và mọi mô hình.
+  - Tính nhất quán này khẳng định rằng dù các biến thứ cấp mang tính bất định, việc nhận diện các đặc trưng cốt lõi vẫn đạt độ tin cậy và tính ổn định cao.
+- Mức độ quan trọng chi phối của $\text{COD-in}$ và $\text{OD}$ mang ý nghĩa cơ chế vận hành và định hướng chiến lược giám sát thực tiễn:
+  - Sự áp đảo của $\text{COD-in}$ làm nổi bật độ nhạy cảm của hệ thống đối với tải trọng $\text{COD}$, cho phép $\text{COD-in}$ đóng vai trò như một tín hiệu cảnh báo sớm để dự báo $\text{COD-re}$.
+    - Khi phát hiện tải trọng $\text{COD}$ cao, hệ thống có thể tự động giảm lưu lượng dòng vào (inflow rate) nhằm kéo dài thời gian cho quá trình sinh học xử lý nước.
+  - Mức độ quan trọng của $\text{OD}$ nhấn mạnh bản chất phi dừng (non-stationary nature) của quá trình $\text{AnMBR}$ (ví dụ: hiện tượng tắc nghẽn màng và sự trưởng thành của sinh khối).
+  - Bản chất phi dừng ngụ ý rằng công tác giám sát quá trình không thể chỉ dựa vào các chỉ số cảm biến tức thời (instantaneous sensor readings), mà bắt buộc phải kết hợp các kế hoạch bảo dưỡng định kỳ phụ thuộc vào thời gian (time-dependent maintenance schedules).

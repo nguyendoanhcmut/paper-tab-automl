@@ -1,0 +1,142 @@
+1. Introduction
+The semiconductor manufacturing industry is one of the most water- 
+intensive sectors globally [1–6], consuming between 1400 and 4200 L of 
+ultrapure water per square centimeter of fabricated wafer [7–10]. As 
+device geometries shrink and production volumes rise, securing supply 
+while managing contaminated effluent has become critical, and the 
+effluent itself demands multi-barrier treatment [11–13]: organic com­
+pounds from photoresist processes, ionic contaminants from etching and 
+cleaning, and colloidal particles from polishing must all be removed, 
+with each unit process operating reliably to safeguard the ones down­
+stream [9,14]. Membrane bioreactors (MBRs) have become the 
+preferred solution because they combine biological degradation with 
+high-efficiency membrane separation in one compact process. In a 
+submerged configuration, ultrafiltration (UF) membranes sit directly in 
+the activated sludge bioreactor in place of a secondary clarifier, pro­
+ducing permeate largely free of suspended solids, bacteria and high- 
+molecular-weight organics. The configuration gives effluent quality 
+* Corresponding author at: Department of Global Smart City, Sungkyunkwan University (SKKU), (16419) 2066, Seobu-ro, Jangan-gu, Suwon, Gyeonggi-do, Re­
+public of Korea.
+E-mail addresses: junyujae@naver.com (Y. Jeon), nguyenducanh@g.skku.edu (D.A. Nguyen), toikimanh@gmail.com (K.A.N. Thi), thainq@g.skku.edu
+(Q.T. Nong), amjang@skku.edu (A. Jang). 
+Contents lists available at ScienceDirect
+Journal of Water Process Engineering
+journal homepage: www.elsevier.com/locate/jwpe
+https://doi.org/10.1016/j.jwpe.2026.110865
+Received 9 July 2026; Received in revised form 17 August 2026; Accepted 29 August 2026  
+Journal of Water Process Engineering 92 (2026) 110865 
+Available online 7 September 2026 
+2214-7144/© 2026 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+independent of sludge settleability, a smaller footprint, operation at 
+elevated mixed liquor suspended solids (MLSS), and decoupling of solids 
+retention time (SRT) from hydraulic retention time (HRT), which en­
+riches slow-growing nitrifiers and enhances nutrient removal [15–19].
+In semiconductor wastewater reclamation, MBRs act as the pre­
+treatment barrier upstream of reverse osmosis (RO) polishing [20,21], 
+and the quality of the UF permeate sets the fouling trajectory of the 
+downstream RO membranes [22,23]. Fouling remains the dominant 
+operational constraint, and it is more complex in submerged MBRs than 
+in pressure-driven standalone UF because the membrane sits in mixed 
+liquor carrying biomass, extracellular polymeric substances (EPS), sol­
+uble microbial products (SMP) and colloidal organic matter [24–26]. Its 
+rate is set by an interacting group of factors: MLSS and sludge rheology 
+govern cake formation, the food-to-microorganism (F/M) ratio and SRT 
+control EPS and SMP production, aeration supplies the shear that miti­
+gates cake build-up, and HRT modulates organic loading [27–29]. 
+Semiconductor wastewater imposes a fouling signature unlike munic­
+ipal streams in three respects. The organic load is dominated not by 
+readily biodegradable substrate but by photoresist strippers, developers, 
+solvents and chelating agents, a recalcitrant fraction of which adsorbs 
+preferentially onto PVDF to form a poorly reversible layer [30–34]. 
+Chemical–mechanical polishing contributes silica and sub-micron 
+abrasive colloids that seed a dense, low-porosity cake [35–37]. And 
+loading follows the fab's batch production calendar rather than diurnal 
+human activity, so organic and nitrogen pulses arrive on a schedule that 
+is steep and only weakly predictable from the wastewater side. Because 
+carbon is often limited for denitrification in these nitrogen-rich streams, 
+glucose dosing becomes a routine control lever that couples the carbon- 
+to‑nitrogen balance directly to fouling [38,39]. Together these features 
+place the plant in an extended-aeration, high-SRT regime in which 
+conventional short-SRT heuristics do not transfer, and they create a non- 
+linear process landscape that defies simple correlation and rule-based 
+optimisation.
+Ubiquitous SCADA sensing and advances in machine learning (ML) 
+have opened data-driven prediction and optimisation of MBR operation 
+[40–42]. Artificial neural networks have predicted TMP from MLSS, flux 
+and aeration rate [43]; random forest and gradient boosting have pre­
+dicted fouling in pilot-scale MBRs with R2 above 0.90 [44]; long short- 
+term memory networks have captured the temporal dynamics of TMP 
+[45]; support vector regression and random forest have been applied to 
+permeate quality [46]; and XGBoost has related operating conditions to 
+fouling rates in municipal MBRs with reported R2 of 0.94–0.97 [47]. 
+Three limitations hinder translation into industrial practice. Most 
+studies use laboratory- or pilot-scale systems fed synthetic or municipal 
+wastewater [48,49], which cannot reproduce full-scale complexity, 
+where feedwater composition follows manufacturing schedules, clean­
+ing residuals perturb the biology and equipment degradation introduces 
+non-stationarity [50]. Most treat the model as a black box, reporting 
+accuracy while offering little insight into which parameters govern 
+membrane performance [51,52], and without that transparency a model 
+cannot inform decisions or earn the trust of the operators who must act 
+on it. And, less often acknowledged, hourly plant records are strongly 
+autocorrelated, so the random train–test partitions used almost univer­
+sally in this literature place near-duplicate observations on both sides of 
+the split, making reported accuracies difficult to read as performance on 
+genuinely unseen operating conditions.
+Two gaps follow. The first concerns interpretability. Explainable 
+artificial intelligence methods, principally SHAP and partial dependence 
+plots, have been applied across wastewater treatment, including aera­
+tion control, nutrient removal and anaerobic digestion monitoring, but 
+their application to MBR fouling is limited and confined to single models 
+and narrow parameter ranges. What is missing is multi-model inter­
+pretability, in which SHAP is applied across algorithmic families to 
+expose model-dependent bias in the importance rankings [53]; such bias 
+matters because different architectures can assign conflicting impor­
+tance to the same variable [54], so the recommendation depends on 
+which model is consulted, a phenomenon documented for RO systems 
+but not for MBRs. The second gap concerns the step from prediction to 
+guidance. Existing ML-based optimisation of membrane processes either 
+pairs a trained model with a search algorithm to locate point optima 
+[55], or derives qualitative guidance from feature importance without 
+formal optimisation [56]. The first returns single solutions without 
+indicating how robust they are or how wide the feasible envelope is; the 
+second gives understanding without quantitative bounds. Neither 
+approach, moreover, takes account of the fact that the operating vari­
+ables of a full-scale plant are strongly interdependent, so that a feasible 
+region is informative only if it is mapped over the joint operating space 
+the facility can actually reach. For semiconductor MBR systems, where 
+biology and filtration are coupled through shared variables such as 
+MLSS, SRT and aeration, a unified framework is needed that treats TMP, 
+permeate flow and membrane tank level simultaneously and that sam­
+ples only states the plant can actually reach.
+This study introduces an interpretable artificial intelligence frame­
+work for optimising MBR operation in semiconductor wastewater 
+treatment, developed from 4593 hourly measurements collected over 
+306 consecutive days at a full-scale industrial facility in Asan City, Re­
+public of Korea. The MBR, comprising submerged PVDF ultrafiltration 
+membranes integrated with a multi-stage biological process, is the 
+pretreatment step ahead of RO polishing in a reclamation train rated at 
+1125 m3/h. Unlike laboratory datasets acquired under controlled con­
+ditions, the analysis uses SCADA records that carry the full complexity of 
+industrial operation, including variable organic loading from upstream 
+manufacturing, routine maintenance and recovery cleaning events, and 
+progressive membrane ageing over the record.
+The complete framework is set out stage by stage in Fig. 1, and the 
+work makes three contributions. First, it provides the most compre­
+hensive ML benchmarking reported for semiconductor-wastewater 
+MBRs, sixteen algorithms across six families predicting TMP, permeate 
+flow and membrane tank level simultaneously, evaluated under four 
+validation designs so that genuine predictive skill is separated from the 
+accuracy conferred by temporal autocorrelation. Second, it applies 
+SHAP across all sixteen models and distinguishes consensus process 
+conclusions from artefacts of a particular learner, a distinction unavai­
+lable from the single-model analyses that dominate this literature. Third, 
+it maps the feasible operating region by manifold-constrained resam­
+pling rather than independent sampling of marginal ranges, and vali­
+dates the resulting window against the plant's measured attainment rate 
+and out of time on months the models never saw. The framework is 
+directly transferable in method, though quantitative windows are site- 
+specific and require retraining on facility data.

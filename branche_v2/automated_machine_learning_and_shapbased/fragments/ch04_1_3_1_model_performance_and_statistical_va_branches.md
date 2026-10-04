@@ -1,0 +1,55 @@
+### 3.1. Model performance and statistical validation
+
+- Mô hình XGBoost được tối ưu hóa bằng FLAML (FLAML-optimized XGBoost) đạt hiệu suất dự đoán cao trong mô hình hóa hiệu quả oxy hóa điện hóa PFOA (PFOA electrochemical oxidation efficiency), đạt kết quả tốt hơn đáng kể so với tất cả các mô hình cơ sở (baseline models) trên mọi chỉ số đánh giá (Bảng 1 / Table 1):
+  - Mô hình FLAML-optimized XGBoost đạt sai số $\text{RMSE} = 3.97 \pm 0.45$ và hệ số xác định $R^2 = 0.98 \pm 0.01$, tương ứng với mức giảm $51\,\%$ sai số dự đoán (prediction error) và cải thiện $7\,\%$ phương sai giải thích được (explained variance) so với mô hình cơ sở có hiệu suất cao nhất là Rừng ngẫu nhiên (Random Forest - RF: $\text{RMSE} = 8.05 \pm 1.02$, $R^2 = 0.91 \pm 0.02$).
+  - Bảng 1 thống kê chi tiết các chỉ số đánh giá trung bình và độ lệch chuẩn ($\text{Mean} \pm \text{Std Dev}$) qua $10$ lần chạy độc lập:
+    - FLAML-optimized XGBoost: $\text{RMSE} = 3.97 \pm 0.45$, $\text{MAE} = 2.93 \pm 0.31$, $\text{MAPE} = 10.02 \pm 3.08\,\%$, $\text{CC} = 0.99 \pm 0.0$, $R^2 = 0.98 \pm 0.01$.
+    - Random Forest (RF): $\text{RMSE} = 8.05 \pm 1.02$, $\text{MAE} = 5.97 \pm 0.57$, $\text{MAPE} = 25.17 \pm 10.94\,\%$, $\text{CC} = 0.96 \pm 0.01$, $R^2 = 0.91 \pm 0.02$.
+    - Cây tăng cường độ dốc (Gradient Boosting Decision Tree - GBDT): $\text{RMSE} = 9.35 \pm 0.77$, $\text{MAE} = 7.49 \pm 0.58$, $\text{MAPE} = 32.39 \pm 10.18\,\%$, $\text{CC} = 0.95 \pm 0.01$, $R^2 = 0.89 \pm 0.01$.
+    - Cây quyết định (Decision Tree - DT): $\text{RMSE} = 10.31 \pm 2.17$, $\text{MAE} = 7.33 \pm 1.11$, $\text{MAPE} = 24.75 \pm 13.5\,\%$, $\text{CC} = 0.93 \pm 0.03$, $R^2 = 0.86 \pm 0.07$.
+    - Học sâu (Deep Learning - DL): $\text{RMSE} = 12.41 \pm 1.46$, $\text{MAE} = 8.9 \pm 0.55$, $\text{MAPE} = 51.78 \pm 32.25\,\%$, $\text{CC} = 0.9 \pm 0.02$, $R^2 = 0.8 \pm 0.05$.
+    - $k$ láng giềng gần nhất (k-Nearest Neighbors - KNN): $\text{RMSE} = 19.6 \pm 2.38$, $\text{MAE} = 14.35 \pm 1.38$, $\text{MAPE} = 101.09 \pm 51.01\,\%$, $\text{CC} = 0.71 \pm 0.06$, $R^2 = 0.49 \pm 0.11$.
+- Ưu thế hiệu suất của FLAML-optimized XGBoost đạt ý nghĩa thống kê trên tất cả các chỉ số với $p < 10^{-5}$, được xác nhận qua các kiểm định $t$ theo cặp (paired t-tests) (Bảng 2 / Table 2):
+  - Chênh lệch thể hiện rõ nét nhất khi so sánh với các mô hình cây quyết định tăng cường độ dốc ($p < 1.1 \times 10^{-8}$ đối với $\text{RMSE}$) và phương pháp tiếp cận học sâu ($p < 2.8 \times 10^{-9}$ đối với $\text{RMSE}$).
+  - Bảng 2 ghi nhận chi tiết giá trị $p$ của kiểm định $t$ theo cặp khi so sánh FLAML-optimized XGBoost với từng mô hình cơ sở:
+    - So với RF: $\text{RMSE}$ có $p = 9.616685 \times 10^{-7}$, $\text{MAE}$ có $p = 1.547798 \times 10^{-7}$, $\text{MAPE}$ có $p = 0.000610$, $\text{CC}$ có $p = 2.953061 \times 10^{-5}$, $R^2$ có $p = 1.260622 \times 10^{-5}$.
+    - So với GBDT: $\text{RMSE}$ có $p = 1.106071 \times 10^{-8}$, $\text{MAE}$ có $p = 5.052537 \times 10^{-9}$, $\text{MAPE}$ có $p = 0.000009$, $\text{CC}$ có $p = 2.678730 \times 10^{-8}$, $R^2$ có $p = 1.228068 \times 10^{-8}$.
+    - So với DT: $\text{RMSE}$ có $p = 3.20401610 \times 10^{-6}$, $\text{MAE}$ có $p = 3.111270 \times 10^{-7}$, $\text{MAPE}$ có $p = 0.004675$, $\text{CC}$ có $p = 1.247765 \times 10^{-4}$, $R^2$ có $p = 1.414884 \times 10^{-4}$.
+    - So với DL: $\text{RMSE}$ có $p = 2.846609 \times 10^{-9}$, $\text{MAE}$ có $p = 3.311756 \times 10^{-11}$, $\text{MAPE}$ có $p = 0.001801$, $\text{CC}$ có $p = 3.080667 \times 10^{-7}$, $R^2$ có $p = 4.826925 \times 10^{-7}$.
+    - So với KNN: $\text{RMSE}$ có $p = 6.734575 \times 10^{-9}$, $\text{MAE}$ có $p = 1.336126 \times 10^{-9}$, $\text{MAPE}$ có $p = 0.000225$, $\text{CC}$ có $p = 2.164031 \times 10^{-7}$, $R^2$ có $p = 1.738757 \times 10^{-7}$.
+- Phân tích xếp hạng (ranking analysis) (Bảng 3 / Table 3) khẳng định vị thế dẫn đầu nhất quán của mô hình FLAML-optimized XGBoost trên tất cả các thước đo hiệu suất:
+  - FLAML-optimized XGBoost giành vị trí số 1 trên toàn bộ các chỉ số ($\text{RMSE}$, $\text{MAE}$, $\text{MAPE}$, $\text{CC}$, $R^2$) với thứ hạng trung bình tuyệt đối là $1.0$.
+  - Random Forest (RF) xếp thứ hai với thứ hạng trung bình là $2.2$ (xếp thứ $2.0$ ở $\text{RMSE}$, $\text{MAE}$, $\text{CC}$, $R^2$ và thứ $3.0$ ở $\text{MAPE}$).
+  - Cây quyết định (DT) và GBDT cùng xếp thứ ba với thứ hạng trung bình là $3.4$.
+  - Học sâu (DL) xếp thứ năm với thứ hạng trung bình là $5.0$ trên mọi chỉ số.
+  - $k$ láng giềng gần nhất (KNN) xếp thứ sáu với thứ hạng trung bình là $6.0$ trên mọi chỉ số.
+- FLAML chứng minh năng lực là công cụ hiệu quả cao trong mô hình hóa quá trình điện hóa, đạt mức độ chính xác từng đòi hỏi quá trình tinh chỉnh thủ công (manual tuning) quy mô lớn:
+  - Hiệu suất mô hình phù hợp với các minh chứng gần đây về khả năng của AutoML trong việc cắt giảm chi phí tính toán (computational costs) nhưng vẫn duy trì độ chính xác cao trong các hệ thống môi trường phức tạp [28,29].
+  - FLAML hoàn thành việc tối ưu hóa trong giới hạn ngân sách thời gian $300\text{ s}$ ($300\text{ giây}$).
+  - Mức ngân sách $300\text{ s}$ đại diện cho mức giảm $72\,\%$ thời gian tinh chỉnh tham số so với các triển khai tìm kiếm lưới truyền thống (conventional grid search) được mô tả trong nghiên cứu gốc [30].
+  - Hiệu quả tối ưu hóa này giải quyết rào cản tính toán trọng yếu trong nghiên cứu môi trường, nơi tài nguyên hạn chế thường gây khó khăn cho việc tối ưu hóa mô hình [23].
+- Độ bền vững chống quá khớp được đánh giá qua $10$ lần lặp độc lập theo phân chia giữ lại phân tầng $80:20$ (stratified 80:20 holdout):
+  - Hiệu suất ổn định trên tập kiểm tra qua $10$ lần lặp xác nhận khả năng tổng quát hóa đáng tin cậy.
+  - Tính ổn định của quy trình được ghi nhận trong tài liệu bổ sung SI Figure S4 (độ nhạy phân tầng - stratification sensitivity) và quy trình chọn lọc nội bộ trong SI Figure S5 (chẩn đoán kiểm định chéo lồng nhau - nested CV diagnostics).
+  - Đường cong học tập (Learning curves - Fig. 1) thể hiện giá trị validation $\text{RMSE}$ giảm đơn điệu theo quy luật hiệu suất cận biên giảm dần và duy trì khoảng cách train–validation khiêm tốn, ổn định ($\approx 3\text{--}4$ đơn vị $\text{RMSE}$ ở kích thước tập huấn luyện lớn nhất), cho thấy mô hình không gặp hiện tượng phân kỳ hoặc quá khớp dưới quy trình được báo cáo:
+    - **Hình 1.** Đường cong học tập (train/validation RMSE theo kích thước tập huấn luyện) của FLAML-optimized XGBoost.
+      - <img src="assets/fig_01_p5.jpeg" alt="Hình 1" />
+      - **Hình này chứng minh điều gì**
+        - Quá trình huấn luyện hội tụ ổn định, không xuất hiện hiện tượng quá khớp (overfitting) hay phân kỳ khi tăng quy mô mẫu dữ liệu.
+      - **Từ đâu mà thấy được**
+        - Trục hoành biểu diễn số lượng mẫu huấn luyện ($40\text{--}380$ mẫu); trục tung thể hiện sai số $\text{RMSE}$ ($0\text{--}25$).
+        - Validation $\text{RMSE}$ (đường màu cam) giảm đơn điệu từ $\approx 21.7$ xuống $\approx 4.4$, trong khi Train $\text{RMSE}$ (đường màu xanh dương) duy trì ở mức thấp từ $0$ đến $\approx 1.1$, giữ khoảng cách ổn định $\approx 3.3$ đơn vị $\text{RMSE}$ ($\approx 3\text{--}4$ đơn vị) tại $380$ mẫu.
+- Phân tích phân phối phần dư (Residual distribution analysis - Fig. 2) thể hiện độ tin cậy và tính ổn định của mô hình:
+  - FLAML thể hiện phần dư đối xứng nhất và phân bố tập trung chặt chẽ nhất với khoảng tứ phân vị $\text{IQR} \approx 6\,\%$, phản ánh độ chệch hệ thống tối thiểu (minimal systematic bias) và độ chính xác dự đoán nhất quán trên toàn bộ không gian tham số vận hành:
+    - **Hình 2.** Biểu đồ hộp phân phối phần dư của từng mô hình dự đoán.
+      - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
+      - **Hình này chứng minh điều gì**
+        - Mô hình FLAML-optimized XGBoost đạt độ phân tán phần dư hẹp nhất và hạn chế độ chệch hệ thống so với các thuật toán học máy cơ sở.
+      - **Từ đâu mà thấy được**
+        - Trục hoành thể hiện $6$ mô hình so sánh (DT, RF, GBDT, DL, KNN, XGBoost (FLAML-optimized)); trục tung thể hiện phần dư $\text{Residuals (Actual - Predicted)}$ từ $-80$ đến $40$.
+        - Hộp phần dư của FLAML-optimized XGBoost tập trung hẹp quanh mốc $0$ ($\text{IQR} \approx 6\,\%$), trong khi KNN có nhiều ngoại lai âm cực đoan ($< -70\,\%$) và DL có xu hướng chệch dương với ngoại lai kéo dài từ $-45$ đến gần $30$.
+  - Trái lại, các thuật toán truyền thống thể hiện phân phối phần dư rộng hơn kèm theo các điểm ngoại lai đáng kể:
+    - Thuật toán $k$ láng giềng gần nhất (KNN) xuất hiện phần dư âm cực đoan ($< -70\,\%$).
+    - Các phương pháp tiếp cận học sâu (DL) bộc lộ xu hướng chệch dương (positive bias tendencies).
+  - Độ chính xác phần dư cao có ý nghĩa sống còn trong các ứng dụng thiết kế lò phản ứng, nơi độ bất định của dự đoán sẽ lan truyền qua các tính toán hiệu quả năng lượng [31,32].
+  - Các đặc điểm phân phối phần dư quan sát được phù hợp với kỳ vọng lý thuyết dành cho các thuật toán tối ưu hóa nhận biết chi phí (cost-aware optimization algorithms), vốn có cơ chế giảm thiểu sai số kiểm định chéo một cách có hệ thống dưới điều kiện tài nguyên bị hạn chế [33].

@@ -1,0 +1,8 @@
+- **Hình 5.** Lưu đồ kiểm soát MBR dựa trên mô hình phân loại.
+  - <img src="assets/fig_06_p13.jpeg" alt="Hình 5" />
+  - **Hình này chứng minh điều gì**
+    - Quy trình kiểm soát sục khí tự động theo từng bước gia số $A$ từ mức cơ sở $a_i$ nhằm duy trì nitrat hóa hoàn toàn mà không lãng phí năng lượng.
+  - **Từ đâu mà thấy được**
+    - Chu trình điều khiển thể hiện từ trên xuống dưới qua từng khoảng thời gian quan trắc $t_i, t_{i+1}, t_{i+2}, t_{i+3}$ (khung chữ nhật nét đứt màu xám).
+    - Rẽ nhánh dự đoán mô hình: nhãn "True" giữ hoặc giảm lưu lượng khí về mức thấp hơn ($a_i$, $a_i + A$, $a_i + 2A$ tương ứng khối màu đỏ, lục, lam); nhãn "False" tăng thêm $A$ ($a_i + A$, $a_i + 2A$, $a_i + 3A$, $a_i + 4A$ tương ứng màu lục, lam, tím, nâu).
+    - Cảnh báo can thiệp của con người (human intervention, khung viền đỏ dưới cùng) khi lưu lượng khí vượt quá công suất nạp khí cực đại của thiết bị sục.

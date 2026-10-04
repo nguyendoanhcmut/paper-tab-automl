@@ -1,0 +1,25 @@
+#### 3.1.2. Pair Plot Analysis
+
+- Phân tích biểu đồ cặp (pair plot analysis) được thực hiện nhằm khảo sát mối quan hệ giữa các thông số vận hành chủ chốt (key operational parameters) và các chỉ số tắc nghẽn màng (membrane fouling indicators):
+  - Biểu đồ cặp trực quan hóa các mối quan hệ hai biến (bivariate relationships) giữa các biến số quá trình, bao gồm đặc tính dòng vào (influent characteristics), điều kiện vận hành (operational conditions) và các chỉ số hiệu năng như $\text{TMP}$ cùng $\text{Spec. Flux}$.
+  - **Hình 2.** Biểu đồ cặp giữa các thông số vận hành và thông số mục tiêu MBR
+    - <img src="assets/fig_03_p13_vector.png" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện tương quan hai biến và xu hướng phân tán giữa 9 thông số vận hành với 2 chỉ số tắc nghẽn ($\text{TMP}$, $\text{Spec. Flux}$).
+    - **Từ đâu mà thấy được**
+      - Đường chéo chính: biểu đồ tần suất (histogram) đơn biến của 11 thông số ($\text{F/M}$, $\text{SV30}$, $\text{SVI}$, $\text{MLSS}$, $\text{DO}$, $\text{pH}$, $\text{Temp.}$, $\text{Flux}$, $\text{COD RM}$, $\text{TMP}$, $\text{Spec. Flux}$).
+      - Nửa dưới đường chéo: các đồ thị phân tán kèm đường hồi quy tuyến tính và dải tin cậy; thể hiện độ dốc tương quan giữa các cặp biến.
+- Các xu hướng tương quan của áp suất xuyên màng ($\text{TMP}$ - transmembrane pressure) với các thông số vận hành và hiệu năng:
+  - Tương quan nghịch giữa $\text{TMP}$ và nồng độ oxy hòa tan ($\text{DO}$ - dissolved oxygen): nồng độ oxy hữu dụng cao hơn liên kết với các giá trị $\text{TMP}$ thấp hơn, giải thích bởi vai trò của sục khí trong việc giảm thiểu tích tụ màng sinh học (biofilm accumulation) và giảm nghẹt màng (membrane clogging).
+  - Tương quan thuận yếu giữa $\text{TMP}$ và nồng độ chất rắn lơ lửng trong bùn lỏng ($\text{MLSS}$ - mixed liquor suspended solids): mức $\text{MLSS}$ tăng cao có thể góp phần làm tăng $\text{TMP}$, có khả năng do hiện tượng nghẹt màng gia tăng bởi nồng độ chất rắn lơ lửng cao hơn.
+  - Tương quan nghịch mạnh giữa $\text{TMP}$ và thông lượng riêng ($\text{Spec. Flux}$ - specific flux): xác nhận quy luật khi hiện tượng nghẹt màng tiến triển, $\text{TMP}$ gia tăng trong khi hiệu năng lọc suy giảm.
+- Các xu hướng tương quan của thông lượng riêng ($\text{Spec. Flux}$) với hiệu quả xử lý hữu cơ và sinh khối:
+  - Tương quan thuận vừa phải giữa $\text{Spec. Flux}$ và hiệu suất loại bỏ nhu cầu oxy hóa học ($\text{COD RM}$ - COD removal efficiency): hiệu suất loại bỏ chất hữu cơ cao hơn có thể nâng cao hiệu năng lọc nhờ giảm thiểu tắc nghẽn sinh học màng (membrane biofouling).
+  - Mối liên kết yếu hơn giữa $\text{Spec. Flux}$ và $\text{MLSSs}$: sự biến thiên của riêng $\text{MLSS}$ có thể không tác động trực tiếp đến hiệu quả lọc trong các điều kiện vận hành khảo sát.
+- Mối phụ thuộc tương hỗ giữa các đặc trưng vận hành (feature interdependencies):
+  - Tương quan thuận mạnh giữa $\text{MLSSs}$ và chỉ số thể tích bùn ($\text{SVI}$ - sludge volume index): phù hợp với kỳ vọng lý thuyết do $\text{MLSS}$ tăng thường dẫn đến khả năng lắng của bùn (sludge settleability) tốt hơn.
+  - Mối liên kết thuận yếu giữa $\text{DO}$ và $\text{pH}$: dao động của $\text{pH}$ có thể chịu ảnh hưởng từ mức độ sục khí và hoạt tính của vi sinh vật.
+  - Tương quan giữa $\text{COD RM}$ và thông lượng ($\text{Flux}$): hiệu suất loại bỏ chất hữu cơ cao hơn có thể góp phần cải thiện hiệu năng màng do giảm thiểu hiện tượng nghẹt màng hữu cơ (organic fouling).
+- Tính chất phức tạp của tương tác hệ thống và định hướng phân tích định lượng tiếp theo:
+  - Các phát hiện sơ bộ nhấn mạnh các tương tác phức tạp giữa các thông số vận hành và động học tắc nghẽn màng (membrane fouling dynamics).
+  - Đặt ra sự cần thiết phải tiếp tục phân tích tương quan định lượng chi tiết hơn (như hệ số tương quan Pearson).

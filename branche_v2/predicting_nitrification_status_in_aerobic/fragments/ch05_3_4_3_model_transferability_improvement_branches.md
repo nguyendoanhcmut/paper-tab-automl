@@ -1,0 +1,30 @@
+### 4.3. Model transferability improvement
+
+- Khả năng chuyển giao mô hình (model transferability) — năng lực thích ứng của mô hình đối với các tác vụ hoặc miền (domains) mới với yêu cầu tái huấn luyện tối thiểu (minimal retraining) — có thể được tối ưu hóa có hệ thống thông qua các khung học chuyển giao có cấu trúc (structured transfer learning frameworks) (Tian và Yu, 2023).
+- Các chiến lược học chuyển giao (transfer learning strategies) bao gồm 6 nhóm phương pháp chính (Yu và cộng sự, 2022):
+  - Căn chỉnh đặc trưng (feature alignment).
+  - Các mô hình tiền huấn luyện (pre-training models).
+  - Kiến trúc học meta (meta-learning architectures).
+  - Học tự giám sát (self-supervised learning).
+  - Tăng cường dữ liệu (data augmentation).
+  - Khả năng mở rộng cấu trúc mô hình (scalability of model structure).
+- Tiềm năng thích ứng đa kịch bản (cross-scenario adaptation) của học chuyển giao trong các hệ thống xử lý nước (water treatment systems) vẫn chưa được khai phá đầy đủ, dù phương pháp này đã được khảo cứu và ứng dụng công nghiệp rộng rãi.
+- Các tiến bộ liên ngành chứng minh những lộ trình ứng dụng học chuyển giao khả thi:
+  - Li và cộng sự (2021) nâng cao độ chính xác dự đoán giao thông ngắn hạn thông qua tinh chỉnh (fine-tuning) các mô hình tiền huấn luyện từ các khu vực giàu dữ liệu (data-rich areas).
+  - Zhou và cộng sự (2025) nâng cao khả năng chuyển giao hiệu năng pin thông qua tăng cường dữ liệu bền vững với điều kiện vận hành (condition-robust data augmentation).
+  - Nieves-Avendano và cộng sự (2023) đã điều chỉnh thành công mô hình $\text{MobileNetV2}$ tiền huấn luyện để phát hiện lỗi cơ khí thông qua tinh chỉnh miền mục tiêu (targeted domain fine-tuning).
+- Dựa trên thử nghiệm đa kịch bản (Mục 3.4 - Section 3.4), ba lộ trình nâng cao (three enhancement pathways) được đề xuất nhằm tăng cường khả năng chuyển giao cho các mô hình xử lý nước:
+  - Tối ưu hóa hướng dữ liệu (Data-centric optimization):
+    - Thiết kế thực nghiệm có hệ thống cần ưu tiên độ bao phủ điều kiện vận hành rộng và phân phối dữ liệu mang tính đại diện trong quá trình thu thập.
+    - Hiệu quả của kỹ thuật tăng cường dữ liệu (data augmentation efficacy) phụ thuộc trực tiếp vào tính đa dạng của tập dữ liệu cơ sở (baseline dataset diversity).
+  - Các khung mô hình tiền huấn luyện (Pre-trained frameworks):
+    - Phát triển các mô hình tiền huấn luyện đặc thù cho miền xử lý nước đòi hỏi chia sẻ dữ liệu liên cơ quan/liên tổ chức (cross-institutional data sharing), đặc biệt đối với các hệ thống xử lý chất lượng nước biến thiên hoặc các quy trình phụ thuộc quy mô (scale-dependent processes).
+    - Các đặc trưng đầu vào (input features) cần tích hợp rõ ràng các thông số quy mô của công trình xử lý (treatment facility scale parameters) do những tác động thủy lực và sinh hóa (hydraulic and biochemical implications) của chúng.
+  - Đổi mới cấu trúc mô hình (Model structure innovation):
+    - Các mô hình con phân cụm (clustered sub-models) sử dụng phân nhóm đặc trưng (feature grouping) và dữ liệu huấn luyện phân vùng theo dải giá trị (range-partitioned training data) có thể nâng cao độ chính xác cục bộ trong khi vẫn duy trì khả năng thích ứng của toàn hệ thống.
+    - Có thể tiến hành thêm các thử nghiệm ứng dụng đổi mới thuật toán (ví dụ: học meta - meta-learning).
+- Cách tiếp cận đa hướng giải quyết các hạn chế hiện tại về khả năng tổng quát hóa của mô hình (model generalization), đồng thời đồng bộ với tính biến thiên cố hữu trong xử lý nước về:
+  - Quy mô vận hành (operational scales).
+  - Đặc tính nước đầu vào (influent characteristics).
+  - Cấu hình quy trình công nghệ (process configurations).
+- Nghiên cứu tương lai cần ưu tiên thiết lập các tập dữ liệu đối chuẩn mở (open benchmarking datasets) nhằm chuẩn hóa việc đánh giá khả năng chuyển giao qua các kịch bản vận hành đa dạng.

@@ -1,0 +1,7 @@
+  - **Hình 1.** Sơ đồ phương pháp luận mô hình hóa hoàn chỉnh.
+    - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Kỹ thuật đặc trưng (Feature engineering) kết nối dữ liệu tiền xử lý vào quy trình huấn luyện AutoML và hậu giải thích SHAP.
+    - **Từ đâu mà thấy được**
+      - Luồng chính từ trái qua phải: Data Collection $\rightarrow$ Data Preprocessing $\rightarrow$ AutoML Model ($80\,\%$ Train, $20\,\%$ Test, $3$ lần 10-fold CV) $\rightarrow$ Output (Coagulant-dosage).
+      - Khối giải thích phía dưới: mũi tên từ Coagulant-dosage dẫn sang Explanation (SHAP) gồm Global interpretation, Partial interpretation và Partial Dependency.

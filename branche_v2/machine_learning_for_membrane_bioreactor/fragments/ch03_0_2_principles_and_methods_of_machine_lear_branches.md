@@ -1,0 +1,29 @@
+## 2 Principles and methods of machine learning
+
+- Học máy (machine learning) xây dựng mô hình bằng cách sử dụng "dữ liệu huấn luyện" ("training data") để đưa ra dự đoán hoặc quyết định mà không cần giả định tiên nghiệm (a priori assumptions) rõ ràng hay lập trình tường minh.
+  - Các bước tổng quát và chi tiết của quy trình học máy được mô tả tương ứng trong Figure 1(a) và Figure 1(b).
+- Các mô hình học máy phổ biến bao gồm học có giám sát (supervised learning), học không giám sát (unsupervised learning), và học tăng cường (reinforcement learning: RL).
+  - **Figure 2: Classification of machine learning methods**
+    - ![Figure 2](assets/fig_02_p5.jpeg)
+    - **Hình này chứng minh điều gì**
+      - Phân loại học máy thành ba nhóm phương pháp chính gồm supervised learning, unsupervised learning, và reinforcement learning (RL) cùng các thuật toán thành phần.
+    - **Từ đâu mà thấy được**
+      - Bánh răng trung tâm (Machine Learning) kết nối truyền động với ba bánh răng nhánh: Supervised Learning (trên), Unsupervised Learning (dưới phải), và Reinforcement Learning (RL) (dưới trái).
+      - Nhóm Supervised Learning gồm: Decision Tree, Support Vector Machine (SVM), Artificial Neural Network (ANN), Naive Bayes (NB), Markov Random Field (MRF), Ensemble Learning.
+      - Nhóm Unsupervised Learning gồm: K-means, Gaussian mixture model, Latent Dirichlet Allocation (LDA), PageRank, Principal Component Analysis (PCA).
+      - Nhóm Reinforcement Learning gồm: Model-based RL, Model-free RL.
+- Việc lựa chọn mô hình phù hợp đòi hỏi phải xem xét nhiều yếu tố:
+  - Nguyên lý mô hình (model principles).
+  - Loại bài toán (problem type: phân loại - classification, hồi quy - regression, chuỗi thời gian - time series, v.v.).
+  - Khối lượng dữ liệu (data volume).
+  - Chiều đặc trưng (feature dimensions).
+  - Yêu cầu giải thích mô hình (interpretation requirements).
+- Khi có nhiều mô hình để lựa chọn, mô hình tối ưu được xác định thông qua so sánh:
+  - Hiệu suất mô hình (model performance).
+  - Chi phí tính toán (computational costs).
+  - Khả năng giải thích (interpretability).
+- Bắt nguồn từ trí tuệ nhân tạo (artificial intelligence), học máy được ứng dụng rộng rãi trong lĩnh vực khoa học và kỹ thuật môi trường (environmental science and engineering):
+  - Xây dựng mô hình dự đoán sử dụng các tập dữ liệu đa dạng (diverse data sets).
+  - Đánh giá tầm quan trọng của đặc trưng (feature importance) thông qua giải thích mô hình (model interpretation).
+  - Phát hiện bất thường (anomaly detection) qua so sánh với dữ liệu lịch sử (historical data).
+  - Thúc đẩy nghiên cứu phát triển vật liệu mới (advancement of new materials) (Zhong et al., 2022).

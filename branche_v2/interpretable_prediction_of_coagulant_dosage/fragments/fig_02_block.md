@@ -1,0 +1,8 @@
+  - **Hình 2.** Phân bố histogram và các chỉ số thống kê của các biến
+    - <img src="assets/fig_02_p4.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Đường tần suất màu tím trực quan hóa độ phân tán: $T$ trải rộng toàn dải đo, còn $\text{pH}$ tập trung đỉnh nhọn quanh trung bình.
+    - **Từ đâu mà thấy được**
+      - 6 ô nước thô (RW, hàng 1--2): hộp thông số ghi $\text{SD}, \text{CV}$; $T$, $\text{NH}_3\text{-N}$, $\text{NTU}$ trải rộng, còn $\text{pH}$ nhọn đứng quanh $8.14$.
+      - 5 ô nước sau xử lý (TW, hàng 3--4): $T\text{-TW}$ trải rộng ($2.50\text{--}30.70\,^\circ\text{C}$); $\text{pH-TW}$ co hẹp trong dải $7.41\text{--}8.16$.
+      - Lưu ý: hình ghi CV dạng số thập phân ($0.62$, $0.03$), văn bản ghi phần trăm ($62\,\%$, $3\,\%$).

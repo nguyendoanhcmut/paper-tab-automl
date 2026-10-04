@@ -1,0 +1,53 @@
+### 3.3. Ensemble Methods and Deep Learning
+
+- **Định nghĩa và hiệu suất tổng thể của phương pháp tập hợp (Ensemble Methods)**:
+  - Các phương pháp tập hợp kết hợp dự đoán từ nhiều mô hình học cơ sở (base learners) nhằm giảm phương sai (variance) và cải thiện khả năng tổng quát hóa (generalization).
+  - Nhóm thuật toán này mang lại hiệu suất tổng thể mạnh nhất trong y văn học máy (machine learning - ML) ứng dụng cho màng phản ứng sinh học (membrane bioreactor - MBR).
+- **Thuật toán Rừng ngẫu nhiên (Random Forest - RF) trong dự đoán tắc nghẽn màng**:
+  - RF tổng hợp dự đoán từ một tập hợp các cây quyết định (decision trees) được huấn luyện độc lập, trong đó mỗi cây được xây dựng trên một tập con ngẫu nhiên của dữ liệu huấn luyện và các đặc trưng đầu vào (input features) [21].
+  - RF đặc biệt thích hợp cho bài toán dự đoán tắc nghẽn màng (fouling prediction) trong MBR nhờ các ưu thế:
+    - Xử lý hiệu quả các kiểu biến hỗn hợp (mixed variable types).
+    - Có độ chống chịu tốt trước các giá trị ngoại lai (resilient to outliers) trong dữ liệu vận hành quy trình.
+    - Cung cấp sẵn ước tính độ quan trọng đặc trưng (built-in feature importance estimates) mà không đòi hỏi thêm bước trí tuệ nhân tạo có thể giải thích (explainable artificial intelligence - XAI) riêng biệt.
+  - Các giới hạn kỹ thuật của RF:
+    - Mức độ chiếm dụng bộ nhớ (memory footprint) tỷ lệ thuận với quy mô tập hợp (ensemble size), gây hạn chế khi triển khai trên phần cứng nhúng (embedded hardware) hoặc phần cứng biên (edge hardware) trong các hệ thống điều khiển MBR thời gian thực.
+    - Bảng xếp hạng độ quan trọng đặc trưng từ RF mang tính toàn cục (global) và có thể che khuất các phi tuyến tính cục bộ (local non-linearities).
+    - Phương pháp quy gán dựa trên SHAP (SHAP-based attribution) được khuyến nghị sử dụng đồng thời với RF khi cần tính minh bạch và khả năng giải thích (interpretability).
+- **Ứng dụng học máy trong hệ thống màng phản ứng sinh học thẩm thấu (Osmotic MBR - OMBR)**:
+  - Viet và Jang ứng dụng nhiều kiến trúc mô hình dựa trên trí tuệ nhân tạo (AI-based models) để dự đoán hiệu suất của hệ thống OMBR xử lý nước thải đô thị [22].
+  - Các thông số đầu vào của mô hình gồm các chỉ tiêu chất lượng nước cấp: $\text{pH}$, độ dẫn điện (conductivity), $\text{NH}_4\text{-N}$, tổng nitơ (total nitrogen - $\text{TN}$), và tổng carbon hữu cơ (total organic carbon - $\text{TOC}$).
+  - Các mô hình đạt hiệu suất cao nhất ghi nhận hệ số xác định $R^2 = 0.92\text{--}0.98$ cho dự đoán lưu lượng dòng thấm nước (water flux) và trở lực tắc nghẽn (fouling resistance).
+  - Mô hình dựa trên dữ liệu nắm bắt động học lực động thẩm thấu (osmotic driving force dynamics) phức tạp chi phối hiệu suất OMBR.
+  - Phương pháp giải quyết các bậc tự do bổ sung (additional degrees of freedom) của OMBR, tính toán tác động cô đặc và pha loãng dung dịch (concentration and dilution effects), đồng thời mô tả hiện tượng thông lượng muối chảy ngược (reverse salt flux) mà không cần tham số hóa cơ chế tường minh (mechanistic parameterization) của các phương trình vận chuyển thẩm thấu thuận (forward osmosis - $\text{FO}$).
+- **Thẩm định mô hình học máy quy mô thực tế đầy đủ của Kovacs và cộng sự**:
+  - Kovacs và cộng sự thực hiện công trình thẩm định ML quy mô thực tế (full-scale) đầy đủ nhất được công bố trong lĩnh vực MBR, so sánh các mô hình RF, mạng nơ-ron nhân tạo (artificial neural networks - ANN), và mạng bộ nhớ ngắn-dài (long short-term memory - LSTM) trên bộ dữ liệu gồm hơn $80{,}000$ mẫu thu thập từ một nhà máy xử lý nước thải đô thị [26].
+  - Hiệu suất của mô hình RF:
+    - Đạt $R^2 = 0.927\text{--}0.996$ và sai số căn bậc hai trung bình bình phương $\text{RMSE} = 0.264\text{--}0.904\,\text{kPa}$ trên các giai đoạn khác nhau của chu kỳ lọc MBR.
+    - Các giai đoạn chu kỳ lọc gồm: tắc nghẽn ban đầu (initial fouling), vận hành ổn định (stable operation), nén chặt giai đoạn muộn (late-stage compaction), và phục hồi sau rửa màng (post-cleaning recovery).
+  - So sánh RF với ANN và LSTM:
+    - ANN và LSTM ghi nhận giá trị $\text{RMSE}$ tổng thể cao hơn so với RF.
+    - Tuy nhiên, LSTM thể hiện thế mạnh rõ nét trong giai đoạn tắc nghẽn muộn có cấu trúc thời gian (temporally structured late-stage fouling period), nơi lịch sử diễn tiến của lưu lượng và áp suất xuyên màng ($\text{TMP}$) cung cấp thông tin dự đoán quan trọng cho quỹ đạo tắc nghẽn hiện tại.
+  - Đóng góp khoa học: Đây là nghiên cứu đầu tiên xác thực thành công dự đoán $\text{TMP}$ bằng ML ở quy mô đô thị hoàn chỉnh với mức độ chính xác cao này.
+- **Ranh giới giữa xác thực dữ liệu lịch sử và triển khai vận hành vòng kín (Closed-loop Operational Deployment)**:
+  - Việc thẩm định mô hình trên dữ liệu SCADA lịch sử không đồng nghĩa với khả năng triển khai vận hành theo chu trình kín (closed-loop).
+  - Xác thực lịch sử chỉ khẳng định mô hình có khả năng tái hiện các quy luật đã xảy ra tại một cơ sở duy nhất; không khẳng định mô hình duy trì độ tin cậy dưới các điều kiện thực tế như trôi dạt cảm biến (sensor drift), nhiễu đo lường (measurement noise), độ trễ dữ liệu (data latency), hoặc sự cố hỏng hóc thiết bị (equipment failures).
+  - Triển khai vận hành thực tế đòi hỏi phải hoàn thành thử nghiệm vòng kín bổ sung trong điều kiện vận hành trực tiếp (live conditions) trước khi áp dụng đầu ra mô hình vào quy trình ra quyết định điều khiển.
+- **Giới hạn tổng quát hóa liên cơ sở (Cross-site Generalizability)**:
+  - Tập dữ liệu từ nghiên cứu của Kovacs và cộng sự xuất phát từ một nhà máy đô thị đơn lẻ, vận hành với một cấu hình màng, chế độ bùn và thành phần nước thải đầu vào cục bộ nhất định.
+  - Biến thiên vận hành do dao động nhiệt độ theo mùa, sự kiện xả thải công nghiệp và hiện tượng lão hóa màng chưa được phân tích riêng biệt.
+  - Khả năng chuyển giao và tổng quát hóa của các mô hình này sang các cơ sở MBR khác cần được tiếp tục thiết lập qua xác thực chéo đa cơ sở (cross-site validation).
+- **Cơ chế thời gian của mạng LSTM và tiềm năng của Gradient Boosting trong mô hình hóa tắc nghẽn**:
+  - Sự xuất hiện của mạng LSTM có ý nghĩa thiết yếu đối với mô hình hóa tắc nghẽn MBR vì diễn tiến của $\text{TMP}$ có bản chất phụ thuộc thời gian (inherently time-dependent) [20].
+  - Trạng thái tắc nghẽn hiện tại phản ánh lịch sử tích lũy của các biến động lưu lượng (flux excursions), chu kỳ sục khí (aeration cycles), và trạng thái bùn (sludge condition) qua nhiều giờ và nhiều ngày trước đó.
+  - Các tế bào bộ nhớ có cổng (gated memory cells) của LSTM cho phép lưu giữ có chọn lọc các phụ thuộc thời gian tầm xa (long-range temporal dependencies), đáp ứng đặc thù vật lý của quá trình tích tụ tắc nghẽn.
+  - Các khung thuật toán tăng cường độ dốc (gradient boosting frameworks) như XGBoost và LightGBM đã chứng minh hiệu quả cao trong các bài toán dự đoán chất lượng nước rộng hơn; việc mở rộng các mô hình này cho dự đoán tắc nghẽn MBR thông qua kỹ thuật tạo đặc trưng thời gian (temporal feature engineering) phù hợp là bước phát triển tiếp theo hợp lý.
+- **Kiến trúc Transformer trong dự báo chuỗi thời gian tắc nghẽn màng**:
+  - Kiến trúc Transformer sử dụng cơ chế tự chú ý (self-attention mechanisms) để nắm bắt các phụ thuộc toàn cục (global dependencies) trên các chuỗi dữ liệu đầu vào [46].
+  - Transformer đã thể hiện hiệu suất tiên tiến nhất (state-of-the-art) trong dự báo chuỗi thời gian môi trường (environmental time-series forecasting).
+  - Đây là hướng tiếp cận tiên phong (frontier application) cho bài toán dự đoán tắc nghẽn MBR nhưng hiện chưa được đánh giá có hệ thống trong các công trình bình duyệt (peer-reviewed studies).
+- **Tính khả thi thực tiễn và gánh nặng tính toán của mô hình học sâu trong hệ thống MBR**:
+  - Mạng LSTM đòi hỏi dung lượng dữ liệu huấn luyện lớn hơn đáng kể so với các mô hình nông (shallow models), thường cần từ hàng nghìn đến hàng chục nghìn bước thời gian (thousands to tens of thousands of time steps) để học các phụ thuộc thời gian có ý nghĩa mà không gặp hiện tượng quá khớp (overfitting).
+  - Quá trình huấn luyện và suy luận của LSTM đòi hỏi tài nguyên tính toán cao hơn RF hoặc máy vector hỗ trợ (support vector machines - SVM), gây khó khăn cho việc cài đặt trực tiếp trên các bộ điều khiển công nghiệp nhúng (embedded industrial controllers) thường dùng trong các trạm MBR.
+  - Kiến trúc Transformer tạo ra gánh nặng dữ liệu và chi phí tính toán còn cao hơn so với LSTM.
+  - Các kỹ thuật nén mô hình (model compression techniques) gồm cắt tỉa (pruning), lượng tử hóa (quantization), và chưng cất tri thức (knowledge distillation) cung cấp giải pháp cho triển khai gọn nhẹ (lightweight deployment), nhưng chưa được khảo sát trong môi trường MBR.
+  - Các nghiên cứu học sâu trong tương lai cần báo cáo rõ ràng các ràng buộc phần cứng và dữ liệu này để người thực hành có cơ sở đánh giá mức độ sẵn sàng triển khai (deployment readiness).

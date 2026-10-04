@@ -1,0 +1,41 @@
+### 2.5. Feature ranking score
+
+- Khung ensemble (ensemble framework) sử dụng điểm xếp hạng (ranking score) được thiết kế riêng cho các tác vụ AutoML nhằm đánh giá độ quan trọng của đặc trưng (feature importance).
+  - Khung làm việc kết hợp ba phương pháp đánh giá độ quan trọng:
+    - Độ quan trọng đặc trưng dựa trên cây (tree-based feature importance).
+    - Độ quan trọng đặc trưng dựa trên hoán vị (permutation feature importance).
+    - Giá trị SHAP (Shapley Additive exPlanations values) (Schreck et al., 2023; Yu et al., 2025; Zheng et al., 2023).
+  - Khung tạo ra điểm số ensemble (ensemble score) đi kèm thứ hạng quan trọng của đặc trưng (feature importance ranking).
+  - Cách tiếp cận này cung cấp đánh giá cân bằng hơn thông qua việc kết hợp nhiều góc nhìn (multiple perspectives), thay vì phụ thuộc vào một phương pháp đơn lẻ.
+- Độ quan trọng đặc trưng trong các mô hình dựa trên cây (tree-based models) được suy ra trực tiếp từ cấu trúc của mô hình.
+  - Trong mô hình Random Forest (RF), độ quan trọng được tính bằng độ quan trọng Gini (Gini importance).
+  - Chỉ số Gini importance đo lường mức suy giảm chuẩn hóa của tiêu chí Gini (normalized reduction in the Gini criterion) do từng đặc trưng đóng góp.
+  - Phương pháp này được gọi là phương pháp dựa trên cây (tree-based method).
+- Phương pháp hoán vị (permutation method) tính toán độ quan trọng đặc trưng bằng cách đánh giá sự thay đổi hiệu năng mô hình khi các giá trị của một đặc trưng bị xáo trộn ngẫu nhiên (Breiman, 2001).
+  - Phương pháp hoán vị áp dụng được cho bất kỳ mô hình nào sử dụng dữ liệu dạng bảng (tabular data).
+  - Độ quan trọng $i_j$ của đặc trưng $j$ được xác định theo công thức:
+    $$i_j = s - \frac{1}{K} \sum_{k=1}^{K} s_{k,j} \tag{6}$$
+  - Các tham số và ký hiệu trong công thức gồm:
+    - $i_j$: độ quan trọng của đặc trưng $j$ (importance of feature $j$).
+    - $s$: điểm số mô hình tham chiếu (reference model score), tính theo sai số căn bậc hai trung bình (RMSE - Root Mean Squared Error).
+    - $s_{k,j}$: điểm số mô hình sau khi xáo trộn đặc trưng $j$ ở lần lặp thứ $k$.
+    - $K$: tổng số lần lặp thực hiện, với $K = 30$.
+- Khung làm việc SHAP (Shapley Additive exPlanations) là phương pháp độc lập với mô hình (model-agnostic framework) nhằm giải thích các dự đoán dựa trên giá trị Shapley (Lundberg et al., 2018; Lundberg and Lee, 2017).
+  - Phương pháp SHAP tính toán mức đóng góp của từng đặc trưng vào đầu ra của mô hình (giá trị SHAP) theo công thức:
+    $$\phi_i(f, x) = \sum_{S \subseteq S_{\text{all}} \setminus \{i\}} \frac{|S|!(M - |S| - 1)!}{M!} [f_x(S \cup \{i\}) - f_x(S)] \tag{7}$$
+  - Các tham số và ký hiệu trong công thức gồm:
+    - $\phi_i(f, x)$: giá trị SHAP của đặc trưng $i$.
+    - $f(S)$ (hoặc $f_x(S)$): đầu ra của mô hình đối với tập con đặc trưng $S$, với $S \subseteq (0, 1)^M$.
+    - $M$: tập hợp gồm toàn bộ $M$ biến đầu vào (the set of all $M$ input variables).
+    - $|S|$: số lượng phần tử khác không (nonzero entries) trong tập hợp $S$.
+    - $\sum_{S \subseteq S_{\text{all}} \setminus \{i\}}$: phép lấy tổng duyệt qua tất cả các tập con đặc trưng khả dĩ.
+  - Mức đóng góp của đặc trưng $i$ được xác định bằng cách so sánh đầu ra mô hình khi có và khi không có đặc trưng này, được gán trọng số theo kích thước tập con đặc trưng (weighted by the subset size).
+- Thước đo điểm xếp hạng ("ranking score" metric) chuẩn hóa việc so sánh độ quan trọng đặc trưng giữa các phương pháp khác nhau (Zheng et al., 2023).
+  - Các chỉ số feature importance thu được từ các phương pháp trên khó so sánh trực tiếp do khác biệt về các nguyên lý cơ bản nền tảng.
+  - Các giá trị feature importance thu được từ mỗi phương pháp được sắp xếp theo thứ tự tăng dần (ascending order).
+  - Mỗi đặc trưng nhận một thứ hạng tương ứng với vị trí của nó trong danh sách có thứ tự:
+    - Đặc trưng ít quan trọng nhất nhận điểm thấp nhất là $1$.
+    - Đặc trưng ít quan trọng thứ hai nhận điểm là $2$.
+    - Các điểm số cao hơn được gán tăng dần cho các đặc trưng có mức độ quan trọng cao hơn.
+  - Quy trình này đảm bảo giá trị ranking score nằm trong khoảng từ $1$ (chỉ đặc trưng ít quan trọng nhất) đến tổng số đặc trưng (chỉ đặc trưng quan trọng nhất).
+  - Chuẩn hóa các giá trị feature importance theo cơ chế xếp hạng mang lại tính nhất quán giữa các phương pháp, tạo điều kiện thuận lợi cho việc so sánh trực tiếp.

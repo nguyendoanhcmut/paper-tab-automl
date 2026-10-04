@@ -1,0 +1,19 @@
+### 2.4. Construction of base models based on source plants
+- Các tập dữ liệu nguồn (source datasets) được phân chia theo trình tự thời gian (chronological order) bên trong từng nhà máy thay vì phân chia ngẫu nhiên (randomly):
+  - Phương pháp phân chia này bắt nguồn từ bản chất chuỗi thời gian (time-series nature) của dữ liệu quan trắc.
+  - Phân chia theo trình tự thời gian giúp giảm thiểu nguy cơ rò rỉ thông tin (information leakage) giữa các mẫu quan trắc kế cận nhau theo thời gian (temporally adjacent samples).
+- Kiến trúc LSTM (Long Short-Term Memory) được lựa chọn làm mô hình hồi quy gọn nhẹ (compact recurrent architecture) cho tác vụ học chuỗi (sequence learning) $[36]$:
+  - Lựa chọn này xuất phát từ đặc điểm kích thước mẫu hạn chế (limited sample sizes) và cửa sổ đầu vào ngắn (short input window) của tập dữ liệu.
+  - Các kiến trúc dựa trên Transformer và TCN (Temporal Convolutional Network) có thể mang lại lợi thế khi có sẵn các tập dữ liệu MBR quy mô lớn hơn hoặc ngữ cảnh thời gian dài hơn (longer temporal contexts).
+  - Việc đánh giá đối chuẩn có hệ thống (systematic benchmarking) đối với các mô hình Transformer và TCN trong những điều kiện đó được định hướng cho các nghiên cứu tiếp theo $[37, 38]$.
+- Hai mô hình cơ sở (base models) được xây dựng nhằm phục vụ học chuyển giao gồm LSTM-base cho học chuỗi hồi quy và XGBoost-base cho học dựa trên cây (Fig. 1(c)):
+  - Mô hình LSTM-base sử dụng các chuỗi đặc trưng chuẩn hóa (standardized feature sequences) với độ dài chuỗi cố định là $3$ bước thời gian (time steps).
+  - Mô hình XGBoost-base sử dụng cùng một lượng thông tin lịch sử $3$ bước thời gian được mã hóa dưới dạng các đặc trưng trễ (lagged features).
+  - Thiết kế cấu trúc đầu vào tương đương đảm bảo cả hai mô hình cơ sở khai thác cùng một lượng thông tin quá khứ, cho phép so sánh công bằng về hiệu năng dự đoán (predictive performance).
+  - Các chi tiết kỹ thuật triển khai bổ sung của hai mô hình cơ sở được trình bày trong Text S6.
+- Quy trình tối ưu hóa siêu tham số (hyperparameter optimization) cho cả hai mô hình cơ sở được thực hiện trên phần phân chia huấn luyện (training split) của các nhà máy nguồn:
+  - Do tính chất dữ liệu được sắp xếp theo thời gian, phương pháp kiểm định chéo chuỗi thời gian $5$ nếp (five-fold time-series cross-validation) được kết hợp với thuật toán tìm kiếm siêu tham số dựa trên Optuna (Optuna-based hyperparameter search).
+  - Quy trình kết hợp này nhằm ngăn ngừa hiện tượng rò rỉ từ các mẫu dữ liệu tương lai (leakage from future samples) và nâng cao độ ổn định (robustness) của quá trình lựa chọn mô hình.
+- Cả hai mô hình cơ sở sau khi tối ưu hóa được huấn luyện hoàn chỉnh trên cùng tập phân chia huấn luyện và lưu trữ để khởi tạo các mô hình học chuyển giao (transfer learning models):
+  - Việc lưu trữ trọng số và cấu trúc mô hình đã huấn luyện tạo tiền đề tham số khởi tạo cho các mô hình học chuyển giao sang nhà máy mục tiêu.
+  - Không gian tìm kiếm siêu tham số (hyperparameter search spaces), các thiết lập tối ưu cuối cùng (final settings) cùng chi tiết huấn luyện cụ thể được cung cấp tại Bảng S2–S3 (Table S2–S3) và Text S7.

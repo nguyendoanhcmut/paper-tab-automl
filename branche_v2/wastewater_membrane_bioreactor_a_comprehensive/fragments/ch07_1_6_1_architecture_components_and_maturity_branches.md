@@ -1,0 +1,50 @@
+### 6.1. Architecture, Components, and Maturity Tiers
+
+- **Nguồn gốc khái niệm và ba thành phần cốt lõi của Digital Twin (DT - bản sao số) công nghiệp**: Khái niệm DT lần đầu tiên được định hình chính thức trong lĩnh vực sản xuất bởi Grieves [30] và sau đó được phát triển mở rộng trên nhiều lĩnh vực công nghiệp khác nhau, bao gồm hàng không vũ trụ (aerospace), cơ sở hạ tầng năng lượng (energy infrastructure) và sản xuất thông minh (smart manufacturing) [32]:
+  - Fuller và cộng sự xác định ba thành phần thiết yếu dùng chung trong các triển khai DT công nghiệp [31]:
+    - Thực thể vật lý (physical entity) với hệ thống cảm biến đo đạc (instrumented sensing) và cơ cấu chấp hành (actuation).
+    - Thực thể ảo (virtual entity) mô hình hóa hệ thống vật lý trên các thang thời gian tương ứng (relevant timescales).
+    - Lớp kết nối dữ liệu (data connection layer) cho phép đồng bộ hóa trạng thái liên tục (continuous state synchronization) giữa miền vật lý và miền ảo.
+  - Yêu cầu đa độ trung thực (multi-fidelity) của thực thể ảo:
+    - Kết hợp các mô hình dựa trên quy luật vật lý độ chính xác cao (high-accuracy physics-based models) cho các trạng thái hệ thống biến đổi chậm (slowly varying system states) với các mô hình hướng dữ liệu tốc độ nhanh hơn (faster data-driven models) cho các biến vận hành động (dynamic operational variables).
+    - Sự cân bằng này duy trì đồng thời tính khả thi về mặt tính toán (computational feasibility) và độ chính xác dự đoán (predictive accuracy) [33].
+
+- **Kiến trúc ba tầng của khung DT áp dụng cho hệ thống MBR (Membrane Bioreactor)**: Khung DT cho MBR được cấu trúc thành ba tầng tích hợp nhằm quản lý quy trình [37]:
+  - Tầng thứ nhất là nhà máy vật lý (physical plant):
+    - Mạng lưới SCADA (Supervisory Control and Data Acquisition).
+    - Cảm biến trực tuyến (online sensors), bao gồm cảm biến oxy hòa tan ($\text{DO}$ - dissolved oxygen), độ đục (turbidity), cảm biến biến đổi áp suất (pressure transducers) và lưu lượng kế (flow meters).
+    - Cơ cấu chấp hành (actuators), bao gồm máy thổi khí (blowers), máy bơm (pumps) và van (valves).
+  - Tầng thứ hai là mô hình ảo phân cấp (hierarchical virtual model):
+    - Tích hợp các phân mô hình cơ chế mô hình bùn hoạt tính ASM (Activated Sludge Models mechanistic sub-models) [34, 35].
+    - Các mô hình tắc nghẽn màng trở lực nối tiếp (resistance-in-series fouling models) [36].
+    - Các bộ dự đoán động học áp suất xuyên màng ($\text{TMP}$ - Transmembrane Pressure) dựa trên $\text{ML}$ (Machine Learning) được huấn luyện trên dữ liệu vận hành [22, 26].
+    - Các module phân bổ đặc trưng dựa trên $\text{SHAP}$ (SHAP-based feature attribution modules) [53].
+    - Các phân mô hình cân bằng năng lượng (energy balance sub-models) [14, 56].
+  - Tầng thứ ba là đường ống dữ liệu thời gian thực (real-time data pipeline):
+    - Tiềm năng lưu trữ trên nền tảng đám mây (cloud-hosted).
+    - Đồng bộ hóa các giá trị đo cảm biến vào mô hình ảo và phản hồi kết quả đầu ra của mô hình về hệ thống điều khiển (control system) [37].
+  - Ứng dụng vòng đời và mục tiêu tích hợp giá trị cao theo Wang và cộng sự:
+    - Tổng quan các ứng dụng DT trên toàn bộ chu kỳ vòng đời xử lý nước thải (entire wastewater treatment lifecycle).
+    - Xác định quản lý tắc nghẽn màng MBR và tối ưu hóa sục khí (aeration optimization) là các mục tiêu tích hợp mang lại giá trị cao nhất.
+    - Chứng minh các phương pháp tiếp cận DT có thể mang lại mức tiết kiệm năng lượng cho toàn nhà máy (plant-wide energy savings) và cải thiện chất lượng nước đầu ra (effluent quality improvements) thông qua tối ưu hóa phối hợp các quy trình con sinh học, lọc và châm hóa chất (biological, filtration, and chemical dosing subprocesses).
+
+- **Phân tầng ba bậc năng lực (three capability tiers) của Digital Twin trong MBR**: Triển khai DT trong MBR được phân tầng theo ba bậc năng lực, phản ánh độ sâu tích hợp ngày càng tăng và năng lực ra quyết định tự chủ (autonomous decision-making):
+  - **Bậc I - Mô tả (Tier I: Descriptive)**:
+    - Giám sát và trực quan hóa trạng thái nhà máy theo thời gian thực thông qua bảng điều khiển cảm biến (sensor dashboards), hệ thống quản lý cảnh báo (alarm management systems) và phân tích xu hướng lịch sử (historical trend analysis).
+    - Các năng lực Tier I đã sẵn sàng về mặt thương mại và được triển khai tại nhiều cơ sở MBR quy mô đầy đủ (full-scale MBR installations) [5, 15].
+  - **Xu hướng tăng trưởng nghiên cứu DT trong ngành nước**:
+    - Khảo sát tổng quan đối với $147$ nghiên cứu kéo dài từ năm $2015$ đến tháng $5$ năm $2025$ xác định số lượng công bố về DT trong ngành nước đã tăng từ $1$ công bố vào năm $2015$ lên $41$ công bố vào năm $2024$ [60].
+    - Trong số $147$ nghiên cứu nói trên, có $41$ nghiên cứu giải quyết bài toán xử lý nước thải (wastewater treatment).
+    - Sự gia tăng này khẳng định công nghệ DT đang dịch chuyển từ các đề xuất mang tính khái niệm (conceptual proposals) sang các khung triển khai có cấu trúc (structured implementation frameworks).
+  - **Nền tảng kiến trúc tham chiếu cho Tier I/II**:
+    - Rodríguez-Alonso và cộng sự chứng minh nền tảng DT thực tế dựa trên vi dịch vụ (microservices-based DT platform) cho toàn bộ nhà máy xử lý nước thải [61].
+    - Công trình cung cấp tài liệu tham chiếu triển khai cụ thể cho Tier I/II thông qua kiến trúc điện toán biên (edge computing architecture) [61].
+  - **Bậc II - Dự đoán (Tier II: Predictive)**:
+    - Dự báo các trạng thái tương lai của nhà máy thông qua các mô hình $\text{ML}$ đã huấn luyện, bao gồm quỹ đạo $\text{TMP}$ (TMP trajectory), chất lượng nước đầu ra (effluent quality) và nhu cầu năng lượng (energy demand) trước khoảng thời gian từ $12\text{--}72\text{ h}$.
+    - Khả năng dự báo cho phép đưa ra các quyết định vận hành chủ động (proactive) thay vì phản ứng bị động (reactive).
+    - Năng lực này đã được chứng minh trong các nghiên cứu mô phỏng $\text{BSM-MBR}$ (Benchmark Simulation Model for MBR) [24, 36] và được kiểm chứng độc lập trên dữ liệu thực tế quy mô đầy đủ [26].
+  - **Bậc III - Kê đơn và chỉ định quyết định (Tier III: Prescriptive)**:
+    - Tự chủ tạo lập, đánh giá và thực thi các quyết định vận hành (autonomously generate, evaluate, and implement operational decisions).
+    - Các quyết định bao gồm điều chỉnh điểm đặt sục khí (aeration setpoint adjustments), kiểm soát thông lượng (flux control) và tối ưu hóa lịch trình làm sạch màng (cleaning schedule optimization).
+    - Quá trình mô phỏng vòng kín (closed-loop simulation) đánh giá trước các hệ quả dự đoán trước khi tiến hành bất kỳ hành động vật lý nào vào hệ thống.
+    - Hiện trạng thực nghiệm và ranh giới nghiên cứu chính (primary frontier): Chưa có bất kỳ triển khai MBR quy mô đầy đủ nào của Tier III có tích hợp $\text{XAI}$ được ghi nhận trong y văn, đại diện cho ranh giới tiên phong hàng đầu của lĩnh vực [33, 37].

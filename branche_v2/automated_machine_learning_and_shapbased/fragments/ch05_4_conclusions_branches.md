@@ -1,0 +1,21 @@
+## 4. Conclusions
+
+- Nghiên cứu chứng minh một quy trình làm việc dựa trên AutoML có khả năng tái lập (reproducible AutoML-based workflow) nhằm tích hợp học máy tự động (automated machine learning) với các quá trình oxy hóa điện hóa (electrochemical oxidation processes) để xử lý các chất ô nhiễm môi trường khó phân hủy (persistent environmental contaminants):
+  - Mô hình XGBoost điều phối bởi FLAML (FLAML-driven XGBoost model) đạt hiệu năng cao hơn các phương pháp tiếp cận ML tối ưu hóa thủ công thông thường (conventional manually optimized ML approaches).
+  - Cung cấp độ chính xác dự đoán (predictive accuracy) và khả năng giải thích (interpretability) được nâng cao rõ rệt, được minh chứng qua quá trình đánh giá đối chuẩn nghiêm ngặt (rigorous benchmarking) và kiểm định thống kê (statistical validation).
+  - Nghiên cứu trực tiếp giải quyết các hạn chế phương pháp luận then chốt trong y văn hiện hành bằng cách chứng minh năng lực dự đoán cao cùng các hiểu biết cơ chế vững chắc về mặt khoa học (scientifically grounded mechanistic insights).
+- Phân tích định danh thời gian điện phân (electrolysis time) và vật liệu cực dương (anode material) là các biến dẫn dắt vận hành chính (primary operational drivers):
+  - Cung cấp các hiểu biết sâu sắc có thể hành động được (actionable insights) dựa trên các nguyên lý điện hóa cơ bản (fundamental electrochemical principles).
+  - Hiểu biết cơ chế được kiểm chứng thông qua khả năng giải thích dựa trên SHAP (SHAP-based interpretability).
+- Khung làm việc tự động FLAML cắt giảm đáng kể yêu cầu tài nguyên tính toán và bảo đảm tính minh bạch trong triển khai:
+  - Giảm $72\,\%$ thời gian tinh chỉnh (72 % reduction in tuning time), qua đó nâng cao tính khả cận (accessibility) và khả năng tái lập (reproducibility) của các kỹ thuật ML tiên tiến đối với những người thực hành trong lĩnh vực môi trường (environmental practitioners).
+  - Quy trình đường ống được đóng gói trong container (containerized) và ghim cố định phiên bản (version-pinned pipeline) bảo đảm tính tái lập và tính minh bạch (transparency), thúc đẩy việc áp dụng rộng rãi hơn và chuẩn hóa phương pháp luận (methodological standardization) trong xử lý môi trường (environmental remediation).
+- Định hướng nghiên cứu tương lai nhằm nâng cao hiệu quả và tính linh hoạt (versatility) của quá trình xử lý điện hóa:
+  - Tích hợp phương pháp luận đã phát triển với các mô hình lai dựa trên vật lý (hybrid physics-based models).
+  - Áp dụng các hệ thống điều khiển quá trình thích ứng theo thời gian thực (real-time adaptive process controls).
+  - Mở rộng đánh giá trên các kịch bản hợp chất PFAS rộng hơn (broader PFAS compound scenarios).
+  - Công trình xác lập học máy tự động và có thể giải thích (automated and interpretable machine learning) như một trụ cột thiết yếu của đổi mới kỹ thuật môi trường (environmental engineering innovation), thúc đẩy nỗ lực toàn cầu hướng tới xử lý bền vững các chất ô nhiễm môi trường khó phân hủy.
+- Tuyên bố đóng góp tác giả, lợi ích cạnh tranh và lời cảm ơn (Authorship, competing interests, and acknowledgments):
+  - Đóng góp tác giả CRediT (CRediT authorship contribution statement): Haitham Elnakar đảm nhiệm viết – soát xét & biên tập (Writing – review & editing), viết – bản thảo gốc (Writing – original draft), trực quan hóa (Visualization), phương pháp luận (Methodology), phân tích chính thức (Formal analysis), và hình thành ý tưởng (Conceptualization).
+  - Tuyên bố về lợi ích cạnh tranh (Declaration of Competing Interest): Tác giả tuyên bố không có bất kỳ xung đột lợi ích tài chính hoặc mối quan hệ cá nhân nào có thể ảnh hưởng đến công trình nghiên cứu được báo cáo.
+  - Lời cảm ơn (Acknowledgment): Tác giả ghi nhận sự hỗ trợ của Đại học Dầu khí và Khoáng sản King Fahd (King Fahd University of Petroleum and Minerals - KFUPM) cho công bố này.

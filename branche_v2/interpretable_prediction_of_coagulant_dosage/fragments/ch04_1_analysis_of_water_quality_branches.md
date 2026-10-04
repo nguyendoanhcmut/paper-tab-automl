@@ -1,0 +1,48 @@
+### 3.1 Analysis of water quality data and feature selection
+
+- Hệ số biến thiên $\text{CV}$ (coefficient of variation - hệ số biến thiên) dùng làm chỉ số định lượng độ biến thiên trong tập dữ liệu:
+  - Giá trị $\text{CV}$ càng lớn phản ánh độ biến động của dữ liệu càng cao.
+  - Các đặc trưng có sự biến động đáng kể nhất gồm nhiệt độ nước thô $T\text{-RW}$ ($\text{SD} = 9.37$, $\text{CV} = 62\,\%$), nitơ amoniac nước thô $\text{NH}_3\text{-N-RW}$ ($\text{SD} = 0.07$, $\text{CV} = 59\,\%$), độ đục nước thô $\text{NTU-RW}$ ($\text{SD} = 2.58$, $\text{CV} = 57\,\%$) và nhiệt độ nước sau xử lý $T\text{-TW}$ ($\text{SD} = 8.77$, $\text{CV} = 54\,\%$).
+  - Hầu hết các đặc trưng khác duy trì tương đối ổn định trong suốt quy trình xử lý nước.
+  - Biến động của độ $\text{pH}$ ở mức tối thiểu: $\text{pH}$ nước thô có $\text{CV} = 3\,\%$ và $\text{pH}$ nước sau xử lý có $\text{CV} = 2\,\%$.
+- Độ biến động của các chỉ số chất lượng nước có sự khác biệt rõ rệt giữa các thông số: $T\text{-RW}$ ($\text{SD} = 9.37$, $\text{CV} = 62\,\%$), $\text{NH}_3\text{-N-RW}$ ($\text{SD} = 0.07$, $\text{CV} = 59\,\%$), $\text{NTU-RW}$ ($\text{SD} = 2.58$, $\text{CV} = 57\,\%$) và $T\text{-TW}$ ($\text{SD} = 8.77$, $\text{CV} = 54\,\%$) biến động mạnh nhất, trong khi $\text{pH}$ ổn định nhất với $\text{CV} = 3\,\%$ ở nước thô và $\text{CV} = 2\,\%$ ở nước sau xử lý:
+  - **Hình 2.** Phân bố histogram và các chỉ số thống kê của các biến
+    - <img src="assets/fig_02_p4.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Đường tần suất màu tím trực quan hóa độ phân tán: $T$ trải rộng toàn dải đo, còn $\text{pH}$ tập trung đỉnh nhọn quanh trung bình.
+    - **Từ đâu mà thấy được**
+      - Trục hoành: khoảng giá trị mẫu ($^\circ\text{C}$, $\text{NTU}$, $\text{mg/L}$, $\mu\text{S/cm}$, $\text{m}^3\text{/s}$); trục tung: tần suất xuất hiện (`Count`).
+      - Hộp thông số ghi $\text{SD}, \text{CV}$: $T\text{-RW}$, $\text{NH}_3\text{-N-RW}$, $\text{NTU-RW}$ trải rộng; $\text{pH-RW}$ ($8.14$) và $\text{pH-TW}$ ($7.76$) có đỉnh nhọn đứng.
+      - Lưu ý: hình ghi CV dạng số thập phân ($0.62$, $0.03$), văn bản ghi phần trăm ($62\,\%$, $3\,\%$).
+- Chất lượng nước thô (raw water quality) tác động trực tiếp đến độ an toàn, độ tin cậy của nguồn cấp nước thành phẩm và nhu cầu chất keo tụ (coagulant requirements).
+- Các chỉ số chất lượng nước thô tại nhà máy, gồm $\text{COD}_{\text{Mn}}$ (permanganate index - chỉ số pemanganat) và $\text{NH}_3\text{-N}$ (ammonia nitrogen - nitơ amoniac), thể hiện các xu hướng biến động theo mùa (seasonal trends) rõ rệt:
+  - Cơ chế tác động vào mùa hè:
+    - Nhiệt độ tăng cao và lượng mưa tăng kích thích sự phát triển của tảo trong các nguồn nước, làm gia tăng chỉ số $\text{COD}_{\text{Mn}}$ trong thủy vực và ảnh hưởng đến chất lượng nước thô.
+    - Nhiệt độ tăng làm giảm độ nhớt của nước (water viscosity), thúc đẩy chuyển động của các ion trong dung dịch và làm giảm nhu cầu chất keo tụ.
+  - Cơ chế tác động vào mùa đông:
+    - Nhiệt độ thấp làm giảm độ hòa tan (solubility) và độ khuếch tán (diffusivity) của chất keo tụ, dẫn đến làm chậm tốc độ của các phản ứng hóa học.
+    - Nhà máy bắt buộc phải châm liều lượng chất keo tụ cao hơn để bảo đảm hiệu quả xử lý nước.
+  - Tính toán chính xác liều lượng chất keo tụ dựa trên dữ liệu chất lượng nước thô theo thời gian thực (real-time data) và thông tin biến động lịch sử đóng vai trò then chốt để duy trì hiệu quả quy trình, ổn định chất lượng nước đầu ra và tối ưu lượng hóa chất.
+- Ma trận tương quan hạng Spearman ($r_s$ - Spearman rank correlation coefficient matrix) thể hiện các mối quan hệ giữa thông số đầu vào và biến mục tiêu liều lượng chất keo tụ PACl (polyaluminum chloride):
+  - Nhóm thông số có tương quan mạnh với liều lượng PACl gồm: $T\text{-RW}$ ($r_s = -0.71$), $\text{NH}_3\text{-N-RW}$ ($r_s = 0.87$), $\text{pH-RW}$ ($r_s = -0.9$), $T\text{-RW}$ ($r_s = -0.67$) và công suất xử lý nước $\text{WTR}$ ($r_s = -0.68$).
+  - Nhóm thông số có tương quan trung bình gồm: $\text{NTU-RW}$ ($r_s = 0.45$), độ dẫn điện nước thô $\text{EC-RW}$ ($r_s = 0.56$), $\text{pH-RW}$ ($r_s = -0.33$), $\text{COD}_{\text{Mn}}\text{-RW}$ ($r_s = 0.56$), độ dẫn điện nước sau xử lý $\text{EC-TW}$ ($r_s = 0.43$) và độ đục nước sau xử lý $\text{NTU-TW}$ ($r_s = -0.23$).
+  - Chỉ số pemanganat nước sau xử lý $\text{COD}_{\text{Mn}}\text{-TW}$ thể hiện mối tương quan yếu nhất với liều lượng PACl ($r_s = 0.011$).
+- Ma trận tương quan hạng Spearman xác định mức độ liên kết giữa các thông số chất lượng nước với liều lượng chất keo tụ PACl: $\text{pH-TW}$ ($r_s = -0.90$), $\text{NH}_3\text{-N-RW}$ ($r_s = 0.87$), $T\text{-RW}$ ($r_s = -0.71$), $\text{WTR}$ ($r_s = -0.68$) và $T\text{-TW}$ ($r_s = -0.67$) có tương quan mạnh nhất, trong khi $\text{COD}_{\text{Mn}}\text{-TW}$ có tương quan yếu nhất ($r_s = 0.011$):
+  - **Hình 3.** Ma trận hệ số tương quan Spearman với liều lượng PACl
+    - <img src="assets/fig_03_p5.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Minh họa tương quan đa chiều giữa 13 biến; bổ sung mức tương quan vừa của $\text{EC-RW}$, $\text{COD}_{\text{Mn}}\text{-RW}$ ($0.56$) và $\text{NTU-RW}$ ($0.45$) với liều lượng.
+    - **Từ đâu mà thấy được**
+      - Trục $Ox, Oy$: 13 biến chất lượng nước và vận hành (`Dosage`, hậu tố `-RW`, `-TW`, không thứ nguyên); thanh màu $r_s \in [-1.0, 1.0]$.
+      - Hàng/cột `Dosage`: ô đỏ sẫm nhất tại $\text{pH-TW}$ ($-0.90$), xanh sẫm nhất tại $\text{NH}_3\text{-N-RW}$ ($0.87$), nhạt nhất tại $\text{COD}_{\text{Mn}}\text{-TW}$ ($0.011$).
+      - Lưu ý: hình ghi pH-TW (-0.9) và T-TW (-0.67), văn bản ghi pH-RW và T-RW.
+- Hiện tượng cộng tuyến mạnh (strong linear correlation) xuất hiện giữa một số cặp biến chất lượng nước:
+  - $\text{EC-RW}$ và $\text{EC-TW}$ có tương quan tuyến tính rất cao với nhau ($r_s = 0.98$).
+  - $\text{COD}_{\text{Mn}}\text{-RW}$ và $\text{EC-RW}$ có tương quan tuyến tính cao với $T\text{-TW}$ (hệ số $r_s$ lần lượt là $0.91$ và $-0.95$).
+- Quy trình loại bỏ biến dư thừa nhằm tránh hiện tượng đa cộng tuyến (redundancy avoidance):
+  - Chỉ giữ lại một đặc trưng đại diện từ mỗi cặp đặc trưng có tương quan cao.
+  - Các đặc trưng $\text{EC-RW}$ và $\text{COD}_{\text{Mn}}\text{-RW}$ được giữ lại, trong khi loại bỏ các đặc trưng nước sau xử lý tương ứng bị cộng tuyến cao.
+- Tập đặc trưng cuối cùng phục vụ huấn luyện mô hình dự đoán liều lượng chất keo tụ:
+  - Bao gồm 9 đặc trưng đầu vào: $T\text{-RW}$, $\text{pH-RW}$, $\text{NH}_3\text{-N-RW}$, $\text{NTU-RW}$, $\text{EC-RW}$, $\text{COD}_{\text{Mn}}\text{-RW}$, $\text{pH-TW}$, $\text{NTU-TW}$ và $\text{WTR}$.
+  - Biến mục tiêu là liều lượng chất keo tụ PACl.
+  - Mô hình học máy thiết lập thành công mối liên kết và tương tác phức tạp giữa chất lượng nước thô, liều lượng châm chất keo tụ và chất lượng nước sau xử lý.

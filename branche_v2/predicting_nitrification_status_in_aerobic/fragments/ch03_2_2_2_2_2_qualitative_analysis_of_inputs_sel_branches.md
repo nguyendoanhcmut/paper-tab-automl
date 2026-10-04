@@ -1,0 +1,22 @@
+#### 2.2.2. Qualitative analysis of inputs selection
+
+- Thu thập ba nhóm dữ liệu chính (three data categories) trong suốt quá trình thí nghiệm:
+  - Nhóm thủy lực (Hydraulic): Thời gian lưu nước thủy lực ($HRT$ - hydraulic retention time) và thời gian lưu bùn ($SRT$ - sludge retention time).
+  - Nhóm vận hành (Operational): Áp suất xuyên màng ($TMP$ - transmembrane pressure), lưu lượng khí cấp/nước đầu vào/nước đầu ra ($air/influent/effluent\ flow\ rates$), thông lượng tổng/thông lượng thực ($gross/net\ flux$), và độ phục hồi thông lượng ($flux\ recovery$).
+  - Nhóm chất lượng nước (Water quality): $COD$, $TN$, $NH_4^+-N$, $NO_3^--N$, $NO_2^--N$ (đo trong nước đầu vào - $influent$, nước đầu ra - $effluent$, và hỗn hợp bùn lỏng trong bể phản ứng - $mixed\ liquor\ in\ the\ reactor$), tổng chất rắn lơ lửng ($TSS$ - total suspended solids trong nước đầu vào/đầu ra), oxy hòa tan ($DO$ - dissolved oxygen), nồng độ chất rắn lơ lửng bùn lỏng ($MLSS$ - mixed liquor suspended solids) và nồng độ chất rắn lơ lửng bay hơi bùn lỏng ($MLVSS$ - mixed liquor volatile suspended solids) trong bể phản ứng.
+  - Hiệu suất loại bỏ (Removal efficiency) được tính toán bổ sung cho từng thông số chất lượng nước.
+- Ba tiêu chí lựa chọn đặc trưng đầu vào (input features) từ góc độ triển khai thực tế (practical deployment):
+  - Khả năng đo trực tiếp ($1 > Direct\ measurability$).
+  - Khả năng tương thích với cảm biến thương mại ($2 > Commercial\ sensor\ compatibility$).
+  - Mức độ liên quan đến vận hành ($3 > Operational\ relevance$, ví dụ: $TMP$).
+- Sàng lọc và loại trừ các biến không phù hợp để tinh giản dữ liệu:
+  - Loại trừ các biến gián tiếp (Indirect variables): Biến thời gian lưu bùn ($SRT$) và hiệu suất loại bỏ ($removal\ efficiencies$) bị loại bỏ do tính chất đo lường gián tiếp.
+  - Cân nhắc ban đầu: Xem xét ban đầu bao gồm các thông số chất lượng nước ($DO$, $COD$, $TN$, $NH_4^+-N$, $NO_3^--N$, $NO_2^--N$) và các yếu tố vận hành (lưu lượng dòng chảy - $flow\ rates$, lưu lượng khí - $air\ flow$, $TMP$).
+  - Loại trừ oxy hòa tan ($DO$): Tỷ lệ thiếu hụt dữ liệu $DO > 50\%$ dẫn đến việc loại bỏ thông số này, mô phỏng các kịch bản hỏng hóc đầu dò cảm biến (probe failure scenarios).
+  - Giữ lại lưu lượng khí cấp ($air\ flow\ rate$) nhằm đóng vai trò biến đại diện cho oxy ($oxygen\ proxy$).
+  - Ưu tiên tính tương thích với cảm biến trực tuyến (Online sensor compatibility): Nhằm nâng cao khả năng áp dụng (applicability) và độ bền vững (robustness) của mô hình.
+  - Loại trừ chất lượng nước đầu vào ($influent\ water\ quality$): Bị loại do các lo ngại về độ tin cậy của cảm biến (sensor reliability concerns), nền mẫu phức tạp (complex matrices) gây tắc nghẽn bề mặt cảm biến (sensor fouling) và suy thoái cảm biến (sensor degradation, ví dụ hiện tượng hòa tan điện cực $Ag/AgCl$) (Ching et al., 2022; Haimi et al., 2013).
+  - Loại trừ $NO_2^--N$ nước đầu ra ($effluent\ NO_2^--N$): Bị loại do tính không ổn định trong phép đo (measurement instability) so với thông số $NO_3^--N$ ổn định.
+  - Đưa vào áp suất xuyên màng ($TMP$): Giữ lại nhằm theo dõi hiệu năng màng lọc (membrane performance), hỗ trợ giám sát vận hành dài hạn (long-term operation monitoring).
+- Tinh chỉnh tập dữ liệu (Dataset refinement):
+  - Loại bỏ các biến không phù hợp và tinh giản các biến đầu vào nhằm tạo điều kiện thuận lợi cho việc phân chia tập dữ liệu (dataset splitting).

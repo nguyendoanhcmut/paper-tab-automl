@@ -1,0 +1,21 @@
+## Conclusions
+
+- Nghiên cứu khảo sát các hiệu ứng đáp ứng ($\text{response effects}$) của các biến dòng ra ($\text{effluent variables}$) quan trọng đối với các điều kiện vận hành ($\text{operation conditions}$) và đặc tính dòng vào ($\text{influent characteristics}$) trong các quy trình khử nitơ dựa trên anammox ($\text{anammox-based nitrogen removal processes}$):
+  - Phương pháp tiếp cận kết hợp phân tích dữ liệu lớn ($\text{big data analysis}$) và thuật toán học máy tự động ($\text{AutoML algorithm}$).
+- Phân tích dữ liệu lớn thu thập từ y văn ($\text{literature}$) xác định ưu thế cấu hình bể phản ứng đối với nước thải sinh hoạt đô thị ($\text{municipal wastewater}$):
+  - Các bể phản ứng dòng chảy liên tục ($\text{continuous flow reactors}$) sử dụng bùn hạt/cụm kết tụ anammox ($\text{anammox aggregates}$) có khả năng tiếp nhận và xử lý mức tải nạp nitơ ($\text{nitrogen loadings}$) cao hơn.
+- Thuật toán $\text{AutoML}$ khởi tạo các mô hình ứng viên ($\text{candidate models}$) đạt độ chính xác cao ($\text{high accuracy}$) cho các biến đầu ra quan trọng:
+  - Độ chính xác cao đạt được đồng thời trên dữ liệu thu thập từ y văn và tập dữ liệu thực nghiệm độc lập chưa từng thấy trước đó ($\text{unseen experiments}$).
+- Phân tích khả năng diễn giải ($\text{interpretable analysis}$) trên các mô hình tối ưu ($\text{optimal models}$) làm sáng tỏ các mối quan hệ đáp ứng giữa biến đầu vào và biến đầu ra:
+  - Làm rõ các hiệu ứng đáp ứng một chiều ($1\text{D}$) và hai chiều ($2\text{D}$) giữa các biến đầu vào ($\text{input variables}$) và biến đầu ra ($\text{output variables}$).
+  - Xác định các khoảng giá trị phù hợp ($\text{appropriate ranges}$) cho các đặc tính và thông số vận hành then chốt:
+    - Tỷ lệ carbon trên nitơ ($\text{C/N}$).
+    - Nồng độ amoni dòng vào ($\text{influent }\text{NH}_4^+\text{-N}$).
+    - Tổng nitơ vô cơ dòng vào ($\text{influent TIN}$).
+    - Nhu cầu oxy hóa học dòng vào ($\text{influent COD}$).
+    - Thời gian lưu nước thủy lực ($\text{HRT}$).
+    - Tải nạp nitơ dòng vào ($\text{NLR}$).
+- Ý nghĩa thực tiễn và định hướng ứng dụng công nghệ:
+  - Các phát hiện này giúp làm sâu sắc hiểu biết về các quá trình sinh học và hỗ trợ trực tiếp công tác vận hành thực tiễn ($\text{practical operation}$) của các quy trình dựa trên anammox trong xử lý nước thải sinh hoạt đô thị.
+- Tính sẵn có của dữ liệu ($\text{Data availability}$):
+  - Toàn bộ dữ liệu hỗ trợ các kết quả của nghiên cứu này có sẵn trong bài báo và phần thông tin bổ sung ($\text{Supplementary Information}$).

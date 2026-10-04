@@ -1,0 +1,15 @@
+### 2.5. Construction of the baseline model for the target plant
+- Mô hình cơ sở (baseline model) được thiết lập chỉ sử dụng tập dữ liệu của nhà máy mục tiêu (target plant dataset) nhằm so sánh hiệu năng với các mô hình học chuyển giao (transfer learning models):
+  - Mô hình cơ sở được xây dựng trước khi thiết lập các mô hình học chuyển giao.
+  - Hiệu năng của mô hình này đóng vai trò mốc tham chiếu trực tiếp để đối chiếu hiệu quả dự báo với các mô hình học chuyển giao.
+- Tập dữ liệu nhà máy mục tiêu được phân chia theo trình tự thời gian (chronological order) với tỷ lệ $50:50$ để đảm bảo tính so sánh (comparability):
+  - $50\%$ dữ liệu đầu tiên theo dòng thời gian được sử dụng cho huấn luyện mô hình (model training).
+  - $50\%$ dữ liệu cuối cùng được giữ lại làm tập kiểm tra (testing).
+  - Phương án phân chia theo tỷ lệ này khiến lượng dữ liệu nhà máy mục tiêu khả dụng cho huấn luyện mô hình chỉ ở mức giới hạn.
+- Mô hình XGBoost độc lập (independent XGBoost model) được lựa chọn làm đường cơ sở thay cho mô hình LSTM huấn luyện độc lập trên nhà máy mục tiêu (standalone target-trained LSTM):
+  - Với tập huấn luyện hạn chế về kích thước, mô hình LSTM độc lập dễ rơi vào trạng thái khớp không ổn định (unstable fitting) và quá khớp (overfitting), làm suy giảm độ tin cậy của các kết quả đối chiếu $[39]$.
+  - Thuật toán XGBoost được triển khai độc lập nhằm đảm bảo độ tin cậy cho phép đo so sánh đối chuẩn.
+- Quy trình huấn luyện mô hình cơ sở duy trì tính nhất quán về không gian đặc trưng và độc lập trong chuẩn hóa:
+  - Mô hình XGBoost được huấn luyện trên phần dữ liệu huấn luyện của nhà máy mục tiêu với cùng không gian đặc trưng (feature set) như các mô hình học chuyển giao.
+  - Bộ chuẩn hóa tỷ lệ (scaler) cho biến mục tiêu (target variable) được khớp (fitted) độc lập chỉ trên phần dữ liệu huấn luyện này nhằm tránh rò rỉ thông tin.
+  - Cấu hình thiết lập chi tiết của mô hình cơ sở được trình bày tại Bảng S4 (Table S4).

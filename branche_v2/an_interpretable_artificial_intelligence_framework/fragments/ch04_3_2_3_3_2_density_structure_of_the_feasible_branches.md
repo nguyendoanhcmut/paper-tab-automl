@@ -1,0 +1,62 @@
+#### 3.3.2. Density structure of the feasible regions
+
+- Cửa sổ vận hành khuyến nghị (recommended operating window) thiết lập không gian vận hành mục tiêu cho cụm bể MBR được lượng hóa chi tiết tại Table 4:
+  - Mỗi hàng trong Bảng 4 đối chiếu song song tỷ lệ đạt đo đạc thực tế (measured attainment rate) trong nhật ký vận hành SCADA với tỷ lệ khả thi suy diễn từ mô hình (model-derived rate), đảm bảo không khuyến nghị nào phụ thuộc đơn lẻ vào mô hình.
+  - Baseline đạt đồng thời cả 3 mục tiêu kỹ thuật trên toàn bộ nhà máy là $37.1\,\%$.
+  - Khoảng giới hạn hiệu suất mục tiêu (target performance envelope) bao gồm: áp suất xuyên màng TMP từ $-0.09$ đến $-0.03\ \text{bar}$, lưu lượng thấm (permeate flow) $1.5\text{--}2.2\ \text{m}^3/\text{min}$, và mực nước bể màng (water level) $65.0\text{--}67.0\,\%$.
+  - Các dải khuyến nghị đơn biến kết hợp không gây xung đột cho 20 trong tổng số 21 cặp biến vận hành (Fig. 8); đường viền xanh lá đậm biểu diễn đường mức khả thi $80\,\%$ ($80\,\%$ contour).
+  - Ngoại lệ duy nhất là cặp SRT và HRT có hiện tượng tương tác phi tuyến, tuân theo quy tắc kiểm soát kết hợp tại Mục 3.3.4 để lựa chọn HRT khi độ tuổi bùn đã được cố định.
+- Thời gian lưu thủy lực (HRT / Hydraulic Retention Time) là đòn bẩy nhạy nhất (sharpest lever) kiểm soát lưu lượng và trạng thái thủy lực:
+  - Trong vùng khả thi, tỷ lệ khả thi có điều kiện đạt $82.8\,\%$ ở khoảng $5.88\text{--}6.38\ \text{h}$ và suy giảm đơn điệu ngay sau đó, chạm mức $0\,\%$ khi HRT vượt quá $7.95\ \text{h}$.
+  - Tỷ lệ đạt đo đạc thực tế trong cùng các dải này ghi nhận tương ứng $82.4\,\%$ và $0\,\%$ (Fig. 7).
+  - Hiện tượng này đại diện cho trần thủy lực (hydraulic ceiling) đã xác định ở Mục 3.2 biểu hiện dưới dạng một ràng buộc vận hành thực tế.
+  - Ở thể tích bể cố định, HRT kéo dài trên khoảng $8\ \text{h}$ tương ứng với lưu lượng đầu vào quá thấp khiến mục tiêu lưu lượng thấm $1.5\ \text{m}^3/\text{min}$ không thể đạt được, bất kể tình trạng màng lọc.
+  - Dải khuyến nghị vận hành HRT là $5.9\text{--}6.4\ \text{h}$ (chính xác $5.875\text{--}6.381\ \text{h}$ trên khoảng quan sát $5.875\text{--}11.042\ \text{h}$), ghi nhận tỷ lệ đạt bên trong / bên ngoài dải là $82.4\,\% / 32.1\,\%$.
+- Cường độ sục khí (Air / aeration rate) thể hiện cấu trúc mục tiêu đối nghịch (opposing-target structure) đã chỉ ra ở Mục 3.2:
+  - Tỷ lệ đạt đo đạc thực tế đạt đỉnh tại dải $4868\text{--}5892\ \text{m}^3/\text{h}$ ($61.1\,\%$) và giảm mạnh xuống $17.2\,\%$ ở trên $6356\ \text{m}^3/\text{h}$ (trên khoảng quan sát $4470\text{--}7272\ \text{m}^3/\text{h}$, tỷ lệ đạt trong / ngoài dải là $61.1\,\% / 34.4\,\%$) (Fig. 9C).
+  - Điểm tối ưu TMP tập trung tại $5500\text{--}6000\ \text{m}^3/\text{h}$, nơi lực cắt thủy động đủ duy trì độ linh động của lớp bánh lọc (cake layer) mà không phát sinh thêm lợi ích khi tiếp tục tăng lưu lượng khí.
+  - Hiện tượng sụt giảm lưu lượng thấm khi sục khí tăng bắt nguồn từ logic điều khiển tự động (control logic) thay vì ức chế thông lượng do thủy động lực học, do đó dải khuyến nghị đáp ứng yêu cầu thổi rửa màng mà không đẩy hệ thống vào chế độ sục khí cao phản ứng (reactive high-aeration regime).
+  - Hệ số tương quan Pearson giữa Air và Flow đạt $-0.410$ trên tập dữ liệu thô, trong khi hai quan hệ tuyến tính mạnh hơn trong bộ dữ liệu là MLSS–F/M ($-0.791$) và SRT–TMP ($-0.606$).
+  - **Hình 9.** Đáp ứng dự báo của biến đầu ra trên vùng khả thi
+    - <img src="assets/fig_09_p12.jpeg" alt="Hình 9" />
+    - **Hình này chứng minh điều gì**
+      - Biến đầu ra phản ứng phi tuyến với từng thông số vận hành; đường cong cắt qua đường giới hạn nét đứt đánh dấu vi phạm mục tiêu.
+      - Dải màu xanh lục thể hiện vùng vận hành khuyến nghị dung hòa đồng thời hai biến đầu ra mục tiêu.
+    - **Từ đâu mà thấy được**
+      - Các ô (A)–(F): trục hoành là thông số đầu vào; trục tung đôi biểu diễn 2 biến đầu ra dự báo kèm dải phân vị xám, đường chấm ngang là ngưỡng mục tiêu.
+      - Ô (C): đường TMP (đỏ) đạt tối ưu rồi bão hòa trong dải xanh, trong khi Flow (xanh lam) giảm từ $2.1$ xuống dưới $1.8\ \text{m}^3/\text{min}$.
+      - Lưu ý: hình ghi ô (F) là C/N (-), văn bản chú thích ghi glucose dosing rate.
+- Kiểm định tính hợp lệ của mặt độ khả thi mô hình (feasibility surface) dựa trên dữ liệu nhật ký thực tế:
+  - Toàn bộ hồ sơ vận hành SCADA ghi nhận $1703$ trên $4593\ \text{h}$ ($37.1\,\%$) đạt đồng thời cả 3 mục tiêu hiệu suất.
+  - Phân chia mỗi biến đầu vào thành các phân vị thập phân (deciles) mang lại 70 phép so sánh theo cặp (paired comparisons) giữa tỷ lệ khả thi dự báo và tỷ lệ đạt đo đạc thực tế trong cùng một bin.
+  - Mức độ tương đồng đạt độ chuẩn xác định lượng cao mà không cần tinh chỉnh mô hình: hệ số tương quan Pearson $r = 0.988$ ($p = 9 \times 10^{-57}$), Spearman $\rho = 0.984$, độ lệch tuyệt đối trung bình $4.3$ điểm phần trăm và độ lệch lạc quan hệ thống chỉ $+4.2$ điểm phần trăm.
+  - Hệ số tương quan của từng biến riêng lẻ dao động trong khoảng từ $0.96$ đến $0.998$ (Fig. 10).
+  - Phép kiểm định này xác thực khả năng ứng dụng thực tế của mô hình để chỉ dẫn vận hành, đóng vai trò thực tiễn hơn so với việc dự báo chuỗi thời gian xuôi đơn thuần.
+  - **Hình 10.** Tương đồng giữa tỷ lệ khả thi mô hình và tỷ lệ thực tế
+    - <img src="assets/fig_10_p12.jpeg" alt="Hình 10" />
+    - **Hình này chứng minh điều gì**
+      - Mô hình học máy tái tạo chính xác tần suất đạt đồng thời cả 3 mục tiêu theo từng khoảng vận hành của nhà máy.
+      - Tỷ lệ khả thi mô hình hóa không bị sai lệch có hệ thống so với số liệu ghi nhận thực tế.
+    - **Từ đâu mà thấy được**
+      - 7 ô đầu: đường mô hình (xanh lam) và đo đạc (đỏ) chồng khít qua 10 phân vị decile của từng biến đầu vào.
+      - Ô cuối cùng: $70$ điểm đối chiếu cặp ($n = 70\ \text{bins}$) phân bố bám sát đường phân giác $1:1$ với $r = 0.988$.
+- Thời gian lưu bùn (SRT / Sludge Retention Time) thể hiện mối quan hệ đáp ứng liều lượng (dose–response) mạnh nhất và đơn điệu nhất trong 7 thông số đầu vào:
+  - Tỷ lệ đạt mục tiêu đo đạc thực tế suy giảm đều đặn từ $77.0\,\%$ tại $43.2\text{--}72.2\ \text{ngày}$, qua $74.5\,\%$ tại $77\text{--}84\ \text{ngày}$ và $59.0\,\%$ tại $84\text{--}86\ \text{ngày}$, xuống $18.7\,\%$ tại $87\text{--}92\ \text{ngày}$ và chạm mức $0\,\%$ ở trên $108\ \text{ngày}$.
+  - Tỷ lệ khả thi suy diễn từ mô hình bám sát các giá trị thực tế này trong biên độ vài điểm phần trăm trên toàn bộ dải biến thiên.
+  - Khuyến nghị vận hành yêu cầu giữ SRT dưới khoảng $85\ \text{ngày}$ và nhắm vào dải mục tiêu $43.2\text{--}72.2\ \text{ngày}$ (khoảng quan sát $43.3\text{--}108.4\ \text{ngày}$, tỷ lệ đạt trong / ngoài dải là $77.0\,\% / 32.3\,\%$), trong đó tỷ lệ đạt giảm đơn điệu xuống $<20\,\%$ khi vượt quá $87\ \text{ngày}$ và cho kết quả chuyển giao ngoài thời gian tăng $+22.7$ điểm phần trăm ($+22.7\ \text{pp}$).
+  - Khuyến nghị này được đồng thuận bởi 3 luồng bằng chứng độc lập: phân tích SHAP liên mô hình (Fig. 6), mặt độ khả thi mô hình (Fig. 7), và dữ liệu đo đạc thực tế (Fig. 11A), cùng xác định vùng tối ưu nằm ở nửa dưới của dải vận hành.
+- Nồng độ bùn hoạt tính (MLSS / Mixed Liquor Suspended Solids) phản ánh sự đánh đổi phi tuyến rõ rệt qua dạng đồ thị chữ U ngược (inverted-U):
+  - Tỷ lệ đạt mục tiêu đo đạc tăng từ $3.9\,\%$ ở dưới $3590\ \text{mg/L}$ lên đỉnh rộng $67.6\,\%$ trong dải $5580\text{--}6138\ \text{mg/L}$, sau đó suy giảm xuống $25.1\,\%$ ở trên $6138\ \text{mg/L}$ (trên khoảng quan sát $1918\text{--}7630\ \text{mg/L}$, tỷ lệ đạt trong / ngoài dải là $67.6\,\% / 29.5\,\%$) (Fig. 7, Fig. 9D, Fig. 10).
+  - Mô hình mô phỏng chính xác cấu trúc chữ U ngược này trong phạm vi sai số $4$ điểm phần trăm ở mọi phân vị decile.
+  - Dải khuyến nghị $5580\text{--}6138\ \text{mg/L}$ bao phủ $918\ \text{giờ}$ vận hành thực tế, thể hiện điểm cân bằng giữa việc duy trì đủ sinh khối xử lý nước và ngăn ngừa gia tăng trở lực bánh lọc do độ nhớt lỏng chi phối ở nồng độ cao.
+  - MLSS ghi nhận năng lực chuyển giao ngoài thời gian cao nhất trong mọi thông số với mức cải thiện $+30.9$ điểm phần trăm ($+30.9\ \text{pp}$).
+- Tỷ lệ thức ăn trên vi sinh vật (F/M / Food-to-Microorganism ratio) biểu hiện xu hướng tương tự MLSS:
+  - Tỷ lệ đạt mục tiêu đạt cực đại $68.3\,\%$ trong dải $0.0233\text{--}0.0252\ \text{day}^{-1}$ so với chỉ $15.0\,\%$ ở trên ngưỡng $0.0373\ \text{day}^{-1}$ (trên khoảng quan sát $0.0117\text{--}0.0658\ \text{day}^{-1}$, tỷ lệ đạt trong / ngoài dải là $68.3\,\% / 33.5\,\%$).
+  - Hiện tượng suy giảm hiệu suất ở tải trọng hữu cơ cao phù hợp với cơ chế tăng sinh quá mức các chất vi sinh hòa tan (SMP - soluble microbial products) đẩy nhanh tốc độ tạo màng gel gây nghẽn màng.
+  - Hướng dẫn thực hành: duy trì F/M dưới ngưỡng xấp xỉ $0.03\ \text{day}^{-1}$ và chủ động trích xuất xả bùn khi hệ thống quản lý sản xuất phát tín hiệu sắp có chu kỳ tải hữu cơ cao; mức chuyển giao ngoài thời gian tăng $+15.7$ điểm phần trăm ($+15.7\ \text{pp}$).
+- Tỷ lệ cacbon trên nitơ (C/N) và lưu lượng châm glucose (Glu) đóng vai trò là các đòn bẩy điều chỉnh có điều kiện:
+  - Tỷ lệ C/N (quan sát $4.80\text{--}17.52$, tỷ lệ đạt trong / ngoài dải là $55.0\,\% / 32.6\,\%$) là biến giám sát thay vì điểm đặt cố định, có dải thuận lợi $4.80\text{--}7.51$ ($55.0\,\%$) cùng một gờ phụ (secondary shoulder) tại $11.3\text{--}12.9$ ($50.5\,\%$).
+  - Cấu trúc hai đỉnh (bimodal structure) này (Fig. 10) phản ánh 2 chế độ xả thải chủ đạo tại nhà máy bán dẫn: dòng thải giàu cacbon từ công đoạn bóc chất cản quang và rửa hóa chất, đối lập với nước rửa giàu nitơ từ các bước đánh bóng và ăn mòn hóa học.
+  - Lưu lượng châm glucose (Glu, khoảng quan sát $0.402\text{--}1.352\ \text{L/min}$, khuyến nghị $0.705\text{--}1.352\ \text{L/min}$, tỷ lệ đạt trong / ngoài dải $59.8\,\% / 31.3\,\%$) được điều tiết để duy trì tỷ lệ C/N hơn là mục tiêu tối ưu hóa màng độc lập.
+  - Tác động của liều lượng châm glucose tới mực nước bể màng trong vùng khả thi vận hành thông qua trạng thái tải trọng tổng thể thay vì qua F/M (vốn có tương quan rất yếu).
+  - Mối liên hệ của C/N kém ổn định nhất trong 7 thông số qua các khoảng thời gian khác nhau, do đó chỉ dẫn C/N được diễn giải như một quan sát đặc thù theo từng thời kỳ hơn là điểm đặt có thể chuyển giao cố định (kết quả phân tích đối chiếu trên các trang 11 và 12 của tài liệu gốc).

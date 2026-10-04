@@ -1,0 +1,24 @@
+## 4. Conclusions
+
+- Phương pháp phân tích thành phần chính ($\text{PCA}$ - Principal Component Analysis) đối với dữ liệu giám sát chất lượng nước sông là công cụ hóa trắc ($\text{chemometric tool}$) hiệu quả:
+  - Cho phép phân tích và làm sáng tỏ các mối quan hệ phức tạp giữa các thông số chất lượng nước sông về mặt hóa lý ($\text{physicochemical parameters}$) và vi sinh ($\text{microbiological parameters}$).
+  - Áp dụng hiệu quả đối với cả dữ liệu đo đạc liên tục từ các cảm biến ($\text{sensors}$) tại trạm thu nước lẫn dữ liệu phân tích chi tiết định kỳ trong phòng thí nghiệm của các nhà máy xử lý nước uống ($\text{DWTP}$ - Drinking Water Treatment Plant).
+- Các sự kiện ô nhiễm hữu cơ và vô cơ được phân loại và đặc trưng hóa qua các tổ hợp thông số khác biệt:
+  - Sự kiện mang đặc tính hữu cơ ($\text{organic matter events}$): được nhận diện thông qua sự gia tăng đồng thời của bộ ba thông số gồm tổng cacbon hữu cơ ($\text{TOC}$ - Total Organic Carbon), độ hấp thụ tia cực tím tại bước sóng $254\text{ nm}$ ($\text{UV}_{254}$), và độ đục ($\text{turbidity}$).
+  - Sự kiện mang tính chất vô cơ ($\text{inorganic events}$): thể hiện sự gia tăng điển hình của nồng độ amoniac ($\text{ammonia}$ / $\text{NH}_4$), độ dẫn điện ($\text{conductivity}$), và $\text{pH}$.
+  - Các sự kiện ô nhiễm có mối tương quan chặt chẽ với dữ liệu khí tượng ghi nhận tại khu vực.
+- Hàm lượng vật chất hữu cơ và vô cơ là hai yếu tố cốt lõi chi phối sự biến thiên chất lượng nước sông, liên kết chặt chẽ với hoàn cảnh khí hậu và khí tượng:
+  - Động lực của vật chất hữu cơ: thể hiện đặc tính biến thiên theo mùa bắt nguồn từ chế độ thủy văn tuyết - mưa ($\text{nivo-pluvial hydrological regime}$) của sông Llobregat, với mức độ đóng góp tăng cao rõ rệt vào thời điểm mở đầu các đợt mưa lớn.
+  - Xu hướng của vật chất vô cơ: biểu hiện chu kỳ biến đổi hàng năm với giá trị cực đại tập trung vào mùa đông.
+  - Các sự kiện làm tăng đột biến hàm lượng vô cơ cục bộ tại điểm thu nước:
+    - Xảy ra vào đầu các đợt mưa: thể hiện qua sự tăng cao nồng độ amoniac ($\text{NH}_4$).
+    - Xảy ra vào cuối các đợt mưa: thể hiện qua sự gia tăng đáng kể của độ dẫn điện.
+- Chiến lược kiểm soát quá trình bằng thống kê đa biến ($\text{MSPC}$ - Multivariate Statistical Process Control) sử dụng $\text{PCA}$ nâng cao hiệu quả quản lý vận hành $\text{DWTP}$:
+  - Thiết lập chiến lược mới nhằm cải thiện công tác quản lý $\text{DWTP}$ và tối ưu hóa các quy trình giám sát chất lượng nước hiện hành.
+  - Đo đạc và phân tích đồng thời nhiều thông số khác nhau hỗ trợ nghiên cứu và đánh giá tác động của các dị thường khí hậu quy mô thời gian lớn (như hạn hán kéo dài).
+  - Hỗ trợ giám sát và kiểm soát các biến cố bất thường ở quy mô thời gian ngắn, chẳng hạn như hiện tượng mưa lũ rửa trôi bề mặt ($\text{flush rains}$) và các sự cố tràn xả thải công nghiệp ($\text{industrial spills}$).
+  - Rút ngắn thời gian phản ứng vận hành trước các dạng sự kiện ô nhiễm khác nhau, bảo vệ an toàn cho các công trình và thiết bị công nghệ của nhà máy nước.
+- Định hướng quản lý vận hành và nhận diện nguồn ô nhiễm:
+  - Hoạt động quản lý vận hành cần mở rộng việc giám sát biến động chất lượng nước theo mùa và kiểm soát chặt chẽ các đợt ô nhiễm định kỳ từ cả nguồn hữu cơ lẫn vô cơ.
+  - Việc kiểm soát tốt hai nguồn phát thải này giúp kiểm soát thuận lợi hơn các sự kiện ô nhiễm vi sinh, do vi sinh vật có xu hướng xuất hiện chủ yếu vào giai đoạn đầu các đợt mưa.
+  - Tổ hợp của tất cả các thông số khảo sát được sử dụng như các dấu vân tay đặc trưng ($\text{specific fingerprints}$) phục vụ việc phát hiện và định danh các sự kiện ô nhiễm nước sông.

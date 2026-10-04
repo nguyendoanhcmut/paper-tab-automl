@@ -1,0 +1,42 @@
+### 3.2. Feature importance and electrochemical mechanisms
+
+- Đánh giá độ quan trọng đặc trưng dựa trên SHAP (SHapley Additive exPlanations) cung cấp hiểu biết cơ chế định lượng về các yếu tố chi phối hiệu suất loại bỏ PFOA bằng quá trình oxy hóa điện hóa (electrochemical oxidation):
+  - **Hình 3.** Độ quan trọng đặc trưng Grouped SHAP giữa XGBoost (FLAML-optimized) và Random Forest.
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Cả hai mô hình đều xác định electrolysis time là yếu tố quan trọng nhất; XGBoost xếp anode ở vị trí thứ hai ($|\text{SHAP}| \approx 12{,}1$), trong khi Random Forest làm suy giảm bậc quan trọng của anode ($|\text{SHAP}| \approx 1{,}0\text{--}1{,}5$).
+    - **Từ đâu mà thấy được**
+      - Biểu đồ thanh bên trái (XGBoost) hiển thị Anode xếp thứ hai ngay sau Electrolysis Time; biểu đồ bên phải (Random Forest) hiển thị Anode tụt xuống vị trí áp chót (thứ 10/11 đặc trưng).
+  - Cả hai khung mô hình học máy—XGBoost được tối ưu hóa bằng FLAML và Random Forest thông thường—đồng thuận xác định thời gian điện phân (electrolysis time) là yếu tố quyết định nhất, ghi nhận giá trị $|\text{SHAP}|$ trung bình lần lượt khoảng $16{,}4$ và $13{,}6$.
+  - Sự chi phối của electrolysis time nhất quán với lý thuyết oxy hóa điện hóa nền tảng: hiệu quả phân hủy chất ô nhiễm phụ thuộc vào lượng điện tích tích lũy được cấp (cumulative applied charge), một đại lượng tỷ lệ thuận trực tiếp với thời lượng điện phân [34].
+  - Thời gian điện phân điều khiển sự hình thành và tính sẵn có liên tục của các chất oxy hóa hoạt tính, chủ yếu là các gốc hydroxyl ($\text{•}\text{OH}$), tác nhân xúc tác quá trình khơi mào và duy trì khoáng hóa chất ô nhiễm có độ bền cao như PFOA [35, 36].
+  - Việc diễn giải mô hình xem xét tương quan ghi nhận giữa các biến đầu vào (SI Figures S1–S2) cùng thống kê mức độ đồng thuận với độ quan trọng hoán vị có điều kiện (conditional permutation importance trong SI Table S2).
+- Sự phân kỳ rõ nét xuất hiện ở yếu tố cực dương (anode) giữa hai cấu trúc mô hình:
+  - Trong mô hình XGBoost tối ưu hóa bằng FLAML, Anode xếp vị trí thứ hai với giá trị $|\text{SHAP}|$ trung bình $\approx 12{,}1$ điểm phần trăm (percentage points), trong khi ảnh hưởng của anode thấp hơn đáng kể ở Random Forest tinh chỉnh với $|\text{SHAP}|$ trung bình $\approx 1{,}5\text{--}2{,}0$.
+  - Tín hiệu cực dương nâng cao ở XGBoost phù hợp về mặt cơ chế điện hóa: các anode có thế quá áp sinh oxy cao (high-OER-overpotential anodes, ví dụ kim cương pha tạp boron - BDD) sản sinh mật độ gốc tự do cao hơn trong quá trình điện phân phân hủy PFAS.
+  - Do cả hai bảng của Hình 3 đều sử dụng grouped TreeSHAP, sự khác biệt bắt nguồn từ năng lực biểu diễn của mô hình (model capacity) thay vì chỉ số đo lường độ quan trọng: XGBoost nắm bắt các hiệu ứng phi tuyến và hiệu ứng tương tác đa biến (ví dụ tương tác $\text{Anode} \times \text{Current Density}$) vốn bị làm loãng khi Random Forest lấy trung bình qua toàn bộ tập hợp cây (ensemble tree averaging).
+  - Kết quả tương quan này giải thích lý do Alnaimat và cộng sự [30] ghi nhận độ quan trọng cực dương thấp khi sử dụng các độ đo Gini/permutation trên mô hình RF truyền thống, vốn là các thước đo có bản chất cấu trúc khác với SHAP.
+  - Độ lớn giá trị quan trọng vẫn phụ thuộc vào cấu trúc mô hình và mức độ tương quan dữ liệu; số liệu đồng thuận với conditional permutation importance được trình bày trong SI Table S2.
+- Nồng độ chất điện phân (Electrolyte Concentration) được mô hình XGBoost xếp ở bậc ưu tiên tiếp theo với giá trị SHAP trung bình $\approx 6{,}5$:
+  - Nồng độ chất điện phân điều chỉnh trực tiếp độ dẫn điện của dung dịch, qua đó tác động đến hiệu suất tạo gốc tự do và tốc độ oxy hóa chất ô nhiễm [37].
+  - Lực ion tối ưu (optimized ionic strength) đạt được qua điều chỉnh chính xác nồng độ chất điện phân giúp gia tăng hiệu suất sản sinh gốc hydroxyl ($\text{•}\text{OH}$) đồng thời ức chế các phản ứng phụ cạnh tranh như phản ứng thoát oxy (oxygen evolution reaction - OER) tại cực dương [38].
+  - Sự ghi nhận này của XGBoost tương thích với các phân tích động học điện hóa chi tiết: hiệu suất phân hủy đạt mức tối ưu ở dải nồng độ chất điện phân vừa phải nhờ thiết lập trạng thái cân bằng giữa độ linh động ion (ionic mobility) và các phản ứng phụ bắt giữ gốc tự do (radical-scavenging side reactions) [39].
+- Mô hình Random Forest nhấn mạnh nồng độ PFOA ban đầu (Initial PFOA Concentration) là biến số có ảnh hưởng lớn thứ hai sau thời gian điện phân (mean $|\text{SHAP}| \approx 5{,}8$ so với $\approx 6{,}8$ ở XGBoost):
+  - Nồng độ ban đầu của chất ô nhiễm tác động đến hiệu quả phân hủy tổng thể chủ yếu qua động học phản ứng tuân theo quy luật giả bậc một (pseudo-first-order degradation kinetics) trong quá trình oxy hóa điện hóa [40].
+  - Việc Random Forest xếp hạng cao nồng độ ban đầu phản ánh độ nhạy lớn hơn đối với các gradient nồng độ trực tiếp, trong khi mô hình cây tăng cường (boosted-tree) ưu tiên nắm bắt các tương tác liên quan đến đặc tính dung dịch điện ly.
+  - Mô hình XGBoost tối ưu thể hiện độ nhạy đối với các tương tác giữa đặc tính chất điện phân và cơ chế phản ứng điện hóa.
+- Cả hai mô hình đều gán mức độ ảnh hưởng đáng kể cho mật độ dòng điện (Current Density), với giá trị SHAP xấp xỉ $5{,}9$ ở XGBoost và $5{,}2$ ở Random Forest:
+  - Mật độ dòng điện phù hợp duy trì tốc độ sinh các gốc phản ứng tại mặt phân giới điện cực [41].
+  - Mật độ dòng điện quá cao làm tăng tiêu hao năng lượng và thúc đẩy các phản ứng phụ như phản ứng thoát oxy, làm giảm hiệu quả xử lý tổng thể [42].
+  - Vai trò hai mặt này đòi hỏi sự tối ưu hóa chính xác điều kiện vận hành; cấu trúc boosted-tree có khả năng nắm bắt các tác động phi tuyến và hành vi ngưỡng (threshold behaviors) liên quan đến sự đánh đổi năng lượng - hiệu suất này [43].
+- pH dung dịch ban đầu (Initial pH) và nhiệt độ (Temperature) thể hiện mức độ ảnh hưởng vừa phải nhưng có ý nghĩa:
+  - Initial pH đạt giá trị $|\text{SHAP}|$ xấp xỉ $4{,}3$ ở XGBoost và $3{,}2$ ở Random Forest; thông số này tác động đến hóa học bề mặt điện cực và sự phân bố dạng tồn tại của gốc tự do (radical speciation), điều biến độ ổn định và khả năng phản ứng của gốc oxy hóa [34, 41].
+  - Ảnh hưởng của Temperature (mean $|\text{SHAP}| \approx 1{,}7$ ở XGBoost và $\approx 1{,}1$ ở Random Forest) xác nhận rằng trong các khoảng vận hành thực tế, tác động của nhiệt độ lên quá trình oxy hóa điện hóa tương đối nhỏ so với các thông số điện hóa như nồng độ chất điện phân và mật độ dòng điện [44].
+  - Các đặc trưng còn lại ghi nhận ảnh hưởng thứ yếu trong cả hai mô hình: vật liệu cực âm (Cathode, mean $|\text{SHAP}| \approx 3{,}3$ ở XGBoost, $\approx 2{,}7$ ở RF), loại chất điện phân (Electrolyte Type, $\approx 2{,}4$ ở XGBoost, $\approx 2{,}1$ ở RF), khoảng cách điện cực (Spacing, $\approx 0{,}7$ ở XGBoost, $\approx 1{,}1$ ở RF), và ma trận nước (Water Matrix, $\approx 0{,}25$ ở XGBoost, $\approx 0{,}2$ ở RF).
+- Sự khác biệt về thứ hạng đặc trưng giữa FLAML-optimized XGBoost và Random Forest phản ánh sự khác biệt về kiến trúc thuật toán:
+  - Thuật toán boosted-tree của XGBoost, thông qua cơ chế khớp mô hình lặp tuần hoàn (iterative fitting) và điều chuẩn hóa nghiêm ngặt (regularization), ưu tiên phát hiện các tương tác phi tuyến phức tạp và hiệu ứng ngưỡng cục bộ [43].
+  - Random Forest tính giá trị trung bình trên toàn bộ tập hợp cây, dẫn đến hiện tượng làm loãng các khác biệt tinh tế về độ quan trọng và đánh giá thấp các mối quan hệ tương tác giữa các biến.
+- Tối ưu hóa siêu tham số tự động bằng FLAML nâng cao độ chính xác dự đoán và khả năng diễn giải cơ chế của mô hình XGBoost:
+  - FLAML tự động xác định các ràng buộc độ phức tạp tối ưu và các số hạng điều chuẩn, bảo đảm cấu hình mô hình đồng thời đạt hiệu năng dự đoán cao và khả năng khái quát hóa (generalizability) [27].
+  - Quy trình này thu hẹp khoảng cách giữa mô hình hóa dự đoán và lý thuyết cơ chế điện hóa, cung cấp thông tin về động học phân hủy và các chiến lược tối ưu hóa vận hành.
+  - Độ ổn định thứ bậc ở nhóm thứ hai (second-tier rank stability) duy trì tính nhất quán qua các lần chạy lặp lại trong quy trình đánh giá thực nghiệm (Mục 2.2).

@@ -1,0 +1,61 @@
+## 5. ML-Driven Energy Optimization in MBR Systems
+
+### 5.1. Energy Consumption Structure and Optimization Targets
+
+- **Cơ cấu chi phí vận hành và tính áp đảo của năng lượng sục khí**: Chi phí năng lượng là khoản mục chi phí vận hành (operational expenditure - OPEX) chủ yếu trong hệ thống bể phản ứng sinh học màng (membrane bioreactor - MBR), chỉ xếp sau chi phí thay thế màng (membrane replacement); trong đó, sục khí (aeration) là thành phần tiêu thụ năng lượng chiếm tỷ trọng lớn nhất [56].
+  - **Mức tiêu thụ năng lượng sục khí hỗn hợp**: Verrecht et al. [56] xác lập thông qua mô hình hóa cơ chế (mechanistic modelling) đối chuẩn với hai nhà máy quy mô đầy đủ (full-scale plants) rằng tổng năng lượng sục khí làm sạch màng (membrane scouring aeration) kết hợp với sục khí xử lý sinh học (biological treatment aeration) tiêu tốn $0.4\text{--}0.8\text{ kWh/m}^3$.
+  - **Tổng mức tiêu thụ năng lượng riêng (SEC) thực nghiệm**: Khảo sát thực nghiệm diện rộng của Krzeminski et al. [15] xác nhận tổng mức tiêu thụ năng lượng riêng (specific energy consumption - SEC) của các hệ thống MBR thường nằm trong khoảng $0.8\text{--}1.1\text{ kWh/m}^3$.
+  - **Các nhân tố chi phối sự phân bố SEC**: Sự phân bố mức tiêu thụ năng lượng trong dải $0.8\text{--}1.1\text{ kWh/m}^3$ chủ yếu chịu sự chi phối từ chiến lược điều khiển sục khí (aeration control strategy), điểm đặt thông lượng màng (membrane flux setpoint), và khả năng lắng của bùn (sludge settleability) [15].
+  - **Sự biến thiên theo cấu hình MBR và yêu cầu chuẩn hóa đối chuẩn**: Germain et al. [57] chứng minh nhu cầu năng lượng riêng dao động đáng kể giữa các cấu hình MBR khác nhau; việc so sánh đối chuẩn (benchmarking) giữa các nhà máy đòi hỏi phải chuẩn hóa cẩn trọng theo nồng độ dòng vào (influent strength) và mục tiêu xử lý (treatment objectives).
+
+- **Hạn chế cố hữu của các chiến lược điều khiển sục khí truyền thống**: Các hệ thống MBR truyền thống áp dụng phương pháp điều khiển luồng khí cố định hoặc điều khiển phản hồi nồng độ oxy hòa tan (dissolved oxygen - DO), cả hai đều dẫn đến hiện tượng lãng phí năng lượng có hệ thống:
+  - **Hệ điều khiển điểm đặt lưu lượng khí cố định (fixed air flow rate setpoints)**: Được xác định trong quá trình chạy thử nghiệm nghiệm thu (commissioning trials), điểm đặt cố định kém hiệu quả về năng lượng do duy trì tốc độ sục khí xáo trộn màng ở mức tối đa bất kể điều kiện bám bẩn (fouling) thực tế; điều này dẫn đến tình trạng sục khí quá mức có hệ thống (systematic over-aeration) trong các giai đoạn màng sạch ngay sau khi rửa ngược (backwashing) hoặc rửa hóa chất (chemical cleaning).
+  - **Hệ điều khiển phản hồi DO (DO-feedback control)**: Cải thiện hiệu suất sục khí cho cụm xử lý sinh học nhưng không trực tiếp điều khiển quá trình sục khí làm sạch màng, khiến thành phần năng lượng sục khí chiếm ưu thế lớn nhất vẫn bị duy trì ở trạng thái điều khiển vòng hở (open-loop control) [36].
+
+- **Thách thức vật lý trong việc xác định tốc độ sục khí xáo trộn tối ưu**: Tốc độ sục khí xáo trộn tối ưu không phải là một thông số tĩnh mà biến thiên liên tục theo nhiều yếu tố động học [58]:
+  - **Các thông số phụ thuộc**: Tốc độ sục khí tối ưu phụ thuộc vào trạng thái bám bẩn hiện thời (độ dày và khả năng nén của lớp bánh lọc - cake layer thickness and compressibility), độ nhớt bùn lỏng (mixed-liquor viscosity), điểm đặt thông lượng (flux setpoint), và độ tuổi của màng (membrane age).
+  - **Khoảng trống đo lường của thiết bị SCADA tiêu chuẩn**: Không có biến số nào trong số các thông số trạng thái nêu trên có thể đo trực tiếp theo thời gian thực bằng hệ thống giám sát điều khiển và thu thập dữ liệu (supervisory control and data acquisition - SCADA) tiêu chuẩn [58].
+
+- **Mục tiêu ứng dụng tối ưu hóa sục khí bằng Machine Learning (ML)**: Khoảng trống đo lường của thiết bị công nghiệp tạo ra trường hợp ứng dụng tự nhiên cho các kỹ thuật tối ưu hóa dựa trên ML [17, 38]:
+  - **Chức năng mô hình dự đoán**: Mô hình ML nhận luồng dữ liệu cảm biến SCADA đầu vào để dự đoán tốc độ sục khí làm sạch màng tối thiểu cần thiết nhằm duy trì áp suất xuyên màng (transmembrane pressure - $\text{TMP}$) dưới ngưỡng bám bẩn tới hạn (critical fouling threshold) ứng với điều kiện vận hành hiện tại.
+  - **Cơ chế điều khiển động**: Mô hình cho phép điều chỉnh sục khí động (dynamic aeration adjustment), cắt giảm tiêu thụ năng lượng trong các điều kiện thuận lợi và tự động tăng sục khí khi nguy cơ bám bẩn gia tăng.
+  - **Khả năng ánh xạ phi tuyến đa biến**: Hành động điều khiển này đòi hỏi năng lực thiết lập ánh xạ phi tuyến, đa biến (non-linear, multi-variable mapping) vốn là thế mạnh đặc trưng của các cấu trúc thuật toán ML [17, 38].
+
+### 5.2. Confirmed Energy Reduction Evidence and Research Gap
+
+- **Phân định bản chất giữa điều khiển cơ chế và điều khiển dựa trên dữ liệu ML**: Cần phân biệt rõ hai tiếp cận điều khiển tiết kiệm năng lượng khác biệt về bản chất trong y văn MBR để tránh thổi phồng mức độ hoàn thiện của công nghệ tối ưu hóa năng lượng bằng ML:
+  - **Điều khiển cơ chế dựa trên mô hình bùn hoạt tính (ASM-based mechanistic control)**: Sử dụng các mô hình quá trình sinh học như $\text{ASM1}$ hoặc $\text{ASM2d}$ kết hợp với vòng điều khiển phản hồi tỉ lệ - tích phân (proportional-integral - PI).
+  - **Điều khiển theo hướng dữ liệu dựa trên ML (ML-based data-driven control)**: Ứng dụng các thuật toán huấn luyện học máy để dự báo và tối thiểu hóa nhu cầu năng lượng tiêu thụ.
+  - **Hai phân loại kết quả tiết kiệm năng lượng trong y văn**:
+    - Nhóm 1: Mức tiết kiệm năng lượng đã được kiểm chứng (validated energy savings), đo lường trực tiếp tại các nhà máy đang vận hành ở quy mô đầy đủ thông qua chiến lược điều khiển cơ chế hoặc điều khiển phản hồi.
+    - Nhóm 2: Mức tiết kiệm dự phóng (projected savings), được báo cáo trong các nghiên cứu mô phỏng hoặc thử nghiệm điều khiển quy mô pilot, nơi thuật toán điều khiển và các điều kiện biên có sự biến thiên lớn giữa các công bố và mức tiết kiệm không phải lúc nào cũng quy được trực tiếp cho ML.
+    - Tiêu chí đánh giá khách quan: Phân loại ranh giới này là điều kiện then chốt để đánh giá đúng những thành tựu mà ML đã chứng minh được trong quản lý năng lượng MBR so với những mục tiêu còn cần kiểm chứng ở quy mô vận hành thực tế.
+
+- **Bằng chứng kiểm chứng cắt giảm năng lượng từ Sun et al. [59]**:
+  - **Quy mô và phương pháp triển khai**: Sun et al. [59] thực hiện mô phỏng mô hình bùn hoạt tính (activated sludge model - $\text{ASM}$) kết hợp điều khiển phản hồi $\text{PI}$ cho hệ thống sục khí tại một cơ sở MBR quy mô đầy đủ.
+  - **Cơ chế vận hành**: Phương pháp điều khiển dựa trên mô hình sử dụng các dự báo của $\text{ASM}$ về nhu cầu oxy để điều chỉnh động các điểm đặt sục khí xử lý sinh học.
+  - **Kết quả cắt giảm năng lượng đo đạc**: Đạt mức giảm $20\%$ nhu cầu năng lượng sục khí, hạ tổng mức tiêu thụ năng lượng riêng ($\text{SEC}$) xuống $0.45\text{ kWh/m}^3$, so với đường cơ sở quy mô pilot là $0.73\text{ kWh/m}^3$ do Verrecht et al. [14] thiết lập.
+  - **Giới hạn quy kết thuật toán**: Mặc dù kết quả xác nhận điều khiển sục khí động dựa trên mô hình mang lại hiệu quả tiết kiệm năng lượng thực tế ở quy mô đầy đủ, thuật toán được sử dụng là điều khiển $\text{PI}$ dựa trên $\text{ASM}$ chứ không phải một phương pháp ML độc lập; do đó, mức giảm $20\%$ năng lượng sục khí đóng vai trò mốc đối chuẩn đã kiểm chứng (validated benchmark) cho phương pháp điều khiển dựa trên mô hình chứ không phải kết quả riêng biệt của ML.
+
+- **Thực trạng nghiên cứu tối ưu hóa năng lượng MBR bằng ML và khoảng trống y văn**:
+  - **Sự hạn chế của các nghiên cứu ML chuyên dụng**: Các công trình nghiên cứu chuyên sâu về tối ưu hóa năng lượng bằng ML nhắm trực tiếp vào nhu cầu sục khí MBR hiện vẫn còn rất ít trong y văn.
+  - **Nguồn gốc dải tiết kiệm $15\%\text{--}25\%$ thường dẫn chiếu**: Dải giá trị tiết kiệm năng lượng sục khí thường được trích dẫn trong y văn MBR mở rộng (dao động từ xấp xỉ $15\%$ đến hơn $25\%$) chủ yếu bắt nguồn từ các nghiên cứu mô phỏng, phân tích tối ưu hóa thiết kế và thử nghiệm điều khiển quy mô pilot; trong đó thuật toán điều khiển khác nhau giữa các bài báo và mức tiết kiệm không phải lúc nào cũng do ML mang lại một cách riêng biệt.
+  - **Thiếu hụt bằng chứng quy mô đầy đủ có bình duyệt**: Chưa có nghiên cứu bình duyệt (peer-reviewed) quy mô đầy đủ nào chứng minh được mức tiết kiệm năng lượng định lượng xuất phát trực tiếp từ một thuật toán điều khiển ML được triển khai vận hành thực tế tại nhà máy MBR.
+  - **Định hướng nghiên cứu ưu tiên hàng đầu**: Việc phát triển, kiểm chứng vòng kín (closed-loop validation) và trình diễn ở quy mô đầy đủ hệ thống điều khiển sục khí động bằng ML sử dụng dữ liệu SCADA thời gian thực đi kèm quy trình hạch toán năng lượng chặt chẽ (rigorous energy accounting) là ưu tiên nghiên cứu mở có tác động trực tiếp và quan trọng nhất trong lĩnh vực tối ưu hóa năng lượng.
+
+- **Các mốc đối chuẩn năng lượng đã xác nhận và bằng chứng tối ưu hóa (dữ liệu Bảng 4)**: Bảng 4 tổng hợp các mốc đối chuẩn tiêu thụ năng lượng riêng đã được kiểm chứng và bằng chứng tối ưu hóa từ các nghiên cứu nền tảng được xác định trong bài đánh giá [14, 15, 56, 59].
+  - **Mô hình năng lượng cơ chế quy mô đầy đủ [56]**: Verrecht et al. [56] sử dụng mô hình năng lượng cơ chế (mechanistic energy model) trên quy mô đầy đủ, đạt độ kiểm chứng mô hình trong phạm vi sai số $20\%$ đối với tất cả các thông số nhà máy, ghi nhận mức tiêu thụ năng lượng sục khí $0.4\text{--}0.8\text{ kWh/m}^3$.
+  - **Mô phỏng BSM-MBR tối ưu hóa kịch bản ASM [14]**: Verrecht et al. [14] sử dụng mô phỏng mô hình chuẩn BSM-MBR kết hợp tối ưu hóa kịch bản $\text{ASM}$, giảm năng lượng tiêu thụ thông qua tinh chỉnh thời gian lưu bùn (solids retention time - $\text{SRT}$) và tỷ lệ tuần hoàn bùn (recirculation tuning), thiết lập mốc cơ sở quy mô pilot là $0.73\text{ kWh/m}^3$.
+  - **Khảo sát thực nghiệm đa nhà máy quy mô đầy đủ [15]**: Krzeminski et al. [15] tiến hành khảo sát thực nghiệm (empirical survey) trên nhiều nhà máy quy mô đầy đủ nhằm đối chuẩn trên các hệ thống MBR đa dạng, xác định dải tiêu thụ năng lượng riêng điển hình là $0.8\text{--}1.1\text{ kWh/m}^3$.
+  - **Điều khiển phản hồi ASM + PI quy mô đầy đủ [59]**: Sun et al. [59] áp dụng điều khiển phản hồi $\text{ASM} + \text{PI}$ ở quy mô đầy đủ, vận hành điều khiển sục khí động giúp giảm $20\%$ nhu cầu máy thổi khí, đạt tổng năng lượng tiêu thụ $0.45\text{ kWh/m}^3$ (tương ứng giảm $-20\%$ năng lượng sục khí).
+
+| Quy mô (Scale) | Phương pháp (Method) | Phát hiện chính (Key Finding) | Chỉ số năng lượng đã xác nhận (Confirmed Energy Metric) | Tài liệu trích dẫn (Reference) |
+| :--- | :--- | :--- | :--- | :--- |
+| Quy mô đầy đủ (Full-scale) | Mô hình năng lượng cơ chế (Mechanistic energy model) | Mô hình được kiểm chứng trong phạm vi $20\%$ của tất cả các thông số nhà máy | Năng lượng sục khí: $0.4\text{--}0.8\text{ kWh/m}^3$ | Verrecht et al. [56] |
+| Mô phỏng BSM-MBR (BSM-MBR simulation) | Tối ưu hóa kịch bản ASM (ASM scenario optimization) | Năng lượng giảm nhờ tinh chỉnh SRT/tuần hoàn bùn | Mốc cơ sở pilot: $0.73\text{ kWh/m}^3$ | Verrecht et al. [14] |
+| Đa nhà máy quy mô đầy đủ (Multiple full-scale) | Khảo sát thực nghiệm (Empirical survey) | Đối chuẩn trên nhiều nhà máy MBR đa dạng | Dải giá trị điển hình: $0.8\text{--}1.1\text{ kWh/m}^3$ | Krzeminski et al. [15] |
+| Quy mô đầy đủ (Full-scale) | Điều khiển phản hồi ASM + PI (ASM + PI feedback control) | Điều khiển sục khí động giảm $20\%$ nhu cầu máy thổi khí | Tổng năng lượng: $0.45\text{ kWh/m}^3$ (giảm $-20\%$ sục khí) | Sun et al. [59] |
+
+- **Yêu cầu khung tích hợp Digital Twin cho bài toán bám bẩn và tối ưu hóa năng lượng**: Việc giải quyết đồng thời hai thách thức dự đoán bám bẩn màng và tối ưu hóa năng lượng ở quy mô vận hành đòi hỏi một khung làm việc hợp nhất:
+  - **Ba trụ cột tích hợp**: Kết hợp chặt chẽ giữa khả năng dự báo của ML, tính minh bạch của trí tuệ nhân tạo có thể giải thích (explainable artificial intelligence - XAI), và hiểu biết cơ chế của quá trình thành một công cụ vận hành được cập nhật liên tục.
+  - **Lớp tích hợp Digital Twin (DT)**: Công nghệ bản sao kỹ thuật số (digital twin - DT) cung cấp chính xác lớp tích hợp này, đóng vai trò nền tảng điều khiển và mô phỏng được khảo sát trong phần tiếp theo của nghiên cứu.

@@ -1,0 +1,26 @@
+#### 2.2.4. Dataset splitting strategy
+
+- Tập dữ liệu sau tiền xử lý (preprocessed dataset) bao gồm 120 nhóm dữ liệu ($120$ groups of data), phản ánh các phép đo hàng ngày từ các thao tác vận hành thực nghiệm:
+  - Dữ liệu tồn tại sự mất cân bằng cố hữu về phân phối nhãn (inherent imbalance in label distribution) do các thay đổi có kiểm soát trong điều kiện xử lý.
+  - Đối với từng bể phản ứng, lưu lượng sục khí (airflow rate) được duy trì ở mức $2.0\text{ L/min}$ cho đến ngày $111$ và tăng lên mức $6.0\text{ L/min}$ sau đó nhằm tăng cường quá trình nitrat hóa (nitrification treatment).
+  - Tương tự, lưu lượng dòng vào (influent flow rate) chủ yếu ở mức $11.7\text{ ML/min}$ trước ngày thứ $149$ và tăng lên mức $20.6\text{ ML/min}$ sau đó.
+- Do các dịch chuyển theo thời gian này (temporal shifts), phương pháp phân chia dữ liệu theo trình tự thời gian đơn thuần (simple chronological split) không thể đánh giá khách quan hiệu năng mô hình.
+- Tập huấn luyện (training set) và tập kiểm tra (test set) được xây dựng theo chiến lược phân chia nhằm bao quát toàn bộ các biến động vận hành để đảm bảo đánh giá mang tính đại diện (representative assessment):
+  - **Hình 3.** Chiến lược phân chia dữ liệu cho các nhóm huấn luyện, kiểm định và kiểm tra
+    - <img src="assets/fig_03_p5.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Quy trình phân vùng 120 nhóm dữ liệu qua các pha vận hành thành tập huấn luyện-kiểm định ($80\%$, 78 nhóm), tập kiểm tra ($20\%$, 19 nhóm) và tập kiểm tra bổ sung (23 nhóm có biocarrier).
+    - **Từ đâu mà thấy được**
+      - Nhánh trái phân tách 97 nhóm không có biocarrier (MBR-1: 60 nhóm, MBR-2: 37 nhóm) trải qua các mức khí ($2\text{ Lpm}$, $6\text{ Lpm}$) và lưu lượng ($11.7\text{ mL/min}$, $20.6\text{ mL/min}$, $8.8\text{ mL/min}$).
+      - Mũi tên lấy mẫu định kỳ đưa dữ liệu vào tập kiểm tra ($20\%$) và tập huấn luyện-kiểm định ($80\%$, áp dụng 5-fold stratified cross-validation); nhánh phải đưa 23 nhóm MBR-2 vào kiểm tra chéo kịch bản.
+      - Lưu ý: hình thể hiện chu kỳ lấy mẫu các ngày 5, 10, 15... 95 (bước nhảy 5 ngày), văn bản ghi chọn mỗi điểm dữ liệu thứ tư ("every fourth data point").
+- Do sự mất cân bằng giữa lưu lượng khí và lưu lượng dòng vào, mỗi điểm dữ liệu thứ tư ("every fourth data point") (hình ghi chu kỳ 5 ngày: 5th, 10th, 15th... 95th day) được lựa chọn để hình thành tập kiểm tra (test set), chiếm $20\,\%$ tổng dữ liệu:
+  - Tập kiểm tra bao gồm 19 nhóm dữ liệu (19 groups of data), với 8 nhãn dương tính ($8\text{ positive}$) và 11 nhãn âm tính ($11\text{ negative labels}$).
+- $80\,\%$ dữ liệu còn lại (gồm 78 nhóm dữ liệu) được sử dụng cho huấn luyện và kiểm định (training and validation):
+  - Tập này gồm 28 nhãn dương tính ($28\text{ positive}$) và 50 nhãn âm tính ($50\text{ negative labels}$).
+  - Cấu trúc phân chia duy trì các đặc tính phân phối riêng biệt để đánh giá khả năng tổng quát hóa của mô hình (model generalization).
+- Quá trình tối ưu hóa siêu tham số (hyperparameter optimization) áp dụng kiểm định chéo phân tầng 5 lần (stratified 5-fold cross-validation thông qua StratifiedKFold của Scikit-Learn):
+  - Phương pháp kiểm định chéo phân tầng đảm bảo tỷ lệ đại diện cân bằng giữa các lớp trong mỗi fold nhằm nâng cao độ tin cậy đối với tập dữ liệu mất cân bằng (Szeghalmy and Fazekas, 2023; Zeng and Martinez, 2000).
+- Thử nghiệm độ bền vững chéo kịch bản (cross-scenario robustness) dưới các phân phối nhãn phân kỳ:
+  - Sử dụng bổ sung 23 bộ dữ liệu ($23\text{ datasets}$) thu thập từ điều kiện có bổ sung giá thể sinh học (biocarrier-added condition; Mục 2.1 và Mục 2.2).
+  - Nhóm này bao gồm 15 nhãn dương tính ($15\text{ positive}$) và 8 nhãn âm tính ($8\text{ negative labels}$) nhằm kiểm tra khả năng chuyển giao của mô hình trước sự thay đổi điều kiện vận hành.

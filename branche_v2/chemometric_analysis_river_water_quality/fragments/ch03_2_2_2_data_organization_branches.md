@@ -1,0 +1,52 @@
+### 2.2. Data organization
+
+- Dữ liệu lịch sử của $8$ thông số chất lượng hóa lý (physicochemical quality parameters), được quan trắc bằng các cảm biến trực tuyến (on-line sensors) tại cửa thu nước (water intake) từ sông Llobregat trong hai năm 2013–2014 ($2013\text{--}2014$) và lưu trữ trong Hệ thống Quản lý Thông tin Phòng thí nghiệm (LIMS - Laboratory Information Management System) của nhà máy xử lý nước uống Sant Joan Despí (SJD DWTP - Drinking Water Treatment Plant), đã được thu thập:
+  - Bảy thông số chất lượng hóa lý trực tuyến cùng lưu lượng dòng chảy sông bao gồm:
+    - Độ đục tính bằng đơn vị Formazin Nephelometric Unit ($\text{UNF}$) ($\text{TURB}$).
+    - Ion amoni tính bằng $\text{mg/L}$ ($\text{NH}_4$).
+    - Tổng cacbon hữu cơ (total organic carbon) tính bằng $\text{mg/L}$ ($\text{TOC}$).
+    - Độ hấp thụ bức xạ tử ngoại tại bước sóng $254\text{ nm}$ tính bằng $\text{abs}/100\text{ cm}$ ($\text{UV254}$).
+    - Độ dẫn điện tính bằng $\mu\text{S/cm}$ ($\text{COND}$).
+    - Chỉ số $\text{pH}$.
+    - Lưu lượng dòng chảy sông (river flow) tính bằng $\text{m}^3/\text{s}$.
+  - Các thông số vi sinh (microbiological parameters) thu được từ các phân tích xét nghiệm phòng thí nghiệm (laboratory assays) cũng được đưa vào xem xét song song.
+- Quy trình chuẩn bị các tập dữ liệu phân tích được định hình dựa trên hai khía cạnh trọng yếu:
+  - Khía cạnh thứ nhất: Tính sẵn có của các thông số đo đạc tại nhà máy và các chương trình quan trắc định kỳ theo kế hoạch:
+    - Phù hợp với các Quy định về Nước uống mới (Drinking Water Regulations), quy chế vận hành của DWTP, và tiêu chuẩn $\text{ISO 22000}$ ($\text{ISO22000}$) quy định sự cần thiết phải gia tăng số lượng các quy trình giám sát.
+  - Khía cạnh thứ hai: Khả năng căn chỉnh trực tiếp (direct alignment) toàn bộ các thông số theo đúng thời gian ghi nhận (recording time):
+    - Tránh thất thoát thông tin trong quá trình căn chỉnh thời gian và ngăn ngừa việc phát sinh các giá trị khuyết thiếu (missing values).
+- Dữ liệu thu thập được sắp xếp thành ba tập dữ liệu (datasets) riêng biệt:
+  - Tập dữ liệu 1 (Dataset 1): Các quan sát hóa lý được nội suy theo thời gian (Time interpolated physicochemical observations).
+  - Tập dữ liệu 2 (Dataset 2): Các quan sát hóa lý thực nghiệm (Experimental physicochemical observations).
+  - Tập dữ liệu 3 (Dataset 3): Các tập dữ liệu mở rộng bổ sung các thông số vi sinh (Augmented datasets including microbiological parameters).
+- Quá trình xử lý sai lệch thời gian ghi nhận giữa các giai đoạn vận hành cảm biến:
+  - Trong năm 2013, dù các thông số hóa lý được đo đạc hàng ngày, các mốc thời gian ghi nhận giữa các cảm biến không trùng khớp nhau:
+    - Bảng dữ liệu ban đầu tồn tại một số lượng đáng kể các giá trị khuyết thiếu mang tính hệ thống (systematic missing values).
+    - Một thuật toán nội suy (interpolation algorithm) được áp dụng để ước tính các giá trị khuyết thiếu, nhằm thu được bảng dữ liệu không còn giá trị trống.
+    - Việc áp dụng thuật toán nội suy dẫn đến sự hình thành của Tập dữ liệu 1 (Dataset 1), đi kèm nhược điểm có thể làm mất mát một phần thông tin về các tương tác thực tế giữa các thông số do bước điền dữ liệu nhân tạo (artificial data filling step).
+  - Đến giữa năm 2014 ($\text{mid 2014}$), toàn bộ các cảm biến hóa lý cần thiết tại cửa thu nước đã được đồng bộ hóa và căn chỉnh chuẩn xác theo thời gian ghi nhận:
+    - Các tương tác thực tế giữa các thông số hóa lý có thể được phân tích trực tiếp trên Tập dữ liệu 2 (Dataset 2) mà không chịu sai số từ bước nội suy nhân tạo.
+  - Tập dữ liệu 3 (Dataset 3) được thu thập bám sát lịch trình lấy mẫu vi sinh định kỳ tại DWTP:
+    - Lấy mẫu vi sinh được thực hiện vào mỗi thứ Hai lúc $08:00\text{ AM}$ ($08:00$ sáng).
+    - Cấu trúc dữ liệu này cho phép tìm ra mối tương quan giữa các kết quả vi sinh và các thông số hóa lý tương ứng tại cùng thời điểm.
+- Đặc điểm cấu trúc và phạm vi ứng dụng của Tập dữ liệu 1 (Dataset 1):
+  - Thuật toán nội suy tuyến tính (linear interpolation) bước đầu được áp dụng để căn chỉnh các thông số chất lượng nước theo từng giờ (hourly basis).
+  - Bảng dữ liệu hoàn chỉnh bao gồm $16{,}333$ phép đo hàng giờ ($16,333$ hourly measurements) cho $7$ thông số hóa lý.
+  - Tập dữ liệu này cho phép đánh giá các quy luật biến thiên theo thời gian (temporal variations) của chất lượng nước trong toàn bộ giai đoạn nghiên cứu hai năm 2013–2014 ($2013\text{--}2014$).
+- Đặc điểm cấu trúc và phạm vi ứng dụng của Tập dữ liệu 2 (Dataset 2):
+  - Chỉ xem xét và giữ lại các thông số hóa lý có quan sát thực nghiệm thực tế (real experimental observations) mà không can thiệp nội suy.
+  - Tập dữ liệu chứa các quan sát của $7$ thông số hóa lý được ghi nhận tại chính xác cùng một thời điểm trong khoảng thời gian từ tháng 7 đến tháng 11 năm 2014 (July to November 2014).
+  - Tổng số mẫu đạt $346$ quan sát thực nghiệm ($346$ experimental observations, gồm nhiều phép đo trong cùng một ngày) đồng bộ chuẩn xác về mốc thời gian cho cả $7$ thông số.
+  - Tập dữ liệu này được sử dụng để đánh giá và kiểm chứng (evaluation and validation) những biến đổi trong xu hướng chất lượng nước, các sự kiện bất thường (events), và các mối quan hệ giữa các thông số ban đầu được phát hiện từ phân tích trên Tập dữ liệu 1.
+- Đặc điểm cấu trúc và phạm vi ứng dụng của Tập dữ liệu 3 (Dataset 3):
+  - Dữ liệu vi sinh được thu thập theo định kỳ hàng tuần (weekly basis) trong suốt năm 2014, đạt tổng cộng $52$ mẫu ($52\text{ samples}$, tương ứng $1$ mẫu mỗi tuần).
+  - Thông tin vi sinh gồm số lượng đếm vi khuẩn (bacterial counts) của $6$ chỉ số vi sinh:
+    - *Pseudomonas* sp.
+    - *Enterococcus* sp. (nguồn ghi *Enterococus* sp.).
+    - *Escherichia coli* sp. (nguồn ghi *Escheria coli* sp.).
+    - Tổng vi khuẩn Coliform (*Total coliforms*).
+    - *Clostridium* sp.
+    - *Aeromonas* sp.
+  - Dữ liệu vi sinh được sắp xếp lại để khớp nối chuẩn xác với các bản ghi dữ liệu hóa lý tương ứng tại cùng thời điểm lấy mẫu.
+  - Phân tích mở rộng này tích hợp đồng thời cả thông tin về các thông số hóa lý và lưu lượng sông (river flow).
+  - Ma trận dữ liệu tăng cường (augmented data matrix) tổng hợp bao gồm tổng cộng $52$ mẫu ($1$ mẫu mỗi tuần) và $14$ thông số ($6$ chỉ số vi sinh và $8$ thông số hóa lý/thủy văn).

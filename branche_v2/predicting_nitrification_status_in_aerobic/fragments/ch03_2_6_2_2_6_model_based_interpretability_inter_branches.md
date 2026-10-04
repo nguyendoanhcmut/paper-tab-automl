@@ -1,0 +1,27 @@
+#### 2.2.6. Model-based interpretability: interpretable ML algorithms
+
+- Lựa chọn mô hình học máy kết hợp giữa độ chính xác thống kê (statistical accuracy) và đặc tính cấu trúc riêng của từng thuật toán (algorithm-specific characteristics) nhằm dự đoán trạng thái nitrate hóa (nitrification status) trong MBR và đảm bảo tính ổn định trong vận hành:
+  - Độ lệch (bias) trong học máy bắt nguồn từ các giả định đơn giản hóa (simplifying assumptions) (Reynaert et al., 2023).
+  - Phương sai (variance) phản ánh mức độ nhạy cảm của mô hình đối với các dao động trong tập dữ liệu huấn luyện (training data) (Reynaert et al., 2023).
+  - Quy luật đánh đổi bias–variance: Cực tiểu hóa một thành phần thường làm gia tăng thành phần còn lại (Belkin et al., 2019).
+- Mô hình đơn giản hơn (simpler models) mang lại nhiều lợi thế thực nghiệm cho các tập dữ liệu quy mô nhỏ (small datasets) (Reynaert et al., 2023; Wang et al., 2025):
+  - Giảm thiểu nguy cơ quá khớp (overfitting risk) khi kích thước dữ liệu hạn chế.
+  - Cải thiện khả năng diễn giải (interpretability) của mô hình.
+  - Đòi hỏi nhu cầu và chi phí tính toán thấp hơn (lower computational demands).
+  - Đối với các tập dữ liệu nhỏ và phi thời gian (small, non-temporal datasets), các cấu trúc phức tạp như mạng nơ-ron nhân tạo (artificial neural networks) làm gia tăng nguy cơ quá khớp (Chiroma et al., 2019).
+- Ba thuật toán học máy có khả năng diễn giải (interpretable algorithms) với đặc tính bias–variance riêng biệt được lựa chọn dựa trên tiêu chuẩn có thể mô phỏng lại (simulatable, tức interpretable) của mô hình hồi quy logistic và các mô hình dựa trên cây quyết định (Breiman et al., 2017; Murdoch et al., 2019):
+  - Hồi quy logistic (Logistic Regression - LR):
+    - Đặc tính: Bias cao, variance thấp (High bias, low variance).
+    - Cơ chế hoạt động: Áp dụng phép biến đổi logit (logit transformation) vào hồi quy tuyến tính (linear regression) để dự đoán xác suất nhị phân (binary probability prediction).
+    - Phạm vi ứng dụng: Xử lý cả biến liên tục và biến phân loại (continuous/categorical variables) với khả năng diễn giải cao và cấu trúc đơn giản (Hosmer et al., 2013).
+  - Phân loại rừng ngẫu nhiên (Random Forest classification - RF):
+    - Đặc tính: Mức cân bằng bias–variance trung gian (Intermediate bias-variance tradeoff).
+    - Cơ chế hoạt động: Phương pháp học tập hợp (ensemble method) tổng hợp nhiều cây quyết định (decision trees) thông qua cơ chế bỏ phiếu (voting).
+    - Hiệu quả: Cải thiện độ chính xác và khả năng chống nhiễu (noise resistance) đối với dữ liệu nhiều chiều (high-dimensional data) (Breiman, 2001).
+  - Phân loại tăng cường độ dốc cực độ (Extreme Gradient Boosting classification - XGB):
+    - Đặc tính: Bias thấp, variance cao (Low bias, high variance).
+    - Cơ chế hoạt động: Triển khai tối ưu hóa thuật toán tăng cường độ dốc (gradient boosting algorithm) với các cây quyết định tuần tự, trong đó mỗi cây kế tiếp sửa lỗi của cây tiền nhiệm nhằm cực tiểu hóa hàm mất mát (loss function) và tăng cường hiệu năng dự đoán.
+    - Cải tiến kỹ thuật: So với các cây quyết định tăng cường độ dốc truyền thống (traditional gradient boosting decision trees), XGB bổ sung các cải tiến gồm kỹ thuật điều chuẩn (regularization), tính toán song song (parallel computing), và khả năng tự định nghĩa hàm mất mát (custom loss function definition) (Chen and Guestrin, 2016).
+- Môi trường cài đặt phần mềm và phương thức tối ưu hóa:
+  - Toàn bộ các mô hình được triển khai bằng thư viện `scikit-learn` phiên bản $1.0.2$ trên nền tảng `Python` phiên bản $3.9.13$.
+  - Siêu tham số (hyperparameters) của các mô hình được tối ưu hóa thông qua tìm kiếm dạng lưới (grid search).

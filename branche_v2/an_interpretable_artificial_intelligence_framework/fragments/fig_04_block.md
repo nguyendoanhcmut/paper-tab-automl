@@ -1,0 +1,7 @@
+  - **Hình 4.** Bản đồ nhiệt $R^2$ và đồ thị phân tán dự đoán của Extra Trees
+    - <img src="assets/fig_04_p6.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phân tầng hiệu suất rõ rệt: các mô hình họ cây tổ hợp chiếm ưu thế với Extra Trees đạt độ chính xác cao nhất trên cả ba biến mục tiêu theo thứ tự giảm dần từ TMP đến lưu lượng permeate và mức nước bể màng.
+    - **Từ đâu mà thấy được**
+      - Panel (A): Bản đồ nhiệt $16$ mô hình $\times$ $3$ biến mục tiêu; dải màu đỏ sẫm ($R^2 > 0.9$) chiếm trọn hàng Extra Trees và cột TMP, giảm dần sang màu xanh dương ở các mô hình tuyến tính ($R^2 < 0.5$).
+      - Panel (B1)–(B3): Đồ thị phân tán của Extra Trees; các điểm dữ liệu phân bố bám sát đường lý tưởng $1:1$ (nét đứt) với $93.4\%$ điểm TMP và $99.4\%$ điểm lưu lượng nằm trong dải sai số $\pm 10\%$, và $100.0\%$ điểm mức nước nằm trong dải $\pm 5\%$.

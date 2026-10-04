@@ -1,0 +1,7 @@
+  - **Hình 6.** So sánh độ quan trọng đặc trưng bằng built-in và permutation
+    - <img src="assets/fig_07_p21_vector.png" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - $F/M\_MA5$ chiếm ưu thế chi phối lớn nhất khi hoán vị đặc trưng, theo sau bởi $F/M$, $MLSS$, $pH\_MA5$ và $Temp.$
+    - **Từ đâu mà thấy được**
+      - Trục Ox: 15 đặc trưng vận hành; Trục Oy: Độ quan trọng tương đối (`Relative Importance (%)`), dải giá trị $0\text{--}40\,\%$.
+      - Cột Permutation (màu đỏ) của $F/M\_MA5$ đạt đỉnh cao nhất (> 40 %), trong khi cột Built-in (màu xanh lam) đạt xấp xỉ $25\,\%$.

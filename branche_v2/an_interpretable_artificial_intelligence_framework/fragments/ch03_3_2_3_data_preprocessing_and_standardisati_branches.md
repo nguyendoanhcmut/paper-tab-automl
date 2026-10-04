@@ -1,0 +1,37 @@
+### 2.3. Data preprocessing and standardisation
+
+- Sau quy trình kiểm soát chất lượng (quality control), các đặc trưng đầu vào (input features) và biến mục tiêu đầu ra (output targets) được chuẩn hóa bằng phương pháp chuẩn hóa z-score (z-score normalization):
+  - Chuẩn hóa z-score đảm bảo tất cả các biến đóng góp bình đẳng vào quá trình huấn luyện mô hình (model training), không phụ thuộc vào thang đo đo lường gốc (original measurement scales).
+  - Quy trình giúp loại bỏ ảnh hưởng từ sự chênh lệch độ lớn giữa các thông số công nghệ khác nhau trong hệ thống xử lý nước thải bán dẫn.
+- Các tham số chuẩn hóa được tính toán độc lập từ tập huấn luyện (training partition) nhằm loại bỏ rủi ro rò rỉ thông tin (information leakage):
+  - Giá trị trung bình $\mu_{\text{train}}$ và độ lệch chuẩn $\sigma_{\text{train}}$ chỉ được xác định trên tập huấn luyện và áp dụng nhất quán sang tập kiểm tra (test set).
+  - Công thức chuẩn hóa $z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}$ được áp dụng theo mô tả tại Phần bổ sung S2 (Supplementary Section S2).
+- Cấu trúc bản ghi dữ liệu vận hành gồm $4593$ mốc giờ ghi nhận đồng thời độ biến động ngắn hạn và sự dịch chuyển dài hạn trên $3$ biến mục tiêu đầu ra:
+  - Chuỗi thời gian của lưu lượng thấm ($\text{Flow}$), áp suất chênh lệch qua màng ($\text{TMP}$) và mực nước bể màng ($\text{Level}$) bộc lộ độ biến thiên ngắn hạn đáng kể (substantial short-term variability) kết hợp cùng độ trôi dạt chậm (slower drift).
+  - Hệ thống MBR thể hiện đồng thời cả sự dịch chuyển vận hành dần dần (gradual operational movement) và các biến đổi trạng thái đột ngột (abrupt transitions) trên toàn bộ $3$ biến đầu ra.
+- Chuẩn hóa z-score bảo toàn nguyên vẹn hình thái phân bố thực nghiệm (empirical distribution) và đồng nhất thang đo (zero-mean, unit-variance scale):
+  - Phép biến đổi giữ nguyên các đặc trưng phân bố gồm độ lệch (skewness), tính đa đỉnh (multimodality) và hành vi đuôi phân phối (tail behaviour).
+  - Đưa tất cả các biến có phạm vi dải đo và đơn vị ban đầu khác biệt lớn về thang đo chuẩn hóa có giá trị trung bình bằng $0$ ($\mu = 0$) và phương sai bằng $1$ ($\sigma = 1$), cho phép so sánh trực tiếp độ lớn và mức độ biến thiên:
+  - **Hình 2.** Chuỗi thời gian và phân bố của các biến trước và sau chuẩn hóa
+    - <img src="assets/fig_02_p4.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Chuẩn hóa z-score đưa toàn bộ biến về $\mu = 0.0000, \sigma = 1.0000$ mà không làm biến dạng hình học chuỗi thời gian và dạng phân bố.
+    - **Từ đâu mà thấy được**
+      - Bảng A: Trục hoành là thời gian ($0$ đến $4593\text{ h}$), trục tung là giá trị biến ($\text{L/min}$, $\text{mg/L}$, $\text{m}^3/\text{h}$, $\text{bar}$, $\text{m}^3/\text{min}$, $\%$, hoặc không thứ nguyên); A1 và A2 giữ nguyên đồ thị dao động.
+      - Bảng B: Trục hoành là giá trị biến, trục tung là tần suất (`Frequency`); phân bố thô (B1) và chuẩn hóa (B2) giữ nguyên $\text{Skew}$ và $\text{Kurt}$.
+- Ma trận hệ số tương quan Pearson (Pearson correlation matrices) trước và sau chuẩn hóa xác nhận các mối quan hệ tuyến tính giữa các biến được giữ nguyên vẹn:
+  - Phép biến đổi chuẩn hóa z-score không làm thay đổi các mối quan hệ tuyến tính, bảo toàn toàn bộ cấu trúc phụ thuộc giữa các biến trong hệ thống:
+    - Bảo toàn mối liên hệ âm (negative association) (hình ghi 0.31) giữa $\text{TMP}$ và $\text{Flow}$.
+    - Bảo toàn sự ghép cặp giữa $\text{Level}$ và các biến liên quan đến tải trọng hữu cơ cùng nồng độ bùn gồm $\text{Glu}$ ($r = 0.14$), $\text{C/N}$ ($r = 0.18$) và $\text{SRT}$ ($r = 0.24$).
+    - Bảo toàn các mối quan hệ thủy lực giữa thời gian lưu nước ($\text{HRT}$) và thời gian lưu bùn ($\text{SRT}$) trong việc đồng thời ràng buộc $\text{Flow}$ và $\text{Level}$ ($\text{SRT}$ tương quan với $\text{TMP}$ ở mức $r = -0.61$, với $\text{Flow}$ ở mức $r = -0.36$; $\text{HRT}$ tương quan với $\text{TMP}$ ở mức $r = -0.41$ và với $\text{Flow}$ ở mức $r = -0.30$).
+  - **Hình 3.** Ma trận tương quan Pearson trước và sau chuẩn hóa
+    - <img src="assets/fig_03_p4.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Chuẩn hóa bảo toàn tuyệt đối giá trị hệ số tương quan tuyến tính từng đôi giữa tất cả các thông số vận hành MBR.
+    - **Từ đâu mà thấy được**
+      - Trục $Ox, Oy$: $10$ biến vận hành ($7$ đầu vào, $3$ đầu ra, không thứ nguyên); thanh màu biểu thị hệ số tương quan $r \in [-1.00, 1.00]$.
+      - Ma trận $10 \times 10$: Panel A (trước) và Panel B (sau) có các ô tương quan đồng nhất về màu sắc và giá trị số từ $-0.79$ ($\text{MLSS}$ - $\text{F/M}$) đến $+1.00$.
+      - Lưu ý: hình ghi hệ số tương quan giữa TMP và Flow là 0.31, văn bản ghi mối liên hệ âm (negative association).
+- Mực nước bể màng ($\text{Level}$) đóng vai trò là một biến trạng thái tích hợp (integrative state variable):
+  - Các mối tương quan liên quan đến $\text{Level}$ phản ánh đồng thời cả điều kiện thủy lực (hydraulic conditions) và sự tích lũy sinh khối (biomass accumulation).
+  - Biến $\text{Level}$ không phải là một biến mục tiêu độc lập thuần túy (purely independent target) mà là chỉ báo tổng hợp về cân bằng động bên trong hệ thống màng lọc sinh học.

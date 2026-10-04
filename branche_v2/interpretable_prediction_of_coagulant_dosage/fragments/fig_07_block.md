@@ -1,0 +1,9 @@
+  - **Hình 7.** Quan hệ phi tuyến giữa thông số nước và liều lượng.
+    - <img src="assets/fig_07_p8.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Giá trị SHAP dương làm tăng liều lượng keo tụ, giá trị âm làm giảm liều lượng.
+      - Lưu lượng nước xử lý (WTR, water treatment rate) làm giảm liều lượng khi tăng từ $2000$.
+    - **Từ đâu mà thấy được**
+      - Ô (a), (c), (d), (f): điểm uốn và ngưỡng tăng thể hiện tại $300\text{--}550\ \mu\text{S/cm}$, $0\text{--}0.2\ \text{mg/L}$, $4\ \text{mg/L}$ và dưới $2\ \text{NTU}$.
+      - Ô (e) và (i): dốc xuống thể hiện tương quan âm của T-RW và khoảng giảm liều của pH-RW tại $8.0\text{--}8.4$.
+      - Ô (b), (g), (h): ô (b) giảm tuyến tính tại $7.6\text{--}7.8$, ô (g) giảm từ $2000$, ô (h) phân tán quanh $0$.

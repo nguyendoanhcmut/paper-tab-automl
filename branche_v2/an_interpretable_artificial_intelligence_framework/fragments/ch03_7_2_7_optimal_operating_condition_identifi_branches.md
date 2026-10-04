@@ -1,0 +1,25 @@
+### 2.7. Optimal operating condition identification
+
+- Khung khả thi đa mục tiêu (multi-objective feasibility framework) xác định các vùng vận hành thỏa mãn đồng thời tiêu chuẩn mục tiêu cho cả 3 biến đầu ra (outputs).
+  - 7 biến vận hành ($7$ operating variables) có tính phụ thuộc lẫn nhau trong thực tế, do đó các điểm ứng viên (candidates) được tạo lập nhằm tôn trọng cấu trúc liên kết đồng thời (joint structure) này.
+  - Cơ sở lý thuyết và kết quả so sánh đối chứng với phương pháp lấy mẫu độc lập theo từng dải biên phân bố riêng lẻ (independent sampling of marginal ranges) được trình bày chi tiết tại Supplementary Section S5.
+- Không gian khả thi được lập bản đồ bằng kỹ thuật tái lấy mẫu hạt nhân hiệp phương sai cục bộ bị ràng buộc trên đa tạp vận hành liên kết thực tế (local-covariance kernel resampling constrained to the plant's real joint operating manifold) của nhà máy:
+  - Một giờ hạt giống (seed hour) được rút ngẫu nhiên đồng đều (drawn uniformly) từ $4593$ quan sát lưu trữ trong nhật ký vận hành SCADA.
+  - Ma trận hiệp phương sai cục bộ (local covariance) được thiết lập từ $30$ láng giềng gần nhất (nearest neighbours) của điểm hạt giống trong không gian đầu vào đã chuẩn hóa (standardised input space).
+  - Điểm hạt giống được gây nhiễu bằng một lượng gia phân phối chuẩn (Gaussian increment) nhân với hệ số độ rộng dải (bandwidth factor) $0.6$ áp dụng lên ma trận hiệp phương sai cục bộ.
+  - Điểm ứng viên bị loại bỏ (rejected) nếu vượt ra ngoài dải biên quan sát (observed marginal range) của bất kỳ biến đầu vào nào, hoặc nếu khoảng cách láng giềng gần nhất tới tập dữ liệu thực tế vượt quá phân vị thứ 99 ($99\text{th percentile}$) của khoảng cách láng giềng gần nhất giữa các điểm dữ liệu thực ($0.539$ đơn vị chuẩn hóa).
+  - Quá trình tạo mẫu thu được $500{,}000$ ứng viên với khoảng cách láng giềng gần nhất trung vị (median nearest-neighbour distance) đạt $0.121$, tương đương mức $0.119$ giữa các giờ vận hành thực tế.
+  - Mẫu dữ liệu thám hiểm liên tục không gian xung quanh đa tạp mà không thoát ly khỏi cấu trúc đa tạp thực tế.
+- Tiêu chí phân loại trạng thái khả thi (feasible) yêu cầu toàn bộ 3 giá trị dự báo phải đồng thời nằm trong dải mục tiêu kỹ thuật.
+  - Độ bất định dự báo (predictive uncertainty) được xác định dựa trên độ phân tán (dispersion) của $100$ cây quyết định riêng lẻ (individual trees) trong mô hình Extra Trees.
+- Cửa sổ vận hành khuyến nghị (operating windows) được xác định từ tỷ lệ khả thi có điều kiện (conditional feasibility rate) thay vì mật độ các điểm khả thi (density of feasible points):
+  - Tỷ lệ khả thi có điều kiện phản ánh xác suất đáp ứng đồng thời cả 3 mục tiêu với một giá trị đầu vào cho trước ($p(\text{all three targets met} \mid \text{input})$).
+  - Mật độ điểm khả thi thuần túy chỉ biểu thị tần suất nhà máy vận hành tại vùng đó, không phản ánh chất lượng vận hành đạt yêu cầu.
+  - Mỗi biến đầu vào được chia thành 10 khoảng phân vị (deciles).
+  - Dải khuyến nghị (recommended band) là chuỗi phân vị liên tục rộng nhất (widest contiguous run) có tỷ lệ đạt mục tiêu đo lường duy trì trong phạm vi $5$ điểm phần trăm ($5\text{ percentage points}$) so với mức tối đa.
+  - Quy tắc xác định dải chịu ràng buộc bởi ngưỡng kích thước mẫu tối thiểu là $250\text{ giờ}$ ghi nhận ($250\text{ logged hours}$).
+  - $4$ trong số $7$ dải thông số vận hành giữ nguyên không đổi theo tiêu chuẩn này, minh chứng cho các điểm tối ưu thực sự rõ nét (genuinely sharp optima).
+- Phương pháp ước lượng mật độ hạt nhân (KDE - Kernel Density Estimation) tái tạo hàm mật độ phân bố liên tục cho các trạng thái vận hành:
+  - KDE là phương pháp phi tham số (non-parametric method) tính tổng các hàm hạt nhân trơn đặt tại tâm mỗi điểm quan sát, loại bỏ sự phụ thuộc vào cách chia khoảng (bin-placement dependence) của biểu đồ phân bố (histogram).
+  - Thuật toán sử dụng hàm hạt nhân Gaussian (Gaussian kernel) với độ rộng dải xác định theo quy tắc Scott (Scott's-rule bandwidth).
+  - Các thuật toán tính toán chi tiết được trình bày trong Supplementary Section S5.

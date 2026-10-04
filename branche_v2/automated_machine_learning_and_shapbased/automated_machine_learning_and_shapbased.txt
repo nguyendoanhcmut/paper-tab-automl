@@ -1,0 +1,910 @@
+<!-- Page 1 -->
+Automated machine learning and SHAP-based interpretation of PFOA 
+removal via electrochemical oxidation
+Haitham Elnakar a,b,*
+a Department of Civil and Environmental Engineering, King Fahd University of Petroleum & Minerals, Dhahran 31261, Saudi Arabia
+b Interdisciplinary Research Center for Construction and Building Materials, King Fahd University of Petroleum & Minerals, Dhahran 31261, Saudi Arabia
+A R T I C L E I N F O
+Keywords:
+Perfluorooctanoic acid (PFOA)
+PFAS
+Electrochemical oxidation
+Automated Machine Learning (AutoML)
+FLAML (Fast Lightweight AutoML)
+SHapley Additive exPlanations (SHAP)
+A B S T R A C T
+The electrochemical oxidation of perfluorooctanoic acid (PFOA), a persistent and toxic environmental pollutant, 
+presents significant operational complexities due to nonlinear interactions among numerous process variables. 
+This study introduces a fully automated, robust machine learning (ML) framework based on Fast Lightweight 
+AutoML (FLAML), integrated with SHapley Additive exPlanations (SHAP) to rigorously optimize and interpret 
+PFOA electrochemical oxidation performance. The FLAML-optimized XGBoost model demonstrated exceptional 
+predictive accuracy (RMSE=3.97, R2=0.98), significantly outperforming systematically tuned traditional ML 
+models such as Random Forest, Gradient Boosting, and Deep Learning architectures. Rigorous statistical vali­
+dation confirmed the superior generalizability and stability of the FLAML-optimized model, while SHAP-based 
+interpretability analyses revealed electrolysis time and anode material as primary drivers of treatment effi­
+cacy, with electrolyte concentration and current density forming the next tier; consistent with established 
+electrochemical degradation kinetics. Notably, FLAML-optimized XGBoost achieved a 72 % reduction in 
+computational overhead compared to manually tuned models, establishing a reproducible, interpretable, and 
+computationally efficient benchmark in environmental ML applications. The framework provides a systematic 
+approach that improves predictive accuracy, enhances interpretability, and strengthens practical applicability to 
+support optimization of remediation technologies and environmental decision-making.
+1. Introduction
+Perfluorooctanoic acid (PFOA), a legacy member of the per- and 
+polyfluoroalkyl substances (PFAS) family, is among the most persistent 
+environmental pollutants identified to date. Its exceptional chemical 
+stability, rooted in the strength of its carbon–fluorine bonds, has enabled 
+widespread contamination of aquatic and terrestrial ecosystems [1,2]. 
+PFOA’s bioaccumulation and its links to immunotoxicity, liver 
+dysfunction, cardiovascular disease, and cancer have triggered esca­
+lating regulatory scrutiny [3,4]. The International Agency for Research 
+on Cancer now classifies PFOA as carcinogenic to humans (Group 1) [5], 
+and the U.S. Environmental Protection Agency has set maximum 
+contaminant levels as low as 4 ng/L in drinking water [6]. These de­
+velopments have catalyzed an urgent search for effective, scalable, and 
+sustainable remediation technologies capable of not just removing, but 
+fully mineralizing PFOA into benign end products such as carbon di­
+oxide and fluoride ions. This challenge mirrors a broader trajectory in 
+wastewater treatment, where established processes are being optimized 
+to more effectively degrade persistent industrial pollutants [7,8].
+Electrochemical oxidation (EO) has emerged as one of the most 
+promising destructive technologies for PFAS remediation, offering the 
+potential to mineralize PFOA into benign end products such as carbon 
+dioxide and fluoride ions [9,10]. The process operates through two 
+principal degradation pathways: direct electron transfer at the anode 
+surface, which generates perfluoroalkyl radicals and initiates 
+chain-shortening reactions, and hydroxyl radical-mediated oxidation via 
+water electrolysis [11,12]. However, optimizing EO systems presents 
+formidable challenges due to the complex interplay of multiple opera­
+tional parameters, including current density, electrode spacing, elec­
+trolyte composition, pH, temperature, initial PFOA concentration, 
+electrolysis time, and water matrix characteristics [13-15]. The high 
+dimensionality and nonlinear interactions among these variables create 
+a multifaceted optimization landscape where changes in one parameter 
+can significantly influence the effectiveness of others, rendering 
+* Corresponding author at: Department of Civil and Environmental Engineering, King Fahd University of Petroleum & Minerals, Dhahran 31261, Saudi Arabia.
+E-mail address: haitham.elnakar@kfupm.edu.sa. 
+Contents lists available at ScienceDirect
+Desalination and Water Treatment
+journal homepage: www.sciencedirect.com/journal/desalination-and-water-treatment/
+https://doi.org/10.1016/j.dwt.2025.101598
+Received 19 August 2025; Received in revised form 24 November 2025; Accepted 2 December 2025  
+Desalination and Water Treatment 325 (2026) 101598 
+Available online 4 December 2025 
+1944-3986/© 2025 The Author(s). Published by Elsevier Inc. This is an open access article under the CC BY license ( http://creativecommons.org/licenses/by/4.0/ ). 
+
+
+<!-- Page 2 -->
+traditional 
+optimization approaches 
+both 
+time-consuming and 
+resource-intensive [16,17]. This operational complexity necessitates 
+advanced computational approaches that can systematically navigate 
+the multidimensional parameter space and identify optimal conditions 
+for effective PFOA destruction.
+Machine learning (ML) approaches have demonstrated significant 
+potential for addressing optimization challenges in electrochemical 
+systems for water treatment applications [17,18]. Recent studies have 
+successfully applied various ML algorithms to predict electrochemical 
+process performance, with applications ranging from general electro­
+chemical oxidation processes to specific PFAS treatment scenarios [19, 
+20]. Advanced ML frameworks have shown particular promise in elec­
+trochemical process optimization, with studies demonstrating the ability 
+to achieve predictive accuracies exceeding R2 = 0.84 while providing 
+mechanistic insights through feature importance analysis [17]. The 
+integration of interpretability tools such as SHAP (SHapley Additive 
+exPlanations) has enabled researchers to extract actionable insights 
+from complex electrochemical datasets, revealing key parameter re­
+lationships and guiding process optimization strategies [17,21]. How­
+ever, most existing ML applications in this domain have relied on 
+conventional modeling approaches requiring extensive manual hyper­
+parameter tuning and expert-driven algorithm selection, limiting their 
+accessibility and scalability for environmental practitioners [18,22,23].
+Automated machine learning (AutoML) frameworks represent a 
+transformative approach to data-driven process optimization by sys­
+tematically exploring algorithm selection, hyperparameter optimiza­
+tion, and feature engineering without human intervention [24-26]. 
+FLAML (Fast Lightweight AutoML), developed by Microsoft Research, 
+implements cost-aware Bayesian optimization that dynamically allo­
+cates computational resources while prioritizing low-complexity models 
+for rapid convergence [27]. Recent applications of AutoML in environ­
+mental modeling have demonstrated the ability to significantly reduce 
+computational cost while achieving predictive performance that sur­
+passes traditional, manually tuned models [28,29]. For instance, 
+gradient boosting algorithms selected via AutoML outperformed con­
+ventional neural networks in predicting the impacts of microplastics on 
+methane production in anaerobic digestion (MSE = 17.0 vs. 58.0) [29], 
+while AutoML models also successfully captured complex antibiotic 
+removal dynamics in constructed wetlands across varying training du­
+rations (MAE = 9.94–13.68, R2 = 0.780–0.877) [28]. The integration of 
+efficient AutoML frameworks such as FLAML with explainable AI tech­
+niques like SHAP directly addresses two critical requirements of envi­
+ronmental engineering applications: delivering high predictive accuracy 
+and generating transparent, interpretable insights that support regula­
+tory compliance, operational optimization, and stakeholder confidence 
+[28,29].
+In this study, a reproducible and interpretable AutoML workflow is 
+developed for electrochemical oxidation of PFOA. The aim is to show 
+that cost-aware automated model selection and tuning (FLAML), 
+coupled with SHAP-based explanation, can deliver (i) reliable predictive 
+performance, (ii) transparent, model-based attribution of operational 
+drivers, and (iii) a portable pipeline that reduces manual trial-and-error. 
+Use of a previously curated dataset enables direct comparability while 
+isolating the methodological contribution (automation plus interpret­
+ability). Throughout, FLAML is treated as an optimization framework 
+distinct from the final predictive learner (XGBoost), and performance is 
+evaluated under repeated holdout with statistical testing and learning- 
+curve diagnostics to assess generalization.
+2. Methodology
+2.1. Dataset characteristics and preprocessing
+This study leverages a dataset originally curated by Alnaimat et al. 
+[30], which captures the electrochemical degradation of PFOA under 
+varied conditions. The dataset comprises unique treatment scenarios, 
+each defined by a combination of operational parameters and environ­
+mental contexts. Key independent variables include electrolysis dura­
+tion, current density, anode and cathode material types, electrolyte 
+concentration and composition, and the water matrix. Exploratory an­
+alyses were performed to characterize the inputs and the target prior to 
+modeling. The dependence structure among predictors is shown in 
+Figure S1 (Spearman rank-correlation heatmap with significance 
+marks). Bivariate relationships are visualized in Figure S2 (pairwise 
+scatterplots with LOWESS fits and Pearson/Spearman annotations). The 
+target distribution, together with a Shapiro–Wilk normality diagnostic, 
+appears in Figure S3. Several electrochemical variables exhibit moder­
+ate positive association (for example, electrolysis time with current 
+density; |ρ|≈0.35–0.55), reflecting typical experimental co-variation. 
+Preprocessing followed algorithm-appropriate conventions. Contin­
+uous variables were standardized (z-score) for distance- and 
+gradient-based baselines to ensure numerical stability and commensu­
+rate scaling, whereas tree-based learners were trained on unscaled in­
+puts given the scale-invariance of split criteria. Categorical descriptors 
+(anode, cathode, electrolyte, water matrix) were one-hot encoded to 
+maintain parity across baseline algorithms and to permit later aggre­
+gation by parent feature in model interpretation. Cardinalities were 
+small (≤6 per field), limiting sparsity and dimensionality.
+2.2. Data splitting and evaluation protocol
+Model evaluation used an 80:20 holdout stratified on anode type to 
+mitigate covariate shift arising from uneven anode distribution across 
+the dataset. The target variable (removal, %) was not stratified, 
+consistent with the regression setting. A fixed random seed (42) was 
+used for reproducibility. Stability of this protocol across repeated runs 
+and alternative split realizations is documented in Figure S4 (stratifi­
+cation sensitivity), and the internal model-selection procedure and 
+performance consistency are summarized in Figure S5 (nested cross- 
+validation diagnostics)
+2.3. Automated model selection via FLAML
+Automated model and hyperparameter selection was conducted with 
+FLAML, a cost-aware AutoML framework that replaces manual, grid- 
+style tuning with budgeted, early-stopped search. A wall-time budget 
+of 300 s was enforced for FLAML’s search. FLAML initializes with 
+inexpensive configurations, adaptively allocates trials toward promising 
+learner–hyperparameter regions, and prunes underperforming runs 
+when validation error plateaus within the allotted budget. The optimi­
+zation objective was 5-fold cross-validation RMSE, with early stopping 
+applied at both the boosting-iteration level (for iterative learners) and 
+the trial level (for unpromising configurations). Convergence was 
+declared when no improvement was observed within the budget win­
+dow and the incumbent remained unchanged across successive evalua­
+tions. The best-performing model selected by FLAML was an XGBoost 
+regressor (learning rate = 0.1403; n_estimators = 379; max_leaves = 13; 
+L1/L2 regularization α = 0.0995, λ = 0.0010), with subsample = 0.85 
+and colsample_bytree = 0.83. This configuration balances bias–variance 
+by combining a moderate learning rate with constrained tree complexity 
+and regularization. The full search space and the selected hyper­
+parameters for XGBoost and all baseline learners are summarized in SI 
+Table S1.
+2.4. Comparative benchmarking and statistical validation
+To contextualize performance, the FLAML-optimized XGBoost model 
+was benchmarked against five commonly used regressors: Decision 
+Trees (DT), Random Forests (RF), Gradient Boosting Decision Trees 
+(GBDT), Deep Learning (DL), and k-Nearest Neighbors (KNN). Each 
+model was evaluated on the same one-hot encoded dataset and sub­
+jected to identical stratified train-test splits to ensure methodological 
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+2 
+
+
+<!-- Page 3 -->
+parity. Model assessment employed ten independent repetitions of the 
+stratified 80:20 partition to quantify stability across split realizations. 
+For each repetition, five metrics were computed: root mean squared 
+error (RMSE), mean absolute error (MAE), mean absolute percentage 
+error (MAPE), correlation coefficient (CC; Pearson’s r), and coefficient 
+of determination (R²). RMSE, MAE, and MAPE quantify error magni­
+tude, whereas CC (r) and R² summarize association and explained 
+variance. Statistical significance of pairwise differences was evaluated 
+with paired two-tailed t-tests (α = 0.01) across the ten repetitions, using 
+Bonferroni correction to control the family-wise error rate. Cohen’s 
+d was additionally reported to quantify effect sizes. This protocol pro­
+vides a split-robust comparison under identical data and preprocessing 
+conditions, aligning the benchmarking with the data-splitting frame­
+work described in Section 2.2.
+2.5. Interpretability via SHAP analysis
+Model interpretability was assessed using SHapley Additive exPla­
+nations (SHAP), which attribute to each feature its marginal contribu­
+tion to individual predictions under the cooperative game–theoretic 
+formulation. SHAP values were computed for the trained XGBoost model 
+and summarized as grouped importances by aggregating the absolute 
+SHAP values across the one-hot levels of each parent categorical variable 
+(anode, cathode, electrolyte, water matrix). Given the observed inter­
+dependence among electrochemical predictors (Figures S1 & S2), the 
+potential influence of correlation on TreeSHAP attributions was exam­
+ined by comparing the grouped SHAP ranking with a correlation-aware 
+conditional permutation importance (CPI) analysis. Conditional per­
+mutation importance was computed by conditionally resampling within 
+strata of correlated predictors to attenuate correlation bias. Agreement 
+was quantified using Kendall’s τ with 95 % confidence intervals in 
+Table S2. Together, they provide a transparent, correlation- 
+contextualized view of feature influence relevant to treatment design 
+and electrochemical optimization.
+To probe stability and dose–response behaviour, we implemented 
+two additional analyses. First, SHAP dependence plots were generated 
+for the three most influential continuous variables (electrolysis time, 
+electrolyte concentration, and current density), with point colour used 
+to show interactions with a secondary electrochemical parameter. Sec­
+ond, a leave-one-out (LOO) stability test was conducted on grouped 
+mean |SHAP|: feature rankings were obtained on the full dataset, then 
+the top-ranked feature (electrolysis time) was removed and SHAP im­
+portances were recomputed on the reduced dataset. Agreement between 
+the two rankings was summarized using Kendall’s τ.
+2.6. Reproducibility and deployment considerations
+All computations were executed in Python 3.10 using version- 
+controlled dependencies: FLAML 1.2.0, SHAP 0.44.0, and scikit-learn 
+1.4.0. The entire modeling pipeline was encapsulated in a Docker 
+container to guarantee cross-platform reproducibility and facilitate peer 
+validation. This containerized approach marks a significant improve­
+ment over the untracked scripting environments used in earlier elec­
+trochemical machine learning studies.
+2.7. Methodological contributions and distinctions
+Relative to Alnaimat et al. [30], this study introduces a cost-aware, 
+fully automated model-selection workflow (FLAML) in place of man­
+ual/grid tuning (Table S1), a split-robust benchmarking protocol with 
+repeated evaluations and formal significance/effect-size testing, and a 
+correlation-contextualized interpretability scheme that reports grouped 
+TreeSHAP alongside conditional permutation importance with agree­
+ment statistics (Table S2). The pipeline is containerized with pinned 
+dependencies to enable end-to-end reproducibility. Taken together, 
+these elements provide a transparent, efficient, and reproducible 
+methodology tailored to electrochemical treatment datasets, clarifying 
+performance gains and interpretability under documented assumptions 
+and validation settings.
+3. Results and discussion
+3.1. Model performance and statistical validation
+The FLAML-optimized XGBoost model demonstrated exceptional 
+predictive performance in modeling PFOA electrochemical oxidation 
+efficiency, significantly outperforming all baseline models across every 
+evaluation metric (Table 1). The FLAML-optimized XGBoost achieved an 
+RMSE of 3.97 ± 0.45 and R2 of 0.98 ± 0.01, representing a 51 % 
+reduction in prediction error and 7 % improvement in explained vari­
+ance compared to the best-performing baseline model (Random Forest: 
+RMSE = 8.05 ± 1.02, R2 = 0.91 ± 0.02). This performance advantage 
+was statistically significant across all metrics (p < 10−5), as confirmed 
+by paired t-tests (Table 2), with particularly pronounced differences 
+against gradient boosting decision trees (p < 1.1 × 10−8 for RMSE) and 
+deep learning approaches (p < 2.8 × 10−9 for RMSE). The ranking 
+analysis (Table 3) further corroborated the FLAML-optimized XGBoost 
+model’s consistent superiority, securing first place across all perfor­
+mance metrics with an average rank of 1.0, while Random Forest ranked 
+second (average rank = 2.2).
+These results establish FLAML as a highly effective tool for electro­
+chemical process modeling, achieving accuracy levels that previously 
+required extensive manual tuning. The performance aligns with recent 
+demonstrations of AutoML’s capacity to reduce computational costs 
+while maintaining accuracy in complex environmental systems [28,29]. 
+Notably, FLAML accomplished this within a 300-second optimization 
+budget. This represents a 72 % reduction in tuning time compared to 
+conventional grid search implementations described in the original 
+study [30]. This efficiency addresses critical computational barriers in 
+environmental research, where resource constraints often limit model 
+optimization [23].
+Robustness to overfitting was assessed using ten independent repe­
+titions of the stratified 80:20 holdout. Stable test-set performance across 
+repetitions supports reliable generalization; protocol stability is docu­
+mented in SI Figure S4 (stratification sensitivity) and the internal se­
+lection procedure in SI Figure S5 (nested CV diagnostics). Learning 
+curves (Fig. 1) show a monotonically decreasing validation RMSE with 
+diminishing returns and a modest, stable train–validation gap (≈3–4 
+RMSE units at the largest training size), indicating no divergence or 
+overfitting under the reported protocol.
+Residual distribution analysis (Fig. 2) provided deeper insights into 
+model reliability. FLAML exhibited the most symmetric and tightly 
+distributed residuals (interquartile range ≈6 %), indicating minimal 
+systematic bias and consistent predictive accuracy across the opera­
+tional parameter space. In contrast, traditional algorithms displayed 
+broader residual distributions with notable outliers: k-nearest neighbors 
+showed extreme negative residuals (< −70 %), while deep learning 
+approaches exhibited positive bias tendencies. This precision is critical 
+for reactor design applications where prediction uncertainty propagates 
+through energy efficiency calculations [31,32]. The observed residual 
+patterns align with theoretical expectations for cost-aware optimization 
+algorithms that systematically minimize cross-validation error under 
+constrained resources [33].
+3.2. Feature importance and electrochemical mechanisms
+The SHAP-based feature importance assessment (Fig. 3) delivers 
+critical insights into the factors influencing the electrochemical removal 
+efficiency of PFOA. The two machine learning frameworks, FLAML- 
+optimized XGBoost and conventional Random Forest, consistently 
+identify electrolysis time as the most critical factor, registering mean 
+absolute SHAP values of approximately 16.4 and 13.6, respectively. This 
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+3 
+
+
+<!-- Page 4 -->
+observation is consistent with fundamental electrochemical oxidation 
+theory, which underscores the dependency of pollutant degradation 
+efficacy on the cumulative applied charge, a function directly propor­
+tional to electrolysis duration [34]. Electrolysis time governs the gen­
+eration and sustained availability of reactive oxidants, primarily 
+hydroxyl radicals (•OH), instrumental in initiating and perpetuating the 
+mineralization of highly stable contaminants like PFOA [35,36]. Inter­
+pretation 
+considers 
+observed 
+correlations 
+among 
+inputs 
+(SI 
+Figures S1–S2) and agreement statistics with conditional permutation 
+importance (SI Table S2).
+A notable divergence is observed for the anode factor. In the FLAML- 
+optimized XGBoost model, Anode ranks second (mean |SHAP| ≈12.1 % 
+age points), whereas its influence is much lower in the tuned Random 
+Forest (mean |SHAP| ≈1.5–2.0). This elevated anode signal is mecha­
+nistically plausible given the superior radical generation on high-OER- 
+overpotential anodes (e.g., BDD) during PFAS electro-oxidation. 
+Because grouped TreeSHAP is used in both panels of Fig. 3, the 
+discrepancy is ascribed to model capacity rather than the importance 
+metric: XGBoost captures non-linear and interaction effects (e.g., Anode 
+x Current Density) that are diluted when Random Forest averages across 
+trees. For context, Alnaimat et al. [30] likewise reported low anode 
+importance using Gini/permutation measures on a conventional RF 
+model, which are different constructs than SHAP. While this finding is 
+robust, 
+importance 
+magnitudes 
+remain 
+model- 
+and 
+correlation-dependent; agreement with conditional permutation 
+importance is reported in SI Table S2.
+Following Anode, the XGBoost model highlights Electrolyte Con­
+centration in the next tier of importance (mean SHAP ≈6.5). Electrolyte 
+concentration directly modulates the solution’s conductivity, subse­
+quently affecting the efficiency of radical production and pollutant 
+oxidation [37]. Oturan and Aaron [38] have documented how opti­
+mized ionic strength, achieved through precise electrolyte concentration 
+adjustments, enhances hydroxyl radical production efficiency while 
+limiting undesired side reactions such as oxygen evolution at the anode. 
+This nuanced recognition by the XGBoost model aligns with detailed 
+electrochemical kinetic analyses demonstrating improved degradation 
+efficiencies at moderate electrolyte concentrations due to an optimized 
+balance between ionic mobility and radical-scavenging side reactions 
+[39].
+In contrast, the Random Forest model highlights the initial PFOA 
+concentration as the second most influential variable after electrolysis 
+time. While the pollutant initial concentration undoubtedly influences 
+the overall degradation efficacy, primarily via reaction kinetics that 
+follow pseudo-first-order degradation patterns in electrochemical 
+oxidation processes [40], the emphasis on initial concentration in the 
+Random Forest ranking suggests greater sensitivity to direct concen­
+tration gradients, whereas the boosted-tree model captures interactions 
+involving electrolyte characteristics. The optimized XGBoost model thus 
+demonstrates enhanced sensitivity towards the subtle yet significant 
+interactions between electrolyte characteristics and electrochemical 
+reaction mechanisms.
+Both models attribute significant influence to current density, iden­
+tified by the SHAP values as approximately 5.9 for XGBoost and 5.2 for 
+Random Forest. The critical role of current density aligns with estab­
+lished electrochemical knowledge; appropriate current densities sustain 
+efficient generation of reactive radicals at the electrode interfaces [41]. 
+However, excessively high current densities have been shown to lead to 
+increased energy consumption and secondary reactions such as oxygen 
+evolution, reducing overall treatment effectiveness [42]. This 
+dual-faceted role of current density highlights the importance of precise 
+operational optimization; the boosted-tree architecture is capable of 
+capturing nonlinear effects and threshold behaviors relevant to this 
+trade-off [43].
+Table 1 
+Mean ± Std Dev of each metric across 10 runs.
+Index
+RMSE
+MAE
+MAPE
+CC
+R2
+DT
+10.31 ± 2.17
+7.33 ± 1.11
+24.75 ± 13.5
+0.93 ± 0.03
+0.86 ± 0.07
+RF
+8.05 ± 1.02
+5.97 ± 0.57
+25.17 ± 10.94
+0.96 ± 0.01
+0.91 ± 0.02
+GBDT
+9.35 ± 0.77
+7.49 ± 0.58
+32.39 ± 10.18
+0.95 ± 0.01
+0.89 ± 0.01
+DL
+12.41 ± 1.46
+8.9 ± 0.55
+51.78 ± 32.25
+0.9 ± 0.02
+0.8 ± 0.05
+KNN
+19.6 ± 2.38
+14.35 ± 1.38
+101.09 ± 51.01
+0.71 ± 0.06
+0.49 ± 0.11
+FLAML-optimized XGBoost
+3.97 ± 0.45
+2.93 ± 0.31
+10.02 ± 3.08
+0.99 ± 0.0
+0.98 ± 0.01
+DT, decision tree; RF, random forest; GBDT, gradient boosting decision tree; DL, deep learning; KNN, k-nearest neighbors; FLAML-optimized XGBoost, fast lightweight 
+AutoML-optimized extreme gradient boosting model; RMSE, root mean square error; MAE, mean absolute error; MAPE, mean absolute percentage error; CC, corre­
+lation coefficient; R², coefficient of determination.
+Table 2 
+Paired t-test p-values (comparing each model vs. FLAML-optimized XGBoost).
+RMSE
+MAE
+MAPE
+CC
+R2
+DT
+3.20401610 × 10−6
+3.111270 × 10−7
+0.004675
+1.247765 × 10−4
+1.414884 × 10−4
+RF
+9.616685 × 10−7
+1.547798 × 10−7
+0.000610
+2.953061 × 10−5
+1.260622 × 10−5
+GBDT
+1.106071 × 10−8
+5.052537 × 10−9
+0.000009
+2.678730 × 10−8
+1.228068 × 10−8
+DL
+2.846609 × 10−9
+3.311756 × 10−11
+0.001801
+3.080667 × 10−7
+4.826925 × 10−7
+KNN
+6.734575 × 10−9
+1.336126 × 10−9
+0.000225
+2.164031 × 10−7
+1.738757 × 10−7
+DT, decision tree; RF, random forest; GBDT, gradient boosting decision tree; DL, deep learning; KNN, k-nearest neighbors; FLAML-optimized XGBoost, fast lightweight 
+AutoML-optimized extreme gradient boosting model; RMSE, root mean square error; MAE, mean absolute error; MAPE, mean absolute percentage error; CC, corre­
+lation coefficient; R², coefficient of determination.
+Table 3 
+Average ranking of models across metrics.
+RMSE
+MAE
+MAPE
+CC
+R2
+Average 
+Rank
+FLAML-optimized 
+XGBoost
+1.0
+1.0
+1.0
+1.0
+1.0
+1.0
+RF
+2.0
+2.0
+3.0
+2.0
+2.0
+2.2
+DT
+4.0
+3.0
+2.0
+4.0
+4.0
+3.4
+GBDT
+3.0
+4.0
+4.0
+3.0
+3.0
+3.4
+DL
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+KNN
+6.0
+6.0
+6.0
+6.0
+6.0
+6.0
+DT, decision tree; RF, random forest; GBDT, gradient boosting decision tree; DL, 
+deep learning; KNN, k-nearest neighbors; FLAML-optimized XGBoost, fast 
+lightweight AutoML-optimized extreme gradient boosting model; RMSE, root 
+mean square error; MAE, mean absolute error; MAPE, mean absolute percentage 
+error; CC, correlation coefficient; R², coefficient of determination.
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+4 
+
+
+<!-- Page 5 -->
+Further examination of SHAP values indicates a moderate yet 
+meaningful influence for initial solution pH, consistent with electro­
+chemical fundamentals. Solution pH critically impacts electrode surface 
+chemistry and radical speciation, thereby modulating radical stability 
+and reactivity [34,41]. The observed moderate importance attributed to 
+temperature confirms previous experimental findings indicating that, 
+within operationally relevant ranges, temperature influences on elec­
+trochemical oxidation are relatively subtle compared to electrochemical 
+parameters such as electrolyte concentration and current density [44].
+The divergence between the two modeling approaches, FLAML- 
+optimized XGBoost and Random Forest, in their feature-ranking pro­
+file underscores differences in their algorithmic architectures. XGBoost’s 
+Fig. 1. Learning curves (train/validation RMSE vs. training size) for FLAML-optimized XGBoost.
+Fig. 2. Box plot of residuals for each model.
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+5 
+
+
+<!-- Page 6 -->
+Fig. 3. Grouped SHAP feature importance for XGBoost (FLAML-optimized) and Random Forest.
+Fig. 4. SHAP dependence plots for (A) electrolysis time coloured by current density, (B) electrolyte concentration coloured by electrolysis time, and (C) current 
+density coloured by electrolysis time. Each point represents one experiment; the x-axis shows the feature value and the y-axis the SHAP contribution to removal 
+(percentage points).
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+6 
+
+
+<!-- Page 7 -->
+boosted-tree algorithm, through iterative fitting and robust regulariza­
+tion, inherently prioritizes capturing complex nonlinear interactions 
+and subtle threshold effects [43]. Conversely, Random Forest averages 
+the effects of individual features across its ensemble, thereby potentially 
+diluting nuanced feature importance differences and underestimating 
+interactions.
+The automated hyperparameter optimization provided by FLAML 
+significantly enhanced the accuracy and interpretability of the XGBoost 
+model. Unlike manual tuning procedures, FLAML automatically iden­
+tifies optimal complexity constraints and regularization terms, ensuring 
+that the selected model configurations simultaneously achieve high 
+predictive performance and generalizability [27]. This methodological 
+enhancement bridges the gap between predictive modeling and mech­
+anistic electrochemical theory, offering valuable insights into underly­
+ing degradation kinetics and operational optimization strategies. 
+Second-tier rank stability is consistent with repeated runs used in the 
+evaluation protocol (Section 2.2).
+3.3. Dose–response patterns and stability of SHAP explanations
+Within-dataset dose–response behavior for the main continuous 
+variables is shown in Fig. 4A–C. The SHAP dependence for electrolysis 
+time (Fig. 4A) is strongly monotonic: very short times give negative 
+contributions to removal, whereas longer electrolysis times progres­
+sively increase the SHAP contribution and then plateau at about 20–30 
+%age points, in line with the effect of cumulative charge. Electrolyte 
+concentration (Fig. 4B) shows a threshold pattern: sub-optimal con­
+centrations are associated with negative contributions, while moderate 
+concentrations shift SHAP values towards neutral or positive, with little 
+additional gain and occasional penalties at the highest tested levels. For 
+current density (Fig. 4C), SHAP values increase approximately mono­
+tonically, with low current densities giving near-zero or negative con­
+tributions and higher current densities yielding increasingly positive 
+contributions, again with signs of diminishing returns at the upper end 
+of the range.
+Figure S6 reports a leave-one-out stability analysis of grouped mean | 
+SHAP|. When the electrolysis time, the top-ranked feature, is removed 
+and the model is refit, anode and current density remain in the leading 
+tier, while initial pH, cathode, temperature, and electrode spacing 
+remain in the mid-/low-importance tier. The Kendall’s τ between the 
+two rankings is 0.600 (p = 0.136), indicating moderate concordance 
+given the small number of features. These results support a stable feature 
+hierarchy, with electrolysis time, anode, and current density as the 
+dominant drivers, while all SHAP values are explicitly interpreted as 
+model-based attributions rather than causal effects.
+3.4. Implications for PFAS treatment optimization
+The feature importance results provide actionable guidance for 
+electrochemical reactor design. The dominance of electrolysis time in­
+dicates that removal gains are primarily governed by cumulative charge 
+passage; operational planning should prioritize sufficient reaction time 
+within energy and throughput constraints. Anode selection appears as a 
+high-influence factor in the XGBoost ranking (Fig. 3), consistent with 
+literature reports of material-dependent radical generation; specific 
+material choices should be matched to the targeted current-density 
+regime and cost constraints, with performance–cost trade-offs evalu­
+ated on a case-by-case basis. Water-matrix effects rank low in the 
+grouped SHAP profile (e.g., “Water Matrix” near the bottom of Fig. 3), 
+suggesting that within the studied range, technology transfer to varied 
+matrices may require less re-optimization than electrochemical set­
+points (subject to validation in new matrices) [45,46].
+FLAML’s predictive accuracy supports tighter setpoint control (e.g., 
+current density and time) for energy-aware operation within the tested 
+domain. Quantitative energy projections (e.g., kWh⋅m⁻³) are not drawn 
+from the present model outputs and require dedicated electro-energy 
+auditing under experimental validation. The model’s generalization 
+capability across operational conditions within this dataset suggests 
+potential for transfer-learning extensions to related PFAS (e.g., PFOS, 
+GenX), contingent on coverage of comparable operating ranges and 
+external validation [47].
+3.5. Limitations and future directions
+Although FLAML demonstrated exceptional predictive accuracy and 
+robustness when applied to the dataset curated by [30], several avenues 
+remain promising for further exploration. First, future research could 
+assess the adaptability of this modeling framework to broader opera­
+tional parameter spaces and validate its performance using external 
+datasets from different experimental setups. This would also include a 
+wider spectrum of PFAS compounds, such as PFOS and co-contaminants, 
+to ascertain the generalizability of insights across diverse treatment 
+systems. Transfer learning methodologies hold particular promise in this 
+regard, as they could efficiently leverage knowledge from the current 
+model to accelerate predictive capabilities in related electrochemical 
+systems.
+Additionally, while the current study prioritized removal efficiency, 
+extending the analytical framework towards integrated multi-objective 
+optimization could significantly enhance practical applicability. Such 
+an extension would consider critical performance indicators beyond 
+contaminant removal, including energy consumption metrics, byprod­
+uct formation, and the computational trade-offs between optimization 
+speed and final model performance. Furthermore, enhancing real-time 
+adaptive process control represents another promising direction. Inte­
+grating FLAML with in situ sensing technologies would enable dynamic 
+process optimization, facilitating immediate adjustments to operational 
+parameters based on real-time feedback.
+Finally, while SHAP analysis provided valuable initial insights, 
+deeper interpretability could be achieved by developing hybrid 
+modeling frameworks that combine FLAML with physics-based elec­
+trochemical models. Future methodological refinements could also 
+include exploring the use of native categorical handling within tree- 
+based models as a potential alternative to one-hot encoding. Collec­
+tively, these future research directions promise substantial advance­
+ments in predictive analytics, interpretability, and operational 
+applicability, reinforcing the potential of AutoML as a transformative 
+approach for environmental electrochemical remediation technologies.
+4. Conclusions
+This study demonstrates a reproducible AutoML-based workflow for 
+integrating automated machine learning with electrochemical oxidation 
+processes targeting persistent environmental contaminants. The FLAML- 
+driven XGBoost model outperformed conventional manually optimized 
+ML approaches, delivering significantly enhanced predictive accuracy 
+and interpretability, as evidenced by rigorous benchmarking and sta­
+tistical validation. The analysis identified electrolysis time and anode 
+material as primary operational drivers, offering actionable insights 
+grounded in fundamental electrochemical principles and validated 
+through SHAP-based interpretability. Crucially, the automated FLAML 
+framework substantially reduced computational demands (72 % 
+reduction in tuning time), thereby enhancing the accessibility and 
+reproducibility of advanced ML techniques for environmental practi­
+tioners. By demonstrating superior predictive power alongside scientif­
+ically robust mechanistic insights, this research directly addresses 
+critical methodological limitations in the current literature. The 
+containerized, version-pinned pipeline ensures reproducibility and 
+transparency, promoting wider adoption and methodological stan­
+dardization within environmental remediation. Moving forward, inte­
+grating the developed methodology with hybrid physics-based models, 
+real-time adaptive process controls, and broader PFAS compound sce­
+narios can further elevate electrochemical treatment efficacy and 
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+7 
+
+
+<!-- Page 8 -->
+versatility. Overall, this work firmly positions automated and inter­
+pretable machine learning as an essential pillar of environmental engi­
+neering innovation, advancing the global effort towards sustainable 
+remediation of persistent environmental contaminants.
+CRediT authorship contribution statement
+Haitham Elnakar: Writing – review & editing, Writing – original 
+draft, Visualization, Methodology, Formal analysis, Conceptualization.
+Declaration of Competing Interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgment
+The author acknowledges the support of King Fahd University of 
+Petroleum and Minerals (KFUPM) for this publication.
+Appendix A. Supporting information
+Supplementary data associated with this article can be found in the 
+online version at doi:10.1016/j.dwt.2025.101598.
+Data Availability
+The dataset used in this research has been cited in the methodology 
+section.
+References
+[1] Elnakar H, Ismail UM, Khan MF, Alnaimat S. Tackling the dust-microplastic nexus: 
+sources, fate, and detection. J Hazard Mater Adv 2024;14:100418. https://doi.org/ 
+10.1016/J.HAZADV.2024.100418.
+[2] Ismail UM, Elnakar H, Khan MF. Sources, fate, and detection of dust-associated 
+perfluoroalkyl and polyfluoroalkyl substances (PFAS): a review. Toxics 2023. 
+https://doi.org/10.3390/toxics11040335.
+[3] EPA, 2017. Technical Fact Sheet – Perfluorooctane Sulfonate (PFOS) and 
+Perfluorooctanoic Acid (PFOA).
+[4] Wee SY, Aris AZ. Revisiting the “forever chemicals”, PFOA and PFOS exposure in 
+drinking water. NPJ clean Water 2023;6:1–16. https://doi.org/10.1038/S41545- 
+023-00274-6.
+[5] Zahm S, Bonde JP, Chiu WA, Hoppin J, Kanno J, Abdallah M, et al. Carcinogenicity 
+of perfluorooctanoic acid and perfluorooctanesulfonic acid. Lancet Oncol 2024;25: 
+16–7. https://doi.org/10.1016/S1470-2045(23)00622-8.
+[6] EPA, 2025. Per- and Polyfluoroalkyl Substances (PFAS) Final PFAS National 
+Primary Drinking Water Regulation [WWW Document]. Safe Drinking Water Act.
+[7] Elnakar H, Buchanan ID. Pulp and paper mill effluent management. Water Environ 
+Res 2018;90:1065–72. https://doi.org/10.2175/106143018X15289915807164.
+[8] Elnakar H, Khan MF, Ismail UM. Emerging trends in sequencing batch reactor 
+operation and enhancement for improved phenol removal. Desalin Water Treat 
+2024;317:100310. https://doi.org/10.1016/J.DWT.2024.100310.
+[9] Calvillo Solís JJ, Sandoval-Pauker C, Bai D, Yin S, Senftle TP, Villagr´an D. 
+Electrochemical reduction of perfluorooctanoic acid (PFOA): an experimental and 
+theoretical approach. J Am Chem Soc 2024;146:10687–98. https://doi.org/ 
+10.1021/jacs.4c00443.
+[10] Tri DVan, Anh NT, Luu T, Le, Trippel J, Wagner M. Electrochemical degradation of 
+perfluorooctanoic acid (PFOA) and perfluorooctane sulfonate (PFOS) in water with 
+persulfate catalyst support. Sep Purif Technol 2025;363:132076. https://doi.org/ 
+10.1016/J.SEPPUR.2025.132076.
+[11] Das A, Adak A. Electrochemical oxidation of perfluorooctanoic acid (PFOA) using 
+graphite substrate lead dioxide (GSLD) as anode: investigating reaction 
+mechanism, degradation byproducts and influences of process parameters. 
+J Environ Chem Eng 2025;13:116869. https://doi.org/10.1016/J. 
+JECE.2025.116869.
+[12] Elnakar H. Disinfection and antimicrobial processes. Water Environ Res 2020;92: 
+1625–8. https://doi.org/10.1002/WER.1409.
+[13] Kim N, Elbert J, Shchukina E, Su X. Integrating redox-electrodialysis and 
+electrosorption for the removal of ultra-short- to long-chain PFAS. 15 Nat Commun 
+2024 2024;15(1):1–14. https://doi.org/10.1038/s41467-024-52630-w.
+[14] Liang Y, Wang A, Liang S, Sun K, Xie R, Zheng C, et al. Durable Ti4O7 
+heterojunction composite membrane encapsulating N-doped graphene nanosheets 
+for efficient electro-oxidation of GenX and other PFAS in fluorochemical 
+wastewater. Environ Sci Technol 2025. https://doi.org/10.1021/ACS. 
+EST.4C09423/SUPPL_FILE/ES4C09423_SI_001.DOCX.
+[15] Samuel MS, Kadarkarai G, Ryan DR, McBeath ST, Mayer BK, McNamara PJ. 
+Enhanced perfluorooctanoic acid (PFOA) degradation by electrochemical 
+activation of peroxydisulfate (PDS) during electrooxidation for water treatment. 
+Sci Total Environ 2024;942:173736. https://doi.org/10.1016/J. 
+SCITOTENV.2024.173736.
+[16] Ismail UM, Bani-Melhem K, Khan MF, Elnakar H. Optimizing membrane bioreactor 
+performance in wastewater treatment using machine learning and meta-heuristic 
+techniques. Results Eng 2025;25:104626. https://doi.org/10.1016/J. 
+RINENG.2025.104626.
+[17] Sun Y, Zhao Z, Tong H, Sun B, Liu Y, Ren N, et al. Machine learning models for 
+inverse design of the electrochemical oxidation process for water purification. 
+Environ Sci Technol 2023;57:17990–8000. https://doi.org/10.1021/acs. 
+est.2c08771.
+[18] Shirkoohi MG, Tyagi RD, Vanrolleghem PA, Drogui P. Artificial intelligence 
+techniques in electrochemical processes for water and wastewater treatment: a 
+review. 20 J Environ Health Sci Eng 2022 2022;20(2):1089–109. https://doi.org/ 
+10.1007/S40201-022-00835-W.
+[19] Jeong N, Park S, Mahajan S, Zhou J, Blotevogel J, Li Y, et al. Elucidating governing 
+factors of PFAS removal by polyamide membranes using machine learning and 
+molecular simulations. Nat Commun 2024;15:1–13. https://doi.org/10.1038/ 
+S41467-024-55320-9.
+[20] Raza A, Bardhan S, Xu L, Yamijala SSRKC, Lian C, Kwon H, Wong BN. A machine 
+learning approach for predicting defluorination of per- and polyfluoroalkyl 
+substances (PFAS) for their efficient treatment and removal. Environ Sci Technol 
+Lett 2019;6:624–9. https://doi.org/10.1021/acs.estlett.9b00476.
+[21] Lin DZ, Pan KJ, Li Y, Musgrave CB, Zhang L, Jayarapu KN, et al. A high-throughput 
+experimentation platform for data-driven discovery in electrochemistry. Sci Adv 
+2025;11:4391. https://doi.org/10.1126/sciadv.adu4391.
+[22] Zhu JJ, Boehm AB, Ren ZJ. Environmental machine learning, baseline reporting, 
+and comprehensive evaluation: the EMBRACE checklist. Environ Sci Technol 2024; 
+58(24). https://doi.org/10.1021/acs.est.4c09611.
+[23] Zhu JJ, Yang M, Ren ZJ. Machine learning in environmental research: common 
+pitfalls and best practices. Environ Sci Technol 2023;57:17671–89. https://doi. 
+org/10.1021/acs.est.3c00026.
+[24] Feng L, Zhang Y, Wei X, Wang M, Niu Z, Wang C. Interpretable prediction of 
+coagulant dosage in drinking water treatment plant based on automated machine 
+learning and SHAP method. J Water Process Eng 2025;75:107925. https://doi.org/ 
+10.1016/J.JWPE.2025.107925.
+[25] Han H, Shaker B, Lee JH, Choi Sunghwan, Yoon S, Singh M, et al. Employing 
+automated machine learning (AutoML) methods to facilitate the in silico ADMET 
+properties prediction. J Chem Inf Model 2025;65:43. https://doi.org/10.1021/ 
+ACS.JCIM.4C02122/ASSET/IMAGES/LARGE/CI4C02122_0002.JPEG.
+[26] Kazadi Mbamba C, Keymer P, Alvi M, Topalian SON, Ud Din F, Batstone DJ. 
+Enhancing data quality in wastewater processes: missing data imputation with 
+deep Variational Autoencoders and genetic algorithms. Comput Chem Eng 2025; 
+199:109123. https://doi.org/10.1016/J.COMPCHEMENG.2025.109123.
+[27] Wang, C., Wu, Q., Weimer, M., Zhu, E., 2021. FLAML: A Fast and Lightweight 
+AutoML Library [WWW Document]. GitHub. URL 〈https://github.com/microsoft/ 
+FLAML〉(accessed 6.30.25).
+[28] Bao H, Yin W, Wang H, Lu Y, Jiang S, Ajibade FO, et al. Automated machine 
+learning-based models for predicting and evaluating antibiotic removal in 
+constructed wetlands. Bioresour Technol 2023;385:129436. https://doi.org/ 
+10.1016/J.BIORTECH.2023.129436.
+[29] Xu RZ, Cao JS, Ye T, Wang SN, Luo JY, Ni BJ, et al. Automated machine learning- 
+based prediction of microplastics induced impacts on methane production in 
+anaerobic digestion. Water Res 2022;223:118975. https://doi.org/10.1016/J. 
+WATRES.2022.118975.
+[30] Alnaimat S, Mohsen O, Elnakar H. Perfluorooctanoic Acids (PFOA) removal using 
+electrochemical oxidation: a machine learning approach. J Environ Manag 2024; 
+370:122857. https://doi.org/10.1016/J.JENVMAN.2024.122857.
+[31] Khalid YS, Misal SN, Mehraeen S, Chaplin BP. Reactive-transport modeling of 
+electrochemical oxidation of perfluoroalkyl substances in porous flow-through 
+electrodes. ACS ES T Eng 2022;2:713–25. https://doi.org/10.1021/ 
+acsestengg.1c00362.
+[32] Xu X, Li Y, Vo PHN, Shukla P, Ge L, Zhao CX. Electrochemical advanced oxidation 
+of per- and polyfluoroalkyl substances (PFASs): development, challenges and 
+perspectives. Chem Eng J 2024;500:157222. https://doi.org/10.1016/J. 
+CEJ.2024.157222.
+[33] Lundberg SM, Lee SI. A Unified Approach to Interpreting Model Predictions. 31st 
+Conference on Neural Information Processing Systems. Neural information 
+processing systems foundation; 2017. p. 1–10.
+[34] Mukherjee P, Sathiyan K, Zidki T, Nadagouda MN, Sharma VK. Electrochemical 
+degradation of per- and poly-fluoroalkyl substances in the presence of natural 
+organic matter. Sep Purif Technol 2023;325:124639. https://doi.org/10.1016/J. 
+SEPPUR.2023.124639.
+[35] Schaefer CE, Tran D, Fang Y, Choi YJ, Higgins CP, Strathmann TJ. Electrochemical 
+treatment of poly- and perfluoroalkyl substances in brines. Environ Sci (Camb) 
+2020;6:2704–12. https://doi.org/10.1039/D0EW00377H.
+[36] Vecitis CD, Park H, Cheng J, Mader BT, Hoffmann MR. Treatment technologies for 
+aqueous perfluorooctanesulfonate (PFOS) and perfluorooctanoate (PFOA). 3 Front 
+Environ Sci Eng China 2009 2009;3(2):129–51. https://doi.org/10.1007/S11783- 
+009-0022-7.
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+8 
+
+
+<!-- Page 9 -->
+[37] Anglada ´A, Urtiaga A, Ortiz I. Contributions of electrochemical oxidation to waste- 
+water treatment: fundamentals and review of applications. J Chem Technol 
+Biotechnol 2009;84:1747–55. https://doi.org/10.1002/JCTB.2214.
+[38] Oturan MA, Aaron JJ. Advanced oxidation processes in water/wastewater 
+treatment: principles and applications. a review. Crit Rev Environ Sci Technol 
+2014;44:2577–641. https://doi.org/10.1080/10643389.2013.829765.
+[39] Martínez-Huitle CA, Panizza M. Electrochemical oxidation of organic pollutants for 
+wastewater treatment. Curr Opin Electrochem 2018;11:62–71. https://doi.org/ 
+10.1016/J.COELEC.2018.07.010.
+[40] Wang C, Zhang T, Yin L, Ni C, Ni JP, Hou LA. Enhanced perfluorooctane acid 
+mineralization by electrochemical oxidation using Ti3+ self-doping TiO2 nanotube 
+arrays anode. Chemosphere 2022;286:131804. https://doi.org/10.1016/J. 
+CHEMOSPHERE.2021.131804.
+[41] Panizza M, Cerisola G. Direct and mediated anodic oxidation of organic pollutants. 
+Chem Rev 2009;109:6541–69. https://doi.org/10.1021/cr9001319.
+[42] Chaplin BP. Critical review of electrochemical advanced oxidation processes for 
+water treatment applications. Environ Sci Process Impacts 2014;16:1182–203. 
+https://doi.org/10.1039/C3EM00679D.
+[43] Chen T, Guestrin C. XGBoost: A scalable tree boosting system. In: KDD ’16: 
+Proceedings of the ACM SIGKDD International Conference on Knowledge 
+Discovery and Data Mining. Association for Computing Machinery; 2016. 
+p. 785–94. https://doi.org/10.1145/2939672.2939785.
+[44] Asadi Zeidabadi F, Banayan Esfahani E, McBeath ST, Dubrawski KL, Mohseni M. 
+Electrochemical degradation of PFOA and its common alternatives: assessment of 
+key parameters, roles of active species, and transformation pathway. Chemosphere 
+2023;315:137743. https://doi.org/10.1016/J.CHEMOSPHERE.2023.137743.
+[45] Karatas O, Kobya M, Khataee A, Yoon Y. Perfluorooctanoic acid (PFOA) removal 
+from real landfill leachate wastewater and simulated soil leachate by 
+electrochemical oxidation process. Environ Technol Innov 2022;28:102954. 
+https://doi.org/10.1016/J.ETI.2022.102954.
+[46] Schaefer CE, Andaya C, Burant A, Condee CW, Urtiaga A, Strathmann TJ, et al. 
+Electrochemical treatment of perfluorooctanoic acid and perfluorooctane 
+sulfonate: Insights into mechanisms and application to groundwater treatment. 
+Chem Eng J 2017;317:424–32. https://doi.org/10.1016/J.CEJ.2017.02.107.
+[47] EPA, 2023. EPA’s PFAS Strategic Roadmap: Second Annual Progress Report.
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+9 

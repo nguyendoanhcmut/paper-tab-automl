@@ -1,0 +1,796 @@
+<!-- Page 1 -->
+Predicting nitrification status in aerobic membrane bioreactors by 
+interpretable machine learning models: Proof of concept for 
+advancing greywater reuse through process monitoring with 
+cross-scenario model validation
+Siyuan Wang a,b, Seow Wah How a,b, Duc-Viet Nguyen a,b, Di Wu a,b,c,*
+a Department of Green Chemistry and Technology, Ghent University, Ghent, Belgium
+b Centre for Green Chemistry and Environmental Biotechnology (GREAT), Ghent University Global Campus, Incheon, Republic of Korea
+c Department of Civil and Environmental Engineering, Water Technology Center and Chinese National Engineering Research Center for Control and 
+Treatment of Heavy Metal Pollution (Hong Kong Branch), The Hong Kong University of Science and Technology, Hong Kong, China
+A R T I C L E I N F O
+Keywords:
+Greywater reuse
+MBR
+Interpretable machine learning
+Data-driven
+Process monitoring
+Soft sensor
+On-site water treatment
+A B S T R A C T
+Membrane bioreactor (MBR) systems for on-site greywater treatment and reuse have been widely 
+investigated, where robust nitrification monitoring is critical to prevent operational disruptions 
+and maintain effluent standards. This research proposed an interpretable machine learning-based 
+framework to predict nitrification efficacy (classified as "sufficient" or "insufficient") in MBR 
+systems, involving model-based and post hoc interpretability. Three interpretable machine 
+learning algorithms—logistic regression (LR), random forest (RF), and extreme gradient boosting 
+(XGB)—were systematically evaluated, accounting for model bias-variance trade-offs during bi­
+nary classification. Six input features were selected based on direct measurability, compatibility 
+with commercial sensors, and operational relevance. Model optimization criteria focused on 
+maximizing precision to prevent erroneous controls for insufficient nitrification, achieved by low 
+false positive rate (FPR: misclassified insufficient nitrification) and high true positive rate (TPR: 
+correctly identified sufficient nitrification). Results showed that both LR and XGB achieved 
+identical precision scores > 0.85 under standard conditions. Cross-scenario validation demon­
+strated RF’s superior generalizability (precision=0.87) when predicting nitrification in biocarrier- 
+amended MBRs using training data from non-biocarrier systems, reflecting the potential trans­
+ferability of the model. The post hoc interpretability and stability analysis further identified 
+prediction sensitivity to data limitations and distributional biases, providing critical insights for 
+improving and even properly deploying models in practice.
+1. Introduction
+Greywater, defined as domestic wastewater excluding toilet contributions, represents around 70 % of residential sewage, with daily 
+yields ranging from 20 to 220 L per capita (Shaikh and Ahammed, 2020). Its on-site reuse offers a critical strategy for water con­
+servation, urban water resilience improvement, and sustainable urban development (Liu et al., 2023; Maggiotto, 2022). Membrane 
+* Correspondence to: Ghent University Global Campus, Incheon Global Campus, 119-5 Songdomunhwa-ro, Incheon 21985, Republic of Korea.
+E-mail address: di.wu@ghent.ac.kr (D. Wu). 
+Contents lists available at ScienceDirect
+Environmental Technology & Innovation
+journal homepage: www.elsevier.com/locate/eti
+https://doi.org/10.1016/j.eti.2025.104541
+Received 3 August 2025; Received in revised form 14 September 2025; Accepted 25 September 2025  
+Environmental Technology & Innovation 40 (2025) 104541 
+Available online 26 September 2025 
+2352-1864/© 2025 The Authors. 
+Published by Elsevier B.V. This is an open access article under the CC BY license 
+( http://creativecommons.org/licenses/by/4.0/ ). 
+
+
+<!-- Page 2 -->
+bioreactors (MBRs) have emerged as a leading technology for such decentralized treatment, owing to their compact footprint and 
+consistent production of high-quality effluent suitable for reuse (Gao et al., 2025). MBR systems synergistically combine biological 
+processes—including heterotrophic oxidation and autotrophic nitrification—with membrane filtration for effective solids separation 
+(Boleydei and Vaneeckhaute, 2024).
+Nitrification—converting ammonium (NH4
++-N) into nitrite (NO2
+- -N) and then nitrate (NO3
+- -N)—is critical in MBRs to meet water 
+reuse standards. Centralized plants typically use the proportional integral differential (PID) control strategy to maintain fixed dissolved 
+oxygen (DO) setpoints, yet this strategy adapts poorly to influent fluctuations and incurs high energy costs (Gu et al., 2023). On-site 
+greywater systems face amplified load variability: daily/seasonal usage patterns cause sustained low loads punctuated by sharp peaks, 
+while highly variable water quality challenges empirical control parameters (DelaPaz-Ruíz et al., 2024; Hassan et al., 2024). Although 
+PID adjusts aeration valves, its static DO targets lack real-time responsiveness to dynamic NH₄⁺-N loads (e.g., dynamic adjustment 
+based on the NH₄⁺-N load) (Li et al., 2022; Shi et al., 2024). Furthermore, PID relies on submerged DO probes, which are prone to 
+fouling and drift in small-scale MBRs due to continuous aeration and sludge accumulation. This compromises measurement reliability, 
+potentially masking sensor failure as load variation.
+Reliable nitrification monitoring remains challenging for decentralized MBRs, where inconsistent efficiency risks process stability 
+despite compliant effluent (observed in the current trial). Notably, real-time monitoring of nitrification processes within 
+MBRs—particularly under decentralized operational scenarios—remains unaddressed in existing studies. Commercial NH4
++-N/NO2
+- -N/ 
+NO3
+- -N sensors are often impractical for installing in the reactor: high sludge concentrations cause rapid fouling and maintenance 
+burdens, increasing operational costs (Huang et al., 2024). Organic matter, suspended solids, and ionic interference further distort 
+readings, while sensor response lags fail to capture rapid nitrogen dynamics—hindering real-time control.
+Machine learning (ML) offers promising data-driven solutions for monitoring MBR nitrification, using effluent water quality pa­
+rameters to assess performance without intrusive sensors, avoiding sensor installation in the reactors with challenges mentioned above 
+(Van de Walle et al., 2023). These methods enable rapid, low-cost, and real-time monitoring—facilitating prompt process interventions 
+and enhancing safety (Bahramian et al., 2023). Compared to mechanistic models, ML requires simpler inputs and incurs minimal 
+maintenance, ideal for on-site systems (Duarte et al., 2024). Given greywater treatment’s critical need for regulatory and public trust, 
+prioritizing interpretable ML methods provides transparent prediction rationales for operator action and model refinement (Allen 
+et al., 2024). Additionally, utilizing interpretable ML methods allows us to further understand the limitations of current training 
+Fig. 1. Experimental setup and operation phases of MBR.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+2 
+
+
+<!-- Page 3 -->
+strategies and provide guidance for model improvement.
+Previous studies on data-driven prediction in MBR-based wastewater treatment have primarily focused on effluent quality, targeted 
+pollutant removal efficiency, and membrane fouling (Muniz de Queiroz et al., 2025; Shi et al., 2022; Zhong et al., 2022). However, 
+relying solely on effluent monitoring provides limited process controllability and fails to enable timely interventions during abnormal 
+operational events. This approach is also labor-intensive, time-consuming, and inadequate for tracing underlying process flaws before 
+effluent quality violations occur (Moretti et al., 2024). In contrast, real-time process monitoring enables proactive control, enhances 
+system resilience, and supports early fault detection—critical for ensuring consistent water quality across diverse reuse applications.
+This work aims to develop an interpretable ML model to monitor the nitrification process in MBRs via effluent parameters, reducing 
+the difficulty of input feature acquisition in practice. Features were selected based on direct measurability, sensor compatibility, and 
+operational relevance. To mitigate overfitting and balance bias-variance tradeoffs, three interpretable algorithms—logistic regression 
+(LR), random forest (RF), and extreme gradient boosting (XGB)—were evaluated, simultaneously considering the bias and variance of 
+each algorithm. Model training prioritized operational stability by maximizing precision, depending on the higher true positive rate 
+(TPR) and lower false positive rate (FPR), trained on data from a suspended-sludge MBR. Furthermore, SHapley Additive exPlanations 
+(SHAP) analysis, feature importance, and pairwise assessments elucidated factor-prediction linkages and informed model refinement. 
+The models were further validated on a hybrid system, integrating suspended sludge and polyvinylidene fluoride (PVDF) biocarriers, 
+performing simultaneously nitrification-denitrification, demonstrating cross-scenario prediction applicability. Finally, an automated 
+aeration control strategy is proposed to operationalize the monitoring framework.
+2. Material and methods
+2.1. Experiment method
+Synthetic greywater was prepared following Ongena et al. (2023) using Korean commercial personal care products, detergents, and 
+Fig. 2. Flowchart of data-driven model development and evaluation for nitrification process monitoring.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+3 
+
+
+<!-- Page 4 -->
+literature-derived compositions. The overall synthetic greywater contained 405 ± 70 mg L−1 of chemical oxygen demand (COD), 
+20 ± 3 mg L−1 of NH+
+4 −N and 21 ± 5 mg L−1 of total nitrogen (TN). The remainder of the COD and TN not provided by the personal 
+care products and detergents was approximated by adding acetate and ammonium chloride. Fresh batches were prepared daily with 
+tap water.
+Two parallel 10 L MBRs were inoculated with activated sludge sampled from an Anaerobic-Anoxic-Oxic wastewater treatment 
+plant (Incheon, Korea) and operated for 235 days. Each contained two 0.56-μm SiC flat-sheet membranes (0.165 m² surface area; 
+Fig. 1). Continuous aeration maintained DO at 5.1 ± 2.2 mg L⁻¹ . Greywater feeding and permeate extraction were conducted 
+continuously, with timer-controlled relaxation (0.06 L min⁻¹). The operational strategy for the two parallel MBRs involved three 
+phases of adjusted net flux and aeration to enhance greywater treatment, particularly ammonia removal (Fig. 1). Initially low ammonia 
+removal under a flux of 2.9 L/(m²⋅h) and aeration of 2.0 L/min prompted an increase in aeration to 6.0 L/min in Phase 2 to improve 
+nitrification efficiency. Phase 3 involved an increase in flux to 6.9 L/(m²⋅h) to further test hydraulic stability. Biocarriers (10 % 
+packing ratio) were added to MBR-2 in phase 3 to try to reduce membrane fouling under high flux and promote anoxic zones for 
+enhancing simultaneous nitrification-denitrification, enabling comparative performance evaluation with MBR-1. The 10 % packing 
+ratio was selected to balance fouling control with operational safety, avoiding abrasion and energy issues associated with higher loads 
+(Noor et al., 2023; Rahman et al., 2023). These intentional variations in flux, aeration, and biocarriers addition diversified operational 
+conditions, enriching the dataset to enhance the machine learning model’s generalizability across multiple scenarios.
+Influent, effluent and reactor water quality were analyzed daily as described in supplementary information (SI) 1.
+2.2. Data-driven modelling
+Fig. 2 presents the comprehensive flow-chart adopted for developing data-driven models to monitor the nitrification process in the 
+MBR. Additionally, result analysis and future perspectives are elaborated in Sections 3 and 4.
+2.2.1. Binary classification: nitrification process evaluation
+To effectively predict nitrification status, the relationship between the concentrations of NO₃⁻-N, NO₂⁻-N, and NH₄⁺-N in the reactor 
+must be understood. In the simultaneous nitrification and denitrification process within the MBR, the concentration of NO3
+- -N typically 
+exceeds that of NO2
+- -N and NH4
++-N under sufficient aeration, which is a key factor for effective nitrogen conversion and removal (Huang 
+et al., 2022; Paetkau and Cicek, 2011). Therefore, sufficient nitrification was defined as the condition in which the concentration of 
+NO3
+- -N exceeds the combined concentrations of NO2
+- -N and NH4
++-N, labeled as “Positive”; otherwise, the condition was labeled as 
+“Negative”. The primary goal of the data-driven model for treatment process prediction was to classify whether nitrification was 
+sufficient or insufficient.
+2.2.2. Qualitative analysis of inputs selection
+Three data categories were collected during the experiment: 1 > Hydraulic: hydraulic retention time (HRT) and sludge retention 
+time (SRT); 2 > Operational: transmembrane pressure (TMP), air/influent/effluent flow rates, gross/net flux, flux recovery; 3 > Water 
+quality: COD, TN, NH₄⁺-N, NO₃⁻-N, NO₂⁻-N (in influent, effluent, and mixed liquor in the reactor), TSS (influent/effluent), and DO, 
+MLSS, MLVSS in the reactor. Removal efficiency was also calculated for each parameter. Input features were selected from the 
+perspective of practical deployment, including: 1> Direct measurability, 2> Commercial sensor compatibility, 3> Operational rele­
+vance (e.g., TMP).
+Indirect variables (SRT, removal efficiencies) were excluded. Water quality parameters (DO, COD, TN, NH₄⁺-N, NO₃⁻-N, NO₂⁻-N) 
+and operational factors (flow rates, air flow, TMP) were initially considered. However, > 50 % DO data absence led to its exclu­
+sion—simulating probe failure scenarios. Air flow rate was retained as an oxygen proxy. Online sensor compatibility was prioritized to 
+enhance model applicability and robustness. Influent water quality was excluded due to sensor reliability concerns: complex matrices 
+cause fouling on sensors and sensor degradation (e.g., Ag/AgCl electrodes dissolution) (Ching et al., 2022; Haimi et al., 2013). Effluent 
+NO₂⁻-N was also excluded due to measurement instability versus stable NO₃⁻-N. TMP was included to monitor membrane performance, 
+contributing to long-term operation monitoring. Finally, the dataset was refined by removing inappropriate variables and simplifying 
+the inputs to facilitate dataset splitting.
+2.2.3. Data preprocessing
+From 128 datasets collected over 235 days from dual MBRs, eight incomplete entries were excluded. Biocarriers were added to one 
+reactor in Phase 3 to enable denitrification (Fig. 1), altering parameter relationships. To evaluate cross-scenario applicability, 23 data 
+groups from Phase 3 were used as an independent test group for models trained exclusively on 97 no-biocarrier data groups (activated 
+sludge only). The 97 data groups were utilized for training, validation, and testing of the model’s performance in predicting nitrifi­
+cation with activated sludge only. This approach assessed performance under altered operational conditions. Given inherent influent 
+variability in onsite greywater systems, outliers were intentionally retained to evaluate model robustness against operational fluc­
+tuations, reflecting real-world dynamics.
+2.2.4. Dataset splitting strategy
+The preprocessed dataset comprised 120 groups of data, daily measurements reflecting operational manipulations. The data 
+exhibited an inherent imbalance in label distribution due to controlled changes in treatment conditions. For each reactor, the airflow 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+4 
+
+
+<!-- Page 5 -->
+rate was maintained at 2.0 L/min until day 111 and increased to 6.0 L/min thereafter to enhance the nitrification treatment. Similarly, 
+the influent flow rate was predominantly 11.7 ML/min before the 149th day and increased to 20.6 ML/min afterward. Given these 
+temporal shifts, a simple chronological split of the data could not fairly evaluate model performance. To ensure a representative 
+assessment, the training and test sets were constructed strategically to encompass these operational variations, as illustrated in Fig. 3.
+Given the imbalanced air flow and influent flow rates, every fourth data point was selected to form the test set, constituting 20 % of 
+the data (8 positive & 11 negative labels). The remaining 80 % (28 positive & 50 negative labels) were used for training and validation, 
+maintaining distinct distributional characteristics to assess model generalization. Hyperparameter optimization employed stratified 5- 
+fold cross-validation (Scikit-Learn’s StratifiedKFold), ensuring balanced class representation in each fold for enhanced reliability with 
+imbalanced dataset (Szeghalmy and Fazekas, 2023; Zeng and Martinez, 2000). Additionally, 23 datasets from the biocarrier-added 
+condition (Section 2.2 ; 15 positive and 8 negative labels) were used to test cross-scenario robustness under divergent label distri­
+butions. Section 2.1
+2.2.5. Statistical correlation analysis for inputs determination
+Based on the preliminary input feature selections by qualitative analysis in Section 2.2.2, Spearman’s rank correlation was used to 
+assess statistical relationships between inputs and outputs. This nonparametric method quantifies the strength of monotonic associ­
+ations between variables without assuming normal distribution, making it suitable for nonlinear yet monotonic classification contexts 
+(Hastie et al., 2009). Statistical significance was determined using p-values. Specifically, the p-value indicates the probability of 
+obtaining the observed Spearman correlation coefficient, or a more extreme value, under the null hypothesis that no monotonic 
+relationship exists between the variables. A p-value < 0.05 was used to reject the null hypothesis and confirm a significant correlation. 
+The "spearmanr" function (SciPy, Python) computed coefficients and p-values for all variable pairs. (Van Rossum and Drake, 2009).
+2.2.6. Model-based interpretability: interpretable ML algorithms
+To predict the nitrification status in the MBR and ensure stable operations, this study considered not only the statistical accuracy of 
+ML methods but also integrated algorithm-specific characteristics. In ML, bias stems from simplifying assumptions, while variance 
+reflects sensitivity to fluctuations in the training data (Reynaert et al., 2023). Minimizing one typically increases the other (Belkin 
+et al., 2019).
+Fig. 3. Splitting strategy for training, validation and test groups.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+5 
+
+
+<!-- Page 6 -->
+Previous studies have indicated that simpler models generally offer advantages for small datasets, including reduced overfitting 
+risk, improved interpretability, and lower computational demands (Reynaert et al., 2023; Wang et al., 2025). For small, non-temporal 
+datasets, complex structures such as artificial neural networks can increase the risk of overfitting (Chiroma et al., 2019).
+Therefore, three interpretable algorithms with distinct bias–variance properties were selected. The logistic regression and decision 
+tree-based models are normally cited as simulatable, i.e., interpretable (Breiman et al., 2017; Murdoch et al., 2019). 
+– Logistic regression (LR): High bias, low variance. Applies logit transformation to linear regression for binary probability pre­
+diction, handling continuous/categorical variables with high interpretability and simple structure (Hosmer et al., 2013).
+– Random forest classification (RF): Intermediate bias-variance tradeoff. An ensemble method aggregating multiple decision trees 
+via voting, improving accuracy and noise resistance for high-dimensional data (Breiman, 2001).
+– Extreme gradient boosting classification (XGB): Low bias, high variance. An optimized implementation of the gradient boosting 
+algorithm with successive decision trees, each correcting the errors of its predecessor to minimize the loss function and improve 
+predictive performance. Compared to traditional gradient boosting decision trees, XGB introduces enhancements such as regula­
+rization, parallel computing, and custom loss function definition (Chen and Guestrin, 2016).
+All models were implemented using scikit-learn 1.0.2 (Python 3.9.13), with hyperparameters optimized via grid search.
+2.2.7. Evaluation metrics and hyperparameter tuning criteria
+The performance of the classification models was evaluated using a confusion matrix, contrasting predicted outcomes ("Sufficient"/ 
+"Insufficient") against actual conditions. The “Positive” label indicated sufficient nitrification, while the “Negative” label indicated 
+insufficient nitrification, as defined in Section 2.1 Key metrics included true positives (TP: correctly classified sufficient nitrification), 
+false positives (FP: erroneously classified sufficient under insufficient conditions), false negatives (FN: insufficient misclassifications 
+despite actual sufficiency), and true negatives (TN: accurate classified as insufficient). Section 2.2.1
+Minimizing the FPR was crucial for ensuring safe effluent water quality. For instance, in a control system integrated with this 
+nitrification monitoring model, when insufficient nitrification occurs, more air should be supplied. However, if an FP occurs, the model 
+incorrectly predicts sufficient nitrification, leading the control system to refrain from adding additional oxygen and unsafe effluent 
+unsuitable for reuse. Meanwhile, a higher TPR was necessary to detect sufficient nitrification under conventional operation conditions, 
+reducing operational costs by preventing unnecessary oxygen supply triggered by FN.
+Besides, optimizing solely for low FPR could severely reduce TPR, as indicated in previous studies (Reynaert et al., 2023; Salvia 
+et al., 2021; Yang et al., 2019). Therefore, a balanced approach considering both TPR (Eq. 1) and FPR (Eq. 2) was adopted, with 
+precision (Eq. 3) serving as a key optimization metric. Precision reflects the proportion of TP predictions among all positive predictions 
+The TRP, FPR, and precision were calculated using the following equations: 
+TPR =
+TP
+TP + FN
+(1) 
+FPR =
+FP
+FP + TN
+(2) 
+Precision =
+TP
+TP + FP
+(3) 
+Although precision was prioritized during hyperparameter tuning, accuracy, representing the proportion of correct predictions out 
+of all cases, was also used for model evaluation in test groups: 
+Accuracy =
+TP + TN
+TP + TN + FP + FN
+(4) 
+Finally, the stability of model performance was evaluated on the test dataset by calculating 95 % confidence intervals for accuracy, 
+precision, recall, and F1 score using 1000-times bootstrap resampling, following standard practices in machine learning validation.
+2.2.8. Post hoc interpretability
+Despite the inherent interpretability of decision tree-based methods, complex models necessitate post hoc interpretation (Murdoch 
+et al., 2019).
+Feature importance quantifies the contributions of input variables, aiding model’s interpretability improvement and guiding data 
+collection strategies for enhanced performance. In LR, feature coefficients are derived by minimizing the loss function (negative log- 
+likelihood) using optimization methods such as gradient descent (Hastie et al., 2009). They indicate the strength and direction of each 
+feature’s linear relationship with the target variable (Murphy, 2012). For RF, feature importance is assessed by the reduction in 
+impurity (e.g., Gini index) when a feature is used to split a node. Scores are averaged across all trees, capturing the overall contribution 
+of each feature to the model (Liaw and Wiener, 2002). The feature importance in XGB is typically calculated using the Gain method. 
+This method sums up and normalizes the gains from all splits involving a feature to compute its importance score (Chen and Guestrin, 
+2016).
+SHAP analysis was implemented to leverage game theory to assign each feature an importance value for specific predictions. SHAP 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+6 
+
+
+<!-- Page 7 -->
+values satisfy efficiency (prediction = base value + sum of feature contributions), symmetry, and additivity axioms, providing 
+consistent local and global interpretability (Lundberg and Lee, 2017).
+Furthermore, pairwise feature relationships were visualized via kernel density estimation (KDE) and pairwise feature plot. KDE 
+could nonparametrically approximate continuous probability density functions by smoothing observed data points via symmetric 
+kernel functions and bandwidth parameters (Scott, 2015). Pairwise feature plots, implemented as scatterplot matrices, reveal corre­
+lation and clustering patterns between features (Pekalska et al., 2005). It can help understand model classification performance by 
+visualizing the confusion matrix (Waskom, 2021).
+All analyses were implemented in Python 3.9.13 (Van Rossum and Drake, 2009).
+3. Results analysis: data-driven model prediction
+3.1. MBR performance and data collection
+Phases 1–2 (no biocarriers) showed consistent COD (>85 % removal), NH₄⁺-N, and TN trends. Phase 1 effluent contained high 
+NH₄⁺-N (14 ± 5 mg/L; 28 % removal) and TN (14 ± 2 mg/L; 23 % removal) with minimal NO₃⁻-N, indicating insufficient nitrification. 
+Increasing aeration in Phase 2 improved NH₄⁺-N removal to 95 ± 1 % (effluent: 0.9 ± 0.2 mg/L). Meanwhile, the MLSS/MLVSS ratio 
+stabilized at 0.92 ± 0.07 during Phase 1 and remained around 0.9 in Phase 2, indicating that most of the sludge consisted of organic 
+fractions—a sign of healthy sludge conditions. In Phase 3, adding PVDF biocarriers to MBR-2 improved denitrification performance: 
+TN removal reached 58 ± 21 %, compared to 34 ± 15 % in MBR-1 without biocarrier addition, while COD removal (90 ± 4 %) and 
+NH₄⁺-N removal (94 ± 5 %) were maintained. The MBR-2 also exhibited reduced membrane fouling (TMP < 10 kPa) and higher 
+biomass concentrations (MLSS: 2832 ± 831 mg/L; MLVSS: 2655 ± 806 mg/L) compared to the MBR-1 (MLSS: 2439 ± 648 mg/L; 
+MLVSS: 2191 ± 543 mg/L). Overall, effluent COD and TN met EU Directive 91/271/EEC standards, though TN removal in Phase 3 was 
+inconsistent, likely due to biofilm acclimatization. More detailed results are described in SI 2.
+3.2. Input features determination
+Following qualitative feature selection as shown in Section 2.2.2, nine input variables remained and were statistically evaluated. SI 
+3 identifies variables with significant correlations labeled with circles (p-value < 0.05) among the remaining input features. To 
+simplify the model structure, only the influent flow rate was retained due to its similarity to the effluent flow rate, which demonstrated 
+over 97 % flux recovery. Despite TMP’s weak correlation with nitrification, its inclusion could enhance model transferability by ac­
+counting for acyclic membrane fouling in long-term operations. Meanwhile, while the membrane cleaning record correlated with TMP, 
+reflecting membrane maintenance needs, it was excluded to avoid material-specific biases. In addition, TN was omitted due to its 
+marginal predictive contribution and impracticality for real-time monitoring. Although TN has certain correlation with the target 
+output, TN sensors are costly and feature long measurement intervals (30–60 min, based on commercially available TN sensors), 
+compared with sensors monitoring NO3
+- -N and NH4
++-N.
+Finally, six input features were selected for nitrification status prediction, including three operational factors (air flow rate, influent 
+flow rate, and TMP) and three water quality variables (effluent COD, NO3
+- -N, and NH4
++-N concentrations). This streamlined feature set 
+balances model simplicity, accuracy, and field feasibility for nitrification monitoring.
+3.3. Nitrification status prediction without biocarriers addition
+Three classification models (LR, RF, XGB) were trained on datasets excluding biocarriers, with precision prioritized during 
+hyperparameter optimization via stratified 5-fold cross-validation (SI 4). Table 1a summarizes prediction results using six selected 
+input features, reporting accuracy, precision, TPR, and FPR for the test group, along with averaged results from cross-validation folds, 
+illustrating the model’s predictive ability for nitrification status. Evaluation metrics for individual folds are provided in SI 5. Based on 
+the limited data in the training (78) and test group (19), three key insights can be drawn from Table 1a: 
+1) LR, RF, and XGB achieved comparable test group performance (accuracy: 0.79–0.84). The confusion matrices for the test group 
+predictions by each algorithm are provided in SI 6. This good fit could be attributed to the mechanistic relationship between the 
+inputs and the target output, involving nitrogen conversion in the nitrification process (Huang et al., 2022; Omar et al., 2024).
+2) With considering the superior performance in validation groups (accuracy: 0.90–0.91), RF and XGB underperformed LR in the test 
+group, indicating potential overfitting risks with limited data.
+3) Additionally, the small data limited the ability to fully evaluate the performance difference among algorithms with different 
+complexity, hard to assess the influence of model complexity on TPR and FPR.
+These results preliminarily support the effectiveness of the ML algorithm in predicting the nitrification status through TMP, air flow 
+rate, influent flow rate, and effluent COD, NO3
+- -N, and NH4
++-N concentrations.
+However, compared with the prediction accuracy on the validation group, the decline of TPR in the test group can be attributed to 
+several factors. One primary reason is the issue of class imbalance. In the training set, negative label samples accounted for 64.10 %, 
+whereas in the test set, this proportion decreased to 57.89 %. Although this indicated a slightly lower proportion of negative Label 
+samples in the test set, the imbalance remained significant. Such an imbalance biases the model toward the dominant class (negative 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+7 
+
+
+<!-- Page 8 -->
+Table 1 
+Statistical evaluation of predicting test group with/without adding biocarriers with feature importance analysis of trained model with kernel density 
+estimates (KDE).
+* “Validation (Ave)”: the average value of stratified 5-fold validation groups
+** The feature coefficient of LR was calculated to represent the feature importance in logistics regression-based prediction.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+8 
+
+
+<!-- Page 9 -->
+label), reducing its ability to accurately predict positive samples and resulting in TPR reduction in the test group. The problem was 
+evident in all algorithms, where validation accuracy was even over 0.1 higher than that of the test group (Table 1a), highlighting the 
+model’s susceptibility to overfitting to class proportions during the training phase due to the small dataset.
+Moreover, feature distribution shifts exacerbated TPR declines and reflected underlying overfitting to training feature de­
+pendencies. In the training set, 58.67 % of the samples had an air flow rate of 2, and 41.33 % had an air flow rate of 6. In the test set, 
+these proportions shifted to 52.63 % and 47.37 %, respectively. While this shift was relatively small, it could still influence the model’s 
+generalization ability, particularly as the air flow rate is critical for predicting nitrification status. KDE plots (Table 1b) demonstrated 
+that air flow rate distributions between positive and negative classes were well separated, which magnified the effect of even subtle 
+distribution shifts. This explains why the RF and XGB models, although exhibiting high validation accuracy (0.9114 and 0.9063, 
+respectively), suffered noticeable reductions in TPR during testing (0.6250 for RF and 0.7500 for XGB). Such discrepancies suggest that 
+the models captured training-specific patterns too rigidly, a hallmark of overfitting.
+Additionally, the scarcity of positive samples in the test set exacerbated overfitting risks. Limited training data forced models to 
+overfit the dominant negative class, compromising their ability to generalize to unseen positive cases. Consequently, TPR declined 
+during testing, as models struggled to correctly classify underrepresented positive samples. This phenomenon was particularly evident 
+in RF, where precision remained relatively high (0.8333) but TPR declined sharply to 0.6250 in the test set. The discrepancy between 
+validation and test outcomes demonstrated that RF overfit to negative-class features during training, compromising its predictive 
+balance across both classes.
+In contrast, the FPR remained stable across training and test sets. Such stability stemmed from the relatively uniform distribution of 
+negative samples. As explained before, the training set’s high negative sample proportion enhanced model sensitivity to negative class 
+Fig. 4. SHAP analysis: beeswarm (a: LR; b: RF; c: XGB) and waterfall (d: LR; e: RF; f: XGB) plot.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+9 
+
+
+<!-- Page 10 -->
+detection. Therefore, the model maintained robust negative class identification when the test set’s negative sample ratio decreased 
+slightly, sustaining low FPR levels. However, this apparent stability should not obscure the underlying problem: the divergence be­
+tween high validation performance and degraded test performance across all three models (Table 1a) clearly demonstrated that 
+overfitting was a systemic issue. The models effectively learned training-specific distributions rather than robust, generalizable pat­
+terns required for reliable deployment.
+In summary, the decline in TPR in the test set was primarily due to class imbalance, feature distribution shifts, and the limited 
+number of “positive” label samples, which increased the overfitting risk. Conversely, the stability of FPR could be attributed to the 
+consistent distribution of negative samples across the training and test sets. These results underscore the challenges in ensuring model 
+robustness under data distribution shifts — a critical consideration for deploying ML in dynamic wastewater treatment environments.
+Feature importance analysis elucidated prediction mechanisms and guided data collection strategies. Table 1b shows importance 
+scores with Kernel Density Estimates (KDE) for LR, RF, and XGB models. In LR, regression coefficients indicated feature-prediction 
+directionality/magnitude. For RF and XGB, importance scores quantified feature contributions. KDE visualized probability density 
+distributions for Predicted Positive (red) and Predicted Negative (blue) classes. Curve peaks revealed value concentration regions (e.g., 
+Eff_COD peaked at ~30 for Positive class). Class discriminative ability was assessed through KDE overlap: minimal overlap indicated 
+strong separability (e.g., Air Flow Rate showed moderate separation). Curve width reflected feature variance—narrow curves denoted 
+consistent class values, while broader curves indicated higher variability.
+Feature importance and KDE analysis confirmed effluent NH₄⁺-N and NO₃⁻-N as primary predictors of nitrification status. Although 
+mechanistically relevant, influent flow rate (11.7–20.6 ML/min) and air flow rate (2–6 Lpm) showed limited contributions due to low 
+operational variability. Effluent COD likewise had a minor impact, evidenced by its lower coefficient of variance (55.25 %) versus 
+NH₄⁺-N (93.82 %) and NO₃⁻-N (101.72 %)—calculated as standard deviation relative to mean. This variability disparity explained 
+differential feature importance.
+SI 7 and 8 display pairwise plots across models and feature importance quantification across validation groups respectively, which 
+confirmed effluent NO₃⁻-N/NH₄⁺-N as primary predictors, aligning with their biochemical centrality in nitrification. However, XGB 
+validation groups showed unexpected prominence of stable influent and airflow rates over N-species. This stemmed from XGB’s 
+boosting mechanism: sequential trees prioritize features correcting predecessor errors, dynamically weighting features during in­
+cremental optimization (Bent´ejac et al., 2021; Nguyen et al., 2024). Such adaptability could enhance model flexibility across data 
+groups but may inflate transient feature importance and overfitting risks.
+Fig. 4 illustrates the SHAP analysis results for three predictive models—LR, RF, and XGB—including global importance (beeswarm 
+plots, Fig. 4a–c) and instance-level decomposition (waterfall plots, Fig. 4d–f). The beeswarm plots revealed consistent feature 
+importance rankings across all models: Effluent NH₄⁺-N and Effluent NO₃⁻-N dominate, followed by Effluent COD and TMP, suggesting 
+robust, model-agnostic relevance of nitrogen and organic matter indicators in treatment performance prediction, consistent with the 
+results of feature importance analysis.
+More nuanced insights arose from the waterfall plots. In the LR model (Fig. 4d), the output was strongly driven by a single high 
+NH₄⁺-N value (+2.84), counteracted by negative contributions from NO₃⁻-N and COD, reflecting the additive nature of linear models. 
+Such strong reliance on a single dominant feature highlighted an overfitting risk: when NH₄⁺-N deviates from training patterns, the 
+model struggles to generalize, explaining the decline in test TPR. In contrast, the RF model (Fig. 4e) showed a more balanced 
+contribution from multiple features, with lower-magnitude but distributed impacts, consistent with ensemble decision averaging. The 
+XGB model (Fig. 4f) exhibited stronger nonlinearity and interaction effects. Here, COD and NO₃⁻-N jointly exerted dominant negative 
+influence, while NH₄⁺-N contributed positively but was insufficient to overcome process stress signals, resulting in a negative pre­
+diction. Nevertheless, the complexity of these nonlinear feature interactions in XGB, combined with limited training samples, raised 
+the likelihood of memorizing dataset-specific noise, another hallmark of overfitting. Notably, TMP and Air Flow Rate emerged as 
+minor but non-negligible modulators, indicating sensitivity to operational states.
+Furthermore, combined with the analysis of the effluent concentration of NH4
++-N and NO3
+- -N, which had the main influence on the 
+prediction, and by tracing back the characteristics in the data set, it was found that false positives mainly occurred when the effluent 
+NO3
+- -N was 9 mg/L and NH4
++-N was 2 mg/L. That is, the effluent quality showed a relatively obvious sufficient nitrification potential, 
+but the reactor was in an insufficient nitrification state simultaneously. Compared with the output labels in the training dataset, this 
+was mainly because when the effluent NO3
+- -N concentration was greater than 9 mg/L and the NH4
++-N concentration was less than 2 mg/ 
+L, the data labels were all positive, that is, sufficient nitrification, which in turn affected the prediction in the test set. This phenomenon 
+indicated that the models overfitted the label distribution patterns in the training set and thus misclassified borderline cases in the test 
+set, exposing a lack of generalization.
+The SHAP analysis revealed that effluent NH₄⁺-N and NO₃⁻-N were the most influential predictors across all models, underscoring 
+their critical role as indicators of nitrification performance in MBR systems. This suggested that real-time monitoring of these nitrogen 
+species—rather than relying only on conventional parameters like TMP, DO in the reactor—could enhance operational control while 
+monitoring essential effluent water quality parameters. Specifically, the identification of borderline cases (e.g., simultaneous NH₄⁺- 
+N ≈2 mg/L and NO₃⁻-N ≈9 mg/L where false positives occur) highlighted process instability regions that were prone to misclassi­
+fication. Such thresholds could inform early-warning systems: when nitrogen levels approach these critical values, the intelligent 
+control system should proactively adjust aeration rates (the “Air Flow Rate” SHAP contributions support its modulating role) or check 
+sludge retention time to prevent nitrification failure. Moreover, multi-parameter synergistic management is essential to maintain 
+robust nitrification and avoid model overfitting to transient noise. These insights bridge data-driven predictions with actionable 
+process strategies, promoting adaptive control in MBR operations.
+Therefore, based on this proof of concept, further experiments should be designed to investigate more variable influent water 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+10 
+
+
+<!-- Page 11 -->
+quality based on the range of gray water quality characteristics summarized in existing literature to simulate the highly variable 
+characteristics of gray water quality. Meanwhile, collecting different influent flow rates, that is, the water quality variation under 
+different HRTs, would allow further analysis of the lag relationship between the effluent ammonia nitrogen and nitrate nitrogen 
+concentrations, and the reaction state in the reactor. Furthermore, designing time series data collection, such as collecting and 
+measuring water samples every hour, could help determine the time series relationship between the effluent water quality changes and 
+the reaction state in the reactor at the same time from a more dynamic perspective. In summary, broader datasets with more dynamics 
+are necessary to further test the feasibility of using effluent quality to predict or even control the reaction state inside the reactor. Such 
+expanded and diversified datasets are also critical to mitigate current overfitting risks and improve the models’ robustness for real- 
+world applications. Sections 4.1 and 4.2 further discuss the impact of data limitation and input feature on the existing model 
+framework.
+3.4. Cross-scenario test
+Building upon the demonstrated efficacy of the model in conventional nitrification systems (Section 3.3), its cross-scenario pre­
+diction capability was further evaluated in MBRs incorporating biocarriers for enhanced simultaneous nitrification-denitrification. The 
+base model trained on no-biocarrier operations was directly tested to predict nitrification status in biocarrier-augmented systems 
+without retraining.
+As shown in Table 1a, the cross-condition testing yielded three principal observations: 
+1) Compared with prediction performance of the test group without biocarriers, the RF model exhibited improvement in both ac­
+curacy (0.79 → 0.83) and precision (0.83 → 0.87) under biocarrier-amended conditions, suggesting superior adaptability to 
+simultaneous nitrification-denitrification system complexities.
+2) TPRs of all these three algorithms were greater than or equal to 0.8, especially that of LR, which reached 1, showing a significant 
+increase compared with the test group without adding biological carriers.
+3) Corresponding FPR values rose significantly, particularly for LR (FPR=0.50), indicating only 50 % negative sample identification 
+accuracy.
+Full confusion matrices are provided in SI 9. While these results are theoretically not directly comparable to those from non- 
+biocarriers data (Table 1a) due to differences in operating conditions and dataset characteristics, these findings provide operational 
+insights into cross-condition model behavior.
+The comparatively high TPR and FPR observed in the test group of the MBR with biocarrier addition can be explained by the 
+following reasons. First, feature consistency in the test set played a significant role. In the training set, the input feature "air flow rate" 
+included two values (2 and 6 Lpm), whereas all samples in the test set had an air flow rate of 6 Lpm. This consistency simplified the 
+model’s decision rules, reducing the likelihood of misclassifying negative label samples (as shown in the KDEs in Table 1b). Second, the 
+limitations of the decision boundary also contributed to the results. Despite effective positive classification at 6 Lpm, the model 
+retained residual misclassification tendencies for negative samples. This effect was amplified by the test set’s limited negative sample 
+size (n = 8), rendering FPR measurements particularly sensitive to individual misclassifications.
+Finally, bootstrap sampling (n = 1000) revealed that models without biocarriers exhibited high precision/accuracy but wide 95 % 
+confidence intervals (indicating instability), whereas biocarrier addition narrowed confidence intervals—particularly for RF, which 
+achieved optimal stability and performance (detailed confidence interval analysis for both scenarios is provided in SI 10).
+4. Discussion and future perspective of sustainable operation
+4.1. Data limitation and data collection
+Data scarcity remains a fundamental constraint in developing ML models for environmental applications, particularly when 
+adapting pre-trained models to novel operational scenarios through transfer learning (Dansawad et al., 2023; Imen et al., 2023; Lowe 
+et al., 2022; Zhang, 2022; Zhu et al., 2022). This dataset—collected from experimental operations instead of being designed for ML 
+development—limited model evaluation despite > 0.8 test accuracy. Larger datasets spanning diverse operation conditions are 
+essential for robust decision boundaries, particularly when distinguishing transient process states during simultaneous 
+nitrification-denitrification.
+In addition to the prediction overfitting due to this smaller dataset discussed in Section 3.3, data constraints impact optimization 
+criteria. Although precision maximization (high TPR/low FPR) was prioritized, limited data hindered boundary definition for TPR-FPR 
+optimization curves. The optimization curve, as demonstrated by Reynaert, et al. (2023), is a useful tool for visualizing the model 
+calibration process and guiding the selection of an appropriate FPR to evaluate performance across the training, validation, and test 
+sets. Beyond mathematical FPR determination, water reuse contexts require quantitative risk assessment of FPs. Identifying reasonable 
+operating points before cross-scenario testing would benefit model validation and set-point adjustments. Meanwhile, wide confidence 
+intervals further underscore the need for larger datasets to evaluate model stability and feature contributions comprehensively. 
+Current reliance on effluent NH₄⁺-N/NO₃⁻-N should expand to include operational parameters, water quality dynamics, and temporal 
+data for credible sensitivity analysis.
+Online sensors are vital for consistent data collection. Sensor-compatible features (Section 2.2.2) were prioritized in this research to 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+11 
+
+
+<!-- Page 12 -->
+facilitate future large-scale validation. Meanwhile, optimizing measurement frequency must balance water reuse requirements and 
+operational costs (Reynaert et al., 2024). Furthermore, identifying the input values linked to misclassification points, increasing 
+measurement frequency, and evaluating the model prediction results in such conditions could contribute to elucidating failure 
+mechanisms and underpinning early-warning systems investigation.
+Current model validation using synthetic greywater provides proof-of-concept but requires extension to real wastewater matrices. 
+To address this, future work should implement a phased framework: 
+– Phase I: Synthetic → Synthetic (Current study)
+– Phase II: Synthetic → Real (Next validation step)
+– Phase III: Hybrid training (e.g., 60 % real + 40 % synthetic)
+Incorporating more challenging operational conditions, such as system failures (e.g., aeration malfunction or membrane damage), 
+is essential for improving the model’s applicability in real-world treatment scenarios (Reynaert, et al., 2023). Though this study 
+included suboptimal operations (e.g., low-aeration nitrification), systematic data collection across failure modes remains essential.
+4.2. Trade-offs of input features for data-driven model structure
+The model uses effluent quality to assess concurrent nitrification status, effectively employing historical data to predict current 
+conditions. However, influent flow variations affecting hydraulic retention time (HRT) introduce input-output time lags that may 
+compromise accuracy. Accounting for inflow dynamics is thus critical, especially with highly variable greywater generation (Pinto and 
+Maheshwari, 2015). Future data collection should address flow variability to enhance predictions, potentially through flow-specific 
+sub-models. Due to extensive DO data gaps, air flow rate served as the sole oxygen proxy. However, observed DO hetero­
+geneity—driven by fluid dynamics, uneven oxygen transfer, microbial activity gradients, and reactor design (Gillot and H´eduit, 
+2000)—necessitates distributed DO sensors for accurate future modeling.
+These findings underscore the need for strategic input feature selection. Features must balance statistical correlations with practical 
+relevance, as imbalanced datasets can distort input-output relationships. Systematic comparison of feature combinations is essential, 
+noting that added inputs do not guarantee accuracy gains despite correlations (Linardatos et al., 2020; Reynaert et al., 2023). Besides, 
+feature stability and reliability are equally critical: water-quality-only inputs risk long-term bias without rigorous sensor maintenance. 
+Measurement errors and recalibration schedules must be integrated into robust model design. Finally, sensor costs should be factored 
+into monitoring systems to enhance real-world applicability and shorten payback periods.
+4.3. Model transferability improvement
+Model transferability — the ability of a model to adapt to new tasks or domains with minimal retraining — can be systematically 
+optimized through structured transfer learning frameworks (Tian and Yu, 2023). Transfer learning strategies include feature align­
+ment, pre-training models, meta-learning architectures, self-supervised learning, data augmentation, and scalability of model structure 
+(Yu et al., 2022).
+Despite broad industrial investigations and applications of transfer learning, its potential for cross-scenario adaptation in water 
+treatment systems remains underexplored. Current interdisciplinary advances demonstrate promising pathways: Li et al. (2021)
+improved the short-term traffic prediction accuracy via fine-tuning pre-trained models from data-rich areas; Zhou et al. (2025)
+enhanced battery performance transferability through condition-robust data augmentation; Nieves-Avendano et al. (2023) success­
+fully adapted a pre-trained MobileNetV2 model for mechanical fault detection via targeted domain fine-tuning.
+Building on the cross-scenario test (Section 3.4), three enhancement pathways are proposed for enhancing transferability of water 
+treatment models: 
+– Data-centric optimization: systematic experimental designs should prioritize wide operational condition coverage and represen­
+tative data distributions during collection. Data augmentation efficacy directly depends on baseline dataset diversity
+– Pre-trained frameworks: development of domain-specific pre-trained models requires cross-institutional data sharing, particularly 
+for systems handling varied water qualities or scale-dependent processes. Input features should explicitly incorporate treatment 
+facility scale parameters due to their hydraulic and biochemical implications.
+– Model structure innovation: Clustered sub-models using feature grouping and range-partitioned training data could further 
+improve local accuracy while maintaining overall system adaptability. Further attempts can also be made in the innovative 
+application of algorithms (e.g., meta learning).
+This multipronged approach addresses current limitations in model generalization while aligning with water treatment’s inherent 
+variability in operational scales, influent characteristics, and process configurations. Future work should prioritize establishing open 
+benchmarking datasets to standardize transferability evaluation across diverse scenarios.
+4.4. Data-driven sustainable control
+After training the model with suitable input features and sufficient data collected systematically (as discussed in sections 5.1 and 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+12 
+
+
+<!-- Page 13 -->
+Fig. 5. Flow chart of MBR control based on classification prediction model. * The flow chart presents the control mechanism under a fixed influent 
+flow rate. * The grey dashed rectangle represents one prediction and the corresponding control operation. * “ai” is the baseline value of air flow rate, 
+“A” is the unit of air flow rate increase. * The red rectangle means that the air flow rate is ai L/min; the green rectangle means that the air flow rate is 
+(ai + A) L/min; the blue rectangle means that the air flow rate is (ai + 2A) L/min; the purple rectangle means that the air flow rate is (ai + 3A) L/ 
+min; the brown rectangle means that the air flow rate is (ai + 4A) L/min (rectangles of the same color represent the same air flow rate).
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+13 
+
+
+<!-- Page 14 -->
+5.2), an automatic control system could be further developed for intelligent operation of MBR system. Fig. 5 presents a control 
+flowchart based on the data-driven model for automatically managing the MBR treatment process. To simplify the explanation, it 
+assumes air flow rate adjustments under a fixed influent flow rate (i.e., constant HRT). Before implementing the data-driven control 
+system, the baseline air flow rate (ai), and the increment unit (A) should be determined by analyzing influent greywater characteristics 
+over a specific period. The measurement frequency should be tailored to reuse options and corresponding effluent quality re­
+quirements. The criteria for selecting these operational factors require further investigation.
+The air flow rate can be increased or decreased to maintain sustainable control without excessive energy use. Assumably, the 
+system operates at ai, and nitrification is predicted at time ti (Fig. 5). If the model predicts complete nitrification ("True" label), the air 
+flow rate remains at ai; otherwise, it is increased by A to ai +A Then, if operating the system through a measurement interval with air 
+flow rate of ai + A, At the next measurement interval ti+1. The air flow rate returns to the baseline value ai if complete nitrification is 
+predicted; if incomplete, it increases to ai + 2A. This process repeats at each subsequent interval (ti+2, ti+3, etc.), adjusting the air flow 
+rate accordingly. As shown in Fig. 5, after determining whether the treatment system is fully nitrified, the air flow rate increases or 
+decreases in units of A. The air flow rate can be reduced to the baseline ai minimally, but if it exceeds the aerator’s maximum capacity, 
+an early warning system should trigger human intervention, such as discarding greywater or adding aeration equipment. Moreover, 
+monitoring frequency can be increased during peak water usage to enhance treatment efficiency and reuse safety.
+The binary classification framework demonstrates operational feasibility under data-constrained conditions. Extending the current 
+framework to multiclass nitrification states—such as a four-level prediction scheme (25 %, 50 %, 75 %, and complete nitrification)— 
+could enable proportional aeration control. This refinement would optimize energy use, reduce carbon footprint, and help ensure 
+consistent effluent quality. Such models require expanded datasets from online sensors (Section 4.1) and specialized optimization 
+techniques: multi-class threshold tuning addressing misclassification costs, and methods for imbalanced data (Davis and Goadrich, 
+2006; Haibo He and Garcia, 2009; Saito and Rehmsmeier, 2015). Threshold selection should account for the cost and risk of 
+misclassification, beyond purely mathematical considerations. Additionally, class definitions should align with influent characteristics 
+and reuse requirements.
+Integrating the multiclassification model into the control system enables more precise adjustments, potentially eliminating the 
+need for incremental changes (such as A in Fig. 5), but optimal aeration reduction strategies post-complete nitrification pre­
+diction—gradual vs. immediate—require lab/pilot validation. Gradual reduction may be better for maintaining efficiency for strict 
+reuse standards, necessitating risk-cost evaluations.
+5. Conclusions
+This work demonstrates the viability of interpretable ML-based models (LR, RF, XGB) for monitoring MBR nitrification by using six 
+sensor-compatible features: airflow, influent flow, TMP, and effluent concentrations of COD, NO₃⁻-N, and NH₄⁺-N. Strategic feature 
+selection enabled robust classification (precision >0.85 for LR/XGB). RF excelled in cross-scenario testing (precision=0.87) for pre­
+dicting biocarrier operations using training data from non-biocarrier systems, despite a decline in FPR due to feature distribution shifts. 
+All models maintained TPR ≥0.80 and accuracy > 0.75 in cross-scenario testing, though limited data constrained stability. Results 
+emphasized ML’s potential to enhance MBR control by balancing precision (minimizing FPs) with transferability across configurations. 
+Post hoc analysis (feature importance, KDE, pairwise plots, and SHAP analysis) confirmed effluent NO₃⁻-N and NH₄⁺-N as dominant 
+predictors. Wide 95 % confidence intervals reflected instability from small dataset scope.
+Future research should prioritize systematic data acquisition and model training across diverse influent water quality and DO 
+regimes. Concurrently, expanding boundary conditions—specifically targeted collection under high NO₃⁻-N/low NH₄⁺-N conditions is 
+essential to optimize model architecture. This work establishes a framework for deploying interpretable data-driven models in 
+decentralized greywater reuse, advancing intelligent MBR control while addressing transferability barriers in real-world 
+implementations.
+CRediT authorship contribution statement
+Siyuan Wang: Writing – review & editing, Writing – original draft, Visualization, Software, Methodology, Investigation, Formal 
+analysis, Conceptualization. Duc-Viet Nguyen: Writing – review & editing, Investigation. How Seow-Wah: Methodology, Investi­
+gation, Formal analysis, Data curation. WU Di: Writing – review & editing, Supervision, Investigation, Funding acquisition, 
+Conceptualization.
+Declaration of Generative AI and AI-assisted technologies in the writing process
+During the preparation of this work the author(s) used DEEPSEEK™ in order to improve the readability and language of the 
+manuscript. After using this tool/service, the authors reviewed and edited the content as needed and took full responsibility for the 
+content of the published article.
+Declaration of Competing Interest
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to 
+influence the work reported in this paper.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+14 
+
+
+<!-- Page 15 -->
+Acknowledgments
+We wish to express our gratitude to Emile van Holsbeke, Helena Deberdt, Yujin Kim, Joonhyung Bai, Ji Eun Kim, Siyoung Kim, Loïc 
+Ruiz and Dongha Kim from Ghent University for assisting in the MBR system installation and operation. This work was supported by 
+the special research fund of Ghent University, Belgium (BOF22/DOC/135). Di Wu acknowledged the funding support from the Hong 
+Kong Research Grant Councils (T21–604/19-R) and the Hong Kong Innovation and Technology Commission (ITC-CNERC14EG03).
+Appendix A. Supporting information
+Supplementary data associated with this article can be found in the online version at doi:10.1016/j.eti.2025.104541.
+Data availability
+Data will be made available on request.
+References
+Allen, G.I., Gan, L., Zheng, L., 2024. Interpretable machine learning for discovery: statistical challenges and opportunities. Annu. Rev. Stat. Appl. 11 (1), 97–121. 
+https://doi.org/10.1146/annurev-statistics-040120-030919.
+Bahramian, M., Dereli, R.K., Zhao, W., Giberti, M., Casey, E., 2023. Data to intelligence: the role of data-driven models in wastewater treatment. Expert Syst. Appl. 
+217, 119453. https://doi.org/10.1016/j.eswa.2022.119453.
+Belkin, M., Hsu, D., Ma, S., Mandal, S., 2019. Reconciling modern machine-learning practice and the classical bias–variance trade-off. Proc. Natl. Acad. Sci. 116 (32), 
+15849–15854. https://doi.org/10.1073/pnas.1903070116.
+Bent´ejac, C., Cs¨org˝o, A., Martínez-Mu˜noz, G., 2021. A comparative analysis of gradient boosting algorithms. Artif. Intell. Rev. 54 (3), 1937–1967. https://doi.org/ 
+10.1007/s10462-020-09896-5.
+Boleydei, H., Vaneeckhaute, C., 2024. Advancements and challenges in membrane bioreactor performance for decentralized and low-temperature applications: a 
+comprehensive review. J. Water Process Eng. 63, 105523. https://doi.org/10.1016/j.jwpe.2024.105523.
+Breiman, L., 2001. Random forests. Mach. Learn. 45 (1), 5–32. https://doi.org/10.1023/A:1010933404324.
+Breiman, L., Friedman, J.H., Olshen, R.A., Stone, C.J., 2017. Classification and regression trees. Routledge. https://doi.org/10.1201/9781315139470.
+Chen, T., Guestrin, C., 2016. XGBoost: a scalable tree boosting system. Proc. 22nd ACM SIGKDD Int. Conf. Knowl. Discov. Data Min. 785–794. https://doi.org/ 
+10.1145/2939672.2939785.
+Ching, P.M.L., Zou, X., Wu, D., So, R.H.Y., Chen, G.H., 2022. Development of a wide-range soft sensor for predicting wastewater BOD5 using an extreme gradient 
+boosting (XGBoost) machine. Environ. Res. 210. https://doi.org/10.1016/j.envres.2022.112953.
+Chiroma, H., Abdullahi, U.A., Abdulhamid, S.M., Abdulsalam Alarood, A., Gabralla, L.A., Rana, N., Shuib, L., Targio Hashem, I.A., Gbenga, D.E., Abubakar, A.I., 
+Zeki, A.M., Herawan, T., 2019. Progress on artificial neural networks for big data analytics: a survey. IEEE Access 7, 70535–70551. https://doi.org/10.1109/ 
+ACCESS.2018.2880694.
+Dansawad, P., Li, Y., Li, Y., Zhang, J., You, S., Li, W., Yi, S., 2023. Machine learning toward improving the performance of membrane-based wastewater treatment: a 
+review. Adv. Membr. 3, 100072. https://doi.org/10.1016/j.advmem.2023.100072.
+Davis, J., Goadrich, M., 2006. The relationship between Precision-Recall and ROC curves. Proc. 23rd Int. Conf. Mach. Learn. 233–240. https://doi.org/10.1145/ 
+1143844.1143874.
+DelaPaz-Ruíz, N., Augustijn, E.-W., Farnaghi, M., Zurita-Milla, R., 2024. Modeling spatiotemporal domestic wastewater variability: implications for measuring 
+treatment efficiency. J. Environ. Manag. 351, 119680. https://doi.org/10.1016/j.jenvman.2023.119680.
+Duarte, M.S., Martins, G., Oliveira, P., Fernandes, B., Ferreira, E.C., Alves, M.M., Lopes, F., Pereira, M.A., Novais, P., 2024. A review of computational modeling in 
+wastewater treatment processes. ACS EST Water 4 (3), 784–804. https://doi.org/10.1021/acsestwater.3c00117.
+Gao, T., Jin, Y., Xiao, K., 2025. Techno–Economic and environmental impact assessment of membrane bioreactors for wastewater treatment: a review. Engineering. 
+https://doi.org/10.1016/j.eng.2025.05.001.
+Gillot, S., H´eduit, A., 2000. Effect of air flow rate on oxygen transfer in an oxidation ditch equipped with fine bubble diffusers and slow speed mixers. Water Res. 34 
+(5), 1756–1762. https://doi.org/10.1016/S0043-1354(99)00323-1.
+Gu, Y., Li, Y., Yuan, F., Yang, Q., 2023. Optimization and control strategies of aeration in WWTPs: a review. J. Clean. Prod. 418, 138008. https://doi.org/10.1016/j. 
+jclepro.2023.138008.
+Haibo He, Garcia, E.A., 2009. Learning from imbalanced data. IEEE Trans. Knowl. Data Eng. 21 (9), 1263–1284. https://doi.org/10.1109/TKDE.2008.239.
+Haimi, H., Mulas, M., Corona, F., Vahala, R., 2013. Data-derived soft-sensors for biological wastewater treatment plants: an overview. Environ. Model. Softw. 47, 
+88–107. https://doi.org/10.1016/j.envsoft.2013.05.009.
+Hassan, K., Alzahrani, A., Alotaibi, N.M., Helmy, M., 2024. Performance of an integrated household greywater treatment system for water optimization and reuse. 
+Appl. Water Sci. 14 (11), 242. https://doi.org/10.1007/s13201-024-02303-2.
+Hastie, T., Tibshirani, R., Friedman, J., 2009. Linear methods for classification. In The Elements of Statistical Learning, 2nd ed. Springer New York, pp. 101–137. 
+https://doi.org/10.1007/978-0-387-84858-7_4.
+Hosmer, D.W., Lemeshow, S., Sturdivant, R.X., 2013. Applied logistic regression. Wiley. https://doi.org/10.1002/9781118548387.
+Huang, R., Geng, M., Gao, S., Yin, X., Tian, J., 2024. In-depth insight into improvement of simultaneous nitrification and denitrification/biofouling control by 
+increasing sludge concentration in membrane reactor: performance, microbial assembly and metagenomic analysis. Bioresour. Technol. 393, 130013. https://doi. 
+org/10.1016/j.biortech.2023.130013.
+Huang, R., Meng, T., Liu, G., Gao, S., Tian, J., 2022. Simultaneous nitrification and denitrification in membrane bioreactor: effect of dissolved oxygen. J. Environ. 
+Manag. 323, 116183. https://doi.org/10.1016/j.jenvman.2022.116183.
+Imen, S., Croll, H.C., McLellan, N.L., Bartlett, M., Lehman, G., Jacangelo, J.G., 2023. Application of machine learning at wastewater treatment facilities: a review of 
+the science, challenges and barriers by level of implementation. Environ. Technol. Rev. 12 (1), 493–516. https://doi.org/10.1080/21622515.2023.2242015.
+Li, J., Guo, F., Sivakumar, A., Dong, Y., Krishnan, R., 2021. Transferability improvement in short-term traffic prediction using stacked LSTM network. Transp. Res. 
+Part C Emerg. Technol. 124, 102977. https://doi.org/10.1016/j.trc.2021.102977.
+Li, D., Zou, M., Jiang, L., 2022. Dissolved oxygen control strategies for water treatment: a review. Water Sci. Technol. 86 (6), 1444–1466. https://doi.org/10.2166/ 
+wst.2022.281.
+Liaw, A., Wiener, M., 2002. Classification and regression by randomforest. R. N. 2 (3), 18–22 (http://www.stat.berkeley.edu/). 
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+15 
+
+
+<!-- Page 16 -->
+Linardatos, P., Papastefanopoulos, V., Kotsiantis, S., 2020. Explainable AI: a review of machine learning interpretability methods. Entropy 23 (1), 18. https://doi.org/ 
+10.3390/e23010018.
+Liu, L., Zhou, X., Due˜nas-Osorio, L., Stadler, L., Li, Q., 2023. Hybrid wastewater treatment and reuse enhances urban water system resilience to disruptive incidents. 
+Nat. Water 1 (12), 1048–1058. https://doi.org/10.1038/s44221-023-00166-6.
+Lowe, M., Qin, R., Mao, X., 2022. A review on machine learning, artificial intelligence, and smart technology in water treatment and monitoring. Water 14 (9), 1384. 
+https://doi.org/10.3390/w14091384.
+Lundberg, S., & Lee, S.-I. (2017). A Unified Approach to Interpreting Model Predictions.
+Maggiotto, G., 2022. Reusing grey water to lower temperatures in the Mediterranean basin cities. Earth 3 (1), 72–75. https://doi.org/10.3390/earth3010005.
+Moretti, A., Ivan, H.L., Skvaril, J., 2024. A review of the state-of-the-art wastewater quality characterization and measurement technologies. Is the shift to real-time 
+monitoring nowadays feasible? J. Water Process Eng. 60, 105061. https://doi.org/10.1016/j.jwpe.2024.105061.
+Muniz de Queiroz, M., Moreira, V.R., Amaral, M.C.S., Oliveira, S.M.A.C., 2025. Machine learning algorithms for predicting membrane bioreactors performance: a 
+review. J. Environ. Manag. 380, 124978. https://doi.org/10.1016/j.jenvman.2025.124978.
+Murdoch, W.J., Singh, C., Kumbier, K., Abbasi-Asl, R., Yu, B., 2019. Definitions, methods, and applications in interpretable machine learning. Proc. Natl. Acad. Sci. 
+116 (44), 22071–22080. https://doi.org/10.1073/pnas.1900654116.
+Murphy, K.P., 2012. Machine learning: a probabilistic perspective. MIT Press.
+Nguyen, D.-V., Wang, S., Nguyen, D.-P., Ching, P.M.L., Shim, J.H., Jung, Y., Wu, D., So, R.H.Y., 2024. Current developments in machine learning models with boosting 
+algorithms for the prediction of water quality. In Water Security: Big Data-Driven Risk Identification, Assessment and Control of Emerging Contaminants. Elsevier, 
+pp. 575–591. https://doi.org/10.1016/B978-0-443-14170-6.00015-9.
+Nieves-Avendano, D., Deschrijver, D., Van Hoecke, S., 2023. Transfer learning for anomaly detection using Bearings’ vibration signals. Int. J. Acoust. Vib. 28 (4), 
+420–434. https://doi.org/10.20855/ijav.2023.28.41993.
+Noor, A., Mohamed Kutty, S.R., Baloo, L., Affam, A.C., Jagaba, A.H., Saeed Ghaleb, A.A., Yahya Almahbashi, N.M., Ahmad, T., Nawab, M.S., Birniwa, A.H., 2023. 
+Parametric optimization of additive manufactured biocarrier submerged in sequencing batch reactor for domestic wastewater treatment. Heliyon 9 (4), e14840. 
+https://doi.org/10.1016/j.heliyon.2023.e14840.
+Omar, A., Almomani, F., Qiblawey, H., Rasool, K., 2024. Advances in Nitrogen-Rich wastewater treatment: a comprehensive review of modern technologies. 
+Sustainability 16 (5), 2112. https://doi.org/10.3390/su16052112.
+Ongena, S., de Walle, A.V., Mosquera-Romero, S., Driesen, N., Gutierrez, L., Rabaey, K., 2023. Comparison of MBR and MBBR followed by UV or electrochemical 
+disinfection for decentralized greywater treatment. Water Res 235, 119818. https://doi.org/10.1016/j.watres.2023.119818.
+Paetkau, M., Cicek, N., 2011. Comparison of nitrogen removal and sludge characteristics between a conventional and a simultaneous nitrification–denitrification 
+membrane bioreactor. Desalination 283, 165–168. https://doi.org/10.1016/j.desal.2011.02.018.
+Pekalska, E., Harol, A., Lai, C., Duin, R.P.W., 2005. Pairwise Selection of Features and Prototypes. Computer Recognition Systems: Proceedings of the 4th International 
+Conference on Computer Recognition Systems CORES’05, 271–278. https://doi.org/10.1007/3-540-32390-2_31.
+Pinto, U., Maheshwari, B.L., 2015. Sustainable graywater reuse for residential landscape irrigation – a critical review. Chin. J. Popul. Resour. Environ. 13 (3), 
+250–264. https://doi.org/10.1080/10042857.2015.1059790.
+Rahman, T.U., Roy, H., Islam, Md.R., Tahmid, M., Fariha, A., Mazumder, A., Tasnim, N., Pervez, Md.N., Cai, Y., Naddeo, V., Islam, Md.S., 2023. The advancement in 
+membrane bioreactor (MBR) technology toward sustainable industrial wastewater management. Membranes 13 (2), 181. https://doi.org/10.3390/ 
+membranes13020181.
+Reynaert, E., Nagappa, D., Sigrist, J.A., Morgenroth, E., 2024. Ensuring microbial water quality for on-site water reuse: importance of online sensors for reliable 
+operation. Water Res. X 22, 100215. https://doi.org/10.1016/j.wroa.2024.100215.
+Reynaert, E., Steiner, P., Yu, Q., D’Olif, L., Joller, N., Schneider, M.Y., Morgenroth, E., 2023. Predicting microbial water quality in on-site water reuse systems with 
+online sensors. Water Res. 240, 120075. https://doi.org/10.1016/j.watres.2023.120075.
+Saito, T., Rehmsmeier, M., 2015. The Precision-Recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets. PLOS 
+ONE 10 (3), e0118432. https://doi.org/10.1371/journal.pone.0118432.
+Salvia, M., Sanchez, N., Piles, M., Ruscica, R., Gonzalez-Zamora, A., Roitberg, E., Martinez-Fernandez, J., 2021. The Added-Value of Remotely-Sensed soil moisture 
+data for agricultural drought detection in Argentina. IEEE J. Sel. Top. Appl. Earth Obs. Remote Sens. 14, 6487–6500. https://doi.org/10.1109/ 
+JSTARS.2021.3084849.
+Scott, D.W., 2015. Kernel Density Estimators. In Multivariate Density Estimation: Theory, Practice, and Visualization, Second Edition (2nd ed., pp. 137–216). https:// 
+doi.org/10.1002/9781118575574.ch6.
+Shaikh, I.N., Ahammed, M.M., 2020. Quantity and quality characteristics of greywater: a review. In: In Journal of Environmental Management, 261. Academic Press. 
+https://doi.org/10.1016/j.jenvman.2020.110266.
+Shi, Y., Wang, Z., Du, X., Ling, G., Jia, W., Lu, Y., 2022. Research on the membrane fouling diagnosis of MBR membrane module based on ECA-CNN. J. Environ. Chem. 
+Eng. 10 (3), 107649. https://doi.org/10.1016/j.jece.2022.107649.
+Shi, H., Wei, A., Zhu, Y., Tang, K., Hu, H., Li, N., 2024. Accurate and robust ammonia level forecasting of aeration tanks using long short-term memory ensembles: a 
+comparative study of adaboost and bagging approaches. J. Environ. Manag. 371, 123173. https://doi.org/10.1016/j.jenvman.2024.123173.
+Szeghalmy, S., Fazekas, A., 2023. A comparative study of the use of stratified Cross-Validation and Distribution-Balanced stratified Cross-Validation in imbalanced 
+learning. Sensors 23 (4), 2333. https://doi.org/10.3390/s23042333.
+Tian, P., Yu, H., 2023. Can we improve meta-learning model in few-shot learning by aligning data distributions? Knowl. Based Syst. 277, 110800. https://doi.org/ 
+10.1016/j.knosys.2023.110800.
+Van de Walle, A., Kim, M., Alam, M.K., Wang, X., Wu, D., Dash, S.R., Rabaey, K., Kim, J., 2023. Greywater reuse as a key enabler for improving urban wastewater 
+management. Environ. Sci. Ecotechnol. 16, 100277. https://doi.org/10.1016/j.ese.2023.100277.
+Van Rossum, G., Drake, F.L., 2009. Python/C api manual - python 3. CreateSpace.
+Wang, S., Schneider, M.Y., Volcke, E.I.P., Wu, D., 2025. How useful are data-driven methods for building-level greywater treatment from a process engineering 
+perspective? Water Res. X 28, 100343. https://doi.org/10.1016/j.wroa.2025.100343.
+Waskom, M., 2021. Seaborn: statistical data visualization. J. Open Source Softw. 6 (60), 3021. https://doi.org/10.21105/joss.03021.
+Yang, H., Lu, K., Lyu, X., Hu, F., 2019. Two-way partial AUC and its properties. Stat. Methods Med. Res. 28 (1), 184–195. https://doi.org/10.1177/ 
+0962280217718866.
+Yu, F., Xiu, X., Li, Y., 2022. A survey on deep transfer learning and beyond. Mathematics 10 (19), 3619. https://doi.org/10.3390/math10193619.
+Zeng, X., Martinez, T.R., 2000. Distribution-balanced stratified cross-validation for accuracy estimation. J. Exp. Theor. Artif. Intell. 12 (1), 1–12. https://doi.org/ 
+10.1080/095281300146272.
+Zhang, H., 2022. AI and big data in water environments. ACS ES T Water Am. Chem. Soc. https://doi.org/10.1021/acsestwater.2c00203.
+Zhong, H., Yuan, Y., Luo, L., Ye, J., Chen, M., Zhong, C., 2022. Water quality prediction of MBR based on machine learning: a novel dataset contribution analysis 
+method. J. Water Process Eng. 50, 103296. https://doi.org/10.1016/j.jwpe.2022.103296.
+Zhou, X., Han, X., Shi, K., Chen, X., Guo, D., Zheng, Y., Lu, L., Ouyang, M., 2025. Intelligent battery life management through mechanism and machine learning under 
+real vehicle working conditions. J. Power Sources 640, 236749. https://doi.org/10.1016/j.jpowsour.2025.236749.
+Zhu, M., Wang, J., Yang, X., Zhang, Y., Zhang, L., Ren, H., Wu, B., Ye, L., 2022. A review of the application of machine learning in water quality evaluation. Eco 
+Environ. Health 1 (2), 107–116. https://doi.org/10.1016/j.eehl.2022.06.001.
+S. Wang et al.                                                                                                                                                                                                          
+Environmental Technology & Innovation 40 (2025) 104541 
+16 

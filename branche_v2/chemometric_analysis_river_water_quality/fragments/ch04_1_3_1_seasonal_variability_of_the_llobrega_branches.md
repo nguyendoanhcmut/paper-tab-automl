@@ -1,0 +1,34 @@
+### 3.1. Seasonal variability of the Llobregat river water quality at the intake (PCA of dataset 1)
+
+- Phân tích thành phần chính (PCA) áp dụng trên Dataset 1 đã chuẩn hóa (autoscaled Dataset 1, gồm $16{,}333$ phép đo hàng giờ của $7$ thông số chất lượng sau khi nội suy tuyến tính căn chỉnh thời gian) xác định $3$ thành phần chính (principal components - PCs) giải thích $72\%$ tổng phương sai dữ liệu thực nghiệm:
+  - Thành phần chính thứ nhất (PC1) giải thích $35\%$ phương sai dữ liệu.
+  - Thành phần chính thứ hai (PC2) giải thích $24\%$ phương sai dữ liệu.
+  - Thành phần chính thứ ba (PC3) giải thích $13\%$ phương sai dữ liệu.
+  - **Figure 2. PCA of dataset 1 for 7 physicochemical parameters**
+    - ![Figure 2](assets/fig_02_p5.jpeg)
+- PC1 ($35\%$ phương sai) mô tả biến thiên của chất hữu cơ (organic matter) như yếu tố chủ đạo trong Dataset 1:
+  - Hệ số tải (loadings) trên PC1 bị chi phối mạnh bởi tương quan thuận giữa tổng carbon hữu cơ (TOC) và độ hấp thụ tử ngoại $\text{UV}_{254}$ (UV absorbance at $254\text{ nm}$), cả hai đều sở hữu hệ số tải dương cao nhất (Fig. 2A).
+  - Nồng độ ion amoni ($\text{NH}_4$) và độ đục (TURB) cũng có hệ số tải dương trên PC1, thể hiện tương quan thuận với hàm lượng chất hữu cơ.
+  - Thông số pH mang hệ số tải âm và tương quan nghịch với bốn thông số trên ($\text{TOC}$, $\text{UV}_{254}$, $\text{NH}_4$, và $\text{TURB}$).
+- Điểm số (scores) PC1 phản ánh tính biến thiên chu kỳ theo mùa (seasonal variability) và các dao động đột ngột ngắn hạn (sharp short-term fluctuations) của chất lượng nước trong toàn bộ thời gian quan trắc (Fig. 2B):
+  - Điểm số PC1 mang giá trị dương vào mùa xuân và mùa thu, biểu thị nồng độ chất hữu cơ cao hơn mức trung bình (above average).
+  - Điểm số PC1 mang giá trị âm vào mùa hè và mùa đông, biểu thị nồng độ chất hữu cơ thấp hơn mức trung bình (below average).
+  - Các xung dao động ngắn hạn có giá trị điểm số dương xuất hiện khi lưu lượng nước lớn tràn về trạm xử lý do các đợt mưa trong lưu vực, kéo theo sự gia tăng đột ngột của hàm lượng chất hữu cơ ($\text{TOC}$, $\text{UV}_{254}$) cùng các thông số $\text{TURB}$ và $\text{NH}_4$.
+  - Tương quan nghịch giữa các thông số này với pH xuất phát từ hiệu ứng pha loãng (dilution effect) tạo bởi lưu lượng dòng chảy sông tăng cao trong mùa xuân, mùa thu và các đợt mưa bão.
+- Mô hình Fourier khớp với chuỗi điểm số PC1 đạt hệ số xác định $R^2 = 0.97$, ghi nhận đường xu hướng dạng sigmoidal với hai đỉnh cực đại trong năm 2013:
+  - Chế độ thủy văn sông Llobregat thuộc kiểu Địa Trung Hải (chế độ mưa - tuyết nivo-pluvial) tạo ra hai đỉnh lưu lượng dòng chảy vào mùa xuân và mùa thu, trùng khớp với lượng mưa tích lũy hàng tháng năm 2013 (Fig. 3A).
+  - Hàm lượng chất hữu cơ suy giảm đáng kể vào giữa mùa hè và giữa mùa đông năm 2013.
+  - Chu kỳ hai đỉnh suy yếu rõ rệt trong năm 2014 do đợt hạn hán kéo dài (persistent drought) vào mùa xuân năm 2014 làm biến đổi chế độ thủy văn của sông Llobregat (Fig. 3B).
+  - **Figure 3. Accumulated monthly precipitation for 2013 and 2014**
+    - ![Figure 3](assets/fig_03_p6.jpeg)
+- PC2 ($24\%$ phương sai) mô tả biến thiên theo thời gian của hàm lượng chất vô cơ (inorganic matter content) như yếu tố quan trọng thứ hai:
+  - Biểu đồ hệ số tải (Fig. 2C) ghi nhận ion amoni ($\text{NH}_4$) và độ dẫn điện (conductivity) có hệ số tải dương cao, trong khi tất cả các thông số còn lại đều mang hệ số tải âm.
+  - Chuỗi điểm số PC2 khớp với mô hình Fourier đạt $R^2 = 0.91$ (đường màu đỏ trong Fig. 2D), khẳng định đặc tính chuỗi thời gian của yếu tố này.
+  - Điểm số PC2 mang giá trị dương vào mùa đông và giá trị âm vào mùa hè.
+  - Nước sông vào mùa đông đặc trưng bởi độ dẫn điện cao hơn và nồng độ $\text{NH}_4$ cao hơn mùa hè; nguyên nhân do lưu lượng dòng chảy sông Llobregat thấp vào mùa đông dẫn đến hàm lượng chất vô cơ tích tụ ở nồng độ cao hơn.
+  - Vào mùa xuân và mùa thu, khi dòng chảy sông tăng lên, nồng độ chất vô cơ dao động quanh mức giá trị trung bình.
+  - Các dao động đột biến ngắn hạn dọc theo đường xu hướng điểm số PC2 phản ánh các sự kiện biến đổi bất thường về hàm lượng chất vô cơ tại cửa thu nước, khi các giá trị độ dẫn điện và nồng độ amoni đo được đạt mức rất cao (Fig. 2D).
+- PC3 ($13\%$ phương sai) giải thích sự biến thiên của pH trong nước sông (hệ số tải dương mạnh trên PC3, Fig. 2E):
+  - Biến thiên pH khó quy về một chu kỳ mùa cụ thể, dù các dao động nhỏ theo thời gian có thể khớp với mô hình Fourier đạt $R^2 = 0.90$ cho giai đoạn quan trắc (đường màu đỏ trong Fig. 2F).
+  - Trên PC3, độ đục ($\text{TURB}$) tương quan thuận với pH, cho thấy sự hiện diện của các phân đoạn vật chất lơ lửng (suspended material) trong điều kiện nước sông có giá trị pH kiềm (basic pH).
+  - Ngược lại, trên PC1 ($35\%$ phương sai), độ đục tương quan nghịch với pH do hàm lượng chất hữu cơ và chất rắn lơ lửng gia tăng trong mùa xuân và mùa thu bởi mưa bão, đồng thời lưu lượng dòng chảy tăng gây hiệu ứng pha loãng làm giảm giá trị pH.

@@ -1,0 +1,28 @@
+#### 2.1.5 Other methods
+
+- Bên cạnh học có giám sát (supervised learning) và học không giám sát (unsupervised learning), học tăng cường (RL - reinforcement learning) là một phân lớp học máy dựa trên chính sách tối ưu (optimal policy) để ánh xạ trạng thái sang hành vi:
+  - Cơ chế vận hành của RL dựa trên sự tương tác giữa tác tử thông minh (intelligence) và môi trường (environment), với mục tiêu tối đa hóa phần thưởng tích lũy (cumulative rewards) (Byeon, 2023).
+  - Quá trình quyết định Markov (Markov decision process) là khung làm việc (framework) nền tảng của RL.
+  - RL là phương pháp luận thường được áp dụng để giải quyết các vấn đề ra quyết định (decision-making) và điều khiển (control).
+  - Một số nghiên cứu đã áp dụng RL để tối ưu hóa việc điều khiển quy trình xử lý nước thải (wastewater treatment control):
+    - Tối ưu hóa quá trình khử phốt pho (removal of phosphorus) (Mohammadi et al., 2024).
+    - Cắt giảm mức tiêu thụ năng lượng (reduction of energy consumption).
+- Sự phát triển của các mô hình lớn (large models, còn gọi là foundation models - mô hình nền tảng) đại diện cho bước tiến quan trọng trong lĩnh vực trí tuệ nhân tạo (AI - artificial intelligence):
+  - Các mô hình lớn được ứng dụng phổ biến trong các lĩnh vực xử lý ngôn ngữ tự nhiên (natural language processing), thị giác máy tính (computer vision), và các bài toán đa phương thức (multimodal problems).
+  - Mô hình lớn có các đặc điểm nổi bật: quy mô tham số lớn (large parameter scale), cấu trúc tính toán phức tạp (complex computational structure), khả năng học đa nhiệm (multitask learning), và năng lực đột sinh (emergence capability).
+  - ChatGPT hiện là một trong những mô hình thu hút sự chú ý hàng đầu (Ahmed et al., 2024).
+  - Ở giai đoạn hiện tại, mô hình lớn chủ yếu được sử dụng để giải quyết các vấn đề môi trường quy mô lớn hoặc dài hạn:
+    - Dự báo thời tiết (weather forecasting) (Bi et al., 2023).
+    - Phát thải khí mê-tan toàn cầu (global methane emissions) (Rouet-Leduc and Hulbert, 2024).
+    - Các ứng dụng này đòi hỏi số lượng mẫu đáng kể để làm cơ sở cho quá trình huấn luyện hoặc học tập.
+- Học máy tự động (AutoML - automated machine learning) là một lĩnh vực phát triển nhanh chóng, hướng đến việc tự động hóa quy trình xây dựng mô hình học máy:
+  - Một chuỗi quy trình tự động hóa đã được thiết lập nhằm giảm thiểu sự can thiệp của người phát triển mô hình và nâng cao chất lượng mô hình (Salehin et al., 2024), bao gồm:
+    - Xử lý dữ liệu (data processing).
+    - Kỹ thuật tạo đặc trưng (feature engineering).
+    - Lựa chọn mô hình/thuật toán (model/algorithm selection).
+    - Tối ưu hóa siêu tham số (hypermeter optimization).
+    - Đánh giá mô hình (model evaluation).
+  - AutoML là công cụ giá trị trong thị giác máy tính (computer vision) và xử lý ngôn ngữ tự nhiên (natural language processing).
+  - Trong lĩnh vực môi trường, AutoML đã được sử dụng để:
+    - Dự đoán bề mặt thế năng (potential energy surfaces) (Abbott et al., 2019).
+    - Dự đoán chất lượng nước (water quality) (Senthil Kumar et al., 2024).

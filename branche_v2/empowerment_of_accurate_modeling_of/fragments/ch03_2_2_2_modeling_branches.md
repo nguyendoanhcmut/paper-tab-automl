@@ -1,0 +1,37 @@
+### 2.2. Modeling
+
+- Mô hình hóa hệ phản ứng màng sinh học kỵ khí (AnMBR - Anaerobic Membrane Bioreactor) được thiết lập dưới dạng hàm toán học tổng quát:
+  $$Y = f_{\theta}(X)$$
+  - $Y$ đại diện cho hiệu suất loại bỏ COD ($\text{COD-re}$ - COD removal rate).
+  - $X$ biểu diễn ma trận các đặc trưng đầu vào (matrix of input features).
+  - $f_{\theta}$ là mô hình được tham số hóa với tập tham số $\theta$ (model parameterized with $\theta$).
+  - Mục tiêu của mô hình hóa dựa trên dữ liệu (data-driven modeling) là ước tính tập tham số tối ưu $\theta$ phản ánh chuẩn xác nhất dữ liệu thực nghiệm đã cho.
+- Việc xác định các tham số mô hình phù hợp phụ thuộc trực tiếp vào việc cấu hình chuẩn xác các siêu tham số (hyperparameters) nhằm định hướng quá trình học:
+  - Khái niệm siêu tham số: là các thiết lập cấu hình ảnh hưởng đến quá trình huấn luyện và hiệu năng của mô hình, nhưng không được học thông qua quá trình huấn luyện (settings that influence the training process and model performance but are not learned through the training process).
+  - Ví dụ về siêu tham số trên mạng nơ-ron (neural networks): tốc độ học (learning rate), kích thước lô (batch size), và số lượng chu kỳ huấn luyện (epochs).
+  - Ví dụ về siêu tham số trên các mô hình dựa trên cây (tree-based models): số lượng bộ ước lượng (estimator number), tốc độ học (learning rate), và độ sâu tối đa của cây (maximum depth of tree).
+- Tinh chỉnh siêu tham số (hyperparameter tuning) là bước thiết yếu trong tối ưu hóa hiệu năng mô hình nhưng gặp rào cản về chuyên môn và tài nguyên:
+  - Các phương pháp tối ưu hóa siêu tham số phổ biến bao gồm: tìm kiếm dạng lưới (grid search), tìm kiếm ngẫu nhiên (random search), tối ưu hóa Bayes (Bayesian optimization), và thuật toán di truyền (genetic algorithms).
+  - Rào cản tiếp cận: các phương pháp truyền thống đòi hỏi chuyên môn học máy chuyên sâu (substantial ML expertise) và tài nguyên tính toán lớn (computational resources), gây hạn chế khả năng ứng dụng.
+  - Học máy tự động (AutoML - Automated Machine Learning) được phát triển nhằm hợp lý hóa quy trình tinh chỉnh siêu tham số và giúp công nghệ này dễ tiếp cận hơn.
+- Nghiên cứu ứng dụng thư viện FLAML (Fast Library for AutoML and tuning) hỗ trợ tinh chỉnh tự động nhanh và tiết kiệm chi phí cho học máy (Wang et al., 2021b):
+  - Cơ chế tìm kiếm của FLAML lựa chọn thứ tự tìm kiếm được tối ưu hóa đồng thời cho cả chi phí tính toán (computational cost) và sai số mô hình (model error).
+  - Quy trình lựa chọn lặp (iterative selection) tự động xác định: thuật toán mô hình (models), siêu tham số (hyperparameters), kích thước mẫu (sample size), và chiến lược tái lấy mẫu (resampling strategy).
+  - Khả năng cạnh tranh của FLAML: thể hiện hiệu năng cao, vượt trên các thư viện AutoML hàng đầu khác như Auto-sklearn, H2O AutoML, và Alpine Meadow (Wang et al., 2021b).
+  - Khả năng ứng dụng liên ngành: mang lại lợi ích rõ rệt cho các nghiên cứu trong khoa học môi trường (environmental sciences), khoa học khí quyển (atmospheric sciences), và khoa học khí hậu (climate sciences) (Dong et al., 2025; Xia et al., 2023; Zheng et al., 2023).
+- Các mô hình học máy dựa trên cây (tree-based models) được lựa chọn làm tập ứng viên cơ sở (base candidates) cho quy trình tuyển chọn mô hình của FLAML do tính tương thích cao với dữ liệu dạng bảng (tabular data):
+  - Rừng ngẫu nhiên (Random Forests - RF) (Breiman, 2001).
+  - Cây cực kỳ ngẫu nhiên (Extremely Randomized Trees / Extra Trees) (Geurts et al., 2006).
+  - XGBoost: hệ thống tăng cường cây mở rộng từ đầu đến cuối (a scalable end-to-end tree boosting system) (Chen and Guestrin, 2016).
+  - LightGBM: cây quyết định tăng cường độ dốc hiệu quả cao (a highly efficient gradient boosting decision tree) (Ke et al., 2017).
+  - CatBoost: tăng cường độ dốc hỗ trợ xử lý đặc trưng phân loại (gradient boosting with categorical features support) (Dorogush et al., 2018).
+- Chiến lược Tối ưu hóa Tiết kiệm Chi phí (CFO - Cost-Frugal Optimization) và thuật toán BlendSearch kiểm soát hiệu quả chi phí tính toán trong quá trình tối ưu hóa:
+  - Nguyên lý hoạt động của CFO (Wu et al., 2021): khởi đầu với cấu hình chi phí thấp (low-cost configuration, ví dụ: kích thước mô hình nhỏ) và chuyển dần qua các bước lặp sang các cấu hình phức tạp hơn chỉ khi mức cải thiện hiệu năng bù đắp thỏa đáng cho chi phí tính toán bổ sung.
+  - Lợi thế của CFO: kiểm soát hiệu quả chi phí trong suốt quá trình tối ưu hóa so với các quy trình tối ưu hóa siêu tham số truyền thống.
+  - Thuật toán BlendSearch (Wang et al., 2021a): thuật toán tìm kiếm phân cấp được áp dụng mặc định, kết hợp giữa thăm dò toàn cục (global exploration) và tối ưu hóa cục bộ (local optimization) nhằm giảm thiểu tổng chi phí tiêu tốn để tìm ra các cấu hình tốt.
+- Ràng buộc ngân sách thời gian, giao thức kiểm định và không gian tìm kiếm siêu tham số của quy trình AutoML:
+  - Ngân sách thời gian toàn cục (global time budget) được ấn định ở mức $300\text{ s}$; quá trình tối ưu hóa sẽ chấm dứt khi ngân sách thời gian cạn kiệt.
+  - Giao thức chống quá khớp: áp dụng chiến lược kiểm định chéo 5 lần ($5\text{-fold cross-validation}$) với tiêu chí sai số bình phương trung bình ($\text{MSE}$ - Mean Squared Error) trong mỗi chu trình tối ưu hóa AutoML.
+  - Không gian tìm kiếm (search spaces) của các thuật toán được đưa vào động, bao gồm: số lượng bộ ước lượng (number of estimators), số lượng lá (number of leaves), tốc độ học (learning rate), và các tham số điều chuẩn (regularization parameters).
+  - Phạm vi tìm kiếm cụ thể (specific search ranges) được chiến lược CFO xác định dựa trên kích thước của tập dữ liệu huấn luyện (training dataset size).
+  - Tập siêu tham số tối ưu và các thiết lập chi tiết của tất cả các mô hình được cung cấp trong Tài liệu Hỗ trợ (Supporting Information).

@@ -1,0 +1,8 @@
+  - **Hình 6.** Tầm quan trọng đặc trưng SHAP và biểu đồ summary plot
+    - <img src="assets/fig_06_p7.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - Giá trị $\text{Mean}(|\text{SHAP value}|)$ định lượng mức đóng góp giảm dần từ $0.72$ (EC-RW) đến $0.18$ (pH-RW).
+      - EC-RW ($0.72$) và pH-TW ($0.71$) có mức tác động lớn nhất lên dự đoán của mô hình.
+    - **Từ đâu mà thấy được**
+      - Panel (a): Trục hoành đo $\text{Mean}(|\text{SHAP value}|)$ từ $0.1$ đến $0.8$. Đầu mỗi thanh ghi giá trị số của đặc trưng.
+      - Panel (b): Trục hoành đo SHAP value từ $-2$ đến $8$. Thang màu bên phải biểu thị giá trị đặc trưng từ thấp (xanh dương) đến cao (đỏ).

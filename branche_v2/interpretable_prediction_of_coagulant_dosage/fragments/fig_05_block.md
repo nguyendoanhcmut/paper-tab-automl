@@ -1,0 +1,7 @@
+  - **Hình 5.** Kết quả tối ưu hóa liều lượng PACl bằng AutoML: RF.
+    - <img src="assets/fig_05_p6.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Đường dự báo tối ưu (`Optimized`) liên tục bám dưới mức châm thủ công (`Actual`), trực quan hóa lượng hóa chất dư thừa được cắt giảm qua vùng tô xám.
+    - **Từ đâu mà thấy được**
+      - (a) Nguồn sông Dương Tử (Yangtze River): Ox Thời gian (`Time`), Oy Liều lượng ($5\text{--}30\,\text{mg/L}$); khoảng xám giữa đường tím `Actual` và cam `Optimized` thể hiện mức cắt giảm trong dải liều $8\text{--}30\,\text{mg/L}$.
+      - (b) Nguồn sông Loan (Luanhe River): Ox Thời gian (`Time`), Oy Liều lượng ($10\text{--}40\,\text{mg/L}$); khoảng xám rõ nhất ở đỉnh liều mùa đông ($10\text{--}35\,\text{mg/L}$) do nhiệt độ thấp.

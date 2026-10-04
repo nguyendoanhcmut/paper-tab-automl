@@ -1,0 +1,43 @@
+### Statistical analysis of anammox-based nitrogen removal processes
+
+- Phân tích thống kê bằng biểu đồ hộp (box plots), phân tích khám phá dữ liệu (Exploratory Data Analysis - EDA) và hệ số tương quan tích - mômen Pearson (Pearson product-moment correlation coefficient - PPMC) được áp dụng để làm rõ đặc tính dữ liệu thu thập từ các quy trình dựa trên anammox (anammox-based processes) (Fig. 2):
+  - Bộ dữ liệu bao gồm $2940$ mẫu dữ liệu (samples) được thu thập từ $28$ nghiên cứu khảo sát các dạng quy trình dựa trên anammox khác nhau và áp dụng các điều kiện vận hành khác nhau.
+  - Phân bố dữ liệu thể hiện qua biểu đồ hộp ghi nhận các giá trị ngoại lai (outliers) ở tất cả các nhóm, phản ánh sự sai lệch đáng kể đôi khi xuất hiện giữa các thí nghiệm khác nhau.
+  - Các thí nghiệm theo mẻ nối tiếp (sequencing batch experiments) đạt hiệu quả khử nitơ vô cơ tổng (total inorganic nitrogen removal efficiency - TIN removal efficiency) với trung vị ($\text{median}$) là $78.18\,\%$, cao hơn so với mức $\text{median} = 74.81\,\%$ của các thí nghiệm dòng chảy liên tục (continuous flow experiments) (Fig. 2(a)).
+  - Các thí nghiệm theo mẻ nối tiếp duy trì độ ổn định cao hơn đối với tốc độ tải nitơ (nitrogen loading rate - NLR), tốc độ phản ứng nitrit hóa bởi vi khuẩn oxy hóa amoniac (nitrification reaction rate by ammonia-oxidizing bacteria - NiRR), tốc độ khử nitơ qua con đường phản ứng anammox (nitrogen removal rate through anammox reaction pathway - NARR) và tốc độ khử nitơ (nitrogen removal rate - NRR).
+  - Tải trọng và tốc độ phản ứng cực cao được ghi nhận trong nghiên cứu của Du et al. (2016) [35] và Wang et al. (2024b) [36], gồm $\text{NLR}$ đạt $2.91\text{--}7.55\,\text{kg N/m}^3\text{/d}$, $\text{NiRR}$ đạt $0.33\text{--}2.53\,\text{kg N/m}^3\text{/d}$, $\text{NARR}$ đạt $0.02\text{--}3.92\,\text{kg N/m}^3\text{/d}$ và $\text{NRR}$ đạt $2.63\text{--}6.55\,\text{kg N/m}^3\text{/d}$.
+  - Nguyên nhân dẫn đến các giá trị tốc độ cực cao trên xuất phát từ nồng độ nitơ đầu vào cao và thời gian lưu thủy lực (hydraulic retention time - HRT) ngắn trong bể phản ứng kỵ khí dòng chảy ngược qua tầng bùn (upflow anaerobic sludge blanket reactor - UASB) và bể bùn hạt mở rộng (expanded granular sludge bed reactor) vận hành theo chế độ dòng chảy liên tục.
+  - Xu hướng khác biệt tương tự về phân bố và hiệu suất cũng được ghi nhận khi so sánh giữa các thí nghiệm bùn dạng bông (floc experiments) và bùn hạt/kết tụ (aggregate experiments) (Fig. 2(b)).
+  - Tốc độ tải nitơ $\text{NLR}$ cao trong các bể phản ứng dòng chảy liên tục vận hành bằng bùn hạt chứng minh tiềm năng lớn của cấu hình này trong xử lý nước thải chứa nồng độ nitơ cao [37,38].
+  - **Hình 2.** Phân tích thống kê các quy trình khử nitơ dựa trên anammox
+    - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Trực quan hóa đặc tính phân bố dữ liệu theo chế độ vận hành (a, b), không gian biến đầu vào giữa nước thải tổng hợp và nước thải đô thị (c, d), cùng cấu trúc tương quan tuyến tính giữa ba công nghệ anammox (e, f, g).
+    - **Từ đâu mà thấy được**
+      - (a, b): Biểu đồ hộp so sánh hiệu quả khử $\text{TIN}$ và các tốc độ phản ứng ($\text{NLR}, \text{NiRR}, \text{NARR}, \text{NRR}$) giữa mẻ nối tiếp/dòng chảy liên tục và bùn bông/bùn hạt.
+      - (c, d): Ma trận EDA $5$ biến ($\text{C/N}$, $\text{COD}$, $\text{NH}_4^+\text{-N}$, $\text{TIN}$, $\text{NLR}$) theo thời gian vận hành cho thấy nước thải đô thị phân tán rộng hơn nước thải tổng hợp.
+      - (e, f, g): Bản đồ nhiệt PPMC thể hiện PNA có tương quan dương giữa thông số đầu vào và đầu ra mạnh nhất ($0.55\text{--}0.95$), cao hơn so với PDA và PNA kết hợp PDA.
+- So sánh giữa nước thải tổng hợp (synthetic wastewater) và nước thải đô thị (municipal wastewater):
+  - Đặc tính nước đầu ra (effluent properties) tương tự nhau giữa hai loại nước thải (Fig. S1(a)).
+  - Các thí nghiệm sử dụng nước thải đô thị có các giá trị $\text{NLR}$, $\text{NiRR}$, $\text{NARR}$ và $\text{NRR}$ ổn định hơn (Fig. S1(b)), cho thấy đặc tính đầu vào của nước thải đô thị tương đồng giữa các nghiên cứu khác nhau [39-42].
+  - Nước thải tổng hợp được sử dụng trong các nghiên cứu khác nhau có khoảng nồng độ đầu vào rộng hơn đối với $\text{COD}$, $\text{NH}_4^+\text{-N}$ và $\text{NO}_3^-\text{-N}$ [35,36,43,44].
+  - Phân tích khám phá dữ liệu (EDA) về phân bố đặc tính đầu vào của hai loại nước thải (Fig. 2(c) và (d)):
+    - Biểu đồ Fig. 2(d) thể hiện các điểm dữ liệu phân bố trên các vùng rộng hơn ở các tương quan giữa tỷ lệ $\text{C/N}$ với $\text{NH}_4^+\text{-N}$ đầu vào, $\text{C/N}$ với $\text{TIN}$ đầu vào, $\text{COD}$ đầu vào với $\text{NH}_4^+\text{-N}$ đầu vào, và $\text{COD}$ đầu vào với $\text{TIN}$ đầu vào.
+    - Điều này chỉ ra rằng các biến đầu vào của nước thải tổng hợp tập trung hơn và ít biến động hơn (less flocculation) so với nước thải đô thị.
+  - Trên thực tế, nồng độ các chất ô nhiễm trong nước thải thực tế thường biến động mạnh [45,46], do đó các nghiên cứu sử dụng nước thải tổng hợp cần xem xét thành phần thực và độ biến động thực tế của nước thải đô thị.
+- Phân tích sai khác và tương quan theo ba cấu hình quy trình dựa trên anammox:
+  - Dữ liệu giữa các dạng quy trình gồm nitrit hóa từng phần kết hợp anammox (partial nitritation/anammox - PNA), khử nitrat từng phần kết hợp anammox (partial denitrification/anammox - PDA), và quy trình kết hợp PNA với PDA thể hiện sự khác biệt rõ rệt (Fig. S2).
+  - Hiệu quả khử $\text{TIN}$ trong các thí nghiệm PNA và PNA kết hợp PDA cao hơn so với các thí nghiệm chỉ áp dụng PDA (Fig. S2(a)).
+  - Ở cả ba dạng quy trình, nồng độ đầu ra $\text{NH}_4^+\text{-N}$, $\text{NO}_2^-\text{-N}$ và $\text{TIN}$ đều có tương quan thuận với $\text{NH}_4^+\text{-N}$ đầu vào, $\text{TIN}$ đầu vào và $\text{NLR}$.
+  - Mối tương quan thuận mạnh nhất, với hệ số trong khoảng $0.55\text{--}0.95$, được ghi nhận ở các thí nghiệm PNA (Fig. 2(e), (f) và (g)).
+  - Khác với quy trình PDA, việc vận hành quy trình PNA đòi hỏi ức chế hoạt tính của vi khuẩn oxy hóa nitrit (nitrite-oxidizing bacteria - NOB) và tăng cường hoạt tính của vi khuẩn oxy hóa amoniac (ammonia-oxidizing bacteria - AOB) [47].
+  - Hoạt tính của NOB và AOB chịu ảnh hưởng sâu sắc từ nồng độ các cơ chất như $\text{NO}_2^-\text{-N}$, $\text{NH}_4^+\text{-N}$ và $\text{COD}$ [48,49], giải thích nguyên nhân dẫn đến mối tương quan chặt chẽ hơn giữa các biến đầu vào và đầu ra trong PNA.
+- Tương quan giữa các biến tốc độ phản ứng và thành phần nitơ đầu vào:
+  - Các tốc độ $\text{NiRR}$, $\text{NARR}$ và $\text{NRR}$ có tương quan mạnh với các biến trực tiếp tham gia vào công thức tính toán của chúng (Text S1).
+  - $\text{NH}_4^+\text{-N}$ đầu vào và $\text{TIN}$ đầu vào thể hiện mối quan hệ từng cặp rất tương đồng với các biến khác, do hàm lượng $\text{NH}_4^+\text{-N}$ ở mức rất cao trong cả nước thải tổng hợp lẫn nước thải đô thị.
+  - Trong nước thải đô thị thực tế, $\text{NH}_4^+\text{-N}$ thường chiếm hơn $90\,\%$ tổng lượng $\text{TIN}$ đầu vào [42,50].
+- Đánh giá hiện tượng đa cộng tuyến và lựa chọn biến đầu vào cho mô hình học máy:
+  - Ma trận PPMC cho toàn bộ các biến định tính và định lượng trên toàn bộ tập dữ liệu (Fig. S3) ghi nhận mối quan hệ từng cặp mạnh giữa loại nước thải đầu vào với loài vi khuẩn anammox ưu thế, $\text{NO}_3^-\text{-N}$ đầu vào cũng như $\text{TIN}$ đầu vào, làm rõ sự khác biệt giữa hai loại nước thải.
+  - Ngoại trừ cặp biến $\text{NH}_4^+\text{-N}$ đầu vào và $\text{TIN}$ đầu vào, không xuất hiện mối quan hệ tuyến tính mạnh nào khác giữa các biến đầu vào tiềm năng.
+  - Các biến đầu vào này đủ điều kiện được sử dụng làm biến đặc trưng đầu vào để xây dựng các mô hình học máy (machine learning models) nhờ không tồn tại hiện tượng đa cộng tuyến tiềm ẩn (lack of potential multicollinearity) [19].
+  - Mối quan hệ phức tạp giữa các biến tham gia vào quy trình khử nitơ dựa trên anammox cần được tiếp tục làm rõ thông qua các mô hình hướng dữ liệu (data-driven models) và các phương pháp giải thích được (interpretable methods).

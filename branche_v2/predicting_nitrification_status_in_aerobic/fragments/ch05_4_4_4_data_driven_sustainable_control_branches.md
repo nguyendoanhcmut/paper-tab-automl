@@ -1,0 +1,37 @@
+### 4.4. Data-driven sustainable control
+
+- Hệ thống điều khiển tự động (automatic control system) có thể được phát triển để vận hành thông minh hệ thống bể phản ứng sinh học màng (MBR - membrane bioreactor) sau khi mô hình được huấn luyện với các đặc trưng đầu vào phù hợp và tập dữ liệu thu thập có hệ thống (như thảo luận tại Mục 5.1 và Mục 5.2).
+- Quy trình quản lý tự động quá trình xử lý MBR dựa trên mô hình dữ liệu (data-driven model) được thiết kế với giả định đơn giản hóa là điều chỉnh lưu lượng khí cấp (air flow rate) trong điều kiện lưu lượng nước đầu vào cố định (fixed influent flow rate, tương ứng thời gian lưu thủy lực $\text{HRT}$ - hydraulic retention time không đổi).
+  - Trước khi triển khai hệ thống điều khiển dữ liệu, giá trị lưu lượng khí cơ sở ($a_i$ / baseline air flow rate) và đơn vị gia số lưu lượng khí ($A$ / increment unit) cần được xác định thông qua phân tích đặc tính nước xám đầu vào (influent greywater characteristics) trong một khoảng thời gian cụ thể.
+  - Tần suất đo đạc (measurement frequency) cần được điều chỉnh phù hợp với từng phương án tái sử dụng (reuse options) và yêu cầu chất lượng nước đầu ra (effluent quality requirements) tương ứng.
+  - Các tiêu chí để lựa chọn những yếu tố vận hành này cần được tiếp tục nghiên cứu sâu hơn.
+- Quy trình điều khiển tự động quá trình xử lý của hệ thống MBR dựa trên mô hình dữ liệu được thực thi thông qua lưu đồ kiểm soát sục khí linh hoạt nhằm duy trì kiểm soát bền vững và tránh tiêu hao năng lượng quá mức:
+  - **Hình 5.** Lưu đồ kiểm soát MBR dựa trên mô hình phân loại.
+    - <img src="assets/fig_06_p13.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Quy trình kiểm soát sục khí tự động theo từng bước gia số $A$ từ mức cơ sở $a_i$ nhằm duy trì nitrat hóa hoàn toàn mà không lãng phí năng lượng.
+    - **Từ đâu mà thấy được**
+      - Chu trình điều khiển thể hiện từ trên xuống dưới qua từng khoảng thời gian quan trắc $t_i, t_{i+1}, t_{i+2}, t_{i+3}$ (khung chữ nhật nét đứt màu xám).
+      - Rẽ nhánh dự đoán mô hình: nhãn "True" giữ hoặc giảm lưu lượng khí về mức thấp hơn ($a_i$, $a_i + A$, $a_i + 2A$ tương ứng khối màu đỏ, lục, lam); nhãn "False" tăng thêm $A$ ($a_i + A$, $a_i + 2A$, $a_i + 3A$, $a_i + 4A$ tương ứng màu lục, lam, tím, nâu).
+      - Cảnh báo can thiệp của con người (human intervention, khung viền đỏ dưới cùng) khi lưu lượng khí vượt quá công suất nạp khí cực đại của thiết bị sục.
+  - Giả định hệ thống ban đầu vận hành tại mức lưu lượng khí cơ sở $a_i$ và trạng thái nitrat hóa được dự đoán tại thời điểm $t_i$:
+    - Nếu mô hình dự đoán nitrat hóa hoàn toàn (nhãn "True" / complete nitrification), lưu lượng khí được giữ nguyên ở mức $a_i\text{ L/min}$ (biểu diễn bằng khối chữ nhật màu đỏ).
+    - Nếu dự đoán nitrat hóa chưa hoàn toàn (nhãn "False" / incomplete nitrification), lưu lượng khí được tăng thêm một lượng $A$ lên mức $(a_i + A)\text{ L/min}$ (khối chữ nhật màu lục).
+  - Khi hệ thống vận hành qua khoảng thời gian đo tiếp theo với lưu lượng $(a_i + A)\text{ L/min}$, tại thời điểm đo kế tiếp $t_{i+1}$:
+    - Lưu lượng khí trở về giá trị cơ sở $a_i\text{ L/min}$ nếu dự đoán nitrat hóa hoàn toàn.
+    - Lưu lượng khí tăng lên mức $(a_i + 2A)\text{ L/min}$ nếu dự đoán nitrat hóa chưa hoàn toàn (khối chữ nhật màu lam).
+  - Quá trình điều chỉnh lặp lại ở từng khoảng thời gian đo kế tiếp ($t_{i+2}, t_{i+3}, \dots$), trong đó lưu lượng khí tăng hoặc giảm theo từng đơn vị $A$ tùy thuộc vào kết quả xác định hệ thống đã được nitrat hóa hoàn toàn hay chưa:
+    - Mức tăng tiếp theo tại $t_{i+3}$ có thể đạt $(a_i + 3A)\text{ L/min}$ (khối chữ nhật màu tím) và $(a_i + 4A)\text{ L/min}$ (khối chữ nhật màu nâu).
+    - Lưu lượng khí chỉ có thể giảm tối thiểu về mức cơ sở $a_i$.
+    - Nếu lưu lượng khí vượt quá công suất nạp khí tối đa của thiết bị sục khí (aerator's maximum capacity), hệ thống cảnh báo sớm (early warning system) sẽ kích hoạt sự can thiệp của con người (human intervention), chẳng hạn như xả bỏ nước xám hoặc bổ sung thiết bị sục khí.
+  - Tần suất giám sát có thể được tăng lên trong thời gian cao điểm sử dụng nước để nâng cao hiệu quả xử lý và độ an toàn khi tái sử dụng.
+- Khung phân loại nhị phân (binary classification framework) chứng minh tính khả thi trong vận hành thực tế dưới điều kiện dữ liệu bị hạn chế.
+- Mở rộng khung phân loại hiện tại sang các trạng thái nitrat hóa đa lớp (multiclass nitrification states) — chẳng hạn sơ đồ dự đoán $4$ cấp độ gồm $25\,\%$, $50\,\%$, $75\,\%$ và nitrat hóa hoàn toàn — cho phép điều khiển sục khí theo tỷ lệ (proportional aeration control):
+  - Tinh chỉnh này giúp tối ưu hóa sử dụng năng lượng, cắt giảm dấu chân carbon (carbon footprint) và đảm bảo chất lượng nước đầu ra ổn định.
+  - Các mô hình đa lớp đòi hỏi tập dữ liệu mở rộng từ các cảm biến trực tuyến (online sensors) (như đề cập trong Mục 4.1).
+  - Cần áp dụng các kỹ thuật tối ưu hóa chuyên biệt: tinh chỉnh ngưỡng đa lớp (multi-class threshold tuning) giải quyết chi phí phân loại sai (misclassification costs) và các phương pháp xử lý dữ liệu mất cân bằng (imbalanced data) (Davis và Goadrich, 2006; Haibo He và Garcia, 2009; Saito và Rehmsmeier, 2015).
+  - Việc lựa chọn ngưỡng cần tính đến chi phí và rủi ro của việc phân loại sai, vượt ra ngoài các cân nhắc thuần túy về mặt toán học.
+  - Định nghĩa các lớp phân loại phải phù hợp và đồng bộ với đặc tính nước xám đầu vào cùng các yêu cầu tái sử dụng.
+- Tích hợp mô hình phân loại đa lớp vào hệ thống điều khiển cho phép thực hiện các điều chỉnh chính xác hơn, có tiềm năng loại bỏ nhu cầu thay đổi tăng dần từng bước cố định (chẳng hạn như đại lượng $A$ trong Hình 5).
+  - Chiến lược tối ưu để giảm lưu lượng sục khí sau khi dự đoán nitrat hóa hoàn toàn — giảm dần từng bước (gradual reduction) so với giảm ngay lập tức (immediate reduction) — cần được kiểm chứng trong phòng thí nghiệm hoặc quy mô thử nghiệm pilot (lab/pilot validation).
+  - Giảm dần từng bước có thể là lựa chọn thích hợp hơn nhằm duy trì hiệu quả xử lý đối với các tiêu chuẩn tái sử dụng nghiêm ngặt, đòi hỏi phải tiến hành các đánh giá rủi ro - chi phí (risk-cost evaluations).

@@ -1,0 +1,7 @@
+  - **Hình 5.** So sánh giá trị Spec. Flux thực tế và dự đoán của CatBoost
+    - <img src="assets/fig_06_p20.png" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Đường dự đoán bám sát giá trị thực tế, theo dõi chính xác các pha dao động thông lượng và cực trị trên tập kiểm tra.
+    - **Từ đâu mà thấy được**
+      - Trục Ox: Chỉ số mẫu thời gian (`Index`), dải giá trị $0\text{--}200$; Trục Oy: Giá trị $\text{Spec. Flux}$ (`Value`), dải giá trị $0.03\text{--}0.08\,\text{LMH/kPa}$.
+      - Đường màu đỏ nét đứt (`Predicted`) bám sát đường màu xanh liền nét (`Actual`), thể hiện chỉ số kiểm tra $\text{MSE} = 0.0000$.

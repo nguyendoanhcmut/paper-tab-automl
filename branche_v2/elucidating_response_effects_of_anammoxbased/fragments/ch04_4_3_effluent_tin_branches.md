@@ -1,0 +1,45 @@
+#### Effluent TIN
+
+- Biến đầu vào $\text{influent TIN}$ và $\text{operation time}$ giữ vai trò quan trọng nhất trong việc dự đoán đồng thời $\text{effluent TIN}$ và $\text{TIN removal efficiency}$:
+  - Đối với dự đoán $\text{effluent TIN}$: các biến đầu vào gồm $\text{influent }\text{NO}_3^-\text{-N}$, $\text{HRT}$, $\text{influent }\text{NH}_4^+\text{-N}$ và $\text{NLR}$ đóng vai trò quan trọng hơn (Fig. 2(d)).
+  - Đối với dự đoán $\text{TIN removal efficiency}$: các biến liên quan đến $\text{COD}$ (gồm $\text{influent COD}$ và $\text{C/N}$), $\text{HRT}$ và $\text{NLR}$ có mức độ quan trọng cao hơn (Fig. 2(f)).
+- Động thái đáp ứng 1D PDP theo $\text{operation time}$ thể hiện sự thuần thục ($\text{maturity}$) của các quy trình khử nitơ dựa trên anammox:
+  - Phản hồi của $\text{effluent TIN}$ suy giảm theo thời gian vận hành (Fig. S9(a)).
+  - Phản hồi của $\text{TIN removal efficiency}$ gia tăng theo thời gian vận hành (Fig. S11(a)).
+- Thời gian lưu nước thủy lực ngắn ($\text{HRT} < 6.84\text{ h}$) và $\text{HRT}$ dài ($> 24.45\text{ h}$) mang lại hiệu năng loại bỏ $\text{TIN}$ tốt hơn (Fig. S9(b) và Fig. S11(e)).
+- Các dạng nitơ đầu vào gồm $\text{influent }\text{NH}_4^+\text{-N}$, $\text{influent }\text{NO}_3^-\text{-N}$ và $\text{influent TIN}$ tạo ra xu hướng đáp ứng 1D PDP đồng nhất đối với $\text{effluent TIN}$ (Fig. S9(c), (d) và (e)):
+  - Đáp ứng của $\text{effluent TIN}$ gia tăng mạnh tại ngưỡng nồng độ $181.18\text{ mg/L}$ đối với $\text{influent }\text{NH}_4^+\text{-N}$.
+  - Đáp ứng của $\text{effluent TIN}$ gia tăng mạnh tại ngưỡng nồng độ $50.07\text{ mg/L}$ đối với $\text{influent }\text{NO}_3^-\text{-N}$.
+  - Đáp ứng của $\text{effluent TIN}$ gia tăng mạnh tại ngưỡng nồng độ $95.87\text{ mg/L}$ đối với $\text{influent TIN}$.
+- Tải nạp nitơ ($\text{NLR}$) gia tăng không dẫn đến việc gia tăng đáp ứng của $\text{effluent TIN}$ (Fig. S9(f)):
+  - Biến $\text{NLR}$ chịu tác động từ sự tương tác qua lại giữa $\text{influent TIN}$ và $\text{HRT}$.
+- Đồ thị 1D PDP của $\text{influent TIN}$ (Fig. S11(b)), $\text{influent COD}$ (Fig. S11(c)), $\text{C/N}$ (Fig. S11(d)) và $\text{NLR}$ (Fig. S11(f)) ghi nhận xu hướng đáp ứng tương đồng đối với $\text{TIN removal efficiency}$:
+  - Đỉnh đáp ứng cao nhất của $\text{TIN removal efficiency}$ đạt được tại $\text{influent TIN} = 87.76\text{ mg/L}$.
+  - Đỉnh đáp ứng cao nhất của $\text{TIN removal efficiency}$ đạt được tại $\text{influent COD} = 179.33\text{ mg/L}$.
+  - Đỉnh đáp ứng cao nhất của $\text{TIN removal efficiency}$ đạt được tại tỷ lệ $\text{C/N} = 2.95$.
+  - Đỉnh đáp ứng cao nhất của $\text{TIN removal efficiency}$ đạt được tại $\text{NLR} = 0.49\text{ kg/m}^3/\text{d}$.
+- Tương tác 2D PDP giữa $\text{operation time}$ và các thông số vận hành tác động phân hóa lên $\text{effluent TIN}$:
+  - Tương tác giữa $\text{operation time}$ với $\text{HRT}$ (Fig. S10(a)) và với $\text{NLR}$ (Fig. S10(e)) biểu hiện xu hướng giảm nồng độ $\text{effluent TIN}$ khi thời gian vận hành giảm.
+  - Tương tác giữa $\text{operation time}$ với $\text{influent }\text{NH}_4^+\text{-N}$, $\text{influent }\text{NO}_3^-\text{-N}$ và $\text{influent TIN}$ xác định đáp ứng $\text{effluent TIN}$ tăng lên khi nồng độ các dạng nitơ đầu vào này tăng (Fig. S10(b), (c) và (d)).
+- Biểu đồ tương tác 2D PDP giữa $\text{HRT}$ và các dạng nitơ dòng vào ($\text{influent }\text{NH}_4^+\text{-N}$, $\text{influent }\text{NO}_3^-\text{-N}$, $\text{influent TIN}$) hình thành các vùng trũng cực tiểu ($\text{low valleys}$) của $\text{effluent TIN}$ tại các ngưỡng $\text{HRT}$ xác định (Fig. S10(f), (g) và (h)):
+  - $\text{HRT} < 8.91\text{ h}$.
+  - $\text{HRT} = 11.50\text{--}12.54\text{ h}$.
+  - $\text{HRT} = 15.64\text{--}17.20\text{ h}$.
+  - $\text{HRT} > 24.45\text{ h}$.
+- Tương tác 2D PDP giữa $\text{HRT}$ và $\text{NLR}$ xác nhận mức $\text{effluent TIN}$ thấp nhất ở các mức $\text{NLR}$ cao đạt được khi $\text{HRT}$ ở hai vùng cực trị (Fig. S10(i)):
+  - Mức $\text{HRT}$ cao: $\text{HRT} > 24.45\text{ h}$.
+  - Mức $\text{HRT}$ thấp: $\text{HRT} < 2.18\text{ h}$.
+- Phân tích tương tác 2D PDP đối với $\text{TIN removal efficiency}$ theo $\text{operation time}$ cho thấy hiệu suất tăng rõ rệt khi thời gian vận hành gia tăng:
+  - Tương tác của $\text{operation time}$ với $\text{influent TIN}$ (Fig. S12(a)), $\text{influent COD}$ (Fig. S12(b)), $\text{C/N}$ (Fig. S12(c)), $\text{HRT}$ (Fig. S12(d)) và $\text{NLR}$ (Fig. S12(e)) đều thể hiện sự gia tăng đáp ứng hiệu suất khi tăng $\text{operation time}$.
+  - Mức thấp của $\text{influent TIN}$, $\text{influent COD}$, $\text{C/N}$ và $\text{NLR}$ dẫn đến các đỉnh hiệu suất ($\text{peaks}$) của $\text{TIN removal efficiency}$.
+- Tương tác 2D PDP giữa $\text{influent TIN}$ với $\text{influent COD}$, $\text{HRT}$ và $\text{NLR}$ thể hiện các quy luật tối ưu đa biến đối với $\text{TIN removal efficiency}$:
+  - Tương tác giữa $\text{influent TIN}$ và $\text{influent COD}$ đạt đáp ứng $\text{TIN removal efficiency}$ cao nhất tại $\text{influent TIN} = 71.54\text{--}87.76\text{ mg/L}$ và $\text{influent COD} = 200.42\text{--}221.52\text{ mg/L}$ (Fig. S12(f)).
+  - Tương tác giữa $\text{influent TIN}$ và $\text{HRT}$ đạt đáp ứng $\text{TIN removal efficiency}$ cao nhất tại hai miền vận hành: $\text{influent TIN} = 71.54\text{--}87.76\text{ mg/L}$ kết hợp $\text{HRT} = 0.63\text{--}6.84\text{ h}$, cùng với $\text{influent TIN} > 108.03\text{ mg/L}$ kết hợp $\text{HRT} = 24.45\text{--}26\text{ h}$ (Fig. S12(g)).
+  - Tương tác giữa $\text{influent TIN}$ và $\text{NLR}$ đạt đáp ứng $\text{TIN removal efficiency}$ cao nhất tại khoảng $\text{influent TIN} = 71.54\text{--}87.76\text{ mg/L}$ (Fig. S12(h)).
+- Tương tác 2D PDP giữa $\text{influent COD}$ với $\text{HRT}$ và $\text{NLR}$ củng cố dải nồng độ hữu cơ tối ưu:
+  - Tương tác giữa $\text{influent COD}$ và $\text{HRT}$ đạt $\text{TIN removal efficiency}$ cao nhất tại $\text{HRT} = 0.63\text{--}6.84\text{ h}$ và $\text{HRT} = 24.45\text{--}26\text{ h}$ với $\text{influent COD} = 168.78\text{--}200.42\text{ mg/L}$ (Fig. S12(i)).
+  - Tương tác giữa $\text{influent COD}$ và $\text{NLR}$ mang lại đáp ứng $\text{TIN removal efficiency}$ cao nhất tại khoảng $\text{influent COD} = 168.78\text{--}200.42\text{ mg/L}$ (Fig. S12(j)).
+- Ý nghĩa công nghệ đối với xử lý nước thải sinh hoạt đô thị ($\text{municipal wastewater}$):
+  - Dải $\text{influent COD}$ tối ưu hóa ($168.78\text{--}221.52\text{ mg/L}$) tương thích với nồng độ $\text{COD}$ thông thường trong nước thải sinh hoạt đô thị.
+  - Nồng độ $\text{TIN}$ đầu vào đòi hỏi phải cao hơn nồng độ trong nước thải sinh hoạt đô thị để các quy trình anammox đạt được hiệu suất cao.
+  - Các kết quả phản hồi cung cấp cơ sở xác lập dải thông số lý tưởng cho việc lựa chọn các điều kiện vận hành kỹ thuật (như $\text{HRT}$ và $\text{NLR}$) trong các quy trình khử nitơ anammox.

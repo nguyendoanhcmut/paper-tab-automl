@@ -1,0 +1,21 @@
+### 2.1 Machine learning methods
+
+- Phần này tập trung giới thiệu ba phương pháp học máy (machine learning methods) phổ biến:
+  - Máy vector hỗ trợ (support vector machine - SVM).
+  - Mạng nơ-ron nhân tạo (artificial neural network - ANN).
+  - Cây quyết định (decision tree).
+- Thuật toán $k$ láng giềng gần nhất ($k$-nearest neighbor - KNN) được cung cấp dưới dạng tổng quan súc tích bổ sung.
+- Bốn phương pháp học máy chứng minh hiệu quả trong việc giải quyết hai nhóm bài toán cốt lõi:
+  - Bài toán phân loại (classification problems) đối với các biến rời rạc (discrete variables).
+  - Bài toán hồi quy (regression problems) đối với các biến liên tục (continuous variables).
+  - **Figure 1: Machine learning process**
+    - ![Figure 1](assets/fig_01_p4.jpeg)
+    - **Hình này chứng minh điều gì**
+      - Minh họa chu trình học máy gồm quy trình vận hành tổng quát và các bước kỹ thuật chi tiết nhằm thiết lập mô hình giải quyết bài toán phân loại và hồi quy.
+    - **Từ đâu mà thấy được**
+      - Panel (a) (Quy trình tổng quát): Luồng tuần tự Data preparation $\rightarrow$ Feature selection $\rightarrow$ Data division $\rightarrow$ Model establishment $\rightarrow$ Model training $\rightarrow$ Model evaluation $\rightarrow$ Kiểm tra đạt chuẩn (Qualified?): nếu chưa đạt (No) thì quay lại Model establishment, nếu đạt (Yes) chuyển sang Model application.
+      - Panel (b) (Các bước chi tiết): Năm giai đoạn triển khai gồm Data collection (thu thập dữ liệu), Data cleaning (làm sạch dữ liệu, chuẩn hóa), Feature engineering (kỹ thuật đặc trưng, PCA, Lasso), Model building (xây dựng mô hình với Tree, SVM, ANN; đánh giá bằng Accuracy/ROC-AUC hoặc MAE/MAPE/$R^2$/RMSE; tinh chỉnh siêu tham số) và Ensemble learning (học kết hợp qua Boosting, Bagging, Stacking).
+- Bảng 1 (Table 1) tổng hợp và so sánh bốn phương pháp học máy cùng phạm vi ứng dụng tương ứng:
+  - Tóm tắt ưu điểm và nhược điểm của từng phương pháp học máy.
+  - Xác định phạm vi ứng dụng trong lĩnh vực môi trường (scope of environmental application).
+  - Khái quát các kịch bản và ví dụ ứng dụng tiềm năng trong hệ thống bể phản ứng sinh học màng (potential application scenarios and examples in MBRs).

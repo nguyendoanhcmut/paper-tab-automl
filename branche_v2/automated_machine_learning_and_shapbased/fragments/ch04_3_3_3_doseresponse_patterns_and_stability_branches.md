@@ -1,0 +1,32 @@
+### 3.3. Dose–response patterns and stability of SHAP explanations
+
+- Hành vi liều–đáp ứng (dose–response behavior) trong tập dữ liệu của các biến liên tục chính phản ánh tác động phi tuyến rõ rệt lên độ đóng góp SHAP đối với độ loại bỏ PFOA:
+  - **Hình 4.** Đồ thị phụ thuộc SHAP của các biến liên tục chính
+    - <img src="assets/fig_04_p6.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phân tán giá trị đóng góp SHAP theo tương tác với biến thứ hai và điểm chuyển tiếp giữa mức đóng góp âm và dương.
+    - **Từ đâu mà thấy được**
+      - (A) Ox: electrolysis time ($min$, $0$–$500$), Oy: SHAP value ($%age points$, $-60$ đến $30$).
+      - (B) Ox: electrolyte concentration ($g/L$, $0$–$100$), Oy: SHAP value ($%age points$, $-35$ đến $15$).
+      - (C) Ox: current density ($mA/cm^2$, $0$–$150$), Oy: SHAP value ($%age points$, $-15$ đến $20$).
+- Phụ thuộc SHAP đối với thời gian điện phân (electrolysis time, Fig. 4A) có tính đơn điệu mạnh (strongly monotonic):
+  - Khoảng thời gian điện phân rất ngắn tạo ra mức đóng góp âm đối với độ loại bỏ PFOA.
+  - Thời gian điện phân kéo dài hơn làm tăng lũy tiến mức đóng góp SHAP.
+  - Mức đóng góp SHAP tiệm cận vùng bão hòa (plateau) ở khoảng 20–30 %age points ($20$–$30$ điểm phần trăm).
+  - Xu thế bão hòa này phù hợp trực tiếp với tác động tích lũy điện tích (cumulative charge).
+- Nồng độ chất điện phân (electrolyte concentration, Fig. 4B) thể hiện dạng quy luật ngưỡng (threshold pattern):
+  - Các nồng độ dưới mức tối ưu (sub-optimal concentrations) liên kết với giá trị đóng góp âm.
+  - Nồng độ vừa phải (moderate concentrations) chuyển dịch giá trị SHAP về mức trung hòa hoặc giá trị dương.
+  - Mức nồng độ thử nghiệm cao nhất mang lại rất ít lợi ích bổ sung (little additional gain), đồng thời thỉnh thoảng xuất hiện các mức phạt (occasional penalties) làm suy giảm giá trị SHAP.
+- Mật độ dòng điện (current density, Fig. 4C) có giá trị đóng góp SHAP tăng xấp xỉ đơn điệu (approximately monotonically):
+  - Mật độ dòng điện thấp tạo ra mức đóng góp gần bằng $0$ hoặc giá trị âm.
+  - Mật độ dòng điện cao hơn đem lại mức đóng góp ngày càng dương.
+  - Xuất hiện dấu hiệu của hiệu suất giảm dần (diminishing returns) ở phần cận trên của dải giá trị khảo sát.
+- Phân tích độ ổn định loại trừ từng biến (leave-one-out stability analysis) đối với giá trị trung bình nhóm $|SHAP|$ (grouped mean $|SHAP|$) được ghi nhận tại Figure S6:
+  - Khi loại bỏ đặc trưng xếp hạng cao nhất là thời gian điện phân (electrolysis time) và tái huấn luyện mô hình (model refit):
+    - Vật liệu cực dương (anode) và mật độ dòng điện (current density) tiếp tục duy trì vị trí ở nhóm dẫn đầu (leading tier).
+    - Độ pH ban đầu (initial pH), vật liệu cực âm (cathode), nhiệt độ (temperature) và khoảng cách giữa hai điện cực (electrode spacing) tiếp tục duy trì ở nhóm có tầm quan trọng trung bình/thấp (mid-/low-importance tier).
+- Hệ số tương quan hạng Kendall's $\tau$ giữa hai bảng xếp hạng trước và sau loại trừ đặc trưng đạt $0.600$ ($p = 0.136$):
+  - Mức tương quan này biểu thị sự tương đồng mức độ vừa phải (moderate concordance) trong bối cảnh số lượng đặc trưng đầu vào nhỏ.
+- Thứ bậc đặc trưng ổn định (stable feature hierarchy) khẳng định thời gian điện phân, vật liệu cực dương và mật độ dòng điện là các yếu tố chi phối chủ đạo (dominant drivers):
+  - Mọi giá trị SHAP đều được giải thích rõ ràng là các quy kết dựa trên mô hình (model-based attributions), không phải là mối quan hệ nhân quả (causal effects).

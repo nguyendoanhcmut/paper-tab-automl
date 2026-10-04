@@ -1,0 +1,47 @@
+### 2.1. Data
+
+- Dữ liệu nghiên cứu được thu thập từ hai hệ phản ứng sinh học màng kỵ khí (AnMBR - Anaerobic Membrane Bioreactor) vận hành liên tục trong các thí nghiệm dài hạn xử lý nước thải sinh hoạt đô thị (municipal sewage) (Ji et al., 2020, 2021a, 2021b).
+  - Thể tích mỗi bể phản ứng là $20\text{ L}$, được lắp đặt tại một nhà máy xử lý nước thải (WWTP - Wastewater Treatment Plant) nhằm tiếp cận trực tiếp nguồn nước thải sinh hoạt đô thị thô.
+  - Cả hai hệ AnMBR đều sử dụng màng sợi rỗng polyvinylidene difluoride (PVDF - hollow fiber polyvinylidene difluoride membranes), với kích thước lỗ màng lần lượt là $0.4\ \mu\text{m}$ và $0.05\ \mu\text{m}$.
+  - Nhiệt độ vận hành bể phản ứng được duy trì ổn định trong khoảng $20\ ^{\circ}\text{C}\text{--}25\ ^{\circ}\text{C}$ bằng bể ổn nhiệt (water bath NTT-20S, EYELA, Nhật Bản).
+  - Thời gian lưu nước thủy lực (HRT - hydraulic retention time) được áp dụng ở mức $4\text{--}24\text{ h}$ cho AnMBR1 và $10\text{--}24\text{ h}$ cho AnMBR2.
+- Quy trình đo đạc và tiền xử lý dữ liệu chất lượng nước cùng bùn hoạt tính tuân theo các tiêu chuẩn thực nghiệm:
+  - Nhu cầu oxy hóa học (COD - chemical oxygen demand), nồng độ chất rắn lơ lửng trong bùn lỏng (MLSS - mixed liquor suspended solids) và nồng độ chất rắn lơ lửng bay hơi trong bùn lỏng (MLVSS - mixed liquor volatile suspended solids) được đo đạc theo các phương pháp tiêu chuẩn (Bridgewater et al., 2017).
+  - Dữ liệu MLSS và MLVSS được lấy mẫu định kỳ hàng tuần, sau đó được lấp đầy bằng phương pháp nội suy tuyến tính (linear interpolation) để khớp với tần suất đo đạc của dữ liệu COD.
+  - Thế oxy hóa - khử (ORP - oxidation-reduction potential) của bùn hoạt tính kỵ khí được đo đạc bằng máy đo ORP (TOADKK, RM-30P, Nhật Bản).
+- Không gian dữ liệu mô hình hóa bao gồm $11$ biến đặc trưng đầu vào và $1$ biến đầu ra mục tiêu:
+  - Các biến đặc trưng đầu vào gồm:
+    - Thời gian vận hành bể phản ứng ($\text{OD}$ - operation days, đơn vị: $\text{day}$).
+    - Nhiệt độ vận hành bể phản ứng ($\text{T-R}$ - reactor operation temperature, đơn vị: $^{\circ}\text{C}$).
+    - Nhiệt độ nước thải đầu vào ($\text{T-in}$ - influent temperature, đơn vị: $^{\circ}\text{C}$).
+    - Nhiệt độ môi trường xung quanh ($\text{T-env}$ - environment temperature, đơn vị: $^{\circ}\text{C}$).
+    - Độ pH dòng vào ($\text{pH-in}$ - influent pH, không thứ nguyên).
+    - COD dòng vào ($\text{COD-in}$ - influent chemical oxygen demand, đơn vị: $\text{mg/L}$).
+    - Thông lượng màng (flux, đơn vị: $\text{m/day}$).
+    - Thế oxy hóa - khử ($\text{ORP}$, đơn vị: $\text{mV}$).
+    - Thời gian lưu nước thủy lực ($\text{HRT}$, đơn vị: $\text{hour}$).
+    - Nồng độ chất rắn lơ lửng trong bùn lỏng ($\text{MLSS}$, đơn vị: $\text{mg/L}$).
+    - Nồng độ chất rắn lơ lửng bay hơi trong bùn lỏng ($\text{MLVSS}$, đơn vị: $\text{mg/L}$).
+  - Biến đầu ra mục tiêu là tỷ lệ loại bỏ COD ($\text{COD-re}$ - COD removal rate, đơn vị: $\%$).
+  - Dung lượng mẫu ban đầu gồm $185$ quan trắc, thu được từ quá trình vận hành hệ phản ứng trong khoảng $50\text{--}414\text{ days}$.
+  - Tập dữ liệu $185$ mẫu được phân chia thành tập huấn luyện và tập kiểm tra theo tỷ lệ $9:1$ ($166:19$) kế thừa từ nghiên cứu của Li et al. (2022).
+- Thiết kế nghiên cứu so sánh khảo sát ba khía cạnh chính gồm hiệu năng của AutoML, tác động của việc lựa chọn đặc trưng và ảnh hưởng của quy mô dữ liệu vận hành:
+  - **Hình 1. Tổng quan quy trình thực nghiệm AnMBR và khung mô hình hóa**
+    - ![assets/fig_01_p2.jpeg](assets/fig_01_p2.jpeg)
+    - **Hình này chứng minh điều gì**
+      - Thiết lập cấu trúc thực nghiệm AnMBR và khung mô hình hóa AutoML với ba kịch bản (Baseline, More feature, More data) cùng cơ chế xếp hạng đặc trưng ensemble ranking.
+    - **Từ đâu mà thấy được**
+      - Bảng (a): sơ đồ dòng AnMBR nối tiếp từ bể điều hòa WWTP qua bể nạp đến bể màng AnMBR sinh dòng thấm (Effluent).
+      - Bảng (b): dữ liệu vận hành phân nhánh vào 3 kịch bản (Baseline, More feature, More data) đưa vào DL Models và AutoML (FLAML), kết hợp bộ giải thích ensemble (Tree-based, Permutation, SHAP).
+  - Thiết kế kịch bản đường cơ sở (Baseline) đối chuẩn với các mô hình học sâu trước đây:
+    - Kế thừa tập huấn luyện và kiểm tra từ Li et al. (2022) với $6$ biến đầu vào gồm $\text{T-R}$, $\text{T-in}$, $\text{T-env}$, $\text{pH-in}$, $\text{COD-in}$ và flux, nhãn mục tiêu là $\text{COD-re}$.
+    - Ba mô hình học sâu gồm mạng kết nối đầy đủ (FCN - fully connected network), mạng nơ-ron tích chập (CNN - convolutional neural network) và mạng tích chập kết nối dày đặc (DenseNet - densely connected convolutional network) đóng vai trò làm mô hình đối chuẩn đường cơ sở.
+  - Kịch bản khảo sát đóng góp của đặc trưng (More feature modeling experiment):
+    - Tích hợp thêm $5$ biến gồm $\text{OD}$, $\text{ORP}$, $\text{HRT}$, $\text{MLSS}$ và $\text{MLVSS}$ vào tập biến đường cơ sở.
+    - Đánh giá các biến này thông qua cả phương thức bổ sung đơn lẻ và tích hợp kết hợp để làm rõ ảnh hưởng đối với hiệu suất mô hình hóa.
+  - Kịch bản mở rộng dung lượng dữ liệu (More data modeling experiment):
+    - Thu thập thêm $135$ mẫu dữ liệu từ thời gian vận hành kéo dài hơn của chính các hệ AnMBR trong khoảng $7\text{--}546\text{ days}$.
+    - Tập dữ liệu mở rộng nhằm kiểm chứng khả năng nâng cao hiệu năng của các mô hình học máy khi gia tăng kích thước tập huấn luyện.
+  - Giao thức kiểm định chéo đánh giá độ ổn định của mô hình:
+    - Áp dụng kiểm định chéo 10 lần (10-fold cross-validation) để thẩm định các mô hình AutoML ngoài việc đối chuẩn với Li et al. (2022).
+    - Quy trình 10-fold cross-validation huấn luyện $10$ mô hình độc lập, mỗi lượt sử dụng một phân tách $90\%$ huấn luyện và $10\%$ kiểm tra riêng biệt nhằm đo lường phương sai hiệu năng và bảo đảm kết quả ổn định trước các biến động dữ liệu.

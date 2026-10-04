@@ -1,0 +1,24 @@
+### 3.4. Cross-scenario test
+
+- Đánh giá năng lực dự đoán xuyên kịch bản (cross-scenario prediction capability) của mô hình cơ sở trong hệ thống màng lọc sinh học (MBR - membrane bioreactor) có bổ sung chất mang sinh học (biocarriers):
+  - Kế thừa hiệu quả đã được chứng minh trong các hệ thống nitrat hóa truyền thống (conventional nitrification systems, Section 3.3).
+  - Năng lực dự đoán xuyên kịch bản được đánh giá sâu hơn trong hệ thống MBR bổ sung biocarriers nhằm tăng cường quá trình nitrat hóa - khử nitrat đồng thời (SND - simultaneous nitrification-denitrification).
+  - Mô hình cơ sở (base model) huấn luyện trên các điều kiện vận hành không có chất mang sinh học (no-biocarrier operations) được đưa vào kiểm định trực tiếp để dự đoán trạng thái nitrat hóa (nitrification status) trong các hệ thống bổ sung biocarriers mà không cần huấn luyện lại (without retraining).
+- Ba quan sát chính từ thử nghiệm kiểm tra điều kiện chéo (cross-condition testing) theo Bảng 1a (Table 1a):
+  - Mô hình Random Forest (RF) ghi nhận sự cải thiện đồng thời ở cả độ chính xác tổng thể (accuracy: $0{,}79 \rightarrow 0{,}83$) và độ chuẩn xác (precision: $0{,}83 \rightarrow 0{,}87$) khi chuyển sang điều kiện bổ sung biocarriers so với nhóm kiểm tra không có biocarriers, phản ánh khả năng thích ứng cao hơn trước tính phức tạp của hệ thống nitrat hóa - khử nitrat đồng thời.
+  - Tỷ lệ dương tính thực (TPR - True Positive Rate) của cả ba thuật toán đều đạt giá trị $\ge 0{,}8$, trong đó mô hình Logistic Regression (LR) đạt mức tối đa $\text{TPR} = 1$, ghi nhận mức tăng đáng kể so với nhóm kiểm tra không bổ sung chất mang sinh học.
+  - Tỷ lệ dương tính giả (FPR - False Positive Rate) tương ứng tăng lên rõ rệt, đặc biệt ở mô hình LR ($\text{FPR} = 0{,}50$), cho thấy độ chính xác nhận diện mẫu âm tính (negative sample identification accuracy) chỉ đạt mức $50\,\%$.
+  - Ma trận nhầm lẫn đầy đủ (full confusion matrices) được trình bày trong Phụ lục SI 9.
+  - Về mặt lý thuyết, các kết quả này không thể so sánh trực tiếp với dữ liệu không bổ sung biocarriers (Table 1a) do khác biệt về điều kiện vận hành và đặc tính tập dữ liệu; tuy nhiên, các phát hiện này cung cấp hiểu biết vận hành thực tế về hành vi mô hình trong điều kiện chéo (cross-condition model behavior).
+- Cơ chế giải thích cho hiện tượng TPR và FPR tương đối cao trong nhóm kiểm tra MBR bổ sung biocarriers:
+  - Tính nhất quán của đặc trưng (feature consistency) trong tập kiểm tra:
+    - Trong tập huấn luyện (training set), đặc trưng đầu vào lưu lượng khí ("air flow rate") bao gồm hai giá trị là $2\text{ Lpm}$ và $6\text{ Lpm}$.
+    - Trong tập kiểm tra (test set), toàn bộ các mẫu đều có giá trị air flow rate cố định ở mức $6\text{ Lpm}$.
+    - Tính nhất quán này đơn giản hóa các quy tắc ra quyết định (decision rules) của mô hình, giúp giảm thiểu khả năng phân loại sai các mẫu nhãn âm tính (thể hiện qua ước lượng mật độ hạt nhân - KDEs trong Table 1b).
+  - Hạn chế của ranh giới quyết định (decision boundary limitations):
+    - Dù mô hình phân loại hiệu quả các mẫu dương tính ở mức $6\text{ Lpm}$, mô hình vẫn duy trì xu hướng phân loại sai còn tồn đọng (residual misclassification tendencies) đối với các mẫu âm tính.
+    - Kích thước tập mẫu âm tính trong tập kiểm tra bị giới hạn ở quy mô nhỏ ($n = 8$), làm khuếch đại độ nhạy của phép đo FPR trước từng trường hợp phân loại sai đơn lẻ.
+- Phân tích độ ổn định mô hình thông qua kỹ thuật lấy mẫu bootstrap ($n = 1000$):
+  - Các mô hình vận hành trong điều kiện không có biocarriers ghi nhận precision và accuracy cao nhưng khoảng tin cậy $95\,\%$ rộng (wide $95\,\%$ confidence intervals), phản ánh sự mất ổn định của mô hình.
+  - Việc bổ sung biocarriers giúp thu hẹp các khoảng tin cậy $95\,\%$, trong đó mô hình RF đạt được độ ổn định và hiệu năng tối ưu nhất.
+  - Phân tích chi tiết về khoảng tin cậy cho cả hai kịch bản được trình bày trong Phụ lục SI 10.

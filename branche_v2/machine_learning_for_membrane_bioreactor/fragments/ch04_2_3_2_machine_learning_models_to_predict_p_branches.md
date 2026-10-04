@@ -1,0 +1,32 @@
+### 3.2 Machine learning models to predict pollutant removal performances
+
+- Các ứng dụng của mô hình học máy (machine learning) nhằm dự đoán hiệu suất loại bỏ chất ô nhiễm của hệ thống MBR được tổng hợp tại Bảng S3 trong Phụ lục A (Table S3 in Appendix A):
+  - Các ứng dụng này chủ yếu dựa trên các mạng nơ-ron nhân tạo (ANN - artificial neural networks).
+  - Mô hình perceptron đa tầng (MLP - multilayer perceptron) đóng vai trò làm nền tảng cho phân tích thống kê của nhiều mô hình, tập trung vào việc tối ưu hóa cấu trúc phân cấp (hierarchical structure) và các hàm kích hoạt (activation functions).
+- Mô hình MLP kết hợp kỹ thuật quang phổ cận hồng ngoại (near-infrared spectroscopy) dự đoán nồng độ dòng ra và các chất gây tắc nghẽn (Kim et al., 2021b):
+  - Dự đoán nồng độ các chất ô nhiễm trong nước đầu ra ($\text{COD}$, $\text{TN}$, $\text{NH}_3\text{-N}$, nitrit nitơ, $\text{NO}_3^-\text{-N}$ và phosphat) cũng như các chất cao phân tử hòa tan (SMP - soluble microbial products) và các chất polymer ngoại bào (EPS - extracellular polymeric substances) trong hỗn hợp bùn lỏng đạt hệ số xác định $R^2 > 0.97$.
+  - Cấu trúc topo (topology) của MLP để dự đoán ba nhóm chất ô nhiễm/chất gây tắc nghẽn này lần lượt là $5\text{-}11\text{-}6$, $5\text{-}9\text{-}1$ và $5\text{-}9\text{-}2$.
+- Ứng dụng mô hình MLP trong dự đoán loại bỏ các chất ô nhiễm hữu cơ vết (trace organic pollutants):
+  - Một số mô hình MLP được tập trung chuyên biệt vào việc dự đoán hiệu quả loại bỏ các chất ô nhiễm hữu cơ vết bên cạnh việc phát hiện chất lượng nước định kỳ (routine water quality) (Wolf et al., 2001; Wolf et al., 2003).
+- Tối ưu hóa hàm kích hoạt của tầng ẩn (hidden layer) bằng hàm cơ sở xuyên tâm (RBF - radial basis function) và các hàm wavelet:
+  - Mirbagheri et al. (2015b) thiết lập mô hình mạng nơ-ron hàm cơ sở xuyên tâm (RBFNN - radial basis function neural network) với cấu trúc topo $5\text{-}5\text{-}1$ để đánh giá hiệu suất của hệ thống MBR đặt ngập (submerged MBR) trong xử lý nước thải đô thị kết hợp nước thải công nghiệp.
+    - Các đặc trưng đầu vào (input characteristics) bao gồm nồng độ đầu vào (nhu cầu oxy sinh hóa - $\text{BOD}$, $\text{COD}$, $\text{NH}_3\text{-N}$, $\text{TP}$), tổng chất rắn hòa tan đầu vào (influent total dissolved solids), thời gian lưu thủy lực (HRT - hydraulic retention time), chất rắn lơ lửng bay hơi trong hỗn hợp bùn lỏng (MLVSS - volatile MLSS) và pH của hỗn hợp bùn lỏng (mixed liquor pH).
+    - Dự đoán nồng độ dòng ra ($\text{BOD}$, $\text{COD}$, $\text{NH}_3\text{-N}$ và $\text{TP}$) đạt $R^2 > 0.98$.
+  - Cai et al. (2019b) thiết lập mô hình mạng nơ-ron wavelet (WNN - wavelet neural network) với cấu trúc topo $3\text{-}2\text{-}1$ để dự đoán chất lượng nước đầu ra ($\text{COD}$ đạt $R^2 = 0.999$; $\text{NH}_3\text{-N}$ đạt $R^2 = 0.997$) với các đặc trưng đầu vào là $\text{COD}$ đầu vào, $\text{NH}_3\text{-N}$ đầu vào và độ mặn (salinity).
+  - Mô hình WNN đạt hiệu suất tốt hơn so với mô hình MLP trong việc dự đoán $\text{COD}$ và $\text{TN}$ đầu ra (Cai et al., 2019a).
+- Tối ưu hóa cấu trúc phân cấp mô hình bằng các kiến trúc mạng phức tạp hơn MLP:
+  - Các cấu trúc phức tạp hơn được nghiên cứu bao gồm mạng nơ-ron tích chập (CNN - convolutional neural network), DenseNet và mạng bộ nhớ ngắn-dài hạn (LSTM - long short-term memory).
+  - Li et al. (2022) thiết lập ba mô hình mạng nơ-ron sâu (DNN - deep neural network), bao gồm mạng kết nối đầy đủ (FCN - fully connected network), CNN và DenseNet, để dự đoán pH đầu ra, $\text{COD}$ đầu ra, tỷ lệ loại bỏ $\text{COD}$, sản lượng khí sinh học (biogas yield: $\text{CH}_4$, $\text{N}_2$ và $\text{CO}_2$) và thế oxy hóa khử của hệ thống MBR kỵ khí (AnMBR - anaerobic MBR).
+    - Các đặc trưng đầu vào bao gồm nhiệt độ môi trường, nhiệt độ nước đầu vào, pH đầu vào, $\text{COD}$ đầu vào, nhiệt độ hỗn hợp bùn lỏng và thông lượng màng (membrane flux).
+    - Độ chính xác dự đoán (prediction accuracy) của mô hình DenseNet đạt $97.4\%$, trong khi FCN đạt $92.6\%$ và CNN đạt $91.8\%$.
+  - Yaqub et al. (2020) thiết lập mô hình LSTM để dự đoán mức độ loại bỏ $\text{TN}$, $\text{TP}$ và $\text{NH}_3\text{-N}$ của quy trình MBR kỵ khí/thiếu khí/hiếu khí (anaerobic/anoxic/aerobic-MBR).
+    - Các đặc trưng đầu vào bao gồm chất lượng nước đầu vào (tổng carbon hữu cơ - TOC [total organic carbon], $\text{TN}$, $\text{TP}$, $\text{COD}$, $\text{NH}_3\text{-N}$ và chất rắn lơ lửng [suspended solids]) cùng các thông số vận hành (oxy hòa tan - $\text{DO}$, thế oxy hóa khử - $\text{ORP}$ và $\text{MLSS}$).
+    - Mô hình đạt hiệu quả cao nhất trong việc dự đoán tỷ lệ loại bỏ $\text{NH}_3\text{-N}$ với sai số bình phương trung bình $\text{MSE} = 0.0047$.
+- Tổng kết xu hướng mô hình, thuật toán tối ưu hóa và các hạn chế trong nghiên cứu dự đoán loại bỏ chất ô nhiễm:
+  - Các nghiên cứu trước đây chủ yếu sử dụng mô hình MLP để dự đoán hiệu suất loại bỏ chất ô nhiễm; các mô hình ANN phức tạp hơn (WNN, CNN, LSTM) chỉ thỉnh thoảng được áp dụng.
+  - Các thuật toán tối ưu hóa thông minh (intelligent optimization algorithms) như thuật toán đom đóm (FFA - firefly algorithm), tối ưu hóa bầy đàn (PSO - particle swarm optimization) và thuật toán bầy sói xám (GWO - grey wolf optimizer) được tích hợp để cải thiện độ chính xác và tìm kiếm giải pháp hiệu quả cho các bài toán phức tạp (Aldrees et al., 2024a).
+  - Thiếu sót về biến đầu vào: Một số mô hình không đưa chỉ số lọc màng (MFI - membrane filtration indices) vào biến đầu vào, dẫn đến nguy cơ đánh giá thấp vai trò của màng trong việc loại bỏ chất ô nhiễm.
+  - Hạn chế về biến đầu ra: Các nghiên cứu trước đây chủ yếu tập trung vào loại bỏ carbon ($\text{C}$), nitơ ($\text{N}$) và phốt pho ($\text{P}$), chưa chú trọng thỏa đáng đến các chất ô nhiễm vết.
+  - Hiệu quả dự đoán chất ô nhiễm hữu cơ vết: Các mô hình ANN dường như kém hiệu quả hơn trong việc dự đoán các chất ô nhiễm hữu cơ vết do hành vi phân hủy đa dạng của chúng trong quá trình xử lý.
+  - Cải thiện hiệu suất qua hàm kích hoạt và mô hình cây: Việc tối ưu hóa hàm kích hoạt có thể nâng cao hiệu suất của ANN, và các mô hình cây (tree models) có thể đạt hiệu suất tốt hơn so với ANN.
+  - Giới hạn của việc phức tạp hóa cấu trúc mô hình: Việc gia tăng độ phức tạp của cấu trúc mô hình không đồng nghĩa với việc trực tiếp cải thiện hiệu suất của ANN, nguyên nhân có thể do dung lượng dữ liệu không đủ (insufficient amount of data), sai số trong dữ liệu đo đạc (errors in the measured data) hoặc mối quan hệ phức tạp giữa các biến (complex relationship between variables).

@@ -1,0 +1,8 @@
+  - **Hình 3.** Ma trận hệ số tương quan Spearman với liều lượng PACl
+    - <img src="assets/fig_03_p5.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Minh họa tương quan đa chiều giữa 13 biến; bổ sung mức tương quan vừa của $\text{EC-RW}$, $\text{COD}_{\text{Mn}}\text{-RW}$ ($0.56$) và $\text{NTU-RW}$ ($0.45$) với liều lượng.
+    - **Từ đâu mà thấy được**
+      - Trục $Ox, Oy$: 13 biến chất lượng nước (`Dosage`, hậu tố `-RW`, `-TW`); thanh màu $r_s \in [-1.0, 1.0]$ từ đỏ sẫm (âm) sang xanh sẫm (dương).
+      - Hàng/cột `Dosage`: ô đỏ sẫm nhất tại $\text{pH-TW}$ ($-0.90$), xanh sẫm nhất tại $\text{NH}_3\text{-N-RW}$ ($0.87$), nhạt nhất tại $\text{COD}_{\text{Mn}}\text{-TW}$ ($0.011$).
+      - Lưu ý: hình ghi pH-TW (-0.9) và T-TW (-0.67), văn bản ghi pH-RW và T-RW.

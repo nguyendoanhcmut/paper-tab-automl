@@ -1,0 +1,50 @@
+## 1 Introduction
+
+- Sự phát triển nhanh của công nghệ xử lý nước làm gia tăng vấn đề tiêu thụ năng lượng và phát thải carbon.
+  - Các quy trình truyền thống được liên tục tối ưu hóa nhưng vẫn gặp các rào cản kỹ thuật và kinh tế:
+    - Adsorption technology (công nghệ hấp phụ) khó tái sinh chất hấp phụ.
+    - Photocatalytic deep mineralization (khoáng hóa sâu quang xúc tác) bị giới hạn bởi hiệu suất chuyển hóa.
+    - Microwave catalytic (xúc tác vi sóng) đạt hiệu suất cao nhưng có chi phí thiết bị đắt đỏ.
+- Coagulation (quá trình keo tụ) chiếm tỷ trọng vận hành lớn trong tổng chi phí của các nhà máy nước.
+  - Quá trình keo tụ đòi hỏi độ chính xác cao khi châm hóa chất xử lý.
+  - Traditional empirical models (mô hình kinh nghiệm truyền thống) không thể cân bằng giữa độ chính xác định lượng và hiệu quả năng lượng do ba yếu tố:
+    - Phản ứng động phi tuyến (nonlinear dynamic response).
+    - Biến động đa biến (multivariate) của các thông số như nhiệt độ nước và $\text{pH}$.
+    - Nhiễu động thời gian thực (real-time disturbances).
+- Việc xác định coagulant dosage (liều lượng chất keo tụ) tối ưu là điều kiện then chốt để đảm bảo hiệu quả xử lý nước và lợi ích kinh tế lẫn môi trường.
+  - Việc tối ưu hóa liều lượng dựa trên raw water quality (chất lượng nước thô) và treated water quality criteria (tiêu chuẩn chất lượng nước sau xử lý).
+- Traditional manual dosing (định lượng thủ công truyền thống) bộc lộ nhiều điểm hạn chế trong vận hành:
+  - Phương pháp mang tính chủ quan cao.
+  - Lượng hóa chất tiêu hao lớn.
+  - Khó thích ứng với quy mô sản xuất lớn.
+  - Khả năng kiểm soát độ ổn định của nước kém và xảy ra hiện tượng regulatory lag (trễ điều tiết).
+- Mechanistic models (mô hình cơ chế) khó nắm bắt các phản ứng phức tạp và mối quan hệ phi tuyến, làm giảm khả năng ứng dụng thực tế.
+- Data-driven models (mô hình theo dữ liệu) dùng học máy có thể xây dựng black-box models (mô hình hộp đen) cho hệ động lực phi tuyến đa biến từ tập dữ liệu giới hạn.
+  - Các mô hình học máy hiện tại vẫn gặp hạn chế về tính generalizability (khái quát hóa) và độ hội tụ (convergence) khi dự đoán liều lượng chất keo tụ.
+- Các phương pháp dự đoán liều lượng keo tụ hiện hữu bộc lộ các nhược điểm kỹ thuật cụ thể:
+  - DL-MV (Deep Learning - Multi-Variable / Học sâu đa biến) phụ thuộc vào tinh chỉnh tham số để đạt độ chính xác cao.
+  - PSO-SVR (Particle Swarm Optimization - Support Vector Regression / Tối ưu hóa bầy đàn - Hồi quy vector hỗ trợ) đòi hỏi thiết lập tham số ban đầu thủ công.
+  - GA-RF (Genetic Algorithm - Random Forest / Thuật toán di truyền - Rừng ngẫu nhiên) có cấu trúc bị cố định và đòi hỏi tài nguyên tính toán cao.
+- Các phương pháp dự đoán hiện hữu chia sẻ hai hạn chế cốt lõi:
+  - Sự phụ thuộc vào can thiệp thủ công cản trở việc tự động điều chỉnh quan hệ phi tuyến phức tạp của các chỉ số chất lượng nước.
+  - Sự gắn chặt với một mô hình tối ưu hóa đơn lẻ và thiếu cơ chế phối hợp động làm giảm hiệu quả dự đoán và tính khái quát hóa.
+- AutoML (Automated Machine Learning / Học máy tự động) xây dựng các pipeline ML (đường ống học máy) hiệu quả bằng cách tự động hóa toàn bộ quy trình.
+  - Các khung làm việc phân tán như TPOT (Tree-based Pipeline Optimization Tool) hỗ trợ sàng lọc mô hình hoàn toàn tự động, giúp giảm chi phí phát triển và giảm phụ thuộc vào nhân lực.
+  - AutoML xử lý hiệu quả hyperparameter optimization (tối ưu hóa siêu tham số) và giải quyết các bài toán ràng buộc phức tạp.
+- AutoML đã chứng minh hiệu quả cao trong nhiều tác vụ xử lý chất lượng nước:
+  - TPOT cải thiện độ chính xác thêm $15\text{--}20\%$ mà không cần giảm chiều đặc trưng trên dữ liệu chất lượng nước $50$ chiều ($50\text{-dimensional}$).
+  - Khung làm việc H2O dự đoán chính xác quá trình loại bỏ chất dinh dưỡng sinh học trong nước thải.
+  - TPOT đạt kết quả cao hơn ML truyền thống $1.4\%$ trong tác vụ phân loại chất lượng nước hồ.
+- Các nghiên cứu hiện tại chưa khám phá và ứng dụng sâu rộng AutoML vào bài toán dự đoán liều lượng chất keo tụ.
+- Bản chất hộp đen của các mô hình học máy tiên tiến làm giảm tính interpretability (khả năng giải thích), gây cản trở ứng dụng thực tế tại nhà máy nước.
+  - Nhà máy nước yêu cầu tính minh bạch vận hành nghiêm ngặt để đưa ra quyết định xử lý.
+- Phương pháp SHAP (SHapley Additive exPlanations / Giải thích cộng tính Shapley) của Lundberg và Lee nâng cao tính minh bạch, độ tin cậy và chất lượng ra quyết định của mô hình.
+  - SHAP lượng hóa marginal contribution (đóng góp biên) của từng đặc trưng vào giá trị dự đoán.
+  - SHAP xác định các biến ảnh hưởng chính và hiệu ứng tương tác qua phân tích toàn cục và cục bộ.
+  - SHAP đã được áp dụng trong nhiều lĩnh vực và dự đoán chất lượng nước mặt với độ chính xác cao.
+  - Phương pháp SHAP chưa từng được áp dụng để giải thích bài toán dự đoán liều lượng chất keo tụ.
+- Nghiên cứu này lần đầu tiên ứng dụng khung làm việc AutoML có thể giải thích cho bài toán dự đoán liều lượng chất keo tụ.
+  - Hệ thống dự đoán được xây dựng thông qua quy trình tự động lựa chọn mô hình và tối ưu hóa siêu tham số.
+  - Phương pháp SHAP được tích hợp để trích xuất độ quan trọng đặc trưng toàn cục và diễn giải quyết định cục bộ của mô hình hộp đen.
+  - Việc kết hợp dữ liệu thời gian thực và thông tin lịch sử đảm bảo kiểm soát chính xác quá trình keo tụ và duy trì tiêu chuẩn chất lượng nước sau xử lý.
+  - Giải pháp này hỗ trợ các tiến bộ kỹ thuật và nâng cấp công nghệ cho ngành xử lý nước trong tương lai.

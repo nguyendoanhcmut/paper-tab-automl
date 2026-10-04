@@ -1,0 +1,83 @@
+### 3.2. Event detection in the intake of the Llobregat River (PCA of dataset 2)
+
+- **Trọng tâm nghiên cứu sự kiện ô nhiễm qua dao động ngắn hạn**: Trọng tâm của nghiên cứu hướng vào các dao động ngắn hạn, biên độ mạnh (short-term, strong fluctuations) có thể quy cho các sự kiện ô nhiễm tiềm ẩn (possible pollution events), được phát hiện trên các đồ thị điểm số (scores plots) của phân tích thành phần chính (PCA - Principal Component Analysis).
+- **Mục tiêu phân tích Dataset 2 và kiểm chứng các nguồn biến thiên**: Bộ dữ liệu 2 (Dataset 2) gồm $346$ quan sát thực nghiệm thực tế ($346$ real experimental observations) cho 7 thông số hóa lý (khớp chính xác thời gian ghi nhận) được phân tích bằng PCA để điều tra sâu hơn và kiểm chứng bản chất của các sự kiện đã quan sát trước đó trong Dataset 1:
+  - Kiểm chứng các nguồn thành phần liên quan đến chất hữu cơ (organic matter), chất vô cơ (inorganic matter) và độ $\text{pH}$.
+  - Thời gian thu thập dữ liệu: trải dài qua 6 tháng quan trắc thực tế, từ tháng 7 đến tháng 11 năm 2014 (between July and November 2014).
+- **Mô hình PCA 3 thành phần chính trên dữ liệu chuẩn hóa tự động**: PCA áp dụng trên dữ liệu chuẩn hóa tự động (autoscaled data) xác lập mô hình gồm 3 thành phần chính (three principal components), giải thích đến $81\%$ tổng phương sai dữ liệu ($\text{total data variance}$):
+  - Tỷ lệ đóng góp phương sai riêng phần của các thành phần chính:
+    - $\text{PC1}$ giải thích $40\%$ phương sai dữ liệu (trục tung đồ thị Hình 4A ghi $40.90\%$).
+    - $\text{PC2}$ giải thích $25\%$ phương sai dữ liệu (trục tung đồ thị Hình 4C ghi $23.70\%$).
+    - $\text{PC3}$ giải thích $16\%$ phương sai dữ liệu (trục tung đồ thị Hình 4E ghi $16.88\%$).
+- **Bản chất của các thành phần chính qua đồ thị tải số $\text{PC1}\text{--}\text{PC3}$**: Phân tích đồ thị tải số (loading plots) $\text{PC1}\text{--}\text{PC3}$ khẳng định sự hiện diện của cùng ba yếu tố chất lượng nước tương tự như phân tích trên Dataset 1:
+  - $\text{PC1}$ mô tả phương sai trong hàm lượng chất hữu cơ (organic matter content), phát hiện các sự kiện quan trọng hơn liên quan đến sự thay đổi đột ngột nồng độ chất hữu cơ.
+  - $\text{PC2}$ mô tả phương sai trong hàm lượng chất vô cơ (inorganic matter) và các sự kiện liên quan đến sự biến đổi đột ngột nồng độ chất vô cơ.
+  - $\text{PC3}$ liên quan trực tiếp đến các biến đổi độ $\text{pH}$ của nguồn nước sông.
+- **So sánh vai trò bổ trợ chức năng giữa Dataset 1 và Dataset 2**: Khẳng định hành vi tương đồng giữa hai tập dữ liệu (Dataset 1 với dữ liệu nội suy và Dataset 2 với dữ liệu đo thực nghiệm thực tế trong cùng chu kỳ thời gian):
+  - Dataset 1 đặc biệt hữu ích cho việc khám phá các xu hướng chất lượng nước chung (general water quality trends).
+  - Dataset 2 hữu ích cho việc điều tra và so sánh các sự kiện ngắn hạn có tác động đáng kể đến chất lượng nước (short-term events with significant impact on water quality).
+- **Nhận diện ba sự kiện liên tiếp trên đồ thị điểm số PCA**: Phân tích tập trung vào ba sự kiện liên tiếp quan sát được trên các đồ thị điểm số và được đánh số 1, 2 và 3:
+  - **Figure 4. PCA results of dataset 2 (346 observations)**
+    - ![Figure 4](assets/fig_04_p7.jpeg)
+    - Đồ thị tải số $\text{PC1}\text{--}\text{PC3}$ (khung hình A, C, E) và đồ thị điểm số mẫu (khung hình B, D, F) từ tháng 7 đến tháng 11 năm 2014; ba sự kiện được đánh số 1, 2 và 3 trên các đồ thị điểm số.
+  - Ba sự kiện được chọn xuất hiện đồng thời trên cả ba đồ thị điểm số $\text{PC1}$, $\text{PC2}$ và $\text{PC3}$, cho thấy ba thành phần chính này đóng góp độc lập vào từng sự kiện được nêu.
+- **Phân tích phần dư $Q$ và đối chiếu nguồn dữ liệu khí tượng địa phương**: Cả ba sự kiện đều thể hiện phần dư $Q$ rất cao ($Q$ residuals), phản ánh các giá trị cực trị (extreme values) và phương sai chưa được giải thích:
+  - **Figure 5. Three events associated with high Q residuals**
+    - ![Figure 5](assets/fig_05_p8.jpeg)
+    - Đồ thị phần dư $Q$ của mô hình PCA 3 thành phần chính vượt ngưỡng thống kê tại cả ba sự kiện (khung hình A); đóng góp thông số vào phần dư $Q$ phân hóa theo từng sự kiện: độ đục $\text{TURB}$ ở Sự kiện 1 (khung hình B), $\text{NH}_4^+$ ở Sự kiện 2 (khung hình C), và độ dẫn điện $\text{COND}$ ở Sự kiện 3 (khung hình D).
+  - Phân tích đồ thị đóng góp của các thông số vào phần dư $Q$ ($Q$ parameter contributions plots) cho phép liên kết ba sự kiện với hiện tượng tự nhiên cụ thể (khí tượng) hoặc công nghiệp (sự cố tràn đổ/xả thải).
+  - Nguồn dữ liệu khí tượng: Thông tin thời tiết từ nhiều trạm khí tượng phân bố trên toàn vùng Catalonia được cung cấp có hệ thống, lưu trữ theo trình tự thời gian và công khai trên trang web `meteoclimatic.com`, cho phép kiểm tra tương quan giữa việc phát hiện sự kiện và diễn biến thời tiết địa phương.
+- **Phân tích chi tiết Sự kiện 1 (03/08/2014 lúc 06:00)**: Sự kiện 1 xảy ra tại cửa thu nước sông Llobregat vào lúc $06:00$ ngày 03/08/2014:
+  - Các thông số cảm biến ghi nhận tại thời điểm sự kiện:
+    - Tổng cacbon hữu cơ: $\text{TOC} = 7.1\text{ mg/L}$.
+    - Amoni: $\text{NH}_4^+ = 1.91\text{ mg/L}$.
+    - Độ đục: $\text{TURB} = 567\text{ UNF}$.
+    - Độ hấp thụ tử ngoại tại $254\text{ nm}$: $\text{UV254} = 15.8\text{ abs/100}$ ($15.8\text{ abs/100 cm}$).
+    - Độ dẫn điện: $\text{COND} = 784\ \mu\text{S/cm}$.
+    - Nhiệt độ nước: $\text{TEMP} = 22.9\ ^\circ\text{C}$.
+    - Độ $\text{pH}$: $\text{pH} = 7.6$.
+  - Biểu hiện phần dư $Q$: Mô hình PCA ghi nhận phần dư $Q$ bất thường của mẫu với giá trị cực trị (phương sai chưa được giải thích) tập trung chủ yếu ở thông số độ đục $\text{TURB}$ (Hình 5B, giá trị phần dư $Q = 7.787$).
+  - Đối chiếu lượng mưa khí tượng: Vào các ngày 01/08 và 02/08/2014, dữ liệu thời tiết ghi nhận nhiều đợt mưa lớn diễn ra trong $24\text{ h}$ với lượng mưa tích lũy lên tới $30\text{ mm}$:
+    - **Figure 6. Accumulated rainfall on 02/08/2014 in Catalonia**
+      - ![Figure 6](assets/fig_06_p9.jpeg)
+      - Bản đồ lượng mưa tích lũy trong $24\text{ h}$ ngày 02/08/2014 trên toàn vùng Catalonia từ cơ sở dữ liệu `meteoclimatic.com`, ghi nhận lượng mưa đạt tới $30\text{ mm}$ tại các tâm mưa dông tương ứng với Sự kiện 1.
+  - Cơ chế thủy văn và hóa học của Sự kiện 1:
+    - Sự kiện 1 là minh chứng điển hình cho tác động của sự gia tăng đột ngột chất hữu cơ tự nhiên bị cuốn trôi (washed out natural organic matter) vào dòng chảy của sông.
+    - Khối lượng nước mưa lớn đồng thời gây ra hiệu ứng pha loãng mạnh (strong dilution effects) đối với các chất khoáng, dẫn đến sự suy giảm đáng kể của độ dẫn điện $\text{COND}$ và độ $\text{pH}$ (phù hợp với các tải số âm của $\text{COND}$ và $\text{pH}$ trên $\text{PC1}$).
+    - Tất cả các đỉnh sự kiện còn lại có điểm số dương mạnh trên $\text{PC1}$ trong suốt 6 tháng nghiên cứu đều gắn liền với các đợt mưa lớn.
+    - Không phát hiện bất kỳ sự kiện nào có hàm lượng hữu cơ cao liên quan đến hoạt động xả thải công nghiệp trên $\text{PC1}$.
+- **Phân tích chi tiết Sự kiện 2 (22/08/2014 lúc 22:00)**: Sự kiện 2 đánh dấu sự khởi đầu của một đợt mưa lớn mới với sự gia tăng mạnh nồng độ chất hữu cơ được phát hiện trên $\text{PC1}$:
+  - Diễn tiến theo thời gian: Đợt tăng nồng độ chất hữu cơ này suy giảm dần sau vài ngày trên đồ thị $\text{PC1}$, mở đầu cho Sự kiện 3 tiếp theo (quan sát thấy như một sự kiện biến động mạnh trên các đồ thị $\text{PC2}$ và $\text{PC3}$).
+  - Thời gian và địa điểm: Xảy ra tại cửa thu nước của nhà máy xử lý nước uống (DWTP intake) vào lúc $22:00$ giờ địa phương ngày 22/08/2014.
+  - Các thông số cảm biến ghi nhận tại thời điểm sự kiện:
+    - Tổng cacbon hữu cơ: $\text{TOC} = 6\text{ mg/L}$.
+    - Amoni: $\text{NH}_4^+ = 1.91\text{ mg/L}$.
+    - Độ đục: $\text{TURB} = 180\text{ UNF}$.
+    - Độ hấp thụ tử ngoại tại $254\text{ nm}$: $\text{UV254} = 13.9\text{ abs/100 cm}$.
+    - Độ dẫn điện: $\text{COND} = 1045\ \mu\text{S/cm}$.
+    - Nhiệt độ nước: $\text{TEMP} = 23.2\ ^\circ\text{C}$.
+    - Độ $\text{pH}$: $\text{pH} = 7.8$.
+  - Biểu hiện phần dư $Q$ và cơ chế nguồn thải:
+    - Đóng góp thông số vào phần dư $Q$ của mô hình PCA cho thấy giá trị cao bất thường đối với $\text{NH}_4^+$ (đóng góp dương cao nhất, phần dư $Q = 3.039$) và ở mức độ thấp hơn đối với $\text{pH}$ cùng nhiệt độ nước (Hình 5C).
+    - Đợt mưa này bắt đầu với sự tăng vọt của $\text{NH}_4^+$, gợi ý khả năng có hiện tượng rửa trôi / dòng chảy tràn (runoff) từ các nhà máy xử lý nước thải (WWTPs - wastewater treatment plants) nằm ở khu vực lân cận.
+    - Sự kiện 2 ngày 22/08/2014 kết thúc và chuyển tiếp sang giai đoạn bắt đầu của Sự kiện 3.
+- **Phân tích chi tiết Sự kiện 3 (01/09/2014 lúc 03:00)**: Đỉnh của Sự kiện 3 xảy ra vào lúc $03:00$ ngày 01/09/2014 tại cửa thu nước DWTP:
+  - Các thông số cảm biến ghi nhận tại đỉnh sự kiện:
+    - Tổng cacbon hữu cơ: $\text{TOC} = 2.6\text{ mg/L}$.
+    - Amoni: $\text{NH}_4^+ = 0.24\text{ mg/L}$.
+    - Độ đục: $\text{TURB} = 153.3\text{ UNF}$.
+    - Độ hấp thụ tử ngoại tại $254\text{ nm}$: $\text{UV254} = 11.2\text{ abs/100 cm}$.
+    - Độ dẫn điện: $\text{COND} = 3413\ \mu\text{S/cm}$.
+    - Nhiệt độ nước: $\text{TEMP} = 24.8\ ^\circ\text{C}$.
+    - Độ $\text{pH}$: $\text{pH} = 8.4$.
+  - Biểu hiện phần dư $Q$ và khoáng hóa nguồn nước:
+    - Sự kiện này thể hiện sự đóng góp thông số bất thường vào phần dư $Q$ (Hình 5D) chỉ đối với duy nhất thông số độ dẫn điện $\text{COND}$ (giá trị phần dư $Q$ đạt cực đại $46.39$).
+    - Trái lại, các thông số hóa lý còn lại đều duy trì trong mức độ bình thường.
+    - Sự kiện phát sinh do sự gia tăng bất thường nồng độ khoáng chất hòa tan trong nước (dissolved minerals in water).
+  - Tác động vận hành bắt buộc đối với DWTP:
+    - Giá trị độ dẫn điện ghi nhận vượt trên $3400\ \mu\text{S/cm}$ ($\text{COND} > 3400\ \mu\text{S/cm}$).
+    - Do độ dẫn điện vượt ngưỡng quá cao, DWTP đã buộc phải ngừng hoạt động thu nước sông (close water intake).
+  - Phân tích tổng hợp dữ liệu khí tượng và truy nguyên nguồn ô nhiễm công nghiệp:
+    - Thông tin về điều kiện thời tiết trong Sự kiện 3 được truy xuất từ phân tích tổng hợp cơ sở dữ liệu khí tượng.
+    - Trong các ngày 30/08/2014 và 31/08/2014, nhiều trận mưa dông lớn cục bộ (lượng mưa tích lũy lên tới $25\text{ mm}$ trong thời gian ngắn) đã được ghi nhận bởi các trạm khí tượng nằm trong bán kính $30\text{ km}$ gần các cơ sở khai thác mỏ kali (potash mining facilities) dọc lưu vực sông.
+    - Nhận định nguyên nhân: Các trận mưa lớn cục bộ này đã tác động trực tiếp lên khu vực công nghiệp khai khoáng và gây ra các đợt rửa trôi / tràn khoáng sản nghiêm trọng (significant mineral spills), được hệ thống cảm biến cửa thu nước DWTP phát hiện như một sự kiện bất thường.

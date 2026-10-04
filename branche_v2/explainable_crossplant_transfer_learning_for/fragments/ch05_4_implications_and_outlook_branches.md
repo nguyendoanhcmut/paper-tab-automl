@@ -1,0 +1,33 @@
+## 4. Implications and outlook
+
+- Nghiên cứu đặt nền tảng cho phương pháp dự đoán tắc nghẽn màng (fouling prediction) dựa trên thông tin cơ chế (mechanism-informed prediction) tại các nhà máy xử lý bị giới hạn dữ liệu (data-limited plants):
+  - Nghiên cứu không chỉ nâng cao hiệu quả dự đoán tắc nghẽn màng cho một bể phản ứng sinh học màng quy mô pilot (pilot-scale MBR - Membrane Bioreactor) đơn lẻ, mà còn mở rộng khả năng ứng dụng sang các hệ thống thiếu hụt dữ liệu.
+  - Bằng việc chuyển giao tri thức học được từ các nhà máy nguồn có dữ liệu phong phú hơn (data-richer source plants), mô hình LSTM (Long Short-Term Memory) đạt được khả năng dự đoán đáng tin cậy tại một nhà máy đích bị giới hạn dữ liệu (data-limited target plant).
+  - Kết quả chứng minh các nhà máy có dữ liệu hạn chế không nhất thiết phải xây dựng hệ thống dự đoán tắc nghẽn màng hoàn toàn từ đầu (entirely from scratch).
+- Khung lựa chọn chỉ số dự đoán (indicator selection) cần khởi đầu bằng việc nhận diện các quá trình tắc nghẽn chủ đạo và trích xuất dấu vân tay tắc nghẽn đại diện:
+  - Chiến lược lựa chọn chỉ số cho bài toán dự đoán tắc nghẽn màng nên bắt đầu từ việc xác định các quá trình tắc nghẽn chi phối (dominant fouling processes), sau đó tiến hành trích xuất các dấu vân tay tắc nghẽn mang tính đại diện (representative fouling fingerprints) phục vụ mô hình dự đoán.
+  - Các chỉ số chất polyme ngoại bào gồm $\text{EPS}_{\text{c}}$ (extracellular polymeric substances carbohydrates - carbohydrate trong chất polyme ngoại bào) và $\text{EPS}_{\text{p}}$ (extracellular polymeric substances proteins - protein trong chất polyme ngoại bào) chứa đựng thông tin tắc nghẽn có khả năng chuyển giao (transferable fouling information) qua các nhà máy MBR khác nhau.
+  - Các rào cản thực tiễn của việc giám sát trực tiếp $\text{EPS}_{\text{c}}$ và $\text{EPS}_{\text{p}}$:
+    - Việc đo lường các biến số $\text{EPS}_{\text{c}}$ và $\text{EPS}_{\text{p}}$ có chi phí cao (expensive), tốn nhiều nhân công (labor-intensive), và khó theo dõi định kỳ thường quy (difficult to monitor routinely), làm hạn chế tính ứng dụng trực tiếp trong thực tế vận hành.
+  - Hướng phát triển khả thi thông qua các dấu vân tay thay thế có thể giám sát trực tuyến (monitorable surrogate fingerprints):
+    - Chuyển dịch các đặc tính tắc nghẽn then chốt thành các dấu vân tay đại diện có thể đo đạc giám sát trực tiếp.
+    - Các tín hiệu quang phổ trực tuyến (online spectral signals), chẳng hạn như phổ hấp thụ UV–vis và dấu vân tay huỳnh quang (fluorescence fingerprints), cung cấp cơ sở thực tiễn cho dự đoán thích ứng nhà máy (plant-adaptive prediction) và kiểm soát tắc nghẽn chủ động (proactive fouling control) [57].
+- Hạn chế của các mô hình phát triển từ quy mô pilot và thách thức khi mở rộng lên quy mô thực tế đầy đủ (full-scale):
+  - Mô hình hiện tại mới được phát triển từ một số lượng hạn chế các hệ MBR quy mô pilot có bối cảnh vận hành tương đối tương đồng:
+    - Ở quy mô thực tế đầy đủ (full scale), hiện tượng tắc nghẽn màng chịu tác động phức tạp bởi các yếu tố thủy động lực học phụ thuộc quy mô (scale-dependent hydrodynamics) và quá trình sục khí (aeration), đồng thời chịu mức độ biến thiên vận hành lớn hơn đáng kể so với hệ thống pilot [58].
+    - Các mối quan hệ đã học từ giai đoạn tiền huấn luyện (pretrained relationships) có thể không trực tiếp nắm bắt được toàn bộ động học tắc nghẽn ở quy mô thực tế.
+  - Thách thức khi áp dụng cho các hệ thống có chất lượng nước đầu vào và điều kiện vận hành khác biệt:
+    - Sự thay đổi lớn về đặc tính nước thải đầu vào (influent) hoặc điều kiện vận hành sẽ làm biến đổi thành phần của bùn hoạt tính cùng tỷ lệ $\text{EPS}/\text{SMP}$ (extracellular polymeric substances / soluble microbial products) và các chất gây tắc nghẽn chủ đạo (dominant foulants).
+    - Sự biến đổi này làm suy giảm tín hiệu tắc nghẽn tập trung vào EPS có khả năng chuyển giao (transferable EPS-centered signal), đòi hỏi phải bổ sung các chỉ số đặc thù của từng nhà máy (plant-specific indicators) để đảm bảo khả năng thích ứng tin cậy.
+  - Yêu cầu kiểm chứng mở rộng trên các tập dữ liệu đa dạng:
+    - Khung phương pháp cần được tiếp tục kiểm chứng trên các tập dữ liệu có quy mô lớn hơn và mở rộng sang các nhà máy quy mô đầy đủ, phân bố tại các khu vực địa lý đa dạng (geographically diverse plants) nhằm xác lập độ ổn định (robustness) và khả năng tổng quát hóa (generalizability).
+- Tính chưa đầy đủ của tập chỉ số hiện tại và nhu cầu tích hợp các yếu tố gây tắc nghẽn vô cơ:
+  - Độ chính xác dự đoán của mô hình chưa tiệm cận mức tuyệt đối ($1$, did not approach unity), cho thấy tập hợp các chỉ số đầu vào hiện tại vẫn chưa hoàn chỉnh.
+  - Sự hiện diện của các chất gây tắc nghẽn vô cơ (inorganic foulants) bên cạnh các chất gây tắc nghẽn hữu cơ (organic foulants):
+    - Nhà máy đích ghi nhận bằng chứng về sự đóng góp của các thành phần vô cơ, đặc biệt là hiện tượng tắc nghẽn liên quan đến sắt (iron-associated fouling) được phát hiện thông qua kết quả của quy trình làm sạch tại chỗ CIP (clean-in-place).
+    - Tắc nghẽn do sắt có thể chưa được nắm bắt đầy đủ bởi các biến đầu vào hiện có của mô hình.
+  - Lợi ích của việc xác định các chỉ số bao quát hơn phản ánh đồng thời tác động kết hợp của chất gây tắc nghẽn hữu cơ và vô cơ:
+    - Hỗ trợ đưa ra cảnh báo tắc nghẽn màng sớm hơn (earlier fouling warning).
+    - Tối ưu hóa thời điểm điều chỉnh vận hành và thực hiện quy trình làm sạch màng (better timing of operational adjustment and membrane cleaning).
+    - Giảm thiểu lượng điện năng tiêu thụ và hóa chất sử dụng (reduced energy and chemical consumption).
+    - Nâng cao tính ổn định của toàn bộ quy trình vận hành (improved process stability) (Hình S13 - Fig. S13).

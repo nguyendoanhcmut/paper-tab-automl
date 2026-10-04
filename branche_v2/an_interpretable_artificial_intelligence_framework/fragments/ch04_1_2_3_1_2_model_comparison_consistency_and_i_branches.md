@@ -1,0 +1,42 @@
+#### 3.1.2. Model comparison, consistency and independent validation
+
+- Khoảng cách lớn và mang tính hệ thống (systematic gap) phân tách các mô hình tuyến tính khỏi các mô hình phi tuyến trên cả $3$ biến mục tiêu (Table 3):
+  - Hồi quy tuyến tính (Linear Regression) và hồi quy Ridge (Ridge Regression) chỉ đạt $R^2 = 0.499$ cho TMP, $0.469$ cho lưu lượng (permeate flow) và $0.195$ cho mực nước (water level).
+  - Các biến thể điều chuẩn (regularised variants) cho kết quả kém hơn một chút do kỹ thuật co hệ số mạnh (aggressive shrinkage) đã loại bỏ các hệ số nhỏ nhưng mang thông tin.
+  - Các mô hình kết hợp tốt nhất (best ensemble models) đều đạt $R^2 > 0.90$ trên cả $3$ biến mục tiêu.
+- Kiểm định giả thuyết có cấu trúc (structured hypothesis test) đối với cơ chế màng sinh học:
+  - Sự thất bại của họ mô hình cộng tính (additive family) kết hợp cùng sự thành công của thuật toán phân vùng đệ quy (recursive partitioning) chứng minh mối quan hệ giữa sinh học và màng (biology–membrane relationship) bị chi phối bởi các ngưỡng (thresholds) và tương tác (interactions) thay vì các tác động tỷ lệ thuận tuyến tính.
+  - Phù hợp với lý thuyết tắc nghẽn màng (fouling theory):
+    - Trở lực lớp bánh lọc (cake resistance) gia tăng nhanh đột biến khi MLSS vượt qua nồng độ tới hạn (critical MLSS).
+    - Tốc độ sục khí (aeration rate) bộc lộ hiệu suất giảm dần (diminishing returns) khi vượt trên vận tốc cọ rửa tới hạn (critical scouring velocity).
+    - Tỷ lệ F/M và thời gian lưu bùn (SRT) tương tác phi cộng tính (interact non-additively) $[25, 29, 36, 38]$.
+- So sánh hiệu năng nội bộ trong họ mô hình kết hợp (ensemble family):
+  - Các biến thể đóng bao (bagging variants) liên tục đạt hiệu năng cao hơn phương pháp tăng cường tuần tự (sequential boosting).
+  - Hai thuật toán tăng cường XGBoost ($R^2 = 0.977$) và LightGBM ($R^2 = 0.978$) đạt hiệu năng gần tương đương với bagging đối với biến mục tiêu TMP.
+  - AdaBoost có hiệu năng kém rõ rệt trên mọi biến mục tiêu ($R^2$ lần lượt là $0.781$ cho TMP, $0.655$ cho lưu lượng và $0.308$ cho mực nước), phù hợp với độ nhạy cao của cơ chế tái gán trọng số thích ứng (adaptive reweighting) đối với các hiện tượng nhiễu cảm biến (sensor artefacts) trong dữ liệu SCADA công nghiệp.
+  - Lợi thế về hiệu năng của Extra Trees so với Random Forest bắt nguồn từ việc ngẫu nhiên hóa bổ sung các ngưỡng phân chia (split thresholds).
+- Hiệu năng của các mô hình phi tuyến không dựa trên cây (non-tree non-linear models):
+  - KNN đạt hiệu năng cao với $R^2$ lần lượt là $0.969$ cho TMP, $0.894$ cho lưu lượng và $0.813$ cho mực nước.
+  - Kết quả này chỉ ra rằng phản ứng của màng lọc có tính quy luật cục bộ (locally regular) trong không gian vận hành, là điều kiện tiên quyết giúp khuyến nghị cửa sổ vận hành (operating-window recommendation) mang lại ý nghĩa thực tế.
+- Đánh giá hiện tượng quá khớp (overfitting) và độ ổn định mô hình:
+  - Chỉ duy nhất cây quyết định (Decision Tree) đối với biến mục tiêu mực nước bộc lộ hiện tượng quá khớp đáng kể ($R^2 = 0.890$ trên tập huấn luyện so với $0.650$ trên tập kiểm tra).
+  - Phân tích qua $20$ lần phân chia dữ liệu (20-split analysis, Table S3, Figs. S4–S6) xác nhận Extra Trees là mô hình tốt nhất với $R^2$ trung bình cao nhất cùng RMSE và MAE thấp nhất trên cả $3$ biến mục tiêu.
+- Đánh giá khả năng chuyển giao sang hệ thống màng độc lập về mặt vật lý (parallel B stream):
+  - Thử nghiệm được tiến hành trên tập dữ liệu độc lập gồm $4593$ quan sát theo giờ từ nhánh song song B (parallel B stream) trong cùng cơ sở xử lý, vận hành dưới điều kiện nước đầu vào khác biệt và có lịch sử tắc nghẽn màng độc lập (Fig. S7).
+  - Mô hình Extra Trees được áp dụng trực tiếp mà không cần huấn luyện lại (without retraining), đạt $R^2 = 0.996$ (hình ghi $0.9764$) cho TMP, $0.980$ (hình ghi $0.9590$) cho lưu lượng và $0.972$ (hình ghi $0.9244$) cho mực nước (Table S4, Fig. 5A–C):
+    - **Hình 5.** Đánh giá hiệu năng và sai số của Extra Trees trên tập độc lập
+      - <img src="assets/fig_05_p8.jpeg" alt="Hình 5" />
+      - **Hình này chứng minh điều gì**
+        - Điểm dự báo bám sát đường $1:1$ và phần dư phân bố đều quanh $0$, chứng minh mô hình chuyển giao sang nhánh độc lập không bị lệch hệ thống.
+      - **Từ đâu mà thấy được**
+        - Panel B: $90.9\%$ điểm TMP, $99.0\%$ điểm lưu lượng và $100.0\%$ điểm mực nước nằm trong dải dung sai $\pm 10\%$.
+        - Panel C, D: đồ thị phần dư phẳng quanh $0$; phân phối sai số đối xứng với độ lệch chuẩn nhỏ ($0.0138\text{ bar}$, $0.0519\text{ m}^3\text{/min}$, $0.3063\,\%$).
+        - Lưu ý: hình ghi $R^2$ lần lượt là $0.9764$, $0.9590$, $0.9244$; văn bản ghi $0.996$, $0.980$, $0.972$.
+  - Sai số trung bình (mean errors) tiệm cận $0$ và độ lệch chuẩn sai số đạt $0.014\text{ bar}$ cho TMP, $0.052\text{ m}^3\text{/min}$ cho lưu lượng và $0.306\,\%$ cho mực nước (Fig. 5D).
+  - Phân phối sai số TMP hơi lệch phải (độ lệch xiên / skewness đạt $1.025$), phản ánh xu hướng thỉnh thoảng đánh giá thấp TMP khi màng bị tắc nghẽn nghiêm trọng (extreme fouling):
+    - Xu hướng này an toàn về mặt vận hành (conservative direction) do thúc đẩy tiến hành làm sạch màng sớm hơn thay vì muộn hơn.
+  - Do nhánh B vận hành trong cùng khoảng thời gian và tiếp nhận cùng nguồn nước đầu vào, kết quả này xác lập khả năng chuyển giao giữa các chuỗi lọc màng (transfer across membrane trains) thay vì chuyển giao theo thời gian (temporal transfer).
+- Tổng hợp lựa chọn mô hình và tính nhất quán của khung vận hành:
+  - Hiệu năng trên tập kiểm tra chính, phân tích độ mạnh qua $20$ lần phân chia dữ liệu và kiểm định trên nhánh song song đồng thuận xác định Extra Trees là mô hình tốt nhất cho cả $3$ biến mục tiêu.
+  - Extra Trees được lựa chọn để triển khai phân tích khả năng diễn giải tại Mục 3.2 và tối ưu hóa vận hành tại Mục 3.3.
+  - Sử dụng đồng nhất một mô hình cho cả $3$ biến mục tiêu duy trì tính nhất quán của khung vận hành (operational framework) và việc diễn giải độ quan trọng của đặc trưng (feature-importance interpretation) trên cả $3$ chỉ số hiệu năng.

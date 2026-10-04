@@ -1,0 +1,11 @@
+### 2.8. Model adaptability under cross-scenario conditions
+- Đánh giá kiểm chứng bổ sung (additional validation) được thực hiện trên hệ thống MBR quy mô pilot (pilot-scale MBR) xử lý nước thải công nghiệp tại Singapore:
+  - Hệ thống xử lý hỗn hợp nước thải công nghiệp ngành hóa dầu và dược phẩm (mixed petrochemical and pharmaceutical industrial wastewater).
+  - Cấu hình quy trình công nghệ và các thông số vận hành chi tiết được cung cấp tại Bảng S8 (Table S8).
+  - Thử nghiệm nhằm đánh giá khả năng duy trì hiệu quả của quy trình đã thiết lập (established workflow) trong điều kiện nước thải công nghiệp mà không cần tối ưu hóa mô hình bổ sung (additional model optimization).
+- Đánh giá kiểm chứng được tiến hành bằng mô hình LSTM-FT dưới hai điều kiện tinh chỉnh (fine-tuning conditions) gồm $\text{FT} = 0$ và $\text{FT} = 40\%$:
+  - Nhằm duy trì tính nhất quán với phân tích chính, toàn bộ các cấu phần kỹ thuật được giữ nguyên:
+    - Mô hình tiền huấn luyện (pretrained model).
+    - Logic tinh chỉnh và kiểm tra theo trình tự thời gian (chronological fine-tuning/testing logic).
+    - Quy trình tiền xử lý dữ liệu (data preprocessing procedure).
+    - Các thiết lập cấu hình của mô hình (model settings).

@@ -1,0 +1,8 @@
+  - **Hình 2.** Lưu đồ phát triển và đánh giá mô hình dữ liệu
+    - <img src="assets/fig_02_p3.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Khung làm việc mô hình hóa phân loại trạng thái nitrat hóa từ dữ liệu thô đến kiểm thử và phân tích tầm quan trọng đặc trưng.
+    - **Từ đâu mà thấy được**
+      - Dòng xử lý từ trên xuống bắt đầu từ Raw data (Sec 2.1) qua Binary classification (Sec 2.2.1), Data preprocessing (Sec 2.2.3) đến Data-splitting strategy (Sec 2.2.4).
+      - Dữ liệu phân tách thành nhóm Training & validation ($80\,\%$) và hai nhóm kiểm thử: Test group không biocarrier ($20\,\%$, Sec 3.3) cùng Further test bổ sung biocarrier (Sec 3.4).
+      - Ba thuật toán (Logistic regression, Random forest, Extreme gradient boosting) được hiệu chuẩn với tiêu chí độ chính xác cao nhất (Sec 2.2.7) trước khi đưa vào Model testing.

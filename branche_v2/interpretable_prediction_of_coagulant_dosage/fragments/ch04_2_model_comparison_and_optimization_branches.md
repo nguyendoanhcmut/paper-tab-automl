@@ -1,0 +1,64 @@
+### 3.2 Model comparison and optimization
+
+- Nghiên cứu so sánh TPOT AutoML với các thuật toán học máy điển hình để xây dựng mô hình dự đoán liều lượng PACl:
+  - Các thuật toán so sánh gồm Cây quyết định (Decision Tree - DT), Hồi quy vector hỗ trợ (Support Vector Regression - SVR), $k$ láng giềng gần nhất (K-Nearest Neighbors - KNN), Hồi quy tuyến tính (Linear Regression - LR) và Cây tăng cường độ dốc (Gradient Boosting Tree - GBT).
+  - Bảng 2 liệt kê cấu hình siêu tham số (hyperparameters) tối ưu hóa của các mô hình:
+    - DT: $\text{max\_depth} = 8$, $\text{min\_samples\_split} = 10$, $\text{min\_samples\_leaf} = 5$, $\text{max\_features} = 0.5$, $\text{random\_state} = 42$.
+    - SVR: $c = 1$, $\epsilon = 10$, $\gamma = \text{scale}$.
+    - KNN: $n\text{\_neighbors} = 15$, $p = 1$, $\text{metric} = \text{minkowski}$.
+    - LR: $\text{fit\_intercept} = \text{True}$, $\text{normalize} = \text{True}$, $\text{positive} = \text{False}$.
+    - GBT: $n\text{\_estimators} = 150$, $\text{learning\_rate} = 0.1$, $\text{max\_depth} = 5$, $\text{min\_samples\_split} = 8$, $\text{subsample} = 0.8$, $\text{max\_features} = \text{sqrt}$.
+  - Bảng 3 so sánh các chỉ số hiệu suất đánh giá giữa các mô hình học máy:
+    - AutoML: RF: Tập huấn luyện (training set) đạt $\text{RMSE} = 0.07$, $\text{MAE} = 0.02$, $R^2 = 1.00$; tập kiểm tra (testing set) đạt $\text{RMSE} = 0.89$, $\text{MAE} = 0.47$, $R^2 = 0.96$.
+    - GBT: Tập huấn luyện đạt $\text{RMSE} = 1.06$, $\text{MAE} = 0.74$, $R^2 = 0.96$; tập kiểm tra đạt $\text{RMSE} = 1.41$, $\text{MAE} = 0.97$, $R^2 = 0.91$.
+    - LR: Tập huấn luyện đạt $\text{RMSE} = 1.68$, $\text{MAE} = 1.21$, $R^2 = 0.89$; tập kiểm tra đạt $\text{RMSE} = 1.81$, $\text{MAE} = 1.34$, $R^2 = 0.84$.
+    - DT: Tập huấn luyện đạt $\text{RMSE} = 0.00$, $\text{MAE} = 0.00$, $R^2 = 1.00$; tập kiểm tra đạt $\text{RMSE} = 2.07$, $\text{MAE} = 0.66$, $R^2 = 0.80$.
+    - KNN: Tập huấn luyện đạt $\text{RMSE} = 2.90$, $\text{MAE} = 1.91$, $R^2 = 0.68$; tập kiểm tra đạt $\text{RMSE} = 3.46$, $\text{MAE} = 2.55$, $R^2 = 0.43$.
+    - SVR: Tập huấn luyện đạt $\text{RMSE} = 4.81$, $\text{MAE} = 2.85$, $R^2 = 0.13$; tập kiểm tra đạt $\text{RMSE} = 4.45$, $\text{MAE} = 2.89$, $R^2 = 0.06$.
+- Thuật toán tối ưu do AutoML lựa chọn là Rừng ngẫu nhiên (Random Forest - RF), đem lại độ chính xác cao và độ bền vững cao hơn so với các thuật toán khác:
+  - Giá trị $R^2$ của mô hình RF đạt $1.00$ trên tập huấn luyện và $0.96$ trên tập kiểm tra.
+  - Mô hình RF ghi nhận sai số thấp nhất tương ứng với $\text{RMSE} = 0.95 \pm 0.11\,\text{mg/L}$ và $\text{MAE} = 0.47 \pm 0.83\,\text{mg/L}$.
+  - Nghiên cứu của Kim và cộng sự dự đoán liều PAC bằng mạng nơ-ron tích chập (CNN) và đơn vị tuần hoàn cổng (GRU) đạt $R^2 > 0.8$ trên cả hai tập.
+    - Mô hình CNN và GRU dùng để trích xuất đặc trưng không-thời gian, nhưng các động lực chính dự đoán liều PAC là thông số chất lượng nước tĩnh thay vì chuỗi thời gian hay mẫu không gian.
+    - Việc trích xuất không-thời gian đưa vào độ phức tạp không cần thiết và dẫn đến dư thừa thông tin.
+  - Nghiên cứu của Lin và cộng sự dùng học sâu (deep learning) dự đoán PAC và sulfate đạt $\text{RMSE} = 3.55$ và $R^2 = 0.94$, trong khi AutoML đạt sai số thấp hơn.
+  - Quy hoạch di truyền (genetic programming) của TPOT ưu tiên các phương pháp học kết hợp (ensemble methods), thích hợp cho dữ liệu quy mô vừa và nhỏ nhờ cân bằng tốt độ chệch và phương sai (bias-variance).
+  - Thuật toán SVR cho hiệu suất kém nhất với $R^2$ chỉ đạt $0.13$ trên tập huấn luyện và $0.06$ trên tập kiểm tra.
+    - SVR nhạy cảm cao với việc chọn siêu tham số và thiếu giải pháp xác định chính xác các tham số cấu hình.
+  - Thuật toán DT đạt $R^2 = 1.00$ trên tập huấn luyện nhưng thể hiện kém trên tập kiểm tra ($R^2 = 0.80$, $\text{RMSE} = 2.07$).
+    - DT có xu hướng xây dựng mô hình phức tạp bắt giữ nhiễu và chi tiết thay vì quy luật phân phối dữ liệu thực, làm giảm hiệu suất trên dữ liệu mới.
+- Kết quả khớp và biểu đồ mật độ phân tán chứng minh mô hình AutoML: RF đạt độ chính xác cao và độ chệch tiềm ẩn tối thiểu:
+  - **Hình 4.** Kết quả khớp và mật độ phân tán của AutoML: RF
+    - <img src="assets/fig_04_p6.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Đường dự đoán bám sát biến thiên thực tế theo từng mẫu trong dải liều lượng $8\text{ mg/L}$ đến $35\text{ mg/L}$.
+    - **Từ đâu mà thấy được**
+      - Panel (khung hình) (a), (b): Đồ thị chuỗi mẫu (Oy: $8\text{ mg/L}$ đến $35\text{ mg/L}$); đường dự đoán nét đứt (Predicted) bám khít đường thực tế (Actual).
+      - Panel (c), (d): Biểu đồ mật độ phân tán (Ox: thực tế, Oy: dự đoán từ $0\text{ mg/L}$ đến $40\text{ mg/L}$); các điểm hội tụ dọc đường chéo với mật độ cao nhất tại $8\text{ mg/L}$ và $30\text{ mg/L}$.
+  - Nồng độ thấp của chất rắn lơ lửng, chất keo và chất ô nhiễm trong nước thô tạo ra nước chất lượng cao.
+  - Ảnh hưởng tối thiểu của $\text{pH-RW}$ và $\text{NTU-RW}$ đến quá trình keo tụ giữ cho sai số trên tập kiểm tra chủ yếu dưới $20\,\text{mg/L}$.
+  - Biểu đồ mật độ phân tán chỉ ra các điểm liều lượng PACl thực tế và dự đoán phân bố bám sát đường chéo trên cả hai tập, phản ánh độ chệch tiềm ẩn ở mức tối thiểu.
+- Tối ưu hóa liều lượng PACl bằng mô hình AutoML: RF giúp cắt giảm dư thừa hóa chất theo kinh nghiệm thủ công, tiết kiệm trung bình trọng số $10.25\,\%$ liều lượng hàng năm cho toàn nhà máy:
+  - **Hình 5.** Kết quả tối ưu hóa liều lượng PACl bằng AutoML: RF.
+    - <img src="assets/fig_05_p6.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Đường dự báo tối ưu (`Optimized`) liên tục bám dưới mức châm thủ công (`Actual`), trực quan hóa lượng hóa chất dư thừa được cắt giảm qua vùng tô xám.
+    - **Từ đâu mà thấy được**
+      - (a) Nguồn sông Dương Tử (Yangtze River): Ox Thời gian (`Time`), Oy Liều lượng ($5\text{--}30\,\text{mg/L}$); khoảng xám giữa đường tím `Actual` và cam `Optimized` thể hiện mức cắt giảm trong dải liều $8\text{--}30\,\text{mg/L}$.
+      - (b) Nguồn sông Loan (Luanhe River): Ox Thời gian (`Time`), Oy Liều lượng ($10\text{--}40\,\text{mg/L}$); khoảng xám rõ nhất ở đỉnh liều mùa đông ($10\text{--}35\,\text{mg/L}$) do nhiệt độ thấp.
+  - Mô hình RF dự đoán liều lượng PACl tối ưu từ dữ liệu nước thô thực tế và các mục tiêu chất lượng nước sau xử lý:
+    - Mục tiêu chất lượng nước sau xử lý cho nguồn sông Dương Tử: $\text{NTU-TW}: 0.2\,\text{NTU}$, $\text{COD}_{\text{Mn}}\text{-TW}: 1.2\,\text{mg/L}$, $\text{pH-TW}: 8$, $\text{NH}_3\text{-N-TW}: 0.01\,\text{mg/L}$.
+    - Mục tiêu chất lượng nước sau xử lý cho nguồn sông Loan: $\text{NTU-TW}: 0.3\,\text{NTU}$, $\text{COD}_{\text{Mn}}\text{-TW}: 1.5\,\text{mg/L}$, $\text{pH-TW}: 8$, $\text{NH}_3\text{-N-TW}: 0.01\,\text{mg/L}$.
+  - Cơ chế tối ưu hóa cho nguồn nước sông Dương Tử (Yangtze River):
+    - Vào mùa xuân và mùa hè, nhiệt độ nước sông Dương Tử cao làm PACl thủy phân nhanh, đồng thời tảo tích điện âm sinh sôi mạnh đòi hỏi nhiều PACl để trung hòa điện tích.
+    - Điều chỉnh chính xác liều lượng giúp tránh dư thừa theo kinh nghiệm ở nhiệt độ cao, giảm $222\,\text{kg/d}$ hóa chất, tiết kiệm $180.7\,\text{RMB/day}$ và giảm tiêu thụ PACl $11\,\%$ mỗi năm.
+    - Nhà máy dùng nước sông Dương Tử làm nguồn duy nhất từ tháng 3 đến tháng 11 hàng năm, với liều PACl thủ công dao động từ $8$ đến $30\,\text{mg/L}$.
+  - Cơ chế tối ưu hóa cho nguồn nước sông Loan (Luanhe River):
+    - Vào mùa đông, nhiệt độ nước sông Loan thấp làm $\text{Al}^{3+}$ thủy phân không hoàn toàn, tạo bông chậm, hình thành các khối bông kích thước nhỏ, tỷ trọng thấp và chịu ảnh hưởng ô nhiễm nông nghiệp thượng nguồn, đòi hỏi bù thêm PACl.
+    - Dự đoán tối ưu giúp giảm châm quá liều bù trừ do nhiệt độ thấp, giảm $225\,\text{kg/d}$ hóa chất, tiết kiệm $183.2\,\text{RMB/day}$ và tiết kiệm $8\,\%$ lượng hóa chất mỗi năm.
+    - Trong các tháng nhiệt độ thấp từ tháng 12 đến tháng 2 hàng năm, liều thủ công cho sông Loan cao hơn từ $10$ đến $35\,\text{mg/L}$, cho phép lượng tiết kiệm tuyệt đối cao hơn dù tỷ lệ phần trăm thấp hơn.
+  - Tính toán theo bình quân trọng số thời gian, mô hình có tiềm năng tiết kiệm $10.25\,\%$ tổng liều lượng PACl hàng năm cho nhà máy.
+- Mô hình hóa AutoML khắc phục triệt để các nhược điểm của phán đoán cảm tính thủ công trong vận hành xử lý nước:
+  - Phương pháp dự đoán chính xác liều lượng tối ưu để đáp ứng liên tục quy chuẩn nước sau xử lý dưới các điều kiện nước thô biến thiên, tiết kiệm $10.25\,\%$ chất keo tụ mỗi năm.
+  - Phán đoán thủ công thường dẫn đến châm quá liều khi chất lượng nước thô vượt ngưỡng nhất định.
+  - Dự đoán bằng mô hình bảo đảm liều lượng chính xác trong khi duy trì quy chuẩn nước sau xử lý, giảm chi phí hóa chất và ổn định chất lượng nước đầu ra.

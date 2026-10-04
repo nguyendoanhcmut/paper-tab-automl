@@ -1,0 +1,47 @@
+### 3.1. AutoML for efficient AnMBR modeling
+
+- Mô hình AutoML được xây dựng trên cùng tập dữ liệu (bao gồm các đặc trưng đầu vào và mục tiêu) từ nghiên cứu của Li et al. (2022) nhằm đối chuẩn hiệu suất trực tiếp với các kết quả đã công bố:
+  - Kết quả cho thấy AutoML đạt hiệu suất cạnh tranh khi so sánh với các kết quả đã báo cáo của các mô hình học sâu trước đó gồm FCN, CNN và DenseNet (Bảng 1 và Hình 2):
+    - **Hình 2. Kết quả dự đoán của các mô hình và so sánh với giá trị đo thực tế**
+      - ![assets/fig_02_p5.jpeg](assets/fig_02_p5.jpeg)
+      - **Hình này chứng minh điều gì**
+        - Mô hình AutoML bám sát giá trị thực tế của hiệu suất loại bỏ COD với dao động ổn định hơn các mô hình học sâu.
+      - **Từ đâu mà thấy được**
+        - Trục $Ox$: Thời gian vận hành ($325\text{--}398\text{ ngày}$); Trục $Oy$: Hiệu suất loại bỏ COD ($70\text{--}105\,\%$).
+        - Đường AutoML (đỏ) dao động ổn định trong phạm vi $81.3\,\%\text{--}89.5\,\%$, trong khi FCN, CNN và Dense biến động mạnh, từng vượt $100\,\%$ hoặc tụt xuống $\approx 71.3\,\%$.
+  - Bảng 1 thống kê chi tiết các chỉ số đánh giá hiệu suất mô hình giữa AutoML và các kiến trúc học sâu cơ sở:
+    - AutoML (kiểm định chéo $10$ phần - $10\text{-fold CV}$): $\text{RMSE} = 2.47\,\%$ [$2.14\,\%$, $2.81\,\%$], $\text{MAE} = 1.90\,\%$ [$1.68\,\%$, $2.11\,\%$], $\text{MAPE} = 2.19\,\%$ [$1.93\,\%$, $2.46\,\%$], $R^2 = 0.44$ [$0.22$, $0.65$] (các chỉ số sai số được báo cáo dưới dạng giá trị trung bình kèm khoảng tin cậy $95\,\%$ dựa trên phân phối Student's $t$).
+    - AutoML (đánh giá theo phân chia dữ liệu của Li et al. (2022)): $\text{RMSE} = 3.09\,\%$, $\text{MAE} = 2.76\,\%$, $\text{MAPE} = 3.11\,\%$, $R^2 = 0.47$.
+    - Mô hình FCN (Li et al., 2022): $\text{RMSE} = 6.29\,\%$, $\text{MAE} = 5.71\,\%$, $\text{MAPE} = 6.49\,\%$, $R^2 = -1.19$.
+    - Mô hình CNN (Li et al., 2022): $\text{RMSE} = 5.98\,\%$, $\text{MAE} = 5.34\,\%$, $\text{MAPE} = 6.02\,\%$, $R^2 = -0.97$.
+    - Mô hình DenseNet / Dense (Li et al., 2022): $\text{RMSE} = 4.69\,\%$, $\text{MAE} = 4.34\,\%$, $\text{MAPE} = 4.93\,\%$, $R^2 = -0.21$.
+    - Đơn vị của $\text{RMSE}$ và $\text{MAE}$ tương đương với hiệu suất loại bỏ $\text{COD}$ ($\text{COD-re}$, $\%$); $\text{MAPE}$ tính theo tỷ lệ phần trăm theo phương trình (4).
+- Ứng dụng AutoML giúp chuyển đổi hệ số xác định $R^2$ từ giá trị âm sang giá trị dương, đánh dấu bước cải thiện rõ rệt về hiệu suất mô hình:
+  - Giá trị $R^2$ âm từng ghi nhận ở các kiến trúc học sâu trước đây có thể xuất phát từ hiện tượng quá khớp (overfitting), kích thước tập dữ liệu hạn chế, sự thiếu hụt các đặc trưng liên quan và mức độ phù hợp của mô hình đối với tác vụ (Jiang et al., 2025).
+  - Đánh giá AutoML qua kiểm định chéo $10$ phần ($10\text{-fold cross-validation}$) cho khoảng tin cậy $\text{RMSE}$ hẹp ($\pm 0.33\,\%$), khẳng định tính ổn định cao của AutoML.
+- Các mô hình dựa trên cây (tree-based models) được sử dụng làm bộ học cơ sở (base learners) cho các tác vụ AutoML:
+  - Các mô hình này thể hiện sự khác biệt đáng kể so với mạng nơ-ron (neural networks), đặc biệt trong xử lý dữ liệu dạng bảng (tabular data) (Grinsztajn et al., 2022; Shwartz-Ziv and Armon, 2022).
+  - Các thuật toán dựa trên cây thường đạt hiệu quả cao hơn các phương pháp học sâu khi áp dụng cho dữ liệu bảng có cấu trúc và không yêu cầu tiền xử lý dữ liệu phức tạp (McElfresh et al., 2023).
+  - Việc ứng dụng AutoML dựa trên cây vừa nâng cao độ chính xác mô hình vừa cải thiện hiệu quả của quy trình mô hình hóa AnMBR.
+- Phân tích Bland-Altman (Bland-Altman analysis) được sử dụng để đánh giá tính nhất quán giữa giá trị dự đoán và quan sát thực tế (ground truth), cung cấp thông tin về độ chính xác dự đoán và tính ổn định của mô hình:
+  - Phân tích thể hiện độ sai khác trung bình (bias) và tính toán các giới hạn thỏa thuận (limits of agreement) phản ánh phạm vi kỳ vọng cho phần lớn các mức sai biệt; ranh giới thỏa thuận càng rộng biểu thị tính nhất quán càng kém giữa mô hình và quan sát thực tế.
+  - Kết quả AutoML phân bố trong dải giới hạn thỏa thuận hẹp hơn so với các mô hình học sâu, với phân phối sai số đồng đều hơn (Hình 3):
+    - **Hình 3. Phân tích Bland-Altman về độ sai khác dự đoán COD-re**
+      - ![assets/fig_03_p6.jpeg](assets/fig_03_p6.jpeg)
+      - **Hình này chứng minh điều gì**
+        - AutoML đạt dải giới hạn thỏa thuận hẹp nhất và sai số phân bố đồng đều, không bị suy giảm theo giá trị trung bình như các mô hình học sâu.
+      - **Từ đâu mà thấy được**
+        - Trục $Ox$: Giá trị COD-re trung bình ($\%$); Trục $Oy$: Độ sai khác COD-re ($\%$, thực tế trừ dự đoán).
+        - Panel (a) AutoML có dải thỏa thuận hẹp nhất (khoảng $-1.5\,\%$ đến $+6.3\,\%$), sai số trung bình $2.36\,\%$, các điểm phân tán đồng đều.
+        - Panel (b) FCN, (c) CNN, (d) Dense có dải thỏa thuận rộng hơn (sai số trung bình lần lượt là $3.97\,\%$, $2.41\,\%$, $2.04\,\%$) và độ sai khác giảm mạnh về giá trị âm (đến $-10.5\,\%$) khi COD-re trung bình tăng cao.
+  - Đa số các điểm dữ liệu của AutoML nằm trong khoảng tin cậy $95\,\%$, chứng minh mức độ tương đồng cao giữa giá trị quan sát và dự đoán của mô hình.
+- Phân phối độ sai khác phản ánh đặc tính ổn định của AutoML so với sự phụ thuộc giá trị ở mô hình học sâu:
+  - Đối với các mô hình học sâu, độ sai khác giữa giá trị dự đoán và quan sát có xu hướng giảm khi giá trị trung bình tăng lên.
+  - Ngược lại, kết quả AutoML không xuất hiện quy luật phụ thuộc này, độ sai khác phân bố đồng đều trên toàn bộ dải giá trị trung bình, làm nổi bật tính ổn định của AutoML.
+- Tất cả kết quả phân tích Bland-Altman đều cho độ sai khác trung bình dương ($\text{mean difference} > 0$) (Hình 3):
+  - Giá trị dương chỉ ra xu hướng có hệ thống là các mô hình đều đánh giá thấp hơn thực tế (underestimate) tỷ lệ loại bỏ COD.
+  - Hiện tượng đánh giá thấp này có thể do phân phối dữ liệu mất cân bằng giữa tập huấn luyện và tập kiểm tra.
+  - Các mô hình dựa trên dữ liệu có xu hướng làm mịn (smooth out) nhiễu do độ bất định đo lường và tính chất biến động động học của quá trình sinh học.
+- AutoML đạt sai số $\text{RMSE} = 3.09\,\%$, thấp hơn độ lệch chuẩn của hiệu suất loại bỏ COD thực nghiệm được ghi nhận trong các hệ thống AnMBR vận hành dài hạn (Robles et al., 2022; Uman et al., 2021):
+  - Kết quả chứng minh độ chính xác tổng thể của mô hình đủ đáp ứng yêu cầu mô tả động học của quá trình AnMBR.
+  - Hiện tượng quá khớp, kích thước tập dữ liệu hạn chế, mức độ phù hợp của mô hình và phương pháp kiểm thử đều ảnh hưởng đến hiệu suất, do đó các kết quả so sánh mang tính định hướng thay vì khẳng định tuyệt đối.

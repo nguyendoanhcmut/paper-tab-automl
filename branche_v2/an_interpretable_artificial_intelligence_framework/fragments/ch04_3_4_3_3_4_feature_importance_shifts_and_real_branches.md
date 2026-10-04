@@ -1,0 +1,27 @@
+#### 3.3.4. Feature importance shifts and real-time control implications
+
+- Việc giới hạn phân tích SHAP (SHapley Additive exPlanations) trong phạm vi vùng khả thi (feasible region) làm thay đổi một số thứ hạng tầm quan trọng của các đặc trưng (importance rankings) theo hướng mang ý nghĩa vận hành thực tế rõ rệt (Bảng S5–S7 / Tables S5–S7).
+  - Sự dịch chuyển thứ hạng không phải là sai số nhân tạo (artefacts): trong chế độ vận hành khả thi (viable regime), các điều kiện vận hành gây tổn hại nghiêm trọng nhất đã bị loại trừ hoàn toàn bởi các ràng buộc đầu ra (output constraints):
+    - Thời gian lưu bùn (SRT / Sludge Retention Time) trên $100\ \text{ngày}$ (days).
+    - Nồng độ chất rắn lơ lửng trong bùn lỏng (MLSS / Mixed Liquor Suspended Solids) trên $7500\ \text{mg/L}$.
+    - Thời gian lưu thủy lực (HRT / Hydraulic Retention Time) trên $10\ \text{h}$.
+  - Khi các điều kiện cực đoan bị loại trừ, các nguồn gây biến thiên ở thang thời gian ngắn hơn (shorter-timescale sources of variability) trở nên chiếm ưu thế chi phối hệ thống.
+- Tỷ lệ thức ăn trên vi sinh vật (F/M / Food-to-Microorganism ratio) là trường hợp dịch chuyển thứ hạng rõ nét nhất, với tầm quan trọng đối với mực nước bể màng (membrane tank water level) tăng $87\,\%$, thăng từ hạng $5$ lên hạng $4$:
+  - Trong toàn bộ tập dữ liệu (full dataset), các giá trị SRT cực đoan và MLSS ở mức cao chiếm ưu thế chi phối phương sai mực nước (level variance), làm che khuất hoàn toàn đóng góp ở thang thời gian ngắn của tải lượng chất hữu cơ (organic loading).
+  - Trong vùng khả thi, khi cả hai thông số SRT và MLSS đều được duy trì ở mức vừa phải (moderate), F/M nổi lên thành động lực chính dẫn dắt biến động mực nước theo từng giờ (hour-to-hour level movement).
+  - Biến động mực nước theo từng giờ diễn ra thuận theo tiến độ sản xuất theo mẻ (batch production schedule) của xưởng sản xuất bán dẫn (fab) thay vì phản ánh các thông số sinh học có chu kỳ điều chỉnh chậm.
+- Sự gia tăng song song về tầm quan trọng của MLSS đối với mực nước cùng với F/M xác định $3$ đòn bẩy phản ứng nhanh (fast-acting levers) cho hoạt động kiểm soát mực nước bể màng:
+  - Liều lượng châm glucose (glucose dosing rate), phản hồi nhanh trong thang thời gian tính bằng phút (minutes).
+  - Tốc độ xả bùn (sludge extraction rate), phản hồi trong thang thời gian tính bằng giờ (hours).
+  - Điều chỉnh F/M thông qua bể điều hòa (equalisation), phản hồi trong thang thời gian tính bằng giờ (hours) (Hình 9E / Fig. 9E).
+  - Ba đòn bẩy phản ứng nhanh này cho phép người vận hành giữ mực nước bể màng dưới ngưỡng an toàn $67\,\%$ trong suốt các chu kỳ sản xuất tải lượng cao (high-loading production) mà không cần chờ đợi chu kỳ điều chỉnh SRT kéo dài hơn rất nhiều (much longer SRT adjustment cycle).
+- Tỷ lệ cacbon trên nitơ (C/N / Carbon-to-nitrogen ratio) cũng tăng thứ hạng tầm quan trọng đối với cả áp suất xuyên màng TMP (transmembrane pressure) và lưu lượng thấm (permeate flow):
+  - Dải giá trị thuận lợi của C/N được thiết lập bởi lịch trình xả thải của nhà máy bán dẫn (fab's discharge schedule) và liên tục dịch chuyển theo sự biến đổi của lịch trình này.
+  - C/N được báo cáo như một biến giám sát (monitoring variable) cần được tái ước tính định kỳ (re-estimated periodically) thay vì áp dụng như một điểm cài đặt cố định (fixed set-point).
+- Các khuyến nghị vận hành trong Bảng 4 (Table 4) được xây dựng dựa trên sự hội tụ của nhiều phương pháp phân tích độc lập thay vì chỉ dựa vào một phương pháp đơn lẻ:
+  - Bằng chứng định hướng SHAP nhất quán giữa các mô hình (cross-model SHAP directional evidence) tại Mục 3.2 (Section 3.2) trên toàn bộ $16$ mô hình học máy.
+  - Mặt cong khả thi có điều kiện (conditional feasibility surface) thu được từ mẫu lấy trên đa tạp ràng buộc (manifold-constrained sample).
+  - Tỷ lệ đạt mục tiêu đo đạc thực tế (measured attainment rate) trong nhật ký vận hành của chính nhà máy, với các đòn bẩy cốt lõi được kiểm định bổ sung độc lập theo chuỗi thời gian ngoài mẫu (out-of-time validation).
+- Sự hội tụ chặt chẽ giữa bằng chứng dựa trên mô hình (model-based evidence) và bằng chứng dựa trên đo đạc thực tế (measurement-based evidence) tạo nên điểm khác biệt căn bản so với các nghiên cứu tối ưu hóa MBR trước đây:
+  - Các công trình trước đây thường chỉ báo cáo riêng lẻ thứ hạng tầm quan trọng (importance rankings), hiệu ứng định hướng (directional effects), hoặc một dải vận hành khả thi (feasible range).
+  - Các nghiên cứu trước đây không đối chiếu và điều hòa đồng thời cả ba yếu tố trên với kết quả thực tế mà nhà máy đã ghi nhận đạt được trong thực tiễn vận hành.

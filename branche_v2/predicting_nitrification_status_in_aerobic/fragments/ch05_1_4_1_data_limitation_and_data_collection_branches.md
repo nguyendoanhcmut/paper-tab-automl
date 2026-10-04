@@ -1,0 +1,25 @@
+### 4.1. Data limitation and data collection
+
+- Sự khan hiếm dữ liệu (data scarcity) là rào cản căn bản trong phát triển mô hình ML (Machine Learning - học máy) cho các ứng dụng môi trường:
+  - Thách thức xuất hiện rõ rệt khi thích ứng mô hình tiền huấn luyện (pre-trained models) sang các kịch bản vận hành mới thông qua học chuyển giao (transfer learning).
+  - Tập dữ liệu nghiên cứu được thu thập từ các thí nghiệm vận hành thay vì được thiết kế chuyên biệt cho việc phát triển ML, tạo ra giới hạn trong đánh giá mô hình dù độ chính xác trên tập kiểm tra (test accuracy) đạt $> 0{,}8$.
+  - Việc mở rộng quy mô tập dữ liệu trải rộng qua nhiều điều kiện vận hành đa dạng là yêu cầu thiết yếu để thiết lập các ranh giới quyết định (decision boundaries) bền vững (robust), đặc biệt khi phân biệt các trạng thái quá trình chuyển tiếp (transient process states) trong quá trình nitrat hóa - khử nitrat đồng thời (SND - simultaneous nitrification-denitrification).
+- Giới hạn dữ liệu tác động trực tiếp đến việc xác lập các tiêu chí tối ưu hóa (optimization criteria) và làm gia tăng hiện tượng quá khớp dự đoán (prediction overfitting):
+  - Dù nghiên cứu ưu tiên tối đa hóa độ chuẩn xác (precision maximization: TPR cao / FPR thấp - high True Positive Rate / low False Positive Rate), tập dữ liệu hạn chế cản trở việc xác định ranh giới cho các đường cong tối ưu hóa TPR-FPR (TPR-FPR optimization curves).
+  - Đường cong tối ưu hóa đóng vai trò trực quan hóa quy trình hiệu chuẩn mô hình (model calibration) và định hướng lựa chọn ngưỡng FPR phù hợp để đánh giá hiệu năng trên cả ba tập: huấn luyện (training set), kiểm định (validation set) và kiểm tra (test set).
+  - Bối cảnh tái sử dụng nước (water reuse contexts) đòi hỏi phải đánh giá rủi ro định lượng đối với các trường hợp dương tính giả (FPs - False Positives) thay vì chỉ xác định FPR thuần túy về mặt toán học.
+  - Việc xác định các điểm vận hành hợp lý (reasonable operating points) trước khi tiến hành thử nghiệm chéo kịch bản (cross-scenario testing) hỗ trợ quá trình kiểm định mô hình và điều chỉnh điểm đặt (set-point adjustments).
+  - Khoảng tin cậy rộng (wide confidence intervals) phản ánh sự cần thiết của các tập dữ liệu quy mô lớn hơn nhằm đánh giá độ ổn định của mô hình và mức đóng góp của từng đặc trưng (feature contributions).
+  - Phạm vi dữ liệu hiện tại phụ thuộc vào nồng độ $\text{NH}_4^+\text{-N}$ và $\text{NO}_3^-\text{-N}$ trong nước sau xử lý (effluent $\text{NH}_4^+\text{-N}/\text{NO}_3^-\text{-N}$), cần được mở rộng để tích hợp các thông số vận hành (operational parameters), động học chất lượng nước (water quality dynamics) và dữ liệu chuỗi thời gian (temporal data) cho phân tích độ nhạy (sensitivity analysis) đáng tin cậy.
+- Cảm biến trực tuyến (online sensors) đóng vai trò cốt lõi trong việc thu thập dữ liệu vận hành nhất quán:
+  - Các đặc trưng tương thích với cảm biến (sensor-compatible features, Section 2.2.2) được ưu tiên lựa chọn để tạo điều kiện thuận lợi cho việc kiểm định quy mô lớn trong tương lai.
+  - Việc tối ưu hóa tần suất đo (measurement frequency) đòi hỏi sự cân bằng giữa yêu cầu nghiêm ngặt của việc tái sử dụng nước và chi phí vận hành (operational costs).
+  - Xác định các giá trị đầu vào liên quan đến các điểm phân loại sai (misclassification points), tăng tần suất đo và đánh giá kết quả dự đoán của mô hình trong các điều kiện này hỗ trợ làm sáng tỏ cơ chế sự cố (failure mechanisms) và đặt nền móng cho các nghiên cứu về hệ thống cảnh báo sớm (early-warning systems).
+- Khung lộ trình theo các giai đoạn (phased framework) mở rộng từ nước xám nhân tạo (synthetic greywater) sang nền nước thải thực tế (real wastewater matrices):
+  - Việc kiểm định mô hình hiện tại sử dụng synthetic greywater chỉ đóng vai trò chứng minh khái niệm (proof-of-concept), đòi hỏi phải mở rộng kiểm chứng trên nền nước thải thực tế.
+  - Khung lộ trình nghiên cứu tương lai gồm ba giai đoạn:
+    - Giai đoạn I (Phase I): Nhân tạo $\rightarrow$ Nhân tạo (Synthetic $\rightarrow$ Synthetic - nghiên cứu hiện tại).
+    - Giai đoạn II (Phase II): Nhân tạo $\rightarrow$ Thực tế (Synthetic $\rightarrow$ Real - bước kiểm định kế tiếp).
+    - Giai đoạn III (Phase III): Huấn luyện mô hình hỗn hợp (Hybrid training), kết hợp dữ liệu thực tế và nhân tạo (ví dụ: $60\,\%$ nước thải thực tế $+ 40\,\%$ nước xám nhân tạo).
+  - Bổ sung các điều kiện vận hành thách thức hơn như sự cố hệ thống (system failures: lỗi hệ thống sục khí - aeration malfunction, hoặc hư hại màng - membrane damage) là điều kiện thiết yếu để nâng cao khả năng ứng dụng thực tế của mô hình.
+  - Mặc dù nghiên cứu đã bao gồm một số điều kiện vận hành cận tối ưu (suboptimal operations: nitrat hóa ở mức sục khí thấp - low-aeration nitrification), việc thu thập dữ liệu có hệ thống trên nhiều chế độ lỗi (failure modes) khác nhau vẫn là yêu cầu cốt lõi.

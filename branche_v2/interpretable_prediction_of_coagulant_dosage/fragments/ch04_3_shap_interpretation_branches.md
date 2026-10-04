@@ -1,0 +1,108 @@
+### 3.3 SHAP interpretation
+
+- Thứ hạng tầm quan trọng đặc trưng toàn cục (SHAP feature importance ranking) trên tập kiểm tra xếp theo thứ tự giảm dần: EC-RW ($0.72$), pH-TW ($0.71$), $\text{NH}_3\text{-N-RW}$ ($0.62$), $\text{COD}_{\text{Mn}}\text{-RW}$ ($0.6$), T-RW ($0.53$), NTU-RW ($0.41$), WTR ($0.28$), NTU-TW ($0.2$) và pH-RW ($0.18$).
+  - **Hình 6.** Tầm quan trọng đặc trưng SHAP và biểu đồ summary plot
+    - <img src="assets/fig_06_p7.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - Giá trị $\text{Mean}(|\text{SHAP value}|)$ định lượng mức đóng góp giảm dần từ $0.72$ (EC-RW) đến $0.18$ (pH-RW).
+      - EC-RW ($0.72$) và pH-TW ($0.71$) có mức tác động lớn nhất lên dự đoán của mô hình.
+    - **Từ đâu mà thấy được**
+      - Panel (a): Trục hoành đo $\text{Mean}(|\text{SHAP value}|)$ từ $0.1$ đến $0.8$. Đầu mỗi thanh ghi giá trị số của đặc trưng.
+      - Panel (b): Trục hoành đo SHAP value từ $-2$ đến $8$. Thang màu bên phải biểu thị giá trị đặc trưng từ thấp (xanh dương) đến cao (đỏ).
+  - Dữ liệu giám sát từ nhà máy xử lý nước tuân thủ nguyên tắc điều chỉnh liều châm liên tục theo chất lượng nước thô để giữ nước sau xử lý đạt chuẩn ổn định.
+  - Quan hệ giữa liều lượng châm hóa chất và chất lượng nước sau xử lý thể hiện mối liên hệ nhân quả trực tiếp.
+    - Liều lượng vượt quá một ngưỡng nhất định chỉ tạo ra tác động rất nhỏ lên chất lượng nước sau xử lý.
+  - Quan hệ giữa liều lượng và chất lượng nước thô phản ánh kinh nghiệm thực tế của người vận hành.
+    - Người vận hành căn cứ vào kinh nghiệm và các chỉ số nước thô để cài đặt liều lượng hóa chất đáp ứng tiêu chuẩn nước sạch.
+  - Các chỉ số nước thô nhìn chung quan trọng hơn các chỉ số nước sau xử lý trong mô hình.
+    - Chất lượng nước thô biến thiên trong biên độ rộng, trong khi chất lượng nước sau xử lý luôn được kiểm soát ổn định.
+  - Chiều hướng đóng góp của các đặc trưng vào kết quả dự đoán thể hiện qua biểu đồ tóm tắt (summary plot):
+    - Các đặc trưng EC-RW, $\text{NH}_3\text{-N-RW}$, $\text{COD}_{\text{Mn}}\text{-RW}$ và NTU-RW có giá trị đặc trưng tăng đồng thuận với giá trị SHAP, tạo tác động dương làm tăng liều lượng chất keo tụ.
+    - Các đặc trưng pH-RW, T-RW và WTR có chiều hướng ngược lại, tạo tác động âm làm giảm liều lượng châm chất keo tụ.
+    - EC-RW cao phản ánh độ tinh khiết của nước thấp, chứa hàm lượng muối hòa tan, chất hữu cơ và ion kim loại cao hơn.
+    - Cation trong PACl (Polyaluminum Chloride / chất keo tụ polyaluminium chloride) trung hòa điện tích bề mặt của các hạt lơ lửng và chất keo mang điện âm, làm giảm lực đẩy tĩnh điện và thúc đẩy quá trình keo tụ tụ tập hạt.
+    - Giá trị lưu lượng xử lý nước (WTR / Water Treatment Rate) cao hơn tương ứng với giá trị SHAP thấp hơn, làm giảm liều lượng châm chất keo tụ.
+- Biểu đồ phân tán giá trị SHAP của từng biến đơn lẻ thể hiện các hiệu ứng cận biên phi tuyến (marginal effects) và ngưỡng đáp ứng của từng thông số lên liều lượng chất keo tụ.
+  - **Hình 7.** Quan hệ phi tuyến giữa thông số nước và liều lượng.
+    - <img src="assets/fig_07_p8.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Giá trị SHAP dương làm tăng liều lượng keo tụ, giá trị âm làm giảm liều lượng.
+      - Lưu lượng nước xử lý (WTR, water treatment rate) làm giảm liều lượng khi tăng từ $2000$.
+    - **Từ đâu mà thấy được**
+      - Ô (a), (c), (d), (f): điểm uốn và ngưỡng tăng thể hiện tại $300\text{--}550\ \mu\text{S/cm}$, $0\text{--}0.2\ \text{mg/L}$, $4\ \text{mg/L}$ và dưới $2\ \text{NTU}$.
+      - Ô (e) và (i): dốc xuống thể hiện tương quan âm của T-RW và khoảng giảm liều của pH-RW tại $8.0\text{--}8.4$.
+      - Ô (b), (g), (h): ô (b) giảm tuyến tính tại $7.6\text{--}7.8$, ô (g) giảm từ $2000$, ô (h) phân tán quanh $0$.
+  - Độ dẫn điện nước thô (EC-RW / Electrical Conductivity of Raw Water) phản ánh tổng nồng độ ion hòa tan trong nước:
+    - EC-RW tăng cường quan hệ gần như tuyến tính với liều lượng châm trong khoảng từ $300$ đến $550\ \mu\text{S/cm}$.
+    - Dưới $300\ \mu\text{S/cm}$ hoặc trên $550\ \mu\text{S/cm}$, quan hệ này chuyển sang xu hướng hiệu suất biên giảm dần.
+    - Độ dẫn điện cao nén lớp điện kép (electrical double layer) và thúc đẩy keo tụ, nhưng độ pH thấp ức chế tạo kết tủa $\text{Al(OH)}_3$ khi cần bù liều tăng dần.
+  - Nitơ amoni nước thô ($\text{NH}_3\text{-N-RW}$ / Ammonia Nitrogen of Raw Water) tồn tại dưới dạng amoniac tự do ($\text{NH}_3$) và ion amoni ($\text{NH}_4^+$) điều tiết bởi pH và nhiệt độ:
+    - $\text{NH}_3\text{-N-RW}$ trong khoảng $0\text{--}0.2\ \text{mg/L}$ tác động dương rõ rệt lên liều lượng chất keo tụ.
+    - Ngoài phạm vi $0\text{--}0.2\ \text{mg/L}$, mối quan hệ tác động trở nên kém rõ rệt hơn.
+    - Nhiệt độ cao thúc đẩy thủy phân PACl, nhưng hàm lượng $\text{NH}_3\text{-N}$ thấp giúp giảm nhiễu, cho phép châm PACl theo phán đoán chuyên gia.
+  - Chỉ số pemanganat nước thô ($\text{COD}_{\text{Mn}}\text{-RW}$ / Permanganate Index of Raw Water) phản ánh tổng lượng chất hữu cơ và chất vô cơ có tính khử:
+    - Khi $\text{COD}_{\text{Mn}}\text{-RW}$ nhỏ hơn $4\ \text{mg/L}$, thông số không thể hiện tương quan rõ ràng với liều lượng châm.
+    - Khi vượt ngưỡng $4\ \text{mg/L}$, chất hữu cơ cạnh tranh vị trí hoạt hóa với PACl và giá trị SHAP tăng vọt.
+  - Độ đục nước thô (NTU-RW / Turbidity of Raw Water) nhìn chung có tác động thúc đẩy dương lên liều lượng châm:
+    - Tăng liều lượng PACl hợp lý giúp tăng cường tụ tập và lắng hạt cặn, phù hợp với nghiên cứu của Vunain và cộng sự.
+    - Khi NTU-RW nhỏ hơn $2\ \text{NTU}$, giá trị SHAP lại có xu hướng gia tăng.
+    - Nước có độ đục thấp chứa các hạt keo thưa thớt và phân tán, làm hạn chế khả năng bắt giữ tạp chất rắn của các hạt keo hình thành sau thủy phân PACl.
+    - Người vận hành phải tăng liều PACl để bù đắp giới hạn khuếch tán và đảm bảo trung hòa điện tích.
+    - Trong nguồn nước có cả $\text{COD}_{\text{Mn}}$ cao và độ đục cao, chất hữu cơ bao bọc các hạt keo, đòi hỏi lượng PACl bổ sung để phá vỡ rào cản chất hữu cơ.
+  - Độ pH nước thô (pH-RW / pH of Raw Water) ảnh hưởng đến liều lượng châm:
+    - Liều lượng PACl cần thiết giảm xuống khi pH-RW tăng trong khoảng từ $8.0$ đến $8.4$.
+    - Trong môi trường kiềm yếu, PACl và các hạt tạp chất mang điện tích trái dấu giúp PACl thể hiện hiệu quả keo tụ tối ưu.
+  - Nhiệt độ nước thô (T-RW / Temperature of Raw Water) nhìn chung có tác động âm lên liều lượng:
+    - Phản ứng thủy phân PACl là phản ứng thu nhiệt.
+    - Độ nhớt của nước tăng ở nhiệt độ thấp gây cản trở chuyển động nhiệt của các hạt lơ lửng, làm giảm độ bền tụ tập hạt keo.
+    - Liều lượng PACl cần tăng lên ở nhiệt độ thấp để đạt hiệu quả keo tụ tối ưu.
+  - Độ pH nước sau xử lý (pH-TW / pH of Treated Water) thể hiện tương quan tuyến tính âm rõ rệt với lượng chất keo tụ châm vào:
+    - Các điểm dữ liệu tập trung chủ yếu trong dải pH hẹp từ $7.6$ đến $7.8$.
+    - Phản ứng thủy phân PACl giải phóng ion $\text{H}^+$, làm giảm độ pH của nước sau xử lý.
+    - Châm thừa hóa chất để đạt tiêu chuẩn pH sẽ làm hạt keo tái ổn định và giảm hiệu suất keo tụ tạo bông.
+    - Sự gia tăng lượng nhôm hòa tan dư thừa ảnh hưởng xấu đến độ an toàn của nguồn nước sau xử lý.
+  - Độ đục nước sau xử lý (NTU-TW / Turbidity of Treated Water) không có tương quan tuyến tính rõ rệt với liều châm PACl:
+    - Kết quả này trái ngược với các công bố trước đây của Chiavola.
+    - NTU-TW chịu tác động đồng thời từ chất lượng nước thô và liều lượng hóa chất keo tụ.
+    - Độ đục nước thô NTU-RW tăng cao đòi hỏi người vận hành tăng liều châm thủ công để giữ chuẩn NTU-TW.
+    - Giá trị NTU-TW thực tế tại nhà máy luôn được duy trì ở mức thấp, ổn định và biến thiên rất nhỏ, nên ít ảnh hưởng đến dự đoán liều lượng.
+    - Hiệu quả keo tụ của PACl dựa trên cơ chế trung hòa điện tích và hấp phụ bắc cầu.
+    - Liều PACl thích hợp thủy phân sinh ion mang điện dương để trung hòa hạt keo mang điện âm và loại bỏ độ đục.
+    - Châm thừa PACl kích hoạt hiện tượng bảo vệ hệ keo (colloidal protection), khi ion dương bám quá mức lên bề mặt hạt keo biến keo kỵ nước thành keo ưa nước, làm giảm khả năng lắng bông cặn và suy giảm hiệu quả loại bỏ độ đục.
+- Đánh giá khả năng tối ưu hóa và giới hạn của AutoML và phương pháp SHAP:
+  - AutoML sử dụng công cụ tối ưu đường ống dạng cây (TPOT / Tree-based Pipeline Optimization Tool) có thể gặp rủi ro quá khớp (overfitting) trong quá trình lựa chọn mô hình và tối ưu hóa siêu tham số.
+  - Mô hình đạt hệ số xác định trên tập huấn luyện $R^2 = 1.00$, nhưng độ nhất quán cao giữa kiểm định chéo lặp lại và tập kiểm tra độc lập ($R^2 = 0.96$) chứng minh mô hình không bị quá khớp.
+  - Phương pháp SHAP làm sáng tỏ các quy luật tác động phức tạp phi tuyến mà phương pháp thống kê tuyến tính truyền thống không thể phát hiện.
+  - SHAP xác định các ngưỡng phản ứng của các thông số then chốt, khắc phục hạn chế của các phân tích tuyến tính.
+- Biểu đồ thác nước (waterfall plot) và biểu đồ quyết định (decision plot) giải thích cục bộ dự đoán liều lượng cho hai mẫu thực tế với giá trị kỳ vọng nền $E[f(X)] = 14.5\ \text{mg/L}$.
+  - **Hình 8.** Waterfall plot và decision plot giải thích cục bộ hai mẫu
+    - <img src="assets/fig_08_p9.jpeg" alt="Hình 8" />
+    - **Hình này chứng minh điều gì**
+      - Các thanh màu đỏ đẩy dự đoán tăng lên $34.9\ \text{mg/L}$ với đóng góp lớn nhất từ $\text{COD}_{\text{Mn}}\text{-RW}$ ($+7.72$).
+      - Các thanh màu xanh kéo dự đoán giảm về $8.57\ \text{mg/L}$ với tác động âm lớn nhất từ $\text{pH-TW}$ ($-2.39$).
+    - **Từ đâu mà thấy được**
+      - Panel (a, b): biểu đồ (a) hiển thị các thanh đỏ nâng dự đoán từ $E[f(X)] = 14.5$ lên $f(X) = 34.9$. Biểu đồ (b) thể hiện đường tích lũy lệch sang phải đạt $34.9$.
+      - Panel (c, d): biểu đồ (c) hiển thị các thanh xanh kéo dự đoán từ $E[f(X)] = 14.5$ giảm về $f(X) = 8.57$. Biểu đồ (d) thể hiện đường tích lũy lệch sang trái đạt $8.57$.
+      - Lưu ý: hình thể hiện (a, c) là waterfall plot và (b, d) là decision plot, chú thích gốc ghi ngược thứ tự.
+  - Mẫu chất lượng nước có liều lượng keo tụ cao hơn mức trung bình $14.5\ \text{mg/L}$:
+    - Mẫu thu thập vào tháng 2 từ nguồn nước sông Loan Hà (Luanhe River), ghi nhận nhiệt độ nước thô $\text{T-RW} = 3.8\ ^{\circ}\text{C}$.
+    - Biểu đồ thác nước thể hiện dự đoán liều lượng chất keo tụ đạt $34.9\ \text{mg/L}$, cao hơn đáng kể mức kỳ vọng trung bình $14.5\ \text{mg/L}$ trên tập kiểm tra.
+    - Mức tăng liều chủ yếu do đóng góp dương của $\text{COD}_{\text{Mn}}\text{-RW}$, tiếp theo là EC-RW, NTU-RW và $\text{NH}_3\text{-N-RW}$, trong khi đóng góp của pH-RW và WTR không đáng kể.
+    - Biểu đồ quyết định mô tả quá trình tích lũy các đặc trưng đưa kết quả dự đoán vượt mức trung bình $14.5\ \text{mg/L}$ đạt đầu ra $34.9\ \text{mg/L}$.
+    - Chỉ số $\text{COD}_{\text{Mn}}\text{-RW}$ đạt $5.46\ \text{mg/L}$ vượt ngưỡng $4\ \text{mg/L}$ làm giá trị SHAP tăng vọt.
+    - Chỉ số EC-RW đạt $600.6\ \mu\text{S/cm}$, $\text{NH}_3\text{-N-RW}$ đạt $0.36\ \text{mg/L}$ và NTU-RW đạt $7.19\ \text{NTU}$, tất cả đều giữ giá trị SHAP lớn hơn 0.
+    - Phán đoán chuyên gia về chất lượng nước thô tổng thể quyết định tăng liều PACl lên trên mức trung bình.
+  - Mẫu chất lượng nước có liều lượng keo tụ thấp hơn mức trung bình $14.5\ \text{mg/L}$:
+    - Mẫu thu thập vào tháng 5 từ nguồn nước sông Dương Tử (Yangtze River), có liều lượng dự đoán thấp hơn mức trung bình.
+    - Biểu đồ thác nước thể hiện liều lượng dự đoán đạt $8.57\ \text{mg/L}$, thấp hơn nhiều mức kỳ vọng trung bình $14.5\ \text{mg/L}$.
+    - Chỉ số pH-TW đạt giá trị $7.906$ tạo ra tác động âm lớn nhất lên dự đoán liều lượng, chứng minh liều keo tụ ở mức này sẽ kéo giảm mạnh pH nước sau xử lý.
+    - Các đặc trưng tiếp theo kéo giảm liều lượng gồm T-RW, EC-RW và $\text{COD}_{\text{Mn}}\text{-RW}$, trong khi đóng góp của $\text{NH}_3\text{-N-RW}$ và WTR không đáng kể.
+    - Biểu đồ quyết định minh họa từng đặc trưng dịch chuyển liều lượng xuống dưới mức trung bình $14.5\ \text{mg/L}$ để đạt giá trị cuối $8.57\ \text{mg/L}$.
+    - Nước thô có đặc tính $\text{T-RW} = 22.34\ ^{\circ}\text{C}$, $\text{EC-RW} = 290.2\ \mu\text{S/cm}$, $\text{COD}_{\text{Mn}}\text{-RW} = 2.6\ \text{mg/L}$ và $\text{pH-RW} = 8.15$, với giá trị SHAP của tất cả các thông số này đều mang dấu âm.
+    - Kinh nghiệm thực tế quyết định giảm liều lượng PACl xuống thấp hơn mức trung bình.
+- Tổng kết giá trị ứng dụng thực tiễn và định hướng công nghệ bền vững:
+  - Mô hình tối ưu hóa liều lượng châm PACl giúp định lượng hóa chất chính xác trong quy trình keo tụ, giảm thiểu đáng kể tình trạng lãng phí hóa chất.
+  - Phương pháp diễn giải SHAP làm rõ các yếu tố cốt lõi và mối quan hệ định lượng chi phối lượng hóa chất tiêu thụ.
+  - Mô hình hỗ trợ người vận hành ra quyết định khoa học và hợp lý, tránh châm thừa hóa chất trong khi vẫn đảm bảo tiêu chuẩn nước sau xử lý.
+  - Giảm thiểu tác động môi trường của hóa chất keo tụ trong thực tế đòi hỏi kết hợp mô hình với các công đoạn tiền clo hóa (pre-chlorination) và hấp phụ than hoạt tính (activated carbon adsorption) để giảm nhu cầu chất keo tụ.
+  - Phát triển các công nghệ xử lý nước xanh và bền vững như chất keo tụ sinh học (bio-based flocculants: chitosan, chất keo tụ vi sinh / microbial flocculants) và công nghệ quang xúc tác (photocatalytic technologies) giúp giảm phụ thuộc vào tài nguyên không tái tạo và hạn chế rủi ro môi trường từ cặn lắng hóa chất như bùn nhôm hydroxit ($\text{Al(OH)}_3$).

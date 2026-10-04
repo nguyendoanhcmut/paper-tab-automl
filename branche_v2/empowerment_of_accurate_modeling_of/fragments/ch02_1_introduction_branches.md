@@ -1,0 +1,47 @@
+## 1. Introduction
+
+- **Nguy cơ khan hiếm nước ngọt (freshwater scarcity) đe dọa an ninh tài nguyên và hệ sinh thái**:
+  - Trong tương lai gần, nhu cầu sử dụng và mức độ gây ô nhiễm nước ngọt của con người có thể đạt ngưỡng làm hạn chế sản xuất lương thực, suy giảm chức năng hệ sinh thái và gián đoạn nguồn cấp nước đô thị (Jury and Vaux, 2007).
+  - Ngành công nghiệp nước đã xác định nước thải (wastewater) là nguồn tài nguyên khả thi và bền vững để thu hồi tài nguyên (resource recovery) (Winkler and van Loosdrecht, 2022).
+  - Bùn hoạt tính (activated sludge) đóng vai trò nền tảng cốt lõi trong các công nghệ xử lý nước thải hiện nay (van Loosdrecht and Brdjanovic, 2014).
+- **Bể phản ứng sinh học màng kỵ khí (AnMBR - Anaerobic Membrane Bioreactor) là giải pháp tiềm năng cho xử lý nước thải và thu hồi tài nguyên**:
+  - AnMBR sở hữu ba ưu thế vận hành nổi bật so với các công nghệ truyền thống (Ho and Sung, 2010; Pretel et al., 2015; Robles et al., 2022):
+    - Chi phí vận hành thấp (low operational cost).
+    - Giảm thiểu khối lượng bùn thải phát sinh (reduced waste sludge production).
+    - Tiềm năng thu hồi năng lượng cao (high potential for energy recovery).
+  - Tích hợp quá trình phân hủy kỵ khí (anaerobic digestion) với lọc màng (membrane filtration) giúp AnMBR vừa xử lý nước thải hiệu quả, vừa tạo điều kiện thu hồi tài nguyên như sản xuất khí sinh học (biogas), phục vụ mô hình kinh tế tuần hoàn (circular economy) và phát triển bền vững (Krzeminski et al., 2017; Moideen et al., 2023).
+  - Công nghệ AnMBR cung cấp thời gian khởi động nhanh (fast start-up) và diện tích lắp đặt nhỏ gọn (smaller footprint) cho các công trình xử lý nước thải (Robles et al., 2018).
+- **Nghiên cứu và phát triển công nghệ AnMBR chịu nhiều rào cản nghiêm ngặt từ phương pháp thực nghiệm truyền thống**:
+  - Quy trình phát triển AnMBR chủ yếu phụ thuộc vào các thử nghiệm trong phòng thí nghiệm (laboratory experiments), sau đó tiếp tục qua các thử nghiệm quy mô pilot (pilot-scale trial) (Q. Li et al., 2024; Z. Li et al., 2024; Ren et al., 2024).
+  - Quá trình vận hành các hệ thống thử nghiệm tiêu hao lượng lớn hóa chất thí nghiệm (chemical reagents), đòi hỏi sự hỗ trợ của trang thiết bị chuyên dụng (Li et al., 2022).
+  - Thời gian vận hành thử nghiệm kéo dài từ hàng tháng đến hàng năm, tiêu tốn nhiều thời gian và tài nguyên (time- and resource-intensive).
+  - Các hạn chế về tài nguyên và không gian phòng thí nghiệm tiếp tục giới hạn số lượng cũng như thời gian của các đợt chạy bể phản ứng, cản trở tiến độ phát triển của công nghệ AnMBR.
+- **Mô hình hóa theo dữ liệu (Data-driven modeling) và học máy (ML - Machine Learning) là hướng tiếp cận bổ trợ cho thực nghiệm AnMBR**:
+  - Mô hình ML mô phỏng hiệu suất bể phản ứng bằng cách thiết lập tương quan giữa các thông số đầu vào và đầu ra (Li et al., 2022; Mahanna et al., 2024; Pal et al., 2024):
+    - Biến đầu vào (inputs): Các thông số vận hành (operational parameters) và chất lượng nước đầu vào (influent water quality).
+    - Biến đầu ra (outputs): Chất lượng nước đầu ra (effluent water quality).
+  - Mô hình ML phân tích các mối quan hệ phức tạp giữa đặc tính nước đầu vào và nước đầu ra, cung cấp thông tin hữu ích cho việc vận hành bể phản ứng và tối ưu hóa hiệu suất.
+  - Các mô phỏng dựa trên ML cung cấp giải pháp thay thế hiệu quả về chi phí so với phương pháp thực nghiệm truyền thống, cho phép đánh giá nhiều kịch bản vận hành tiềm năng với mức tiêu hao tài nguyên tối thiểu.
+  - Khả năng mô phỏng giúp định hướng thiết kế và vận hành các hệ thống AnMBR, đặc biệt trong các điều kiện thực nghiệm thực tế không khả thi hoặc bị giới hạn tài nguyên (Li et al., 2022; Robles et al., 2018; Wang and Li, 2024).
+- **Ứng dụng ML trong mô hình hóa AnMBR đối mặt với thách thức lớn từ tính không đồng nhất của hệ thống (System heterogeneity)**:
+  - Tính không đồng nhất cao của các hệ thống AnMBR xuất phát từ ba yếu tố biến thiên chính:
+    - Cấu trúc quần xã vi sinh vật (microbial community structures).
+    - Cấu hình vật lý của thiết bị (physical configurations).
+    - Chất lượng nước đầu vào (influent water quality).
+  - Các yếu tố trên ảnh hưởng căn bản đến hiệu suất của bể phản ứng và hiệu quả thu hồi tài nguyên.
+  - Bằng chứng thực nghiệm từ Ji et al. (2020) chỉ ra rằng kích thước lỗ màng (membrane pore size) trong AnMBR ảnh hưởng đến nồng độ nhu cầu oxy hóa học đầu ra ($\text{COD}$ - chemical oxygen demand) và thành phần vi sinh vật trong bể phản ứng, làm thay đổi chất lượng nước đầu ra và hiệu suất thu hồi tài nguyên.
+  - Sự biến thiên này làm hạn chế khả năng áp dụng của các mô hình ML khái quát hóa (generalized ML models) khi chuyển giao giữa các bể phản ứng và điều kiện môi trường khác nhau.
+  - Mô hình ML đòi hỏi phải được tùy biến theo từng cấu hình riêng biệt của bể phản ứng, đặt ra nhu cầu về phương pháp mô hình hóa tùy biến (tailored modeling) linh hoạt và thích ứng.
+- **Quy trình phát triển mô hình ML truyền thống cho AnMBR gặp rào cản về độ phức tạp kỹ thuật và yêu cầu chuyên môn cao**:
+  - Việc phát triển mô hình ML hiệu quả cho AnMBR bao gồm chuỗi tác vụ phức tạp gồm lựa chọn thuật toán ML (ML algorithm selection) và tối ưu hóa siêu tham số (hyperparameter optimization), đòi hỏi chuyên môn sâu về học máy (He et al., 2021; Karmaker (“Santu”) et al., 2021).
+  - Rào cản chuyên môn khiến mức độ ứng dụng thực tế của mô hình ML trong các hệ thống MBR vẫn còn hạn chế.
+- **Học máy tự động (AutoML - Automated Machine Learning) giải quyết các rào cản kỹ thuật và thúc đẩy triển khai thực tế**:
+  - AutoML làm giảm độ phức tạp của các tác vụ lặp lại trong quy trình học máy (ML pipelines) (Truong et al., 2019).
+  - AutoML tự động hóa các bước then chốt như lựa chọn thuật toán ML và tối ưu hóa siêu tham số, giúp cắt giảm thời gian và độ phức tạp kỹ thuật khi xây dựng mô hình ML hiệu năng cao (Lai et al., 2024).
+  - AutoML phổ cập hóa khả năng tiếp cận (democratizing access) các kỹ thuật ML cho nhiều nhóm người dùng, mở rộng khả năng tiếp cận hướng tiếp cận theo dữ liệu trong nghiên cứu AnMBR và thúc đẩy đổi mới công nghệ (Li et al., 2021).
+- **Mục tiêu nghiên cứu và các đóng góp cốt lõi của bài báo**:
+  - Khai thác khung làm việc AutoML để mô hình hóa nhanh (rapid modeling) các động học phi tuyến phức tạp (complex nonlinear dynamics) của AnMBR trong quá trình xử lý nước thải.
+  - Khảo sát ảnh hưởng của việc mở rộng số lượng biến dự đoán (features) và quy mô tập dữ liệu huấn luyện (training dataset size) lên hiệu năng mô hình.
+  - So sánh đối chứng kết quả của mô hình AutoML với các kiến trúc mạng nơ-ron hiện hữu (neural networks: FCN, CNN, DenseNet).
+  - Đề xuất khung diễn giải học kết hợp (ensemble learning interpretation framework) nhằm giải thích cơ chế đưa ra quyết định của mô hình dựa trên AutoML.
+  - Cung cấp định hướng kỹ thuật cho việc xây dựng mô hình hiệu quả trong các hệ thống AnMBR và thúc đẩy ứng dụng của AutoML trong mô hình hóa các bể phản ứng xử lý nước thải.

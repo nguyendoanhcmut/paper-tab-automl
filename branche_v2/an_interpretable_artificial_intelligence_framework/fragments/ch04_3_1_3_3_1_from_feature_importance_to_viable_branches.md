@@ -1,0 +1,50 @@
+#### 3.3.1. From feature importance to viable operating space
+
+- Phân tích khả năng giải thích (interpretability analysis) ở Mục 3.2 đạt đồng thuận qua 16 thuật toán (16 algorithms) về các biến chi phối và chiều hướng tác động lên từng chỉ số hiệu suất:
+  - Tuổi bùn $\text{SRT}$ (sludge retention time) là nhân tố chi phối chính của áp suất xuyên màng $\text{TMP}$ (transmembrane pressure), làm gia tăng tắc nghẽn màng (fouling) một cách đơn điệu trên toàn dải sục khí kéo dài (extended-aeration range) thông qua tích lũy sinh khối (biomass accumulation), tăng độ nhớt (elevated viscosity) và nén ép lớp bánh lọc (cake compaction).
+  - Thời gian lưu nước $\text{HRT}$ (hydraulic retention time) thiết lập giới hạn trần thủy lực (hydraulic ceiling) đối với lưu lượng dòng thấm (permeate flow).
+  - Cường độ sục khí (aeration) tác động lên $\text{TMP}$ qua điểm tối ưu phi đơn điệu (non-monotonic optimum) với hiệu suất giảm dần (diminishing returns).
+- Giới hạn cốt lõi của SHAP là không thể cung cấp tập hợp điều kiện đầu vào đồng thời thỏa mãn cả ba mục tiêu hiệu suất, cũng như không xác định được liệu chiều hướng cải thiện một mục tiêu có xung đột với các ràng buộc của mục tiêu khác hay không:
+  - Mục 3.3 giải quyết khoảng trống này nhằm chuyển đổi tri thức mô hình thành hướng dẫn vận hành thực tế (operating guidance).
+- Ánh xạ tính khả thi (feasibility mapping) được xây dựng bằng mô hình Extra Trees sử dụng cơ chế lấy mẫu lại ràng buộc trên đa tạp (manifold-constrained resampling scheme) theo Mục 2.7 dưới 3 ràng buộc hiệu suất đồng thời:
+  - Áp suất xuyên màng $\text{TMP} \in [-0.09, -0.03]\ \text{bar}$.
+  - Lưu lượng dòng thấm $\text{permeate flow} \in [1.5, 2.2]\ \text{m}^3/\text{min}$.
+  - Mực nước bể màng $\text{water level} \in [65.0, 67.0]\ \%$ (Hình S12–S13).
+- Trong số $500{,}000$ trạng thái ứng viên trên đa tạp vận hành, có $207{,}238$ trạng thái ($41.4\%$) thỏa mãn đồng thời cả ba tiêu chí ràng buộc:
+  - Độ phân tán qua $100$ cây của mô hình ensemble cho khoảng dự đoán $95\%$ (95% prediction intervals) là $\pm 0.008\ \text{bar}$ đối với $\text{TMP}$, $\pm 0.17\ \text{m}^3/\text{min}$ đối với lưu lượng dòng thấm và $\pm 0.71\%$ đối với mực nước.
+  - Vận hành hướng vào vùng lõi bên trong của biên bao khả thi (interior of the envelope) thay vì vùng rìa mép (edge) được khuyến nghị đặc biệt cho hai mục tiêu thủy lực.
+- Hai đặc tính then chốt mang lại giá trị thực tiễn cho bản đồ tính khả thi:
+  - Mọi trạng thái lấy mẫu đều nằm trên đa tạp thực nghiệm mà nhà máy đã trải qua: khoảng cách láng giềng gần nhất trung vị (median nearest-neighbour distance) từ mẫu lấy đến dữ liệu thực tế là $0.121$ đơn vị chuẩn hóa so với $0.119$ đơn vị chuẩn hóa giữa các mốc giờ thực tế, bảo đảm mọi dự đoán đều là phép nội suy giữa các điều kiện đã vận hành và các khuyến nghị đều khả thi về mặt vật lý (physically attainable).
+  - Các cửa sổ vận hành được phân cấp dựa trên tỷ lệ khả thi có điều kiện (conditional feasibility rate) thay vì số lượng điểm khả thi tuyệt đối, giúp nhận diện vị trí nhà máy đạt hiệu suất tối ưu thay vì vị trí dành nhiều thời gian vận hành nhất và cho phép từng khuyến nghị trong Bảng 4 gắn liền với tần suất thực tế nhà máy đạt mục tiêu.
+- Phân tách rõ rệt giữa mật độ điểm vận hành khả thi và tỷ lệ đạt mục tiêu thực tế xác lập cơ sở định hình vùng vận hành khuyến nghị:
+  - **Hình 7.** Miền khả thi và tỷ lệ đạt mục tiêu của 7 biến
+    - <img src="assets/fig_07_p10.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Vùng khuyến nghị (dải xanh lục) bám sát decile có tỷ lệ đạt mục tiêu cao nhất (đỏ sẫm), phân kỳ khỏi đỉnh mật độ thời gian vận hành (đường cong xanh lam).
+      - Xác lập 7 dải khuyến nghị: $\text{HRT}$ ($82\%$), $\text{SRT}$ ($77\%$), $\text{MLSS}$ ($69\%$), $F/M$ ($68\%$), $\text{Air}$ ($61\%$), $\text{Glu}$ ($61\%$) và $C/N$ ($57\%$).
+    - **Từ đâu mà thấy được**
+      - 7 bảng đồ thị: trục hoành là miền giá trị biến, trục tung biểu diễn mật độ điểm khả thi KDE (trục trái) và tỷ lệ đạt thực tế $0\text{--}100\%$ (trục phải).
+      - Đường bậc thang đỏ đạt cực đại tại decile đỏ sẫm trùng khớp vùng xanh lục; đường cong KDE ($15{,}000$ mẫu) lệch đỉnh rõ rệt ở $\text{Glu}$, $\text{HRT}$ và $\text{SRT}$.
+- Không gian khả thi hình thành một tập hợp có cấu trúc tương quan cao (structured, correlated set) thay vì hình hộp chữ nhật độc lập:
+  - Vùng xác suất cao tập trung thành dải hẹp (narrow ridge) ở hầu hết các cặp biến: cặp $\text{MLSS}$ so với tỷ lệ thức ăn trên vi sinh vật $F/M$ biểu hiện tính đối nghịch nghiêm ngặt (strict opposition), và cặp tỷ lệ $C/N$ so với $\text{HRT}$ phân bố theo một dải dốc tăng dần (rising band).
+  - Việc xem xét 7 khuyến nghị như các điểm đặt điều chỉnh độc lập (independently adjustable set-points) sẽ phóng đại mức độ tự do vận hành thực tế.
+- Giao điểm của hai dải khuyến nghị đơn biến nằm trọn trong vùng xác suất cao ở 20 trên 21 cặp biến với tỷ lệ khả thi đạt $60\text{--}100\%$ (so với mức nền toàn nhà máy khoảng $40\%$), chứng minh các khuyến nghị cấu thành mà không gây xung đột:
+  - **Hình 8.** Xác suất đạt đồng thời ba mục tiêu trên từng cặp biến
+    - <img src="assets/fig_08_p11.jpeg" alt="Hình 8" />
+    - **Hình này chứng minh điều gì**
+      - Giao điểm hai dải khuyến nghị (hộp chữ nhật) nằm trên vùng xanh lục xác suất cao ($60\text{--}100\%$) ở 20/21 cặp biến.
+      - Cặp $\text{HRT}$ và $\text{SRT}$ là ngoại lệ duy nhất bị xung đột, xác suất khả thi bên trong hộp chỉ đạt $26\%$ (thấp hơn mức nền).
+    - **Từ đâu mà thấy được**
+      - 21 ô tương tác: thanh màu thể hiện xác suất $0\text{--}100\%$ (đỏ sang xanh lục), đường lục thẫm là đường đồng mức $80\%$, vùng xám có dưới $20$ mẫu.
+      - Nhãn tỷ lệ trên từng ô: 20 ô đạt từ $60\%$ đến $100\%$; riêng ô góc phải dưới cùng ($\text{HRT}$ so với $\text{SRT}$) hiển thị $26\%$ màu đỏ.
+- Hiện tượng tương tác phi cộng tính giữa $\text{SRT}$ và $\text{HRT}$ là ngoại lệ duy nhất mà phân tích đơn biến không thể phát hiện:
+  - Khi xét riêng lẻ, dải $\text{SRT} \in [43.2, 72.2]\ \text{ngày}$ và $\text{HRT} \in [5.875, 6.381]\ \text{h}$ là hai đòn bẩy điều khiển mạnh nhất với tỷ lệ đạt mục tiêu đo đạc thực tế lần lượt là $77.0\%$ và $82.4\%$.
+  - Khi kết hợp đồng thời cả hai điều kiện, chỉ có 35 giờ vận hành trong dữ liệu lịch sử hội tụ đủ cả hai biến và tỷ lệ đạt mục tiêu thực tế sụt giảm xuống $34.3\%$, thấp hơn mức nền $37.1\%$ của toàn nhà máy.
+  - Cơ chế vận hành thực tế giải thích sự xung đột vật lý giữa hai thông số:
+    - Khi $\text{SRT}$ duy trì ở $43.2\text{--}72.2\ \text{ngày}$, nhà máy thực tế vận hành tại $\text{HRT}$ từ $6.2\text{--}7.5\ \text{h}$.
+    - Dải $\text{HRT}$ từ $5.9\text{--}6.4\ \text{h}$ chỉ xuất hiện trong lịch sử vận hành khi tuổi bùn $\text{SRT}$ nằm ở dải cao $72\text{--}108\ \text{ngày}$.
+    - $\text{HRT}$ ngắn tương ứng với điều kiện lưu lượng thông lượng cao (high-throughput condition); việc duy trì thông lượng cao ở tuổi bùn thấp đòi hỏi tốc độ xả bùn (wasting rate) vượt ngoài ngưỡng nhà máy vận hành, đẩy hệ thống vào chế độ vận hành chưa từng trải qua.
+  - Cấu trúc quy tắc vận hành chung (joint rule) theo thứ bậc ưu tiên:
+    - Không thiết lập độc lập $\text{SRT}$ và $\text{HRT}$ ở các điểm tối ưu biên riêng lẻ.
+    - Cố định tuổi bùn $\text{SRT}$ trước tiên do đây là biến biến thiên chậm hơn và là nhân tố chi phối chính của $\text{TMP}$.
+    - Lựa chọn $\text{HRT}$ phụ thuộc có điều kiện theo $\text{SRT}$ đã chọn nhằm bảo đảm tính tương thích động học (cấu trúc quy tắc kết hợp được kiểm chứng tại Mục 3.3.4).

@@ -1,0 +1,116 @@
+## 7. Research Gaps and Future Directions
+
+- **Khung phân loại 9 khoảng trống nghiên cứu có mối liên kết tương hỗ (nine interconnected research gaps)**: Bài tổng quan chỉ ra $9$ khoảng trống nghiên cứu liên kết với nhau cần phải được giải quyết trước khi việc tích hợp XAI (Explainable Artificial Intelligence - Trí tuệ nhân tạo có thể giải thích) và DT (Digital Twin - Bản sao số) có thể đạt được triển khai vận hành ở quy mô lớn trong các cơ sở MBR (Membrane Bioreactor - Bể phản ứng sinh học màng):
+  - Phân nhóm nguồn gốc các khoảng trống nghiên cứu:
+    - Năm khoảng trống đầu tiên ($5$ khoảng trống: Gap 1 đến Gap 5) được xác định trong bài tổng quan gốc.
+    - Bốn khoảng trống bổ sung ($4$ khoảng trống: Gap 6 đến Gap 9) được xác định nhằm phản hồi các ý kiến đóng góp của phản biện.
+
+- **Khoảng trống 1 (Gap 1) - Sự khan hiếm các tập dữ liệu chuẩn đối sánh (scarcity of benchmark datasets) và thách thức tổng quát hóa liên cơ sở (cross-site generalization)**:
+  - Bản chất nền tảng của khoảng trống dữ liệu: Đây là khoảng trống nghiên cứu đầu tiên và mang tính cốt lõi nhất đối với lĩnh vực MBR ML.
+  - Hạn chế của các nghiên cứu hiện tại về phạm vi thu thập dữ liệu:
+    - Phần lớn các nghiên cứu được đánh giá tiến hành huấn luyện và thẩm định mô hình trên các tập dữ liệu từ một cơ sở đơn lẻ (single-facility datasets).
+    - Thời gian thu thập dữ liệu điển hình chỉ kéo dài từ vài tuần đến vài tháng, ngăn cản việc đánh giá năng lực tổng quát hóa liên cơ sở (cross-site generalization).
+  - Hiện tượng suy giảm hiệu năng do dịch chuyển phân phối tập dữ liệu (dataset shift):
+    - Khi các mô hình huấn luyện tại một trạm MBR được áp dụng cho cơ sở thứ hai có cấu hình mô-đun màng khác biệt, thành phần nước thải đầu vào khác biệt, hoặc chế độ vận hành khác biệt, hiệu năng dự đoán thường bị suy giảm rõ rệt.
+    - Sự suy giảm này là hệ quả của hiện tượng dịch chuyển tập dữ liệu (dataset shift) đã được ghi nhận trong y văn kỹ thuật môi trường ứng dụng ML nói chung.
+    - Mối quan hệ thống kê giữa các đặc trưng đầu vào (input features) và kết quả nghẹt màng (fouling outcomes) có sự sai khác giữa các nhà máy theo những phương diện mà dữ liệu huấn luyện tại một cơ sở đơn lẻ không thể nắm bắt được.
+  - Các nguồn căn chính dẫn đến dịch chuyển tập dữ liệu (primary sources of dataset shift):
+    - Sự khác biệt về hình học mô-đun màng (membrane module geometry) giữa cấu hình sợi rỗng (hollow-fiber) và cấu hình tấm phẳng (flat-sheet).
+    - Hệ vi sinh vật trong bùn hoạt tính (sludge microbiology) được định hình bởi thành phần nước thải cục bộ và nhiệt độ môi trường.
+    - Cửa sổ thông số vận hành cụ thể về thời gian lưu bùn $\text{SRT}$ (solids retention time) và thời gian lưu thủy lực $\text{HRT}$ (hydraulic retention time) được duy trì tại từng cơ sở.
+    - Các sự kiện xả thải chất thải thương mại công nghiệp (industrial trade waste discharge events), tạo ra những nhiễu động nhanh và biên độ lớn không được ghi nhận trong dữ liệu huấn luyện định kỳ.
+  - Tình trạng thiếu hụt dữ liệu chuẩn đối sánh trong cộng đồng ML ngành nước thải:
+    - Cộng đồng ML nước thải hiện thiếu vắng các tập dữ liệu chuẩn đối sánh chuẩn hóa (standardized benchmark datasets) tương đương với các bộ dữ liệu từng thúc đẩy tiến bộ nhanh chóng và có hệ thống trong thị giác máy tính (computer vision), xử lý ngôn ngữ tự nhiên (NLP - natural language processing), và hệ gen học (genomics) trong thập kỷ qua.
+    - Yêu cầu cấp thiết: Phát triển các tập dữ liệu vận hành MBR đa cơ sở (multi-facility MBR operational datasets) có thể truy cập mở, bao hàm đa dạng quy mô, cấu hình mô-đun, loại nước thải, và các vùng khí hậu khác nhau nhằm đánh giá nghiêm ngặt và cải thiện khả năng tổng quát hóa của mô hình ML [17, 24, 47].
+  - Vai trò và giới hạn của nền tảng mô phỏng BSM-MBR [36, 50]:
+    - Nền tảng BSM-MBR (Benchmark Simulation Model for MBR) cung cấp một chuẩn đối sánh dựa trên mô phỏng có giá trị.
+    - Dữ liệu mô phỏng có giá trị cho công tác đối sánh, nhưng không thể tái tạo trọn vẹn các điều kiện phi dừng (non-stationary), nhiều nhiễu (noisy), và các ràng buộc vận hành (operationally constrained conditions) của dữ liệu nhà máy thực tế.
+  - Phương pháp luận giải quyết thách thức tổng quát hóa mô hình:
+    - Học chuyển giao (Transfer learning): Mô hình được huấn luyện trước trên một cơ sở nguồn dồi dào dữ liệu (data-rich source facility) và được tinh chỉnh (fine-tuned) bằng một lượng nhỏ dữ liệu từ nhà máy mục tiêu (target plant).
+    - Thích ứng miền (Domain adaptation): Giảm thiểu một cách tường minh sự sai lệch phân phối (distributional discrepancy) giữa không gian đặc trưng nguồn và không gian đặc trưng mục tiêu.
+    - Cả hai hướng tiếp cận đều đã chứng minh thành công trong các ứng dụng kỹ thuật môi trường và quan trắc chất lượng nước liên quan [17, 47].
+    - Cần ưu tiên các phương pháp này trong các nghiên cứu MBR đa cơ sở tương lai, lý tưởng nhất là sử dụng các tập dữ liệu chuẩn đối sánh truy cập mở làm nền tảng thử nghiệm chung (shared testbed).
+
+- **Khoảng trống 2 (Gap 2) - Sự thiếu vắng gần như hoàn toàn của định lượng độ không chắc chắn (uncertainty quantification) trong các dự đoán ML MBR**:
+  - Thực trạng trong y văn MBR ML:
+    - Rất ít nghiên cứu được đánh giá công bố các khoảng dự đoán (prediction intervals) hoặc biên độ tin cậy (confidence bounds) song hành cùng các ước tính điểm (point estimates).
+    - Y văn hiện tại chủ yếu chỉ cung cấp các dự đoán điểm mang tính tất định (deterministic point predictions).
+  - Tính khả thi hành động của độ không chắc chắn trong vận hành:
+    - Độ không chắc chắn là thông tin có thể trực tiếp chuyển hóa thành hành động can thiệp trong bối cảnh vận hành thực tế.
+    - Sự khác biệt về phản ứng điều khiển: Một hệ thống điều khiển đối mặt với dự báo áp suất xuyên màng $\text{TMP}$ (transmembrane pressure) có độ không chắc chắn $\pm 2\text{ kPa}$ sẽ đưa ra hành động hoàn toàn khác so với khi đối mặt với độ không chắc chắn $\pm 12\text{ kPa}$.
+  - Đánh giá các phương pháp luận định lượng độ không chắc chắn:
+    - Mạng nơ-ron Bayes (Bayesian neural networks): Duy trì các phân phối xác suất trên trọng số mạng thay vì ước tính điểm, cung cấp định lượng độ không chắc chắn có nguyên lý (principled uncertainty quantification) nhưng đòi hỏi chi phí tính toán rất lớn (computationally demanding).
+    - Phương pháp dự đoán chuẩn hình (Conformal prediction methods): Cung cấp các đảm bảo độ bao phủ không phụ thuộc phân phối (distribution-free coverage guarantees) dưới các giả định về tính khả hoán (exchangeability assumptions), tạo ra giải pháp thay thế hiệu quả về mặt tính toán và ngày càng được ứng dụng nhiều trong các bài toán kỹ thuật đòi hỏi an toàn nghiêm ngặt (safety-critical engineering applications) [28, 48].
+    - Cả hai hướng tiếp cận trên đều chưa từng được đánh giá một cách có hệ thống trong bối cảnh ML ứng dụng cho MBR.
+  - Yêu cầu bắt buộc đối với vận hành Digital Twin kê đơn Bậc III (Tier III prescriptive DT):
+    - Đối với vận hành DT Bậc III (nơi các quyết định điều khiển được thực thi trực tiếp trên hệ thống), các biên độ không chắc chắn được hiệu chuẩn tự động (automatically calibrated uncertainty bounds) không chỉ dừng ở mức đáng mong muốn mà là yêu cầu thiết yếu về mặt vận hành để đảm bảo kiểm soát tự chủ an toàn (safe autonomous control).
+
+- **Khoảng trống 3 (Gap 3) - Thiếu hụt các triển khai Digital Twin quy mô thực tế tích hợp XAI (full-scale DT deployments with integrated XAI)**:
+  - Hiện trạng các nghiên cứu DT trong y văn:
+    - Toàn bộ các công bố tập trung vào DT được xác định trong bài tổng quan đều chỉ mô tả các khung làm việc dựa trên mô phỏng hoặc ở quy mô phòng thí nghiệm (laboratory-scale).
+    - Chưa có công trình nào ghi nhận việc triển khai trọn vẹn DT Bậc II (Tier II) hoặc Bậc III (Tier III) ở quy mô đô thị thực tế (full municipal scale) kết hợp việc sinh giải thích XAI đồng thời (contemporaneous XAI explanation generation) và tích hợp với người vận hành (operator integration).
+  - Yêu cầu hạ tầng đa chiều cho triển khai quy mô lớn:
+    - Yêu cầu kỹ thuật (Technical requirements): Hiệu chuẩn cảm biến (sensor calibration), độ tin cậy của đường ống dữ liệu (data pipeline reliability), hạ tầng tính toán (computational infrastructure), và an ninh mạng (cybersecurity).
+    - Yêu cầu tổ chức (Organizational requirements): Đào tạo người vận hành (operator training), quản lý sự thay đổi (change management), và các khung trách nhiệm pháp lý theo hợp đồng (contractual liability frameworks) đối với kiểm soát tự động.
+    - Các yếu tố tổ chức này chưa được ghi chép đầy đủ trong tài liệu học thuật [33, 37].
+  - Nhu cầu thiết lập mô hình hợp tác có cấu trúc (Structured collaboration):
+    - Cần sự hợp tác chặt chẽ giữa các đơn vị cấp thoát nước (water utilities), nhà cung cấp công nghệ (technology providers), và các nhóm nghiên cứu học thuật tương tự mô hình thẩm định ML quy mô thực tế của Kovacs et al. [26].
+    - Sự hợp tác này là điều kiện cốt lõi để tạo lập cơ sở bằng chứng triển khai (deployment evidence base), làm nền tảng hỗ trợ cho việc chấp thuận từ cơ quan quản lý và áp dụng thương mại.
+
+- **Khoảng trống 4 (Gap 4) - Đặc tính hóa động học dòng nước thải vào (dynamic influent characterization)**:
+  - Hạn chế của thiết bị đo SCADA truyền thống:
+    - Thiết bị đo $\text{SCADA}$ (Supervisory Control and Data Acquisition) tiêu chuẩn chỉ đo lường các thông số chất lượng nước thải gộp: $\text{COD}$ (Chemical Oxygen Demand - nhu cầu oxy hóa học), $\text{BOD}$ (Biochemical Oxygen Demand - nhu cầu oxy sinh hóa), $\text{TSS}$ (Total Suspended Solids - tổng chất rắn lơ lửng), độ đục (turbidity), $\text{DO}$ (Dissolved Oxygen - oxy hòa tan), $\text{pH}$, và độ dẫn điện (conductivity).
+    - Các chỉ số này chỉ cung cấp đặc tính hóa ở mức độ tổng hợp (aggregate characterization) đối với hỗn hợp bùn lỏng (mixed liquor) đi vào hệ thống sinh học.
+  - Các nguồn gây nhiễu động dòng vào không được phản ánh chính xác:
+    - Các sự kiện xả thải chất thải thương mại công nghiệp, hiện tượng nước mưa thâm nhập (stormwater infiltration) trong các đợt mưa, và sự biến thiên theo chu kỳ ngày đêm (diurnal variation) của thành phần nước thải sinh hoạt đều tạo ra những thay đổi nhanh với biên độ lớn trong đặc tính dòng vào.
+    - Các biến động này khó được nắm bắt bởi các mẫu gộp hàng ngày (daily composite samples) hoặc các cảm biến trực tuyến có tốc độ phản hồi chậm [3, 22].
+    - Những nhiễu động chưa được đặc tính hóa này là nguồn nguyên nhân hàng đầu dẫn đến các sự kiện nghẹt màng MBR vốn rất khó dự đoán nếu chỉ dựa trên các mảng cảm biến tiêu chuẩn.
+  - Giải pháp nâng cấp lớp cảm biến trong kiến trúc DT:
+    - Tích hợp các cảm biến quang phổ trực tuyến tần số cao (high-frequency online spectroscopic sensors) như quang phổ tử ngoại - khả kiến ($\text{UV-Vis}$) và quang phổ huỳnh quang (fluorescence spectrophotometry).
+    - Ứng dụng kỹ thuật chụp cắt lớp quang học cố kết (OCT - optical coherence tomography) mới xuất hiện để đặc tính hóa lớp bánh bùn (cake layer) theo thời gian thực.
+    - Áp dụng các công cụ sinh học phân tử (molecular tools) phục vụ nhận diện hồ sơ cấu trúc quần thể vi sinh vật (microbial community fingerprinting).
+    - Việc đưa các công nghệ này vào lớp cảm biến của DT sẽ nâng cao đáng kể năng lực đặc tính hóa động học dòng vào và phạm vi bao phủ dự đoán của mô hình ML trước các sự kiện nhiễu động gây hậu quả nghiêm trọng (high-consequence disturbance events).
+
+- **Khoảng trống 5 (Gap 5) - Chiều kích pháp lý và quản lý quy chuẩn của việc ứng dụng XAI (regulatory dimension of XAI adoption)**:
+  - Khoảng cách giữa lý thuyết học thuật và thực tiễn pháp lý:
+    - Lập luận lý thuyết về vai trò của XAI như một công cụ xây dựng niềm tin pháp lý (regulatory trust) trong quản trị hệ thống nước dựa trên ML đã được phát triển sâu sắc trong y văn [29, 51].
+    - Tuy nhiên, chưa có bất kỳ nghiên cứu công bố nào ghi nhận bằng thực nghiệm một trường hợp mà các giải thích SHAP hoặc đầu ra XAI tương đương tác động trực tiếp đến một điều kiện cấp phép (permit condition), kết quả thanh tra quy chuẩn (regulatory inspection outcome), sửa đổi giấy phép vận hành (operational license amendment), hay một hành động pháp lý chính thức nào trong ngành nước.
+  - Mắt xích còn thiếu giữa năng lực kỹ thuật và khung cấp phép: Đây là điểm gián đoạn nghiêm trọng giữa năng lực kỹ thuật được minh chứng trong nghiên cứu học thuật và các cấu trúc cấp phép quản lý kiểm soát sự vận hành của các hệ thống nước thực tế.
+  - Điều kiện tiên quyết để chuyển giao công nghệ sang vận hành thương mại:
+    - Cần sự chủ động tương tác giữa cộng đồng kỹ thuật ngành nước và các cơ quan quản lý môi trường (environmental regulators).
+    - Thiết lập các tiêu chuẩn bằng chứng được đồng thuận (agreed-upon evidence standards) phục vụ thẩm định XAI.
+    - Xác định các trường hợp sử dụng được chấp nhận (acceptable use cases) đối với kiểm soát tự động dựa trên ML.
+    - Xây dựng các yêu cầu lưu vết kiểm toán (audit-trail requirements) nhằm hỗ trợ quá trình chuyển dịch từ thử nghiệm nghiên cứu sang triển khai vận hành đã được cấp phép.
+
+- **Khoảng trống 6 (Gap 6) - Chi phí kinh tế trong phát triển và tái huấn luyện mô hình ML (economic cost of ML model development and retraining)**:
+  - Gánh nặng chi phí tài nguyên: Việc phát triển một mô hình ML cấp độ sản xuất (production-grade ML model) cho nhà máy MBR đòi hỏi đầu tư hạ tầng dữ liệu, chuyên môn kỹ thuật công nghệ, và tài nguyên tính toán.
+  - Tính chất định kỳ của chi phí tái huấn luyện: Chi phí tái huấn luyện phát sinh lặp lại mỗi khi đặc tính dòng nước thải biến động, các mô-đun màng được thay thế, hoặc cấu hình nhà máy thay đổi.
+  - Sự thiếu vắng dữ liệu chi phí trong y văn:
+    - Các khoản chi phí này hiếm khi được báo cáo trong các công bố học thuật.
+    - Chưa có nghiên cứu bình duyệt nào công bố một phân tích chi phí - lợi ích đầy đủ (full cost–benefit analysis) cho một hệ thống ML được triển khai trong nhà máy MBR; sự thiếu hụt dữ liệu này tự nó đã là một phát hiện quan trọng.
+  - Cấu trúc chi phí triển khai thực tế cho hệ thống dự đoán nghẹt màng bằng ML tại nhà máy MBR quy mô vừa:
+    - Chi phí phát triển ban đầu (Initial development costs): Bao gồm kiểm toán cảm biến và hạ tầng dữ liệu (thường đòi hỏi vài tháng dọn dẹp dữ liệu lịch sử SCADA), phát triển mô hình và kiểm định chéo (cross-validation), cùng tài liệu quy chuẩn để xin phê duyệt thay đổi quy trình.
+    - Chi phí vận hành thường xuyên (Ongoing costs): Bao gồm tái huấn luyện mô hình định kỳ, phần cứng tính toán biên (edge computing hardware), an ninh công nghệ thông tin (IT security), và đào tạo người vận hành.
+  - Khuyến nghị đối với nghiên cứu và thực hành kỹ thuật:
+    - Các nghiên cứu tương lai cần báo cáo tổng chi phí phát triển (total development cost), chi phí thẩm định (validation cost), và chi phí bảo trì hàng năm (annual maintenance cost) bên cạnh các chỉ số hiệu năng kỹ thuật của mô hình.
+    - Khi thiếu các dữ liệu này, các đơn vị cấp thoát nước không thể đánh giá liệu việc kiểm soát dựa trên ML có hợp lý về mặt kinh tế so với các phương án đơn giản hơn như bộ điều khiển $\text{PID}$ (Proportional–Integral–Derivative) hay không.
+    - Cho đến khi có đầy đủ dữ liệu kinh tế, các kỹ sư thực hành nên thực hiện các đánh giá tính khả thi theo từng địa điểm cụ thể (site-specific feasibility assessments) trước khi cam kết triển khai hệ thống kiểm soát bằng ML.
+
+- **Khoảng trống 7 (Gap 7) - Yêu cầu về nguồn nhân lực (human capital requirements) trong vận hành hệ thống DT và XAI**:
+  - Yêu cầu về năng lực chuyên môn: Một bản sao số Bậc II hoặc Bậc III vận hành hiệu quả đòi hỏi đội ngũ nhân sự sở hữu năng lực chuyên sâu kết hợp giữa kỹ thuật dữ liệu (data engineering), vận hành học máy (ML operations - MLOps), và kiểm soát quy trình công nghệ (process control).
+  - Tình trạng thiếu hụt kỹ năng tại các đơn vị cấp thoát nước: Phần lớn các đơn vị cấp thoát nước không có sẵn bộ kỹ năng chuyên môn nội bộ này (lack this skill set in-house).
+  - Bản chất khoảng cách triển khai: Khoảng cách giữa các thử nghiệm ở cấp độ nghiên cứu (research-grade demonstrations) và việc ứng dụng thực tiễn tại nhà máy không chỉ đơn thuần là khoảng trống công nghệ, mà phần lớn là khoảng trống về lực lượng lao động (workforce gap).
+  - Khuyến nghị nghiên cứu: Các nghiên cứu cần công bố rõ ràng và tường minh các yêu cầu về biên chế nhân sự và chương trình đào tạo (staffing and training requirements) đối với các khung làm việc DT được đề xuất.
+
+- **Khoảng trống 8 (Gap 8) - Hạn chế trong so sánh đối sánh giữa điều khiển bằng ML với các giải pháp phi ML truyền thống đã thiết lập (established non-ML alternatives)**:
+  - Vị thế của các giải pháp điều khiển truyền thống: Các bộ điều khiển $\text{PID}$ (Proportional–Integral–Derivative) và bộ điều khiển logic mờ (fuzzy logic controllers) là các công nghệ đã được hiểu rõ, chi phí thấp, và đã được vận hành rộng rãi tại hầu hết các cơ sở MBR.
+  - Thiếu sót trong đối chuẩn thực nghiệm: Rất ít nghiên cứu được đánh giá thực hiện đối sánh các mô hình ML với các đường cơ sở truyền thống này dưới những điều kiện vận hành tương đương.
+  - Hệ quả thiếu định lượng lợi ích gia tăng: Nếu không có các so sánh trực tiếp, lợi ích gia tăng (incremental benefit) của ML so với các phương pháp điều khiển quy ước không thể lượng hóa một cách xác thực.
+  - Yêu cầu bắt buộc trong nghiên cứu tương lai: Các nghiên cứu tương lai cần phải đưa $\text{PID}$ và logic mờ vào làm các đường cơ sở đối sánh bắt buộc (mandatory baselines) khi đưa ra tuyên bố về sự cải thiện hiệu năng.
+
+- **Khoảng trống 9 (Gap 9) - Dấu chân carbon và năng lượng từ tính toán mô hình ML (carbon and energy footprint of ML model computation)**:
+  - Mức tiêu thụ điện năng lớn của mô hình học sâu:
+    - Quá trình huấn luyện các mô hình học sâu như mạng bộ nhớ ngắn-dài $\text{LSTM}$ (Long Short-Term Memory) hoặc Transformer trên các tập dữ liệu $\text{SCADA}$ quy mô lớn tiêu tốn một lượng điện năng đáng kể.
+    - Quá trình suy luận (inference) trên các phần cứng biên (edge hardware) tiếp tục tạo ra nhu cầu năng lượng bổ sung liên tục trong suốt vòng đời vận hành.
+  - Xung đột với mục tiêu môi trường của công nghệ MBR: Đối với các hệ thống MBR được triển khai với mục tiêu cốt lõi là giảm thiểu tác động môi trường, dấu chân tiêu thụ năng lượng tính toán này là một vấn đề quan ngại chính đáng.
+  - Khuyến nghị minh bạch hóa thông số năng lượng: Các nghiên cứu tương lai cần báo cáo mức tiêu thụ năng lượng huấn luyện (training energy consumption) và năng lượng suy luận trên mỗi lượt dự đoán (inference energy per prediction) song hành cùng các thước đo hiệu năng mô hình.

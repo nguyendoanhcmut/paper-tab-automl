@@ -1,0 +1,267 @@
+3.4. Dataset Limitations, Overfitting Risk, and Cross-Site Generalization
+A critical appraisal of the performance metrics summarized in Table 1 must account
+for the substantial heterogeneity in dataset characteristics across reviewed studies. The
+majority of studies trained and validated models on single-facility datasets comprising
+hundreds to a few thousand samples. Only Kovacs et al. reported a dataset comprising
+more than 80,000 operational samples from a full municipal-scale plant. High reported
+R2 values, including R2 = 0.990 for LSSVM [42] and R2 = 0.92–0.98 for OMBR prediction
+models [22], must therefore be interpreted with care. When a model is trained and tested
+on data from a single, homogeneous operating campaign, a high R2 can reflect the model’s
+capacity to reproduce the specific noise structure and temporal autocorrelation of that
+dataset rather than a genuinely generalizable representation of fouling dynamics. This
+overfitting risk is compounded by the near-universal absence of external validation on data
+from a separate operating period or independent plant; most reviewed studies relied on
+random train–test splits that do not preserve temporal ordering and therefore cannot detect
+temporal data leakage. Future studies should report k-fold cross-validation with temporal
+blocking, learning curves as a function of training set size, and, where feasible, cross-site
+validation on at least one independent facility.
+Table 1. Confirmed ML model performance for MBR fouling and TMP prediction.
+ML
+Algorithm
+Target Variable
+Scale
+Best R2
+Approx.
+Dataset Size
+External
+Validation
+RMSE/MSE
+Reference
+ANN
+(MLP + RBF)
+TMP/permeability
+Pilot
+Satisfactory
+N/R; 60-day
+campaign
+None
+(train–test split)
+N/R
+[23]
+ANN
+(backprop)
+TMP, AO-MBR
+Pilot
+0.850
+N/R; pilot-scale
+None
+(train–test split)
+N/R
+[25]
+LSSVM (best)
+Fouling resistance
+Lab
+0.990
+N/R; lab-scale
+None
+(train–test split)
+MSE = 0.0002
+[42]
+ANN-MLP
+Fouling resistance
+Lab
+Lower than
+LSSVM
+N/R; lab-scale
+None
+(train–test split)
+>LSSVM
+[42]
+AI models
+(OMBR)
+Water
+flux + fouling
+Lab
+0.92–0.98
+N/R; lab OMBR
+None
+(train–test split)
+Reported
+[22]
+RF (best)
+TMP, full-scale
+WWTP
+Full-scale
+0.927–0.996
+>80,000 samples
+None
+(single plant)
+0.264–0.904 kPa
+[26]
+LSTM
+TMP, full-scale
+WWTP
+Full-scale
+Lower than RF
+(no exact value
+reported)
+>80,000 samples
+None
+(single plant)
+Higher than RF
+[26]
+ANN
+TMP, full-scale
+WWTP
+Full-scale
+Lower than RF
+(no exact value
+reported)
+>80,000 samples
+None
+(single plant)
+Higher than RF
+[26]
+The ability of a model trained at one MBR installation to maintain predictive accuracy
+when applied to a second facility with different membrane module geometry, influent
+composition, or operating regime, referred to here as cross-site generalization, has rarely
+been evaluated in the reviewed literature. Dataset shift, arising from differences in sludge
+microbiology, local wastewater chemistry, and climate-driven seasonal patterns, is the pri-
+mary mechanism driving cross-site performance degradation. Transfer learning, in which
+a model pre-trained on a data-rich source facility is fine-tuned with limited data from a
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 10 -->
+Membranes 2026, 16, 181
+10 of 26
+target plant, and domain adaptation, which explicitly minimizes the distributional discrep-
+ancy between source and target feature spaces, offer technically feasible pathways toward
+generalizable MBR ML models. Both approaches have demonstrated success in related
+environmental engineering contexts [17,47] and represent a high-priority methodological
+direction for future MBR ML research.
+The limitations and generalizability constraints identified in this section directly affect
+the adoption of ML in regulated MBR operations. Practitioners and regulators require not
+only accurate predictions but also transparent, auditable justification for model-driven
+recommendations. This requirement motivates the use of explainable AI methods, which
+are evaluated in the following section. Table 2 presents a critical comparison of the principal
+ML algorithms reviewed, based solely on verified data from the primary cited sources. The
+table highlights the key strength, the primary limitation, and the bias risk level of each
+algorithm. Bias risk is rated High where no external validation on an independent facility
+was reported and the dataset comprised fewer than 500 samples. It is rated Moderate
+where the dataset was large but validation remained within a single facility. It is rated
+Low where at least two independent test sets from operational plants were used. This
+assessment follows the framework proposed by Reviewer and by published guidance on
+ML validation standards in environmental engineering [28,48].
+Table 2. Critical comparison of principal ML algorithms applied to MBR fouling and TMP prediction.
+Algorithm
+Category
+Key Strength
+Key Limitation
+Best R2
+Bias Risk 1
+Reference
+ANN-
+MLP + RBF
+Shallow ANN
+Fast convergence; handles
+non-linear input-output
+relationships
+No quantitative R2
+reported; generalizability
+unvalidated
+Not reported
+HIGH
+[23]
+ANN
+(backprop)
+Shallow ANN
+Established architecture;
+practical for
+pilot-scale use
+R2 = 0.850 only;
+moderate accuracy; no
+uncertainty
+quantification
+0.850
+HIGH
+[24]
+LSSVM
+Kernel-based
+Highest R2 in lab setting
+(0.99); robust on small
+data; built-in sensitivity
+analysis
+Does not scale to large
+datasets; no temporal
+modeling capability
+0.990
+HIGH 2
+[42]
+AI models
+(OMBR)
+Various
+Captures osmotic driving
+force dynamics;
+R2 = 0.92–0.98
+Small lab dataset; single
+facility only; no external
+validation
+0.92–0.98
+HIGH
+[22]
+Random Forest
+Ensemble
+Best accuracy at full scale;
+robust to outliers; built-in
+feature importance;
+handles mixed data types
+Memory-intensive;
+global feature
+importance only;
+single-plant validation
+0.927–0.996
+MODERATE 3
+[26]
+LSTM
+Deep learning
+(RNN)
+Captures long-range
+temporal fouling
+dependencies; suited to
+time-series TMP
+Requires large datasets;
+high compute demand;
+less accurate than RF in
+same study
+Lower than RF
+MODERATE 3
+[26]
+CatBoost + XAI
+Gradient boosting
+Strong full-scale
+performance; XAI
+identifies dominant
+fouling drivers
+(F/M, MLSS)
+Moderate R2 (0.8374) on
+noisy industrial
+data; single
+food-processing plant
+0.8374
+MODERATE 3
+[49]
+MBR-Net
+(custom DL)
+Deep learning
+Real-time IoT-integrated
+prediction; R2 > 0.87 on
+two independent test sets;
+one-day-ahead forecasting
+Limited by data
+availability; single
+facility type validated
+>0.87
+LOW 4
+[50]
+1 Bias risk rated per Reviewer 2 criteria: High = no external validation + dataset < 500 samples; Moderate = large
+dataset but single-facility validation only; Low = validated on ≥2 independent test sets. 2 LSSVM trained on
+lab-scale data only; dataset size not reported but consistent with <500 samples given lab campaign. 3 Single
+municipal or industrial plant; no cross-site validation performed. 4 MBR-Net validated on two independent test
+sets from the same full-scale facility; cross-site generalization not yet demonstrated.
+https://doi.org/10.3390/membranes16050181
+
+
+<!-- Page 11 -->
+Membranes 2026, 16, 181
+11 of 26

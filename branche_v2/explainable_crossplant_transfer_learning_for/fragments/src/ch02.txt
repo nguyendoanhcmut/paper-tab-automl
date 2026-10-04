@@ -1,0 +1,148 @@
+1. Introduction
+Urbanization and increasing wastewater reuse requirements 
+continue to push wastewater treatment toward intensified processes, 
+which need to deliver stable, high-quality effluent within constrained 
+infrastructure footprints [1]. Membrane bioreactors (MBRs), which 
+integrate biological treatment with membrane separation, have there­
+fore been widely adopted for domestic and industrial applications, due 
+to their superior effluent quality and compact configuration. However, 
+membrane fouling remains the principal obstacle to fully realizing these 
+advantages [2]. Under constant-flux operation, fouling progressively 
+increases filtration resistance and is reflected by a rise in transmembrane 
+pressure (TMP), which in turn increases aeration and pumping demand, 
+intensifies chemical cleaning requirements, accelerates membrane 
+aging, and raises lifecycle costs [3]. Consequently, MBRs typically 
+consume more energy than conventional activated sludge processes 
+(0.4–1.6 vs. 0.3–0.8 kWh m−3) [4]. Accurate prediction of fouling evo­
+lution/TMP is therefore essential for enabling feedforward fouling 
+control and low-energy MBR operation [5,6]. Nevertheless, despite 
+substantial progress in fouling characterization and mitigation, 
+* Corresponding author.
+** Corresponding author. School of Technology for Sustainability, Beijing Normal University, China.
+E-mail addresses: xuboyan@bnu.edu.cn (B. Xu), huanghy@bnu.edu.cn (H.Y. Ng). 
+1 First Authors.
+Contents lists available at ScienceDirect
+Journal of Membrane Science
+journal homepage: www.elsevier.com/locate/memsci
+https://doi.org/10.1016/j.memsci.2026.126065
+Received 8 June 2026; Received in revised form 21 July 2026; Accepted 18 August 2026  
+Journal of Membrane Science 758 (2026) 126065 
+Available online 19 August 2026 
+0376-7388/© 2026 Elsevier B.V. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+proactive fouling management remains difficult in MBRs.
+To support proactive management, both mechanistic and data- 
+driven approaches have been explored to predict fouling evolution. 
+Mechanistic and hybrid biological–physical models can enhance inter­
+pretability, but they are often challenging to parameterize and recali­
+brate in real plants [7]. In parallel, machine learning (ML) and deep 
+learning (DL) models have emerged as attractive alternatives, because 
+they can capture nonlinear relationships among operational, 
+water-quality, and biomass-related variables [7–9]. Within this land­
+scape, tree-based ML models (e.g., gradient-boosting families such as 
+Extreme Gradient Boosting (XGBoost)) are attractive for tabular process 
+data, whereas recurrent DL architectures (e.g., long short-term memory 
+(LSTM) networks) are particularly suitable for fouling prediction, 
+because membrane fouling is an intrinsically cumulative and 
+path-dependent process, driven by temporal changes in sludge proper­
+ties and hydrodynamic conditions [10–12].
+Notably, comprehensive and rationally designed inputs for model 
+development are key to achieving accurate AI modeling [13]. However, 
+many existing TMP prediction models, particularly those developed at 
+pilot-scale/full-scale MBRs, are built primarily on routinely monitored 
+“conventional” variables, such as mixed liquor suspended solids (MLSS), 
+mixed liquor volatile suspended solids (MLVSS), hydraulic retention 
+time (HRT), and sludge retention time (SRT). Thus, the current ap­
+proaches for tracking fouling dynamics in MBRs are often insufficient 
+[14,15]. In contrast, mechanistically informative biochemical de­
+scriptors such as extracellular polymeric substances (EPS) and soluble 
+microbial products (SMP) are often missing or severely under-sampled 
+at pilot-scale/full-scale MBRs [15,16]. This is a critical limitation, 
+because extensive evidence shows that EPS and SMP, particularly their 
+proteinaceous and polysaccharide fractions, strongly influence fouling 
+propensity 
+by 
+shaping 
+cake 
+formation, 
+compressibility, 
+and 
+pore-blocking behavior [17], although humic and fulvic acids can also 
+contribute to membrane fouling [18–20]. Collectively, this evidence 
+suggests that explicitly introducing EPS and SMP as model inputs could 
+be both scientifically justified and a promising route to improve TMP 
+prediction and interpretability in MBR plants.
+Even when these key biochemical indicators are available, pilot-/ 
+full-scale MBR datasets are often still insufficient to support the devel­
+opment of robust site-specific fouling prediction models. In practice, 
+measurements of EPS and SMP fractions are usually sparse and irregular, 
+because they rely on labor-intensive laboratory analyses rather than 
+online sensing. Together with missing values, sensor errors, and outliers 
+in routine operational records and key biochemical datasets, these 
+limitations make it difficult for a single data-limited MBR plant to 
+independently train a high-quality predictive model [21,22]. Most 
+existing ML-based MBR fouling prediction models have also been 
+developed and validated using relatively long or dense plant-specific 
+historical records, leaving their cross-plant generalizability under 
+data-limited conditions insufficiently established [7,8,23]. Neverthe­
+less, different MBR plants often share comparable fouling mechanisms, 
+including cake-layer accumulation, pore blocking, and the contribution 
+of microbial products to membrane fouling. This suggests that trans­
+ferable models for fouling formation/prediction may exist across 
+MBR plants. From this perspective, transfer learning provides a prom­
+ising strategy to address both data scarcity and data silos in MBR fouling 
+prediction [24,25]. Specifically, a base model can be pretrained on 
+multi-source data from different MBR plants to learn generalized re­
+lationships among operational conditions, EPS/SMP signatures, and 
+TMP evolution. Then it could be fine-tuned using a small amount of data 
+from the target MBR to learn the plant-specific fouling drivers.
+However, cross-plant transfer learning for MBR fouling prediction is 
+not a simple model-porting problem. First, source and target MBRs may 
+differ substantially in influent composition, sludge physicochemical 
+properties, EPS/SMP profiles, metal–organic interactions, and operating 
+conditions. Moreover, even after fine-tuning, limited target plant data 
+may still be insufficient for the model to fully capture newly dominant 
+fouling drivers that were weak or absent in the source plants. Further­
+more, the success of transfer learning should not be evaluated by pre­
+dictive accuracy alone, but also by how and why physically meaningful 
+fouling signals are retained, discarded, or reweighted during transfer. 
+Explainable analyses, such as SHAP and leave-one-feature-out (LOFO) 
+analysis, are needed to determine how key EPS/SMP-related indicators 
+function as transferable fouling drivers or plant-specific recalibrated 
+signals. Prior applications of these methods to membrane-fouling pre­
+diction have focused mainly on model-level feature ranking [26]. 
+However, SHAP attributions are inherently model-dependent and lack a 
+ground truth for validation, so high predictive accuracy alone does not 
+ensure that the highlighted features reliably reflect the true fouling 
+behavior [27]. Accordingly, independent physicochemical character­
+ization, including excitation–emission matrix (EEM), liquid chroma­
+tography–organic carbon detection (LC-OCD), and foulant analysis, is 
+needed to evaluate the plausibility of these attribution shifts and support 
+their mechanistic interpretation.
+To address these gaps, this study proposes an explainable transfer 
+learning strategy for fouling prediction in pilot-scale MBRs under data- 
+limited conditions. Specifically, (1) base models (based on LSTM and 
+XGBoost) were first pretrained on multi-source datasets collected from 
+three pilot-scale MBR plants (source plants) treating domestic waste­
+water, covering diverse operating conditions, routine biochemical 
+characteristics, and key components in EPS and SMP. We then (2) fine- 
+tuned the base models using the target plant dataset to establish a 
+fouling prediction model for the data-limited target plant (treating do­
+mestic wastewater), while quantifying the relationship between fine- 
+tuning ratio and predictive performance and examining how LSTM 
+and XGBoost architectures influenced transfer performance after fine- 
+tuning. Next, (3) the transfer behavior and transferable fouling-related 
+information were examined using explainable analyses, including 
+SHAP and LOFO analyses, together with physicochemical character­
+ization by EEM, LC-OCD, and foulant analysis. These analyses were used 
+to clarify how key fouling-related indicators, particularly EPS and SMP, 
+were retained or reweighted during pretraining and fine-tuning, and 
+provided mechanistic support for these changes. Finally, (4) the 
+transfer learning framework was further examined in a pilot-scale MBR 
+treating industrial wastewater to test whether cross-plant transfer 
+learning remains feasible under a more distinct wastewater background. 
+Collectively, this study aims to provide a practical and explainable route 
+for establishing fouling prediction models in data-limited MBR facilities 
+through cross-plant transfer learning.

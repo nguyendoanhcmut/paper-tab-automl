@@ -1,0 +1,42 @@
+### Testing candidate models by the experimental dataset
+
+- Kiểm định các mô hình ứng viên (candidate models) bằng tập dữ liệu thực nghiệm chưa từng thấy (unseen experimental dataset) nhằm đánh giá độ tin cậy và năng lực tổng quát hóa của nền tảng H2O AutoML:
+  - Các mô hình ứng viên sinh ra từ thuật toán H2O AutoML vốn được huấn luyện trên cùng một tập dữ liệu huấn luyện gồm $2070$ mẫu ($2070$ training samples) thu thập từ y văn.
+  - Tập dữ liệu kiểm định độc lập gồm $185$ mẫu thực nghiệm chưa từng thấy ($185$ unseen experimental samples) được sử dụng để kiểm tra hiệu năng thực tế.
+  - Các mô hình tối ưu hóa được lựa chọn để dự đoán $7$ biến đầu ra (output variables), kết quả chi tiết trình bày tại Bảng 2 (Table 2).
+- Độ chính xác dự đoán cao ($R^2 = 0{,}725\text{–}0{,}945$) đạt được trên 5 biến đầu ra chủ chốt khi kiểm định bằng dữ liệu thực nghiệm:
+  - $\text{NH}_4^+\text{-N}$ nước đầu ra (effluent $\text{NH}_4^+\text{-N}$, Fig. S15).
+  - $\text{NO}_3^-\text{-N}$ nước đầu ra (effluent $\text{NO}_3^-\text{-N}$, Fig. S16).
+  - TIN nước đầu ra (effluent TIN, Fig. S18).
+  - Hiệu suất loại bỏ $\text{NH}_4^+\text{-N}$ ($\text{NH}_4^+\text{-N}$ removal efficiency, Fig. S19).
+  - Hiệu suất loại bỏ TIN (TIN removal efficiency, Fig. S20).
+- Hiệu năng của các mô hình tối ưu cho 7 biến đầu ra trên tập dữ liệu thực nghiệm chưa từng thấy theo Bảng 2 (Table 2):
+  - Effluent $\text{NH}_4^+\text{-N}$: mô hình tối ưu là GBM (Gradient Boosting Machine) đạt sai số tuyệt đối trung bình $\text{MAE} = 1{,}686$ và hệ số xác định $R^2 = 0{,}945$.
+  - Effluent $\text{NO}_3^-\text{-N}$: mô hình tối ưu là XGBoost đạt $\text{MAE} = 2{,}196$ và $R^2 = 0{,}725$.
+  - Effluent $\text{NO}_2^-\text{-N}$: mô hình tối ưu là GBM đạt $\text{MAE} = 1{,}045$ và $R^2 = 0{,}563$.
+  - Effluent TIN: mô hình tối ưu là GBM đạt $\text{MAE} = 3{,}407$ và $R^2 = 0{,}899$.
+  - $\text{NH}_4^+\text{-N}$ removal efficiency: mô hình tối ưu là GBM đạt $\text{MAE} = 4{,}514$ và $R^2 = 0{,}867$.
+  - TIN removal efficiency: mô hình tối ưu là GBM đạt $\text{MAE} = 3{,}375$ và $R^2 = 0{,}882$.
+  - NARR (nitrogen removal rate through anammox): mô hình tối ưu là Deep learning đạt $\text{MAE} = 0{,}013$ và $R^2 = 0{,}677$.
+- Đánh giá dự đoán đối với effluent $\text{NO}_2^-\text{-N}$ và NARR:
+  - Mặc dù độ chính xác dự đoán ($R^2$) của effluent $\text{NO}_2^-\text{-N}$ ($R^2 = 0{,}563$) và NARR ($R^2 = 0{,}677$) thấp hơn so với các biến đầu ra khác, các giá trị dự đoán của effluent $\text{NO}_2^-\text{-N}$ (Fig. S17) và NARR (Fig. S21) vẫn nắm bắt và phản ánh phù hợp xu hướng biến thiên tổng thể của các giá trị thực nghiệm thực tế (Fig. 5).
+  - Sai số $\text{MAE}$ dự đoán effluent $\text{NO}_2^-\text{-N}$ của mô hình GBM ($1{,}045$) vẫn thấp hơn đáng kể so với sai số $\text{MAE}$ ($3{,}428$) từ mô hình ensemble regression trees của Huang et al. (2023) [55].
+    - Mô hình của Huang et al. (2023) [55] xây dựng dựa trên các biến đầu vào gồm: operating days (số ngày vận hành), influent $\text{NH}_4^+\text{-N}$, influent $\text{NO}_2^-\text{-N}$, effluent $\text{pH}$, và effluent $\text{DO}$.
+- Phân tích nguyên nhân dẫn đến độ chính xác dự đoán thấp hơn của effluent $\text{NO}_2^-\text{-N}$ và NARR:
+  - Hiện tượng biến động/keo tụ mạnh (high flocculation) của các giá trị này trong các thí nghiệm dựa trên anammox (Fig. 5(c) và Fig. 5(g)).
+  - NARR được tính toán dựa trên sự kết hợp của nhiều biến số khác nhau (Text S1), dẫn đến tích lũy độ bất định cao (high uncertainty).
+  - Sự thiếu hụt một số biến cơ chế (missing mechanistic variables) trong tập dữ liệu thu thập, cụ thể gồm:
+    - $\text{pH}$.
+    - $\text{DO}$ (dissolved oxygen / oxy hòa tan).
+    - Các hợp chất hữu cơ ức chế đặc hiệu (specific inhibitory organic substances).
+- Khả năng tổng quát hóa của các mô hình H2O AutoML:
+  - Độ chính xác dự đoán cao của các mô hình đã huấn luyện đối với dữ liệu thực nghiệm chưa từng thấy ($185$ mẫu) khẳng định các mô hình ứng viên tạo ra từ nền tảng H2O AutoML sở hữu khả năng tổng quát hóa xuất sắc (excellent generalization ability) trong việc mô phỏng và dự đoán hiệu năng của các quá trình khử nitơ dựa trên anammox [19].
+- Đối chiếu với hiệu năng tối ưu trên tập dữ liệu y văn phân chia theo 5 seed ngẫu nhiên (Table 1):
+  - Bảng 1 (Table 1) tổng hợp hiệu năng tốt nhất của các mô hình sinh ra từ thuật toán H2O AutoML trên tập dữ liệu y văn qua 5 seed phân chia dữ liệu (data splitting seeds):
+    - Effluent $\text{NH}_4^+\text{-N}$: mô hình tối ưu GBM; Training $\text{MAE} = 0{,}171$, Training $R^2 = 0{,}994$; Validation $\text{MAE} = 1{,}951$, Validation $R^2 = 0{,}914$; Testing $\text{MAE} = 1{,}889$, Testing $R^2 = 0{,}928$.
+    - Effluent $\text{NO}_3^-\text{-N}$: mô hình tối ưu XGBoost; Training $\text{MAE} = 0{,}048$, Training $R^2 = 0{,}998$; Validation $\text{MAE} = 1{,}677$, Validation $R^2 = 0{,}727$; Testing $\text{MAE} = 1{,}626$, Testing $R^2 = 0{,}824$.
+    - Effluent $\text{NO}_2^-\text{-N}$: mô hình tối ưu XGBoost; Training $\text{MAE} = 0{,}004$, Training $R^2 = 0{,}999$; Validation $\text{MAE} = 0{,}546$, Validation $R^2 = 0{,}949$; Testing $\text{MAE} = 0{,}496$, Testing $R^2 = 0{,}962$.
+    - Effluent TIN: mô hình tối ưu XGBoost; Training $\text{MAE} = 0{,}215$, Training $R^2 = 0{,}996$; Validation $\text{MAE} = 3{,}141$, Validation $R^2 = 0{,}916$; Testing $\text{MAE} = 3{,}366$, Testing $R^2 = 0{,}910$.
+    - $\text{NH}_4^+\text{-N}$ removal efficiency: mô hình tối ưu XGBoost; Training $\text{MAE} = 0{,}305$, Training $R^2 = 0{,}996$; Validation $\text{MAE} = 3{,}638$, Validation $R^2 = 0{,}832$; Testing $\text{MAE} = 3{,}975$, Testing $R^2 = 0{,}882$.
+    - TIN removal efficiency: mô hình tối ưu XGBoost; Training $\text{MAE} = 0{,}320$, Training $R^2 = 0{,}991$; Validation $\text{MAE} = 5{,}583$, Validation $R^2 = 0{,}731$; Testing $\text{MAE} = 5{,}252$, Testing $R^2 = 0{,}814$.
+    - NARR: mô hình tối ưu XGBoost; Training $\text{MAE} = 0{,}002$, Training $R^2 = 0{,}999$; Validation $\text{MAE} = 0{,}013$, Validation $R^2 = 0{,}981$; Testing $\text{MAE} = 0{,}014$, Testing $R^2 = 0{,}993$.

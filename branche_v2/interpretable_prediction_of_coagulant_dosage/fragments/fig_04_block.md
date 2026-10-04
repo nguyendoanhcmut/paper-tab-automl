@@ -1,0 +1,7 @@
+  - **Hình 4.** Kết quả khớp và mật độ phân tán của AutoML: RF
+    - <img src="assets/fig_04_p6.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Đường dự đoán bám sát biến thiên thực tế theo từng mẫu trong dải liều lượng $8\text{ mg/L}$ đến $35\text{ mg/L}$.
+    - **Từ đâu mà thấy được**
+      - Panel (khung hình) (a), (b): Đồ thị chuỗi mẫu (Oy: $8\text{ mg/L}$ đến $35\text{ mg/L}$); đường dự đoán nét đứt (Predicted) bám khít đường thực tế (Actual).
+      - Panel (c), (d): Biểu đồ mật độ phân tán (Ox: thực tế, Oy: dự đoán từ $0\text{ mg/L}$ đến $40\text{ mg/L}$); các điểm hội tụ dọc đường chéo với mật độ cao nhất tại $8\text{ mg/L}$ và $30\text{ mg/L}$.

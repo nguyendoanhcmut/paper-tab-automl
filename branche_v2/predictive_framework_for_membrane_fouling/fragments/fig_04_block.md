@@ -1,0 +1,8 @@
+  - **Hình 3.** Kết quả kiểm định phân phối chuẩn Shapiro–Wilk cho các thông số MBR
+    - <img src="assets/fig_04_p15.png" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Đồ thị Q-Q trực quan hóa độ bám phân phối chuẩn: duy nhất $\text{F/M}$ bám sát đường thẳng lý thuyết, $10$ đặc trưng còn lại phân tán lệch rõ rệt.
+    - **Từ đâu mà thấy được**
+      - Trục Ox: Phân vị lý thuyết (`Theoretical quantiles`), dải từ $-2.5$ đến $2.5$; Trục Oy: Giá trị có thứ tự (`Ordered Values`).
+      - Tiêu đề từng khung hình hiển thị giá trị kiểm định: $\text{F/M}$ đạt $p = 0.0518$ (`Normality: True`); $10$ đặc trưng còn lại có $p < 0.05$ (`Normality: False`).
+      - Lưu ý: hình ghi MLSS và Temp., văn bản ghi MLSSs và temperature.

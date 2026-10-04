@@ -1,0 +1,41 @@
+#### 2.1.3 Decision tree and ensemble learning
+
+- **Định nghĩa và đặc trưng cấu trúc của cây quyết định (decision tree)**:
+  - Cây quyết định là một phương pháp học máy (machine learning) có đặc trưng bởi cấu trúc dạng cây (tree-like structure).
+  - Thuật toán cây quyết định có thể được xem như một tập hợp các quy tắc nếu-thì (if-then rules) hoặc một phân phối xác suất có điều kiện (conditional probability distribution) được định nghĩa trên cả không gian đặc trưng (feature space) và không gian phân lớp (class space).
+  - Đặc tính này mang lại độ phức tạp mô hình thấp (low model complexity) và tạo điều kiện thuận lợi cho khả năng giải thích tốt (good interpretability).
+- **Các thuật toán cây quyết định thông dụng và phạm vi ứng dụng theo bài toán**:
+  - Ba thuật toán cây quyết định phổ biến (Bảng S2 trong Phụ lục A - Table S2 in Appendix A) sử dụng các thước đo khác nhau (different metrics) để phân chia mẫu (divide samples):
+    - ID3
+    - C4.5 (Quinlan, 1993)
+    - Cây hồi quy phân loại (categorical regression tree - CART) (Breiman et al., 1984)
+  - Thuật toán cây quyết định đơn lẻ (single decision tree algorithm) thường được áp dụng để giải quyết các bài toán phân loại (classification problems).
+  - Phương pháp CART phù hợp để giải quyết các bài toán hồi quy (regression problems).
+- **Nguy cơ quá khớp (overfitting) và các kỹ thuật kiểm soát**:
+  - Hiện tượng quá khớp có thể xuất hiện, có khả năng dẫn đến khả năng tổng quát hóa yếu (weak generalization).
+  - Để giảm thiểu nguy cơ quá khớp, các kỹ thuật có thể được áp dụng bao gồm:
+    - Cắt tỉa (pruning)
+    - Kiểm định chéo (cross-validation - CV)
+    - Học tập hợp (ensemble learning)
+- **Định nghĩa và các phương thức triển khai của học tập hợp (ensemble learning)**:
+  - Học tập hợp là một thuật toán học máy kết hợp một nhóm các mô hình học cơ sở (base learners, ví dụ: cây quyết định, mạng nơ-ron lan truyền ngược - backpropagation neural network - BPNN, v.v.) theo một chiến lược xác định nhằm cải thiện hiệu suất tổng quát hóa của các mô hình học cơ sở này.
+  - Đóng bao (bagging) và tăng cường (boosting) là hai thuật toán triển khai học tập hợp điển hình:
+    - Rừng ngẫu nhiên (Random Forest - RF) (Breiman, 2001) là một phần mở rộng của phương pháp bagging.
+    - Tăng cường thích ứng (adaptive boosting), cây quyết định tăng cường độ dốc (gradient boosting decision tree - GBDT), và tăng cường độ dốc tột cùng (eXtreme gradient boosting - XGBoost) (Chen and Guestrin, 2016) là các phần mở rộng của phương pháp boosting.
+- **Các ưu thế của học tập hợp so với phương pháp tiếp cận mô hình học cơ sở đơn lẻ**:
+  - Độ chính xác cao (high accuracy).
+  - Hiệu suất tổng quát hóa tốt (good generalization performance).
+  - Tốc độ huấn luyện nhanh (fast training speed).
+  - Độ bền vững tốt (good robustness).
+  - Đòi hỏi kỹ thuật tạo đặc trưng ở mức tối thiểu (minimal feature engineering).
+  - Phạm vi kịch bản ứng dụng rộng (wide range of application scenarios).
+- **Các kịch bản ứng dụng trong lĩnh vực môi trường và vai trò hỗ trợ ra quyết định**:
+  - Tương tự như mạng nơ-ron nhân tạo (artificial neural networks - ANN) và máy vector hỗ trợ (support vector machines - SVM), cây quyết định cùng các phương pháp học tích hợp của chúng được áp dụng rộng rãi trong nhiều bài toán:
+    - Giám sát hoặc phân loại chất lượng nước (water quality monitoring or classification) (Xu et al., 2021).
+    - Nhận diện vi nhựa nano (nano-plastics identification) (Xie et al., 2023).
+    - Phân hủy chất ô nhiễm (pollutant degradation) (Zhang et al., 2023).
+    - Dự đoán chất lượng không khí (air quality prediction) (Chen et al., 2020).
+    - Dự đoán ô nhiễm nước ngầm (groundwater contamination prediction) (Bindal and Singh, 2019).
+    - Nhận diện nguồn ô nhiễm đất (source of soil contamination) (Zhou and Li, 2024).
+    - Đánh giá sinh thái và môi trường (ecological and environmental evaluation) (Espel et al., 2020).
+  - Nhờ có khả năng giải thích tốt hơn (better interpretability), các mô hình cây được sử dụng không chỉ cho dự đoán môi trường (environmental prediction) mà còn phục vụ cho quản lý môi trường và ra quyết định (environmental management and decision-making) (Jiang et al., 2021).

@@ -1,0 +1,40 @@
+### 3.2. Improved ML performance with operation time as a feature
+
+- Hiệu suất xử lý của hệ thống màng sinh học kỵ khí (anaerobic membrane bioreactor - AnMBR) không chỉ chịu tác động từ các biến vận hành cơ sở mà còn bị chi phối bởi các điều kiện động học bên trong bể phản ứng:
+  - Các biến đầu vào trong tập đặc trưng cơ sở (baseline feature set) gồm nhiệt độ bể phản ứng ($\text{T-R}$), nhiệt độ dòng vào ($\text{T-in}$), nhiệt độ môi trường ($\text{T-env}$), $\text{pH}$ dòng vào ($\text{pH-in}$), $\text{COD}$ dòng vào ($\text{COD-in}$) và thông lượng qua màng ($\text{flux}$).
+  - Cấu trúc và hoạt tính của quần xã vi sinh vật (microbial community structure and activity) trong $\text{AnMBR}$ là những nhân tố then chốt quyết định hiệu suất xử lý (Hu et al., 2017; Xie et al., 2014).
+  - Phép đo cấu trúc quần xã vi sinh vật gặp nhiều trở ngại do quy trình phân tích kéo dài và chi phí cao, dẫn đến sự khan hiếm của nguồn dữ liệu này trong thực tế vận hành.
+  - Sự thiếu hụt dữ liệu cấu trúc quần xã vi sinh vật cản trở mô hình hóa $\text{AnMBR}$ theo định hướng dữ liệu (data-driven modeling) trong việc phát hiện các cơ chế vận hành tiềm ẩn bên dưới.
+- Xuất phát từ giả thuyết thông tin bổ sung có thể tương quan với thời gian vận hành, nghiên cứu đưa số ngày vận hành (operation days - $\text{OD}$) vào mô hình như một biến đại diện (potential proxy) cho động học vi sinh vật:
+  - Việc tích hợp $\text{OD}$ cải thiện đáng kể hiệu năng mô hình so với tập đặc trưng cơ sở ($\text{T-R}$, $\text{T-in}$, $\text{T-env}$, $\text{pH-in}$, $\text{COD-in}$ và $\text{flux}$), làm tăng giá trị trung bình $R^2$ từ $0.44$ lên $0.55$ và giảm giá trị trung bình $\text{RMSE}$ từ $2.47$ xuống $2.20$ ($\text{Fig. 4}$ và $\text{Fig. S1}$):
+    - **Hình 4. Hiệu năng mô hình với các tập đặc trưng đầu vào khác nhau**
+      - ![assets/fig_04_p6.jpeg](assets/fig_04_p6.jpeg)
+      - **Hình này chứng minh điều gì**
+        - Bổ sung $\text{OD}$ (Add OD) đơn lẻ đem lại mức cải thiện hiệu năng rõ rệt nhất trên cả 4 chỉ số đánh giá so với Baseline, trong khi thêm các biến đơn lẻ khác ($\text{ORP}$, $\text{HRT}$, $\text{MLSS}$, $\text{MLVSS}$) hầu như không tạo ra biến chuyển đáng kể.
+      - **Từ đâu mà thấy được**
+        - Panel (a) $R^2$: Cột Add OD đạt giá trị trung bình cao nhất $\sim 0.55$, vượt mức cơ sở nét đứt ($0.44$); các cột thêm biến đơn lẻ khác chỉ dao động quanh mức $0.43\text{--}0.48$.
+        - Panel (b) $\text{RMSE}$, (c) $\text{MAE}$, (d) $\text{MAPE}$: Cột Add OD ghi nhận mức sai số thấp nhất (lần lượt $\sim 2.20$, $\sim 1.70\,\%$, $\sim 1.96\,\%$); thanh sai số biểu thị khoảng tin cậy $95\%$ từ kiểm định chéo 10 lần ($10\text{-fold CV}$).
+  - Phân tích tương quan Spearman (Spearman correlation analysis) cho thấy mối liên hệ yếu giữa $\text{OD}$ và biến mục tiêu ($\text{COD-re}$), chỉ ra xác suất rò rỉ dữ liệu (data leakage) ở mức thấp (xem tài liệu bổ sung).
+  - Sự cải thiện này xác nhận thông tin bổ sung hàm chứa trong $\text{OD}$ đã được mô hình học máy tiếp nhận và học tập hiệu quả.
+- Biến $\text{OD}$ đóng vai trò là biến thay thế (surrogate variable) thu nhận động học thời gian chưa được đo đạc nội tại trong quy trình $\text{AnMBR}$, thay vì là một tham số nhân quả trực tiếp (direct causal parameter):
+  - Động học thời gian phản ánh quá trình thích nghi dần của quần xã vi sinh vật (gradual acclimatization of the microbial community, như sự phát triển của màng sinh học - biofilm development).
+  - Động học thời gian đồng thời ghi nhận những biến đổi tích lũy theo thời gian về các đặc tính trên bề mặt màng lọc (cumulative changes in membrane surface properties over time).
+  - Việc đưa chiều thời gian (temporal dimension) vào đầu vào giúp mô hình học được các hành vi phi dừng (non-stationary behaviors) của bể phản ứng trong quá trình vận hành dài hạn.
+  - Việc bổ sung $\text{OD}$ đặt ra thách thức đối với khả năng ngoại suy (extrapolation) của mô hình:
+    - Mặc dù đạt hiệu năng quan sát tốt trong nghiên cứu, các mô hình dạng cây (tree-based models) thường gặp khó khăn khi thực hiện dự đoán ngoài phạm vi phân bố của dữ liệu huấn luyện (training data range).
+- Việc đưa thêm các dữ liệu thông số vận hành truyền thống gồm $\text{ORP}$, $\text{HRT}$, $\text{MLSS}$ và $\text{MLVSS}$ không đóng góp đáng kể vào việc nâng cao hiệu năng mô hình:
+  - Khi sử dụng đồng thời $\text{OD}$, $\text{ORP}$, $\text{HRT}$, $\text{MLSS}$ và $\text{MLVSS}$ để huấn luyện mô hình, hiệu quả tổng thể thu được chỉ tương đương với kịch bản chỉ bổ sung riêng lẻ biến $\text{OD}$.
+  - Phân tích Bland-Altman chứng minh việc tích hợp $\text{OD}$ vào mô hình làm giảm độ lệch giữa giá trị dự đoán và giá trị thực tế, giúp sai số phân bố đồng đều hơn quanh mốc 0 so với các mô hình không chứa thời gian vận hành ($\text{Fig. 5}$ và $\text{Fig. S2}$):
+    - **Hình 5. Phân tích Bland-Altman của các mô hình AutoML**
+      - ![assets/fig_05_p7.jpeg](assets/fig_05_p7.jpeg)
+      - **Hình này chứng minh điều gì**
+        - Bổ sung $\text{OD}$ thu hẹp biên độ phân tán của sai số và đưa độ lệch trung bình về sát mức $0$, trong khi các cấu hình thiếu $\text{OD}$ có độ phân tán rộng hơn và độ lệch lớn hơn.
+      - **Từ đâu mà thấy được**
+        - Trục tọa độ: Trục hoành là giá trị trung bình $\text{COD-re}$ ($\%$); trục tung là độ lệch $\text{COD-re}$ ($\%$) (giá trị thực tế trừ giá trị dự đoán).
+        - Panel (b) Add OD và (c) Add OD, ORP, HRT, MLSS, MLVSS: Đường chênh lệch trung bình (nét đứt giữa) nằm ở $0.03$ và $-0.02$; các điểm phân tán tập trung chặt chẽ hơn quanh đường $0$.
+        - Panel (a) Baseline và (d) All without OD: Đường chênh lệch trung bình lệch xa hơn ($0.05$ và $0.06$); dải giới hạn đồng thuận ($\pm 1.96 \times \text{SD}$) mở rộng hơn.
+  - Kết quả phân tích khẳng định sự hiện diện của biến thời gian vận hành giúp nâng cao hiệu năng mô hình, trong khi bổ sung thêm các thông số đầu vào khác chỉ mang lại sự cải thiện giới hạn.
+- Sự đóng góp hạn chế của các thông số điển hình ($\text{ORP}$, $\text{HRT}$, $\text{MLSS}$ và $\text{MLVSS}$) bắt nguồn từ các giới hạn dữ liệu đặc thù của nghiên cứu thay vì sự thiếu hụt ý nghĩa vật lý hay sinh học:
+  - Những ràng buộc dữ liệu bao gồm tần suất đo đạc (measurement frequency) và tỷ số tín hiệu trên nhiễu (signal-to-noise ratio).
+  - Hiện tượng cộng tuyến đặc trưng (feature collinearity) có thể đã che khuất tầm quan trọng của các thông số này, do mô hình có thể trích xuất đầy đủ thông tin từ các biến dự đoán tương quan khác.
+  - Các kết quả trên nhấn mạnh tầm quan trọng cốt lõi của công tác lựa chọn đặc trưng (feature selection) đối với quá trình mô hình hóa học máy.

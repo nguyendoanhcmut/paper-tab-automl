@@ -1,0 +1,31 @@
+### 3.4. Final Prediction Performance
+
+- Đánh giá khả năng dự đoán cuối cùng của mô hình phát triển thông qua việc áp dụng CatBoost cho Trường hợp IV (Case IV) kết hợp chuẩn hóa robust (robust scaling) và trung bình trượt $5\text{ ngày}$ (moving average 5 days):
+  - Phân chia tập dữ liệu theo trình tự thời gian (chronological split) nhằm bảo toàn các phụ thuộc thời gian (temporal dependencies):
+    - Sử dụng $80\,\%$ số bản ghi đầu tiên ($155\text{ bản ghi}$) làm dữ liệu huấn luyện (training data).
+    - Dành $20\,\%$ số bản ghi còn lại ($39\text{ bản ghi}$) làm dữ liệu kiểm tra (test data) theo thực hành mô hình hóa chuỗi thời gian tiêu chuẩn.
+  - Phương pháp biểu diễn trực quan kết nối các điểm dữ liệu dự đoán bằng đường nét đứt thay vì hiển thị từng điểm riêng lẻ:
+    - Số lượng điểm dữ liệu tương đối nhỏ khiến đồ thị dạng điểm phân tán kém hiệu quả trong việc truyền tải các xu hướng tổng thể.
+    - Đường nét đứt hỗ trợ so sánh trực quan các đặc trưng và xu hướng giữa tập huấn luyện và tập kiểm tra trên toàn bộ chu kỳ vận hành.
+- Đồ thị chuỗi thời gian thể hiện giá trị thực tế và dự đoán của thông lượng riêng $\text{Spec. Flux}$, minh họa khả năng nắm bắt các biến thiên theo thời gian của hiện tượng tắc nghẽn màng:
+  - **Hình 5.** So sánh giá trị Spec. Flux thực tế và dự đoán của CatBoost
+    - <img src="assets/fig_06_p20.png" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Đường dự đoán bám sát giá trị thực tế, theo dõi chính xác các pha dao động thông lượng và cực trị trên tập kiểm tra.
+    - **Từ đâu mà thấy được**
+      - Trục Ox: Chỉ số mẫu thời gian (`Index`), dải giá trị $0\text{--}200$; Trục Oy: Giá trị $\text{Spec. Flux}$ (`Value`), dải giá trị $0.03\text{--}0.08\,\text{LMH/kPa}$.
+      - Đường màu đỏ nét đứt (`Predicted`) bám sát đường màu xanh liền nét (`Actual`), thể hiện chỉ số kiểm tra $\text{MSE} = 0.0000$.
+- Các chỉ số hiệu suất định lượng trên tập kiểm tra ($20\,\%$ dữ liệu) xác nhận độ chính xác cao của CatBoost đối với dữ liệu chưa từng thấy (unseen data):
+  - Hệ số xác định $R^2$ đạt $0.7712$.
+  - Sai số căn bậc hai trung bình bình phương $\text{RMSE}$ ở mức thấp $0.0064$.
+  - Sai số tuyệt đối trung bình $\text{MAE}$ ở mức tối thiểu $0.0054$.
+  - Sai số phần trăm tuyệt đối trung bình $\text{MAPE}$ chỉ ở mức $0.11\,\%$, chứng minh sai số tương đối rất nhỏ khi dự đoán $\text{Spec. Flux}$.
+  - Toàn bộ chỉ số được tính toán riêng biệt trên tập kiểm tra ($39\text{ bản ghi}$), đem lại kết quả đánh giá khách quan và không bị chệch (unbiased).
+- Mô hình CatBoost nắm bắt hiệu quả các mối phụ thuộc phi tuyến tính phức tạp giữa các thông số vận hành và động học tắc nghẽn màng (membrane fouling):
+  - Kỹ thuật tạo đặc trưng nâng cao (moving average) kết hợp cấu trúc mô hình bền vững cho phép dự đoán hiệu quả dù tập dữ liệu giới hạn ở $194\text{ bản ghi}$ hàng ngày ($194\text{ daily records}$).
+  - Mở rộng quy mô tập dữ liệu trong các nghiên cứu tương lai sẽ tiếp tục nâng cao khả năng khái quát hóa (generalizability) của khung mô hình.
+- Khả năng theo dõi động học và phạm vi dữ liệu vận hành thực tế của khung mô hình:
+  - Mô hình bám sát các pha dao động của $\text{Spec. Flux}$, đặc biệt trong các giai đoạn biến động đỉnh (peak variations), khẳng định khả năng khái quát hóa dưới các điều kiện vận hành động.
+  - Xuất hiện một số sai lệch nhỏ ở các pha dao động nhanh, gợi ý việc bổ sung các phụ thuộc thời gian bổ sung hoặc đặc trưng trễ (lagged features) để tinh chỉnh độ nhạy mô hình.
+  - Tập dữ liệu phản ánh biến động vận hành thực tế điển hình và tiến trình tắc nghẽn vừa phải (moderate fouling progression) trong hệ thống MBR quy mô công nghiệp ổn định, dù chưa bao gồm các sự kiện tắc nghẽn nghiêm trọng (severe fouling) hay chu kỳ rửa màng (cleaning events).
+  - Khung phương pháp có tính tương thích cao để tích hợp các kịch bản sự kiện vận hành đa dạng trong tương lai nhằm mở rộng năng lực dự báo biến cố.

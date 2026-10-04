@@ -1,0 +1,85 @@
+### 3.3. Nitrification status prediction without biocarriers addition
+
+- Ba mô hình phân loại gồm Hồi quy logistic (Logistic Regression - $\text{LR}$), Rừng ngẫu nhiên (Random Forest - $\text{RF}$) và Tăng cường độ dốc cực đại (Extreme Gradient Boosting - $\text{XGB}$) được huấn luyện trên tập dữ liệu không bổ sung giá thể sinh học (biocarriers), ưu tiên tối ưu hóa độ chuẩn xác ($\text{Precision}$) qua kiểm thực chéo phân tầng $5$ lượt (stratified 5-fold cross-validation, $\text{SI 4}$).
+- Bảng 1a (Table 1a) tóm tắt kết quả dự đoán với $6$ đặc trưng đầu vào được chọn lọc ($\text{TMP}$, lưu lượng sục khí, lưu lượng dòng vào, cùng nồng độ $\text{COD}$, $\text{NO}_3^-\text{-N}$ và $\text{NH}_4^+\text{-N}$ nước đầu ra), báo cáo độ chính xác ($\text{Accuracy}$), độ chuẩn xác ($\text{Precision}$), tỷ lệ dương tính thật ($\text{TPR}$) và tỷ lệ dương tính giả ($\text{FPR}$) trên tập kiểm tra cùng kết quả trung bình từ các lượt kiểm thực chéo ($\text{SI 5}$).
+- Tập dữ liệu có quy mô giới hạn gồm $78$ mẫu ở nhóm huấn luyện và $19$ mẫu ở nhóm kiểm tra mang lại ba phát hiện cốt lõi từ Bảng 1a:
+  - Các mô hình $\text{LR}$, $\text{RF}$ và $\text{XGB}$ đạt hiệu suất tương đồng trên tập kiểm tra với độ chính xác dao động trong khoảng $0.79\text{--}0.84$ (ma trận nhầm lẫn của từng thuật toán được cung cấp trong $\text{SI 6}$).
+    - Mức độ phù hợp tốt này gắn liền với mối quan hệ cơ chế giữa các biến đầu vào và mục tiêu đầu ra, liên quan trực tiếp đến quá trình chuyển hóa nitơ trong phản ứng nitrat hóa (Huang et al., 2022; Omar et al., 2024).
+  - Khi đối chiếu với kết quả cao hơn ở các nhóm kiểm thực (độ chính xác đạt $0.90\text{--}0.91$), $\text{RF}$ và $\text{XGB}$ thể hiện hiệu suất trên tập kiểm tra thấp hơn $\text{LR}$, cảnh báo nguy cơ quá khớp (overfitting) tiềm ẩn khi dữ liệu bị giới hạn.
+  - Kích thước mẫu nhỏ hạn chế khả năng đánh giá đầy đủ sự khác biệt về hiệu suất giữa các thuật toán có độ phức tạp khác nhau, gây khó khăn cho việc xác định ảnh hưởng của độ phức tạp mô hình lên $\text{TPR}$ và $\text{FPR}$.
+- Kết quả bước đầu xác nhận tính khả thi của các thuật toán học máy trong việc dự đoán trạng thái nitrat hóa dựa trên áp suất xuyên màng ($\text{TMP}$), lưu lượng sục khí (air flow rate), lưu lượng dòng vào (influent flow rate), cùng nồng độ $\text{COD}$, $\text{NO}_3^-\text{-N}$ và $\text{NH}_4^+\text{-N}$ nước đầu ra.
+- Sự sụt giảm của tỷ lệ dương tính thật ($\text{TPR}$) trên tập kiểm tra so với nhóm kiểm thực xuất phát từ ba nguyên nhân chính: mất cân bằng lớp (class imbalance), sự dịch chuyển phân phối đặc trưng (feature distribution shifts) và số lượng mẫu nhãn dương tính bị hạn chế:
+  - Hiện tượng mất cân bằng lớp tạo độ chệch khiến mô hình thiên lệch về phía lớp chiếm ưu thế:
+    - Trong tập huấn luyện, mẫu nhãn âm tính chiếm tỷ lệ $64.10\%$, trong khi ở tập kiểm tra tỷ lệ này giảm xuống $57.89\%$.
+    - Dù tỷ lệ mẫu âm tính ở tập kiểm tra có giảm nhẹ, mức độ mất cân bằng vẫn ở mức đáng kể, làm giảm năng lực dự đoán chính xác các mẫu dương tính và kéo giảm $\text{TPR}$ trên tập kiểm tra.
+    - Vấn đề này xuất hiện đồng loạt ở tất cả các thuật toán, với độ chính xác kiểm thực cao hơn tập kiểm tra vượt quá $0.1$ (Bảng 1a), cho thấy mô hình dễ bị quá khớp vào tỷ lệ lớp trong giai đoạn huấn luyện do tập dữ liệu nhỏ.
+  - Sự dịch chuyển phân phối đặc trưng làm trầm trọng thêm mức giảm $\text{TPR}$ và bộc lộ sự phụ thuộc quá mức vào các đặc tính dữ liệu huấn luyện:
+    - Ở tập huấn luyện, $58.67\%$ số mẫu có lưu lượng khí bằng $2\ \text{L/min}$ và $41.33\%$ số mẫu có lưu lượng khí bằng $6\ \text{L/min}$.
+    - Ở tập kiểm tra, các tỷ lệ này dịch chuyển tương ứng thành $52.63\%$ và $47.37\%$.
+    - Mặc dù biên độ dịch chuyển tương đối nhỏ, biến thiên này vẫn làm suy giảm năng lực khái quát hóa do lưu lượng sục khí là thông số mang tính quyết định để dự đoán trạng thái nitrat hóa.
+  - Biểu đồ ước lượng mật độ hạt nhân ($\text{KDE}$) minh chứng hai phân phối của lưu lượng sục khí giữa lớp dương tính và lớp âm tính có sự phân tách rõ rệt, làm khuếch đại ảnh hưởng bất lợi của sự dịch chuyển phân phối đặc trưng.
+    - **Hình 4 (Bảng 1b).** Biểu đồ phân bố mật độ hạt nhân KDE của các đặc trưng
+      - <img src="assets/fig_04_p8.jpeg" alt="Hình 4 (Bảng 1b)" />
+      - **Hình này chứng minh điều gì**
+        - Đường mật độ lớp dương (màu đỏ) tập trung chủ yếu ở mức sục khí cao $6\ \text{Lpm}$, trong khi lớp âm (màu xanh) chiếm ưu thế tại $2\ \text{Lpm}$.
+        - Độ phân tách hai đỉnh rõ rệt ở cả ba mô hình chứng minh sự dịch chuyển phân phối sục khí tác động trực tiếp đến suy giảm $\text{TPR}$.
+      - **Từ đâu mà thấy được**
+        - Trục hoành biểu thị $6$ thông số: $\text{TMP}$ ($\text{kPa}$), $\text{Air Flow Rate}$ ($\text{Lpm}$), $\text{Influent Flow Rate}$ ($\text{mL/min}$), $\text{Eff\_COD}$ ($\text{mg/L}$), $\text{Eff. NH}_4^+$ ($\text{mg/L}$), $\text{Eff. NO}_3^-$ (dải $0\text{--}15\ \text{mg/L}$, đỉnh lớp dương tại $10\ \text{mg/L}$).
+        - Trục tung đo mật độ xác suất ($\text{Density}$, giá trị $0.0\text{--}0.8$), với ba hàng đồ thị tương ứng cho $\text{LR}$ (trên), $\text{RF}$ (giữa) và $\text{XGB}$ (dưới).
+  - Sự phân tách phân phối rõ nét giải thích nguyên nhân các mô hình $\text{RF}$ và $\text{XGB}$, dù đạt độ chính xác kiểm thực cao ($0.9114$ ở $\text{RF}$ và $0.9063$ ở $\text{XGB}$), vẫn bị suy giảm $\text{TPR}$ rõ rệt khi kiểm tra ($0.6250$ đối với $\text{RF}$ và $0.7500$ đối với $\text{XGB}$), bộc lộ việc ghi nhớ quá cứng nhắc các quy luật đặc thù của tập huấn luyện.
+  - Sự khan hiếm mẫu dương tính trong tập kiểm tra đẩy cao rủi ro quá khớp:
+    - Kích thước tập huấn luyện hạn chế buộc mô hình quá khớp vào lớp âm tính đa số, gây suy giảm năng lực khái quát hóa đối với các trường hợp dương tính chưa từng quan sát.
+    - Hiện tượng này thể hiện rõ rệt nhất ở mô hình $\text{RF}$, khi độ chuẩn xác duy trì ở mức cao ($0.8333$) nhưng $\text{TPR}$ sụt giảm mạnh xuống $0.6250$ trên tập kiểm tra.
+    - Sự phân kỳ giữa kết quả kiểm thực và kiểm tra chứng minh $\text{RF}$ đã quá khớp vào các đặc trưng của lớp âm tính trong quá trình huấn luyện, làm suy giảm tính cân bằng dự đoán giữa hai lớp.
+  - Tỷ lệ dương tính giả ($\text{FPR}$) duy trì ổn định giữa tập huấn luyện và kiểm tra nhờ phân phối đồng nhất của các mẫu âm tính:
+    - Tỷ lệ mẫu âm tính cao trong tập huấn luyện nâng cao độ nhạy của mô hình trong việc nhận diện lớp âm tính, duy trì khả năng phân loại chính xác khi tỷ lệ mẫu âm tính ở tập kiểm tra giảm nhẹ, giúp giữ $\text{FPR}$ ở mức thấp.
+    - Sự ổn định biểu kiến của $\text{FPR}$ không che lấp được bản chất quá khớp mang tính hệ thống khi độ chênh lệch giữa hiệu suất kiểm thực cao và hiệu suất kiểm tra suy giảm xuất hiện ở cả ba mô hình (Bảng 1a), cho thấy các thuật toán đã học phân phối riêng của tập huấn luyện thay vì các quy luật khái quát hóa bền vững.
+- Tóm lại, mức suy giảm $\text{TPR}$ trên tập kiểm tra chủ yếu bắt nguồn từ mất cân bằng lớp, dịch chuyển phân phối đặc trưng và số lượng mẫu nhãn dương tính ít ỏi làm tăng rủi ro quá khớp; ngược lại, độ ổn định của $\text{FPR}$ phản ánh phân phối nhất quán của các mẫu âm tính qua hai tập dữ liệu, nhấn mạnh thách thức trong việc duy trì độ ổn định mô hình dưới tác động của sự dịch chuyển dữ liệu trong môi trường xử lý nước thải biến động.
+- Phân tích tầm quan trọng đặc trưng làm sáng tỏ cơ chế dự đoán và định hướng chiến lược thu thập dữ liệu:
+  - Bảng 1b (Table 1b) trình bày điểm số tầm quan trọng cùng các đường biểu diễn ước lượng mật độ hạt nhân ($\text{KDE}$) cho các mô hình $\text{LR}$, $\text{RF}$ và $\text{XGB}$.
+  - Đối với $\text{LR}$, hệ số hồi quy phản ánh chiều hướng và độ lớn của đặc trưng lên dự đoán.
+  - Đối với $\text{RF}$ và $\text{XGB}$, điểm số tầm quan trọng định lượng mức độ đóng góp của từng đặc trưng.
+  - Đường $\text{KDE}$ trực quan hóa phân phối mật độ xác suất cho lớp dự đoán dương tính (Predicted Positive, màu đỏ) và lớp dự đoán âm tính (Predicted Negative, màu xanh).
+  - Đỉnh của đường cong chỉ ra vùng tập trung giá trị (chẳng hạn $\text{Eff\_COD}$ đạt đỉnh tại giá trị khoảng $30$ đối với lớp dương tính).
+  - Khả năng phân biệt lớp được đánh giá thông qua độ chồng lấn $\text{KDE}$, với độ chồng lấn tối thiểu biểu thị khả năng phân tách mạnh (chẳng hạn lưu lượng sục khí thể hiện mức phân tách vừa phải).
+  - Độ rộng đường cong phản ánh phương sai đặc trưng: đường cong hẹp biểu thị giá trị nhất quán theo lớp, trong khi đường cong rộng thể hiện độ biến thiên cao hơn.
+- Phân tích tầm quan trọng đặc trưng và $\text{KDE}$ xác nhận nồng độ $\text{NH}_4^+\text{-N}$ và $\text{NO}_3^-\text{-N}$ nước đầu ra là các biến dự đoán chủ đạo cho trạng thái nitrat hóa:
+  - Dù có liên hệ về mặt cơ chế, lưu lượng dòng vào ($11.7\text{--}20.6\ \text{mL/min}$) và lưu lượng sục khí ($2\text{--}6\ \text{Lpm}$) chỉ đóng góp hạn chế do biên độ biến thiên vận hành trong thực nghiệm ở mức thấp.
+  - Nồng độ $\text{COD}$ nước đầu ra cũng chỉ tạo tác động nhỏ, thể hiện qua hệ số biến thiên thấp hơn ($55.25\%$) so với $\text{NH}_4^+\text{-N}$ ($93.82\%$) và $\text{NO}_3^-\text{-N}$ ($101.72\%$) — được tính bằng tỷ số giữa độ lệch chuẩn và giá trị trung bình.
+  - Sự chênh lệch về biên độ biến thiên giải thích mức độ phân hóa về tầm quan trọng giữa các đặc trưng đầu vào.
+- Đồ thị phân tán theo cặp ($\text{SI 7}$) và định lượng tầm quan trọng đặc trưng trên các nhóm kiểm thực ($\text{SI 8}$) củng cố vai trò trung tâm của $\text{NO}_3^-\text{-N}$ và $\text{NH}_4^+\text{-N}$ nước đầu ra, phù hợp với bản chất sinh hóa của quá trình nitrat hóa:
+  - Tuy nhiên, nhóm kiểm thực của $\text{XGB}$ ghi nhận sự nổi bật bất thường của lưu lượng dòng vào và lưu lượng khí vốn ổn định hơn so với các hợp chất nitơ.
+  - Hiện tượng này bắt nguồn từ cơ chế tăng cường của $\text{XGB}$: các cây tuần tự ưu tiên những đặc trưng giúp sửa lỗi của cây đứng trước, liên tục phân bổ lại trọng số đặc trưng trong quá trình tối ưu hóa gia tăng (Bentéjac et al., 2021; Nguyen et al., 2024).
+  - Khả năng thích ứng này giúp tăng tính linh hoạt giữa các nhóm dữ liệu nhưng có thể thổi phồng tầm quan trọng của các đặc trưng ngắn hạn và làm tăng nguy cơ quá khớp.
+- Biểu đồ $\text{SHAP}$ (Hình 4 / Fig. 4) minh họa phân tích giải thích cho ba mô hình $\text{LR}$, $\text{RF}$ và $\text{XGB}$, kết hợp tầm quan trọng toàn cục (beeswarm plots, Hình 4a–c) và phân rã đóng góp ở cấp độ từng cá thể (waterfall plots, Hình 4d–f):
+  - Biểu đồ beeswarm thể hiện thứ hạng tầm quan trọng nhất quán trên cả ba mô hình: $\text{Eff. NH}_4^+\text{-N}$ và $\text{Eff. NO}_3^-\text{-N}$ chiếm ưu thế áp đảo, tiếp theo là $\text{Eff. COD}$ và $\text{TMP}$, chứng minh vai trò mang tính bất biến theo thuật toán của các chỉ số nitơ và chất hữu cơ trong việc phản ánh hiệu quả xử lý, hoàn toàn phù hợp với phân tích tầm quan trọng đặc trưng.
+  - Biểu đồ thác nước (waterfall plots) mang lại cái nhìn sâu sắc hơn về cơ chế vận hành và phân bổ trọng số của từng thuật toán:
+    - **Hình 4.** Biểu đồ SHAP beeswarm và waterfall cho ba mô hình
+      - <img src="assets/fig_05_p9.jpeg" alt="Hình 4" />
+      - **Hình này chứng minh điều gì**
+        - Giá trị kỳ vọng nền $E[f(X)]$ có sự khác biệt lớn giữa $\text{LR}$ ($-2.424$), $\text{RF}$ ($0.352$) và $\text{XGB}$ ($-1.609$).
+        - Ở cá thể được phân tích, $\text{Eff. NH}_4^+\text{-N} = 1.541\ \text{mg/L}$ tạo lực đẩy dương mạnh nhất ở cả ba mô hình ($+2.84$ ở $\text{LR}$, $+0.23$ ở $\text{RF}$, $+2.58$ ở $\text{XGB}$).
+      - **Từ đâu mà thấy được**
+        - Panel (a–c): Trục hoành đo giá trị $\text{SHAP}$ (từ $-0.2$ đến $+0.3$), trục tung xếp hạng $6$ đặc trưng từ trên xuống dưới theo mức độ tác động.
+        - Panel (d–f): Trục hoành đo đầu ra mô hình $f(x)$ (thang giá trị từ $-4.0$ đến $+0.45$), hiển thị giá trị thực tế của từng đặc trưng cùng độ lớn thanh phân rã.
+  - Trong mô hình $\text{LR}$ (Hình 4d), đầu ra bị chi phối mạnh mẽ bởi một giá trị $\text{NH}_4^+\text{-N}$ cao duy nhất ($+2.84$), bị triệt tiêu bởi đóng góp âm từ $\text{NO}_3^-\text{-N}$ và $\text{COD}$, phản ánh tính chất cộng tuyến tính thuần túy:
+    - Sự phụ thuộc tuyệt đối vào một đặc trưng đơn lẻ làm bộc lộ rủi ro quá khớp: khi $\text{NH}_4^+\text{-N}$ lệch khỏi khuôn mẫu huấn luyện, mô hình gặp khó khăn trong việc khái quát hóa, giải thích nguyên nhân sụt giảm $\text{TPR}$ khi kiểm tra.
+  - Mô hình $\text{RF}$ (Hình 4e) thể hiện sự đóng góp cân bằng hơn từ nhiều đặc trưng với độ lớn nhỏ hơn nhưng phân bổ đều, phù hợp với nguyên lý lấy trung bình quyết định của mô hình tập hợp.
+  - Mô hình $\text{XGB}$ (Hình 4f) biểu hiện tương tác phi tuyến rõ rệt hơn: $\text{COD}$ và $\text{NO}_3^-\text{-N}$ cùng tạo ảnh hưởng âm chi phối, trong khi $\text{NH}_4^+\text{-N}$ đóng góp dương nhưng không đủ để vượt qua các tín hiệu áp lực vận hành, dẫn đến dự đoán âm tính.
+    - Độ phức tạp của các tương tác phi tuyến kết hợp số lượng mẫu huấn luyện hạn chế làm tăng khả năng ghi nhớ nhiễu riêng của tập dữ liệu, một dấu hiệu điển hình của quá khớp.
+  - Áp suất xuyên màng ($\text{TMP}$) và lưu lượng sục khí (Air Flow Rate) đóng vai trò như các biến điều biến thứ cấp nhưng không thể bỏ qua, phản ánh độ nhạy của mô hình đối với trạng thái vận hành.
+- Phân tích tương quan nồng độ $\text{NH}_4^+\text{-N}$ và $\text{NO}_3^-\text{-N}$ nước đầu ra kết hợp truy nguyên tập dữ liệu làm sáng tỏ cơ chế phát sinh lỗi dự đoán:
+  - Các trường hợp dương tính giả (false positives) tập trung chủ yếu khi $\text{NO}_3^-\text{-N}$ nước đầu ra đạt $9\ \text{mg/L}$ và $\text{NH}_4^+\text{-N}$ đạt $2\ \text{mg/L}$.
+  - Chất lượng nước đầu ra thể hiện tiềm năng nitrat hóa đạt yêu cầu tương đối rõ ràng, nhưng đồng thời bể phản ứng thực tế lại ở trạng thái nitrat hóa chưa đạt.
+  - Đối chiếu với nhãn đầu ra trong tập huấn luyện cho thấy nguyên nhân chủ yếu: khi nồng độ $\text{NO}_3^-\text{-N} > 9\ \text{mg/L}$ và $\text{NH}_4^+\text{-N} < 2\ \text{mg/L}$, toàn bộ nhãn dữ liệu huấn luyện đều là dương tính (nitrat hóa đạt yêu cầu), chi phối trực tiếp đến dự đoán trên tập kiểm tra.
+  - Hiện tượng này chứng minh các mô hình đã quá khớp vào quy luật phân phối nhãn của tập huấn luyện và phân loại nhầm các trường hợp ở vùng ranh giới trên tập kiểm tra, bộc lộ sự thiếu hụt năng lực khái quát hóa.
+- Phân tích $\text{SHAP}$ khẳng định nồng độ $\text{NH}_4^+\text{-N}$ và $\text{NO}_3^-\text{-N}$ nước đầu ra là các biến dự báo có ảnh hưởng lớn nhất trên toàn bộ các mô hình, nhấn mạnh vai trò chỉ báo trọng yếu cho hiệu quả nitrat hóa trong hệ thống $\text{MBR}$:
+  - Việc giám sát thời gian thực các hợp chất nitơ này — thay vì chỉ phụ thuộc vào các thông số quy ước như $\text{TMP}$ hay oxy hòa tan ($\text{DO}$) trong bể — giúp nâng cao năng lực kiểm soát vận hành song song với theo dõi chất lượng nước đầu ra.
+  - Việc xác định các trường hợp vùng ranh giới (chẳng hạn khi đồng thời ghi nhận $\text{NH}_4^+\text{-N} \approx 2\ \text{mg/L}$ và $\text{NO}_3^-\text{-N} \approx 9\ \text{mg/L}$ dẫn đến dương tính giả) giúp khoanh vùng các trạng thái bất ổn định dễ phân loại sai.
+  - Các ngưỡng tới hạn này cung cấp thông tin thiết thực cho các hệ thống cảnh báo sớm: khi nồng độ nitơ tiến gần các giá trị này, hệ thống điều khiển thông minh cần chủ động điều chỉnh mức độ sục khí (được chứng minh qua vai trò điều biến của lưu lượng khí trong phân tích $\text{SHAP}$) hoặc kiểm tra thời gian lưu bùn ($\text{SRT}$) nhằm ngăn ngừa sự cố nitrat hóa.
+  - Quản lý đồng bộ đa thông số là điều kiện tiên quyết để duy trì quá trình nitrat hóa ổn định và tránh cho mô hình bị quá khớp vào các xung nhiễu ngắn hạn, gắn kết các dự đoán từ dữ liệu với chiến lược điều khiển thích ứng trong vận hành $\text{MBR}$.
+- Dựa trên kết quả thử nghiệm ban đầu, các nghiên cứu tiếp theo cần được thiết kế nhằm khảo sát chất lượng nước đầu vào biến động hơn, mô phỏng đặc tính biên độ dao động rộng của nước xám được tổng hợp từ các tài liệu khoa học:
+  - Việc thu thập dữ liệu ở các lưu lượng dòng vào khác nhau, tương ứng với các thời gian lưu nước ($\text{HRT}$) khác nhau, sẽ hỗ trợ phân tích độ trễ giữa nồng độ amoni/nitrat nước đầu ra và trạng thái phản ứng bên trong bể.
+  - Thiết kế thu thập dữ liệu theo chuỗi thời gian, chẳng hạn lấy mẫu và đo đạc liên tục mỗi giờ, giúp xác định mối quan hệ động học giữa biến thiên chất lượng nước đầu ra và trạng thái phản ứng tại cùng thời điểm dưới góc nhìn đa chiều hơn.
+  - Mở rộng tập dữ liệu với độ biến động phong phú là điều kiện bắt buộc để kiểm chứng tính khả thi của việc sử dụng chất lượng nước đầu ra nhằm dự đoán và kiểm soát trạng thái bể phản ứng, giảm thiểu rủi ro quá khớp và nâng cao độ ổn định của mô hình trong ứng dụng thực tế.
+  - Các tác động của giới hạn dữ liệu và đặc trưng đầu vào lên cấu trúc mô hình tiếp tục được thảo luận chi tiết trong phần 4.1 và 4.2.

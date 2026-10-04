@@ -1,0 +1,55 @@
+#### Effluent NH4+-N
+
+- Độ quan trọng của các biến đầu vào (variable importance) có sự phân hóa rõ nét giữa hai biến mục tiêu là nồng độ $\text{NH}_4^+\text{-N}$ dòng ra (effluent $\text{NH}_4^+\text{-N}$) và hiệu suất loại bỏ $\text{NH}_4^+\text{-N}$ ($\text{NH}_4^+\text{-N}$ removal efficiency):
+  - Thứ tự độ quan trọng của $15$ biến đầu vào trong dự đoán effluent $\text{NH}_4^+\text{-N}$ giảm dần theo thứ tự: $\text{influent TIN} > \text{C/N} > \text{influent }\text{NH}_4^+\text{-N} > \text{operation time} > \text{dominant anammox bacteria} > \text{HRT} > \text{influent }\text{NO}_3^-\text{-N} > \text{sludge morphology} > \text{NLR} > \text{process type} > \text{influent COD} > \text{influent }\text{NO}_2^-\text{-N} > \text{enrichment strategy} > \text{operation condition} > \text{influent type}$ (Hình 3(a)).
+  - Ngược lại, $\text{NO}_3^-\text{-N}$ dòng vào ($\text{influent }\text{NO}_3^-\text{-N}$) thể hiện độ quan trọng cao hơn khi dự đoán hiệu suất loại bỏ $\text{NH}_4^+\text{-N}$ (Hình 3(e)).
+  - **Hình 3.** Độ quan trọng của 15 biến đầu vào đối với 9 biến đầu ra trong quy trình xử lý nitơ dựa trên anammox
+    - <img src="assets/fig_03_p7.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phân hóa thứ bậc quan trọng của 15 biến đầu vào đối với effluent $\text{NH}_4^+\text{-N}$ và $\text{NH}_4^+\text{-N}$ removal efficiency: các biến thành phần cacbon và nitơ dòng vào chiếm ưu thế chi phối khả năng dự đoán, trong khi hình thái bùn và loại nước thải có ảnh hưởng thấp nhất.
+    - **Từ đâu mà thấy được**
+      - Panel (a): Biểu đồ thanh thể hiện $\text{influent TIN}$ dẫn đầu (~$22.5\%$), tiếp theo là $\text{C/N}$ (~$18\%$), $\text{influent }\text{NH}_4^+\text{-N}$ (~$14\%$), và thấp nhất là $\text{influent type}$ (< $1\%$).
+      - Panel (e): $\text{influent }\text{NO}_3^-\text{-N}$ vươn lên vị trí quan trọng nhất (~$26\%$), kế tiếp là $\text{operation time}$ (~$21.5\%$) và $\text{influent TIN}$ (~$19.5\%$) trong dự đoán $\text{NH}_4^+\text{-N}$ removal efficiency.
+- Các biến liên quan đến thành phần cacbon và nitơ của dòng vào ($\text{influent TIN}$, $\text{C/N}$, $\text{influent }\text{NH}_4^+\text{-N}$, và $\text{influent }\text{NO}_3^-\text{-N}$) được xác định là những biến quan trọng nhất để dự đoán các biến $\text{NH}_4^+\text{-N}$:
+  - Khẳng định quá trình loại bỏ $\text{NH}_4^+\text{-N}$ trong các hệ thống khử nitơ dựa trên anammox bị chi phối chặt chẽ bởi thành phần chi tiết của cacbon và nitơ trong nước thải đầu vào.
+  - Là cơ chất không thể thiếu cho các phản ứng anammox, hiệu quả loại bỏ $\text{NH}_4^+\text{-N}$ phụ thuộc trực tiếp vào hoạt tính anammox (anammox activity), vốn chịu tác động sâu sắc từ các thành phần dòng vào [56, 57].
+- Loại nước thải đầu vào ($\text{influent type}$: nước thải tổng hợp - synthetic wastewater hoặc nước thải sinh hoạt đô thị - municipal wastewater) là đặc trưng có độ quan trọng thấp nhất trong dự đoán loại bỏ $\text{NH}_4^+\text{-N}$:
+  - Trong phần lớn các nghiên cứu, thành phần của nước thải sinh hoạt đô thị thường được đơn giản hóa thành các nồng độ chất ô nhiễm cơ bản (như $\text{COD}$, $\text{NH}_4^+\text{-N}$ và $\text{TIN}$).
+  - Sự khác biệt về thành phần thực tế giữa nước thải tổng hợp và nước thải sinh hoạt đô thị có thể đã bị bỏ qua (overlooked) trong tập dữ liệu thu thập, dẫn đến việc $\text{influent type}$ có độ quan trọng thấp nhất.
+- Biểu đồ phụ thuộc một phần một chiều (1D PDP) của các biến số đầu vào quan trọng (Hình S4) làm sáng tỏ động học phụ thuộc số liệu của quá trình loại bỏ $\text{NH}_4^+\text{-N}$:
+  - Phản ứng của effluent $\text{NH}_4^+\text{-N}$ thể hiện xu hướng giảm dần theo thời gian vận hành ($\text{operation time}$, Hình S4(a)), phù hợp với quan sát thực nghiệm phổ biến về hiệu suất xử lý ngày càng cải thiện ở các giai đoạn sau của thí nghiệm anammox [14, 58, 59].
+  - Kết quả 1D PDP xác định dải tỷ lệ $\text{C/N}$ thích hợp là $2.72\text{--}6.32$, trong đó nồng độ effluent $\text{NH}_4^+\text{-N}$ đạt mức thấp hơn rõ rệt so với các vùng $\text{C/N} < 2.72$ và $\text{C/N} > 6.32$ (Hình S4(b)).
+  - Các nghiên cứu trước đây đã xác nhận tỷ lệ $\text{C/N}$ quá thấp hoặc quá cao đều dẫn đến suy giảm tốc độ loại bỏ $\text{NH}_4^+\text{-N}$ trong quy trình anammox [60, 61], hoàn toàn đồng thuận với kết quả 1D PDP (Hình S4(b)).
+  - Cụ thể, Miao và cộng sự (2018) [60] đã công bố rằng hiệu suất loại bỏ $\text{NH}_4^+\text{-N}$ trong quá trình anammox tăng dần khi tỷ lệ $\text{C/N}$ tăng từ $1.1$ lên $2.5$.
+- Biểu đồ 1D PDP của $\text{influent }\text{NH}_4^+\text{-N}$ và $\text{influent TIN}$ thể hiện quy luật tương đồng (Hình S4(c) và (d)):
+  - Nồng độ effluent $\text{NH}_4^+\text{-N}$ tăng vọt khi $\text{influent }\text{NH}_4^+\text{-N}$ và $\text{influent TIN}$ lần lượt đạt ngưỡng $62.32\text{ mg/L}$ và $91.08\text{ mg/L}$.
+  - Nước thải sinh hoạt đô thị có nồng độ nitơ dưới các giá trị ngưỡng này sẽ thích hợp hơn để xử lý bằng các quy trình khử nitơ dựa trên anammox.
+  - Trong thực tế, nồng độ $\text{NH}_4^+\text{-N}$ và $\text{TIN}$ dòng vào trong nước thải sinh hoạt đô thị thực tế thông thường đều nằm dưới các ngưỡng này [62, 63], đảm bảo mức đóng góp cao của quy trình anammox đối với nước thải đô thị.
+- Các biến đầu vào dạng số có tác động tương hỗ lên effluent $\text{NH}_4^+\text{-N}$, được thể hiện qua các đỉnh (peaks) và thung lũng (valleys) rõ rệt trên biểu đồ phụ thuộc một phần hai chiều (2D PDP, Hình 4):
+  - Sự xuất hiện của các đỉnh và thung lũng khẳng định effluent $\text{NH}_4^+\text{-N}$ có sự phụ thuộc phi tuyến mạnh vào các cặp biến đầu vào dạng số (Hình 4).
+  - **Hình 4.** Biểu đồ 2D PDP về tương tác giữa các cặp biến đầu vào trong dự đoán effluent NH4+-N
+    - <img src="assets/fig_04_p9.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phụ thuộc phi tuyến và tương tác đa biến của effluent $\text{NH}_4^+\text{-N}$: xác định vùng tối ưu để cực tiểu hóa amoni dòng ra tại $\text{C/N}$ trung bình kết hợp $\text{TIN}$ thấp, đồng thời phản ánh xu hướng giảm nồng độ amoni khi kéo dài thời gian vận hành.
+    - **Từ đâu mà thấy được**
+      - Panel (a), (d): Bề mặt đáp ứng hiển thị vùng thung lũng sâu (màu xanh tím, mean response $4.10\text{--}7.17\text{ mg/L}$) ở $\text{C/N} \approx 2.36\text{--}2.75$ và chuyển sang đỉnh cao (màu đỏ, $> 17\text{ mg/L}$) khi $\text{TIN}$ vượt $87.76\text{ mg/L}$.
+      - Panel (b): Đáp ứng effluent $\text{NH}_4^+\text{-N}$ tăng mạnh từ $\approx 4.10\text{ mg/L}$ lên $> 18.75\text{ mg/L}$ khi cả $\text{influent TIN}$ và $\text{influent }\text{NH}_4^+\text{-N}$ cùng tăng cao.
+      - Panel (c), (f): Nồng độ effluent $\text{NH}_4^+\text{-N}$ giảm dốc từ dải đỉnh đỏ ($20.46\text{--}32.16\text{ mg/L}$) xuống đáy xanh ($4.12\text{--}4.68\text{ mg/L}$) khi $\text{operation time}$ tăng dần từ $0$ lên $300\text{ ngày}$.
+      - Panel (e): Địa hình phức tạp nhất với các đỉnh nhọn ở $\text{operation time}$ ngắn kết hợp $\text{C/N}$ cực trị, và vùng trũng ổn định tại $\text{C/N} = 2.75\text{--}6.48$.
+- Tương tác giữa $\text{influent TIN}$ và tỷ lệ $\text{C/N}$ chi phối đáp ứng của effluent $\text{NH}_4^+\text{-N}$ (Hình 4(a)):
+  - Đáp ứng thấp nhất của effluent $\text{NH}_4^+\text{-N}$ đạt được tại tỷ lệ $\text{C/N} = 2.75$ và $\text{influent TIN}$ từ $18.85\text{ mg/L}$ đến $87.76\text{ mg/L}$ (Hình 4(a)).
+  - Khi $\text{influent TIN}$ tiếp tục tăng, đáp ứng của effluent $\text{NH}_4^+\text{-N}$ tăng mạnh từ $4.23\text{ mg/L}$ lên $17.0\text{ mg/L}$.
+  - Ở cùng tỷ lệ $\text{C/N}$, sự gia tăng của $\text{influent TIN}$ dẫn đến sự gia tăng của $\text{influent COD}$, gây ra sự sinh sôi của vi khuẩn dị dưỡng (heterotrophic bacteria), chiếm đoạt không gian sống của vi khuẩn anammox và ức chế sự sinh trưởng của chúng [56].
+- Biểu đồ 2D PDP của $\text{C/N}$ so với $\text{influent }\text{NH}_4^+\text{-N}$ thể hiện xu hướng tương tự như giữa $\text{C/N}$ và $\text{influent TIN}$ (Hình 4(d)):
+  - Quan sát thấy dải tỷ lệ $\text{C/N}$ rộng hơn ($2.36\text{--}9.62$) và dải $\text{influent }\text{NH}_4^+\text{-N}$ ($13.83\text{--}213.84\text{ mg/L}$) đạt mức đáp ứng effluent $\text{NH}_4^+\text{-N}$ thấp ($7.17\text{--}10.74\text{ mg/L}$).
+  - Sự khác biệt giữa $\text{influent }\text{NH}_4^+\text{-N}$ và $\text{influent TIN}$ có thể do $\text{influent TIN}$ còn bao gồm các dạng nitơ khác (ví dụ: $\text{NO}_3^-\text{-N}$ và $\text{NO}_2^-\text{-N}$).
+  - Đáp ứng effluent $\text{NH}_4^+\text{-N}$ tăng rõ rệt khi tăng đồng thời $\text{influent }\text{NH}_4^+\text{-N}$ và $\text{influent TIN}$ (Hình 4(b)), hoàn toàn phù hợp với kết quả 1D PDP của $\text{influent }\text{NH}_4^+\text{-N}$ (Hình S4(c)) và $\text{influent TIN}$ (Hình S4(d)).
+- Thời gian vận hành ($\text{operation time}$) có tác động tương hỗ tương tự khi kết hợp với $\text{influent TIN}$ (Hình 4(c)) và $\text{influent }\text{NH}_4^+\text{-N}$ (Hình 4(f)) lên effluent $\text{NH}_4^+\text{-N}$:
+  - Ghi nhận sự suy giảm đáp ứng rõ rệt của effluent $\text{NH}_4^+\text{-N}$ từ $32.16\text{ mg/L}$ xuống $4.68\text{ mg/L}$ đối với cặp $\text{operation time}$ và $\text{influent TIN}$, và từ $20.46\text{ mg/L}$ xuống $4.12\text{ mg/L}$ đối với cặp $\text{operation time}$ và $\text{influent }\text{NH}_4^+\text{-N}$.
+  - Biểu đồ 2D PDP giữa $\text{operation time}$ và $\text{C/N}$ thể hiện các đỉnh và thung lũng phức tạp nhất (Hình 4(e)).
+  - Đáp ứng thấp của effluent $\text{NH}_4^+\text{-N}$ đạt được tại dải $\text{C/N} = 2.75\text{--}6.48$, hoàn toàn nhất quán với kết quả từ biểu đồ 1D PDP.
+- Thời gian vận hành và chi của vi khuẩn anammox ưu thế ($\text{dominant anammox bacteria}$) đóng vai trò quan trọng thứ hai trong dự đoán loại bỏ $\text{NH}_4^+\text{-N}$:
+  - Sự tiến hóa của các nhóm vi sinh vật (evolution of microbial groups) và quá trình làm giàu các chi anammox (enrichment of anammox genera) trong suốt thí nghiệm giữ vai trò quyết định trong việc tiêu thụ $\text{NH}_4^+\text{-N}$ ở các quy trình anammox.
+- Các yếu tố gồm hình thái bùn ($\text{sludge morphology}$), loại quy trình ($\text{process type}$), chiến lược làm giàu ($\text{enrichment strategy}$), điều kiện vận hành ($\text{operation condition}$) và loại nước thải đầu vào ($\text{influent type}$) không thể hiện độ quan trọng cao trong dự đoán loại bỏ $\text{NH}_4^+\text{-N}$ (Hình 3(a) và (e)):
+  - Kết quả này bắt nguồn từ các con đường khử nitơ tương đồng (similar nitrogen removal pathways) trong các quy trình xử lý dựa trên anammox bất kể sự khác biệt về hình thái bùn, loại quy trình, chiến lược làm giàu hay điều kiện vận hành.
+  - Loại nước thải đầu vào ($\text{influent type}$) là biến ít quan trọng nhất trong việc dự đoán loại bỏ $\text{NH}_4^+\text{-N}$, hàm ý sự khác biệt giữa nước thải tổng hợp và nước thải sinh hoạt đô thị có thể được bỏ qua trong các quy trình khử $\text{NH}_4^+\text{-N}$.

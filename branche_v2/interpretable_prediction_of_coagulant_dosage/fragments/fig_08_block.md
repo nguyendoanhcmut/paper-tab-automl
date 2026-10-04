@@ -1,0 +1,9 @@
+  - **Hình 8.** Waterfall plot và decision plot giải thích cục bộ hai mẫu
+    - <img src="assets/fig_08_p9.jpeg" alt="Hình 8" />
+    - **Hình này chứng minh điều gì**
+      - Các thanh màu đỏ đẩy dự đoán tăng lên $34.9\ \text{mg/L}$ với đóng góp lớn nhất từ $\text{COD}_{\text{Mn}}\text{-RW}$ ($+7.72$).
+      - Các thanh màu xanh kéo dự đoán giảm về $8.57\ \text{mg/L}$ với tác động âm lớn nhất từ $\text{pH-TW}$ ($-2.39$).
+    - **Từ đâu mà thấy được**
+      - Panel (a, b): biểu đồ (a) hiển thị các thanh đỏ nâng dự đoán từ $E[f(X)] = 14.5$ lên $f(X) = 34.9$. Biểu đồ (b) thể hiện đường tích lũy lệch sang phải đạt $34.9$.
+      - Panel (c, d): biểu đồ (c) hiển thị các thanh xanh kéo dự đoán từ $E[f(X)] = 14.5$ giảm về $f(X) = 8.57$. Biểu đồ (d) thể hiện đường tích lũy lệch sang trái đạt $8.57$.
+      - Lưu ý: hình thể hiện (a, c) là waterfall plot và (b, d) là decision plot, chú thích gốc ghi ngược thứ tự.

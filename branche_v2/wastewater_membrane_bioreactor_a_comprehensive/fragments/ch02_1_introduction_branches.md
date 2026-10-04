@@ -1,0 +1,56 @@
+## 1. Introduction
+- **Bối cảnh phát triển và vai trò của công nghệ màng lọc sinh học (MBR - Membrane Bioreactor)**:
+  - Tình trạng khan hiếm nước toàn cầu và quy chuẩn xả thải ngày càng khắt khe đã đưa MBR từ ứng dụng nghiên cứu thích hợp thành giải pháp xử lý nước thải phổ biến trên mọi châu lục có người sinh sống.
+  - Công nghệ MBR kết hợp xử lý sinh học bằng bùn hoạt tính (activated sludge) với quá trình lọc màng theo áp suất (pressure-driven membrane filtration).
+  - Cấu hình màng siêu lọc (ultrafiltration) dạng sợi rỗng (hollow-fiber) hoặc tấm phẳng (flat-sheet) được ngâm ngập trực tiếp bên trong bể phản ứng sinh học (bioreactor).
+  - Chất lượng nước sau lọc (permeate): dòng permeate thu được có chất lượng cao, đồng đều, sạch mầm bệnh (pathogen-free) và giảm thiểu dinh dưỡng (nutrient-reduced).
+  - Permeate đáp ứng tiêu chuẩn tái sử dụng trực tiếp không dùng để uống (direct non-potable reuse) cho tưới tiêu nông nghiệp, nước công nghệ công nghiệp và xả thải môi trường.
+- **Quy mô triển khai và thị trường ứng dụng công nghiệp**:
+  - Ưu thế cạnh tranh: Sự kết hợp giữa diện tích mặt bằng nhỏ gọn (compact footprint), vận hành linh hoạt và chất lượng nước sau lọc cao đã thúc đẩy việc ứng dụng thương mại rộng rãi.
+  - Dải quy mô công suất: Hệ thống MBR vận hành ở các quy mô từ các trạm phân tán nhỏ $10\text{ m}^3/\text{ngày}$ ($10\text{ m}^3/\text{day}$) đến các công trình đô thị lớn xử lý trên $100,000\text{ m}^3/\text{ngày}$ ($100.000\text{ m}^3/\text{day}$).
+  - Mức độ thâm nhập toàn cầu: Kể từ các công trình thương mại đầu tiên đầu những năm $1990$, hiện có hơn $5000$ nhà máy xử lý nước thải trên toàn thế giới ứng dụng MBR cho đô thị, công nghiệp và tái sử dụng nước.
+  - Các lĩnh vực công nghiệp ứng dụng: Bao gồm chế biến thực phẩm và đồ uống (food and beverage processing), sản xuất dược phẩm (pharmaceutical manufacturing), sản xuất dệt nhuộm (textile and dye production) và xử lý nước thải hóa dầu (petrochemical wastewater treatment).
+  - Thách thức hỗn hợp bùn lỏng: Mỗi ngành mang thành phần hỗn hợp bùn lỏng (mixed-liquor composition) và đặc thù nghẹt màng (fouling) riêng biệt mà công nghệ xử lý truyền thống không thể giải quyết trong cùng một diện tích mặt bằng quy trình.
+  - Tác động của chính sách quản lý: Các tiêu chuẩn xả thải cho nitơ, phốt pho và các chất ô nhiễm mới nổi (emerging contaminants) ngày càng khắt khe, cùng yêu cầu tái sử dụng nước mở rộng, khiến MBR trở thành lựa chọn khả thi duy nhất về mặt kỹ thuật tại nhiều thị trường.
+- **Hai rào cản cấu trúc cố hữu của công nghệ MBR (Structural Liabilities)**:
+  - **Hiện tượng nghẹt màng (Membrane fouling)**:
+    - Bản chất: Sự tích tụ tăng dần của chất bẩn hữu cơ (organic foulants), hạt keo (colloidal particles) và các chất polymer ngoại bào của vi sinh vật (EPS - microbial extracellular polymeric substances) lên bề mặt màng và bên trong cấu trúc lỗ rỗng.
+    - Hệ quả kỹ thuật: Làm suy giảm thông lượng thấm qua màng (permeate flux), gia tăng áp suất qua màng ($TMP$ - transmembrane pressure), kích hoạt các chu kỳ rửa hóa chất (chemical cleaning) và dẫn đến thay thế màng sớm.
+    - Tác động kinh tế: Là yếu tố chi phối chính chi phí vòng đời (dominant lifecycle cost driver) của các công trình MBR.
+    - Tính chất động thái: Cơ chế chi phối nghẹt màng phức tạp, phi tuyến và rất nhạy cảm với thành phần hỗn hợp bùn lỏng, tuổi bùn (sludge age), lịch sử thông lượng vận hành và điều kiện thủy lực; những thay đổi nhỏ ở đặc tính nước thải đầu vào có thể làm biến đổi hành vi nghẹt màng ngay trong một ngày vận hành đơn lẻ.
+  - **Tiêu hao năng lượng (Energy demand)**:
+    - Suất tiêu hao năng lượng riêng: Quá trình sục khí cho chuyển hóa oxy sinh học và làm sạch màng (membrane scouring), kết hợp với bơm hút permeate, tiêu tốn $0.4$–$1.5\text{ kWh/m}^3$ nước xử lý.
+    - So sánh với quy trình truyền thống: Mức tiêu thụ này xấp xỉ gấp đôi nhu cầu năng lượng đặc thù của quy trình bùn hoạt tính truyền thống (conventional activated sludge).
+    - Tỷ trọng sục khí màng: Riêng quá trình sục khí làm sạch màng chiếm $60$–$75\%$ tổng lượng năng lượng tiêu thụ của hệ thống.
+    - Hạn chế môi trường và chi phí: Gánh nặng năng lượng ở quy mô lớn phát sinh chi phí vận hành đáng kể và gia tăng dấu chân carbon (carbon footprint), làm giảm giá trị môi trường của các ứng dụng tái sử dụng nước.
+- **Ưu thế và ứng dụng của học máy (Machine Learning - ML)**:
+  - Năng lực cốt lõi: Thuật toán ML học các mối quan hệ phi tuyến phức tạp giữa các biến vận hành và kết quả quy trình trực tiếp từ dữ liệu lịch sử.
+  - Không đòi hỏi tham số hóa cơ chế: Khắc phục hạn chế của các mô hình dựa trên nguyên lý vật lý (physics-based models) vốn đòi hỏi xác định đầy đủ các tham số cơ chế phức tạp trong điều kiện vận hành thực tế.
+  - Các thuật toán đã triển khai: Bao gồm máy vector hỗ trợ (Support Vector Machines - SVM), rừng ngẫu nhiên (Random Forests - RF), các khung tăng cường độ dốc (gradient-boosting frameworks) và mạng hồi quy sâu (deep recurrent networks).
+  - Độ chính xác dự đoán: Cho thấy độ chính xác dự đoán cao hơn rõ rệt so với mô hình hồi quy tuyến tính (linear regression) và mô hình cơ chế đơn giản hóa trên nhiều quy mô và nhiều loại nước thải khác nhau.
+- **Rào cản hộp đen và yêu cầu về Trí tuệ nhân tạo có thể giải thích (Explainable Artificial Intelligence - XAI)**:
+  - Thách thức hộp đen: Tính mờ đục (opacity) của các dự đoán mô hình hộp đen (black-box) là rào cản then chốt khi triển khai ML trong môi trường xử lý nước có kiểm soát theo quy định.
+  - Yêu cầu từ các bên liên quan: Người vận hành, kỹ sư quy trình và cơ quan quản lý đòi hỏi bằng chứng chứng minh các khuyến nghị của mô hình có ý nghĩa vật lý, nhất quán với tri thức chuyên ngành và không đưa ra kết quả sai lệch nghiêm trọng trong điều kiện bất thường.
+  - Vai trò của công cụ XAI: Các phương pháp như LIME và phương pháp phân bổ thuộc tính dựa trên gradient (gradient-based attribution methods) phân rã dự đoán của mô hình thành các đóng góp đặc trưng (feature contributions) có thể định lượng được.
+  - Giá trị vận hành và pháp lý: Giúp kỹ sư thẩm vấn hành vi mô hình, xác thực dự đoán theo tri thức chuyên ngành, xây dựng niềm tin của người vận hành và đáp ứng kỳ vọng pháp lý đối với việc ra quyết định tự động trong các công trình cơ sở hạ tầng trọng yếu.
+- **Khung tích hợp Bản sao số (Digital Twin - DT)**:
+  - Định nghĩa Digital Twin: Bản sao ảo liên kết hai chiều (bidirectionally coupled virtual replica), được cập nhật liên tục của hệ thống vật lý, kết hợp các mô hình quy trình độ tin cậy cao với dữ liệu cảm biến thời gian thực và các hiệu chỉnh dựa trên dữ liệu.
+  - Năng lực vận hành: Cho phép mô phỏng dự đoán (predictive simulation), kiểm thử kịch bản (scenario testing) và tối ưu hóa mà không cần tiến hành thực nghiệm vật lý trên hệ thống thực.
+  - Kiến trúc DT hoàn chỉnh cho MBR: Tích hợp các mô hình bùn hoạt tính (Activated Sludge Models - ASM), các mô hình con lọc màng, mô hình ML dự đoán nghẹt màng, mô-đun giải thích XAI và động cơ tối ưu hóa năng lượng thành một nền tảng thống nhất cung cấp cho người vận hành đồng thời khuyến nghị vận hành và lập luận minh bạch đằng sau khuyến nghị.
+- **Chuỗi liên kết tương hỗ ba tầng (ML $\rightarrow$ XAI $\rightarrow$ DT) và luận điểm phân tích trung tâm**:
+  - Khoảng trống tổng quan: Chưa có bài tổng quan nào khảo sát đầy đủ sự giao thoa của ML, XAI và DT như một khung phân tích tích hợp cho hệ thống MBR; các nghiên cứu trước chỉ tiếp cận riêng rẽ ML hoặc khảo sát DT mà thiếu vắng tính minh bạch của XAI.
+  - Chuỗi logic tuần tự ba tầng:
+    - Tầng động cơ dự đoán (ML): Cung cấp động cơ dự báo các mối quan hệ phi tuyến từ dữ liệu vận hành để ước tính nghẹt màng, nhu cầu năng lượng và chất lượng nước đầu ra với độ chính xác cao hơn mô hình tiền định trong điều kiện biến động thực tế.
+    - Tầng diễn giải (XAI): Phân rã từng dự đoán ML thành các đóng góp đặc trưng có xếp hạng giúp kỹ sư và cơ quan quản lý kiểm toán được mô hình; không có XAI thì ML không thể triển khai an toàn trong hạ tầng được kiểm soát.
+    - Tầng tích hợp vận hành (DT): Kết hợp dự đoán ML, giải thích XAI và mô hình quy trình cơ chế trong bản sao ảo cập nhật liên tục để mô phỏng và thử nghiệm kịch bản; không có DT thì XAI chỉ dừng lại ở các giải thích hồi tố (post-hoc explanations) mà thiếu tích hợp vận hành vòng lặp kín (closed-loop).
+  - Tính phụ thuộc điều kiện: Chỉ khi kết hợp cả ba mô hình mới tạo nên hệ thống có năng lực điều khiển MBR tự động đáng tin cậy, diễn giải được và khả thi triển khai trong thực tế; đây là luận điểm phân tích cốt lõi định hình phạm vi tổng hợp của bài báo.
+  - Bốn mục tiêu nghiên cứu trọng tâm: (1) Đánh giá hiệu năng mô hình ML, hạn chế của tập dữ liệu và khả năng tổng quát hóa trên dự đoán nghẹt màng, tối ưu hóa năng lượng và ước tính chất lượng nước đầu ra; (2) Đánh giá các khung diễn giải XAI và vai trò thực tế trong xây dựng quyết định tin cậy, dễ tiếp cận cho người vận hành; (3) Định hình các kiến trúc DT mới nổi, mức độ trưởng thành triển khai và yêu cầu tích hợp XAI trong nền tảng DT vận hành; (4) Nhận diện các khoảng trống nghiên cứu then chốt cần giải quyết để tích hợp XAI-DT ở quy mô vận hành thực tế.
+  - **Hình 1.** Sơ đồ khung khái niệm nghiên cứu MBR kết hợp ML, XAI và DT
+    - ![Hình 1. Sơ đồ khung khái niệm nghiên cứu MBR kết hợp ML, XAI và DT](assets/fig_01_p4.png)
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự liên kết từ các thách thức vận hành cốt lõi, ba hướng tiếp cận phân tích (ML, XAI, DT), các lĩnh vực ứng dụng chính, kết quả mang lại và các khoảng trống nghiên cứu cần giải quyết.
+    - **Từ đâu mà thấy được**
+      - Sơ đồ đọc theo chiều dọc từ trên xuống dưới qua 6 tầng khối: nền tảng MBR $\rightarrow$ thách thức vận hành cốt lõi $\rightarrow$ phương pháp phân tích (ML, XAI, DT) $\rightarrow$ lĩnh vực ứng dụng $\rightarrow$ kết quả chính $\rightarrow$ khoảng trống nghiên cứu (full-scale validation, open datasets, practical DT deployment).
+- **Phạm vi thuật ngữ và các phát hiện nghiên cứu cốt lõi**:
+  - Ý nghĩa thuật ngữ "comprehensive": Thuật ngữ "comprehensive" trong tiêu đề bài báo phản ánh độ bao quát của các mô hình phân tích được khảo sát (ML, XAI và DT) trong cùng một khung phân tích duy nhất, không ngụ ý rằng lĩnh vực này đã đạt đến mức độ trưởng thành ở quy mô vận hành thực tế.
+  - Phát hiện trung tâm của bài tổng quan: Sự khan hiếm của các triển khai DT ở quy mô đầy đủ (full-scale) và mức độ tích hợp XAI còn hạn chế là những phát hiện trọng tâm được ghi nhận xuyên suốt bài báo, định hình chương trình nghị sự nghiên cứu được nêu rõ tại Mục 7.

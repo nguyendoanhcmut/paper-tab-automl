@@ -1,0 +1,35 @@
+## 4. Conclusions
+
+- Nghiên cứu thiết lập một khung dự đoán ($predictive\ framework$) hiện tượng nghẹt màng ($membrane\ fouling$) trong các hệ thống bể phản ứng sinh học màng ($MBR$ - Membrane Bioreactor) quy mô đầy đủ ($full\text{-}scale$) bằng cách tích hợp kỹ nghệ đặc trưng định hướng AI ($AI\text{-}driven\ feature\ engineering$) và trí tuệ nhân tạo có thể giải thích ($XAI$ - Explainable AI):
+  - Khung dự đoán được định hướng ứng dụng trực tiếp tại các nhà máy $MBR$ vận hành thực tế.
+  - Sử dụng các thông số được đo đạc thường quy trong điều kiện vận hành kết hợp với các mô hình $AI$ có khả năng diễn giải ($interpretable\ AI\ models$), hỗ trợ quản lý nghẹt màng chủ động ($proactive\ fouling\ management$) và ra quyết định vận hành ($operational\ decision\ making$).
+  - Tinh chỉnh thông số mục tiêu thành thông lượng riêng ($Specific\ Flux = \text{Flux}/\text{TMP}$) và tích hợp hiệu suất loại bỏ $COD$ ($COD\ removal\ efficiency$) làm chỉ số hiệu năng sinh học ($biological\ performance\ indicator$):
+    - Giúp mô hình nắm bắt mối quan hệ tương tác động giữa các thông số vận hành và hành vi nghẹt màng.
+  - Kỹ thuật trung bình trượt ($moving\ average$) nâng cao khả năng biểu diễn đặc trưng theo thời gian ($temporal\ feature\ representation$), giải quyết các tác động tích lũy trong quá trình diễn tiến nghẹt màng.
+  - Mô hình $CatBoost$ thể hiện độ chính xác dự đoán cao hơn các phương pháp tiếp cận thống kê truyền thống và học máy ($machine\ learning$) được thử nghiệm.
+- Các kỹ thuật $XAI$ làm sáng tỏ các cơ chế nghẹt màng then chốt:
+  - Tỷ lệ thức ăn trên vi sinh vật (tỷ lệ $F/M$ - Food-to-Microorganism ratio) và nồng độ bùn hoạt tính lơ lửng ($MLSS$ - Mixed Liquor Suspended Solids) là các yếu tố chi phối động lực học nghẹt màng.
+  - Khẳng định tầm quan trọng của chiến lược giám sát thời gian thực ($real\text{-}time\ monitoring$) và kiểm soát thích ứng ($adaptive\ control$), bao gồm tối ưu hóa tải lượng hữu cơ ($organic\ loading$) và nồng độ sinh khối ($biomass\ concentration$) nhằm giảm thiểu nguy cơ nghẹt màng.
+- Vai trò hỗ trợ ra quyết định và sự kết hợp với các mô hình dựa trên vật lý ($physics\text{-}based\ models$):
+  - Khung dự đoán không thay thế các mô hình điều khiển dựa trên vật lý, mà cung cấp đầu vào hỗ trợ ra quyết định thiết yếu cho việc tối ưu hóa lịch bảo trì và định hình chiến lược điều khiển thích ứng trong vận hành $MBR$ quy mô đầy đủ.
+  - Quá trình kiểm chứng bằng dữ liệu thực nghiệm từ nhà máy $MBR$ thực tế chứng minh tính ứng dụng trong điều kiện vận hành không lý tưởng ($non\text{-}ideal\ conditions$).
+  - Khung dự đoán tạo sự kết hợp tương hỗ với các mô hình vật lý (ví dụ: mô phỏng động lực học màng vi sinh - $biofilm\ dynamics\ simulations$) thông qua việc cung cấp các hiệu chỉnh dự đoán nghẹt màng dựa trên dữ liệu.
+  - Khả năng tương thích với các cảm biến chi phí thấp ($low\text{-}cost\ sensors$) giúp khỏa lấp khoảng cách của các công cụ giám sát truyền thống.
+  - Cho phép các chiến lược điều khiển thích ứng điều chỉnh động các thông số vận hành (như cường độ sục khí - $aeration\ intensity$, thời gian lưu giữ bùn - $sludge\ retention$) dựa trên đánh giá rủi ro nghẹt màng theo thời gian thực.
+- Hạn chế của nghiên cứu và yêu cầu mở rộng dữ liệu:
+  - Tập dữ liệu nghiên cứu có quy mô tương đối nhỏ, làm hạn chế khả năng tổng quát hóa ($generalizability$) của mô hình.
+  - Các nghiên cứu tiếp theo cần kiểm chứng khung dự đoán trên các tập dữ liệu lớn hơn và đa dạng hơn nhằm nâng cao độ tin cậy ($robustness$) và tính khả thi trên các cấu hình $MBR$ khác nhau.
+- Ý nghĩa khoa học và thực tiễn trong quản lý màng lọc:
+  - Nghiên cứu chứng minh khả năng dự đoán và diễn giải hành vi nghẹt màng ngay cả trong điều kiện dữ liệu dưới mức tối ưu ($suboptimal\ data\ conditions$), tạo cầu nối giữa nghiên cứu học thuật và thực tiễn công nghiệp.
+  - Thu hẹp khoảng cách giữa các mô hình $AI$ phức tạp và khả năng diễn giải trong vận hành, cung cấp công cụ tin cậy cho quản lý màng chủ động.
+- Định hướng nghiên cứu phát triển hệ thống điều khiển và giám sát trực tuyến:
+  - Nghiên cứu trong tương lai cần ưu tiên tích hợp các mô hình $AI$ với mạng lưới cảm biến ($sensor\ networks$) và hệ thống điều khiển thích ứng:
+    - Cho phép tối ưu hóa động các thông số vận hành theo thời gian thực như chế độ sục khí ($aeration$), thời gian lưu giữ bùn ($sludge\ retention$), và quy trình lọc ($filtration\ protocols$).
+    - Nâng cao hiệu suất chung của các quá trình $MBR$, giảm tiêu thụ năng lượng, và kéo dài tuổi thọ của màng lọc ($membrane\ lifespan$).
+  - Tập trung tích hợp mô hình vào các hệ thống giám sát trực tuyến ($online\ monitoring\ systems$) phục vụ dự đoán và điều khiển thích ứng thời gian thực tại các cơ sở quy mô đầy đủ.
+- Khả năng chuyển giao phương pháp luận sang các quy trình xử lý qua màng khác:
+  - Tính thích ứng của phương pháp mở ra tiềm năng ứng dụng trong các quy trình xử lý qua màng khác như khử muối ($desalination$) và xử lý nước thải công nghiệp.
+  - Các nguyên lý cốt lõi của khung dự đoán—gồm thông số mục tiêu động (thông lượng riêng $Specific\ Flux$), kỹ nghệ đặc trưng theo thời gian ($temporal\ feature\ engineering$), và khả năng diễn giải bằng $XAI$—có thể chuyển giao sang các quy trình màng khác như thẩm thấu ngược ($RO$ - Reverse Osmosis):
+    - Hiện tượng nghẹt màng trong $RO$ cũng có tính phụ thuộc thời gian và chịu ảnh hưởng của các biến động vận hành (như biến thiên áp suất và thông lượng).
+    - Việc áp dụng cho $RO$ đòi hỏi những hiệu chỉnh theo đặc thù lĩnh vực (ví dụ: bổ sung các chỉ số bám cặn cho hiện tượng nghẹt màng do khoáng chất - $mineral\ fouling$).
+    - Nền tảng phương pháp luận trong việc xử lý dữ liệu thực tế có độ nhiễu cao ($noisy\ real\text{-}world\ data$) và nắm bắt các tác động tích lũy vẫn giữ nguyên giá trị áp dụng rộng rãi cho nhiều công nghệ màng.

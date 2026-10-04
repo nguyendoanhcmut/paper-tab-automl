@@ -1,0 +1,25 @@
+#### 3.3.3. LOFO and SHAP interpretation of feature contributions during transfer
+
+- Phân tích LOFO và SHAP được sử dụng để xác định các biến duy trì hiệu năng chuyển giao trong mô hình LSTM-FT:
+  - Phân tích loại bỏ từng đặc trưng (Leave-One-Feature-Out - LOFO) trước hết được thực hiện để đánh giá ảnh hưởng của từng biến đầu vào đối với hiệu năng mô hình LSTM-FT tại tỷ lệ tinh chỉnh $\text{FT} = 40\%$ (Fig. 5(e)).
+  - Mô hình tham chiếu (reference model) là mô hình LSTM-FT được huấn luyện với đầy đủ tất cả các biến đầu vào, đạt sai số tuyệt đối trung bình $\text{MAE} = 0.33\text{ kPa}$.
+  - Mỗi biến đầu vào sau đó được loại bỏ riêng lẻ, và giá trị $\text{MAE}$ thu được được so sánh với mô hình tham chiếu bằng các kiểm định dấu hạng Wilcoxon hai phía theo cặp (paired two-sided Wilcoxon signed-rank tests) (Table S10).
+  - Loại bỏ biến carbohydrate trong chất polyme ngoại bào ($\text{EPSc}$) gây ra sự suy giảm hiệu năng lớn nhất, làm tăng $\text{MAE}$ lên $0.37\text{ kPa}$ ($p \le 0.001$), chứng minh $\text{EPSc}$ là biến quan trọng nhất để duy trì hiệu năng của LSTM-FT.
+  - Loại bỏ protein trong chất polyme ngoại bào ($\text{EPSp}$) hoặc thời gian lưu bùn ($\text{SRT}$) cũng làm tăng $\text{MAE}$ lên $0.35\text{ kPa}$ (cả hai biến đều có $p \le 0.001$).
+  - Loại bỏ thông lượng màng ($\text{FLUX}$) gây ra mức tăng sai số nhỏ hơn nhưng vẫn có ý nghĩa thống kê ($p \le 0.01$).
+  - Nhìn chung, kết quả LOFO xác nhận các biến liên quan đến EPS, đặc biệt là $\text{EPSc}$ và $\text{EPSp}$, giữ vai trò quan trọng đối với hiệu năng của LSTM-FT, trong khi $\text{SRT}$ và $\text{FLUX}$ cũng thể hiện các tác động nhỏ hơn nhưng có ý nghĩa thống kê.
+- Phân tích SHAP khảo sát sự tiến hóa của cấu trúc phân bổ đóng góp đặc trưng khi gia tăng tỷ lệ tinh chỉnh $\text{FT}$:
+  - Dưới chế độ chuyển giao không cần mẫu (zero-shot transfer, $\text{FT} = 0$), $\text{EPSc}$ là đặc trưng xếp hạng cao nhất, đóng góp tỷ phần lớn nhất vào tổng mức phân bổ gán giá trị, cao hơn đáng kể so với chất rắn lơ lửng bay hơi trong bùn lỏng ($\text{MLVSS}$) và $\text{EPSp}$ (Fig. 6(b); Fig. S8(a)).
+  - Điều này chỉ ra rằng dưới chế độ chuyển giao zero-shot, mô hình chuyển giao duy trì cấu trúc phân bổ tập trung mạnh vào $\text{EPSc}$, phản ánh mức độ tái hiệu chuẩn (recalibration) hạn chế trước khi tinh chỉnh.
+  - Từ $\text{FT} = 10\%$ đến $30\%$, cấu trúc phân bổ đóng góp trở nên phân tán hơn, với mức độ gán đóng góp gia tăng cho $\text{EPSp}$ cùng sự đóng góp tương đương hơn giữa $\text{EPSc}$, $\text{SRT}$ và $\text{MLVSS}$ (Fig. S9–S10).
+- Cấu trúc phân bổ đặc trưng đạt trạng thái cân bằng xoay quanh lõi EPS tại $\text{FT} = 40\%$ và duy trì ổn định khi tăng lên $\text{FT} = 50\%$:
+  - Tại tỷ lệ $\text{FT} = 40\%$, $\text{EPSc}$ và $\text{EPSp}$ là hai đặc trưng xếp hạng cao nhất và cùng nhau chiếm hơn một nửa (hơn $50\%$) tổng mức phân bổ đóng góp (Fig. 6(c); Fig. S8(b)), thể hiện cấu trúc phân bổ tập trung vào EPS cân bằng hơn sau khi tinh chỉnh:
+    - **Hình 6.** Phân bổ SHAP và tóm tắt LLM cho LSTM-base và LSTM-FT
+      - <img src="assets/fig_06_p9.jpeg" alt="Hình 6" />
+      - **Hình này chứng minh điều gì**
+        - Quá trình tinh chỉnh chuyển dịch cấu trúc gán giá trị từ trạng thái mất cân bằng phụ thuộc lệch vào $\text{EPSc}$ ở $\text{FT} = 0$ sang cấu trúc ổn định với lõi chi phối kép gồm $\text{EPSc}$ và $\text{EPSp}$ ở $\text{FT} = 40\%$.
+      - **Từ đâu mà thấy được**
+        - Panel (a), (b), (c): Trục hoành $\text{Ox}$ đo giá trị SHAP (không thứ nguyên, thang đo lần lượt từ $-0.4$ đến $0.6$, $-0.2$ đến $0.6$, và $-0.3$ đến $0.5$); trục tung $\text{Oy}$ liệt kê các đặc trưng đầu vào xếp hạng từ trên xuống; thang màu biểu thị giá trị đặc trưng từ thấp (xanh lam) đến cao (đỏ).
+        - Panel (d): Bản tóm tắt của LLM xác nhận LSTM-base có phân bổ gán giá trị trải đều giữa $\text{EPSc}$, $\text{MLVSS}$ và $\text{EPSp}$; $\text{FT} = 0$ bị chi phối bởi độ phân tán rộng của $\text{EPSc}$; $\text{FT} = 40\%$ hình thành lõi chi phối ổn định của $\text{EPSc}$ và $\text{EPSp}$.
+  - Thứ hạng đặc trưng và cấu trúc phân bổ gán giá trị tại $\text{FT} = 50\%$ duy trì sự tương đồng lớn so với tại $\text{FT} = 40\%$ (Fig. S11), nhất quán với mức cải thiện hiệu năng bổ sung hạn chế khi tỷ lệ tinh chỉnh vượt quá mốc $\text{FT} = 40\%$.
+  - Cùng với các kết quả LOFO, những phát hiện này chỉ ra rằng hiệu năng của LSTM-FT chủ yếu được duy trì bởi các biến liên quan đến EPS, trong đó $\text{EPSc}$ tiếp tục giữ vị trí xếp hạng cao nhất và $\text{EPSp}$ trở nên nổi bật hơn sau khi tinh chỉnh.

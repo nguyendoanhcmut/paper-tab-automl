@@ -1,0 +1,141 @@
+### 3.4. Dataset Limitations, Overfitting Risk, and Cross-Site Generalization
+
+- **Tính dị thể của tập dữ liệu và rủi ro quá khớp (Dataset heterogeneity and overfitting risk)**: Đánh giá phản biện các chỉ số hiệu suất tổng hợp tại Bảng 1 phải tính đến tính dị thể đáng kể về đặc tính tập dữ liệu giữa các nghiên cứu đã công bố:
+  - Đa số các công trình chỉ huấn luyện và kiểm định mô hình trên tập dữ liệu từ một cơ sở duy nhất (single-facility datasets) với quy mô từ vài trăm đến vài nghìn mẫu.
+  - Duy nhất Kovacs và cộng sự [26] báo cáo tập dữ liệu quy mô lớn gồm hơn $80{,}000$ mẫu vận hành thu thập từ một nhà máy đô thị quy mô thực tế (full municipal-scale plant).
+  - Các giá trị $R^2$ rất cao được báo cáo — bao gồm $R^2 = 0.990$ đối với mô hình LSSVM [42] và $R^2 = 0.92\text{--}0.98$ đối với các mô hình dự đoán trong hệ bể phản ứng sinh học màng thẩm thấu (Osmotic Membrane Bioreactor - OMBR) [22] — cần phải được diễn giải một cách thận trọng.
+  - Khi một mô hình được huấn luyện và kiểm tra trên dữ liệu từ một chiến dịch vận hành đơn lẻ, đồng nhất (single, homogeneous operating campaign), chỉ số $R^2$ cao có thể chỉ phản ánh năng lực tái hiện cấu trúc nhiễu đặc thù (specific noise structure) và độ tự tương quan thời gian (temporal autocorrelation) của chính tập dữ liệu đó, thay vì là một biểu diễn thực sự có khả năng tổng quát hóa về động học nghẽn màng (fouling dynamics).
+  - Nguy cơ quá khớp (overfitting risk) này càng bị gia tăng do sự thiếu vắng gần như tuyệt đối của kiểm định ngoại bộ (external validation) trên dữ liệu thu thập từ một chu kỳ vận hành tách biệt hoặc từ một nhà máy độc lập.
+  - Phần lớn các nghiên cứu được xem xét đều dựa vào phương pháp phân chia dữ liệu huấn luyện - kiểm tra ngẫu nhiên (random train–test splits); phương pháp này không bảo toàn được thứ tự thời gian nên không thể phát hiện hiện tượng rò rỉ dữ liệu theo thời gian (temporal data leakage).
+  - Các khuyến nghị phương pháp luận cho nghiên cứu trong tương lai:
+    - Báo cáo kết quả kiểm định chéo $k$ lần kết hợp phân khối theo chuỗi thời gian ($k$-fold cross-validation with temporal blocking).
+    - Trình bày các đường cong học tập (learning curves) dưới dạng hàm số của quy mô tập dữ liệu huấn luyện.
+    - Thực hiện kiểm định chéo giữa các cơ sở (cross-site validation) trên tối thiểu một cơ sở độc lập tại những nơi có tính khả thi kỹ thuật.
+
+- **Tổng hợp hiệu suất thực nghiệm các mô hình ML (dữ liệu Bảng 1)**: Tổng hợp các chỉ số hiệu suất thực nghiệm của các thuật toán ML trong dự đoán tắc nghẽn MBR và TMP qua các nghiên cứu đã rà soát:
+  - **Mô hình ANN (MLP + RBF)** [23]:
+    - Biến mục tiêu (Target Variable): Áp suất xuyên màng và độ thấm (TMP/permeability).
+    - Quy mô vận hành (Scale): Quy mô pilot (Pilot).
+    - Hệ số xác định tốt nhất (Best $R^2$): Thỏa đáng (Satisfactory).
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): Không báo cáo (N/R); chiến dịch vận hành thử nghiệm kéo dài $60\text{ ngày}$ (60-day campaign).
+    - Kiểm định ngoại bộ (External Validation): Không có (phân chia ngẫu nhiên train–test split).
+    - Chỉ số sai số (RMSE/MSE): Không báo cáo (N/R).
+  - **Mô hình ANN (lan truyền ngược - backpropagation)** [25]:
+    - Biến mục tiêu (Target Variable): TMP trong hệ thiếu khí - hiếu khí (TMP, AO-MBR).
+    - Quy mô vận hành (Scale): Quy mô pilot (Pilot).
+    - Hệ số xác định tốt nhất (Best $R^2$): $0.850$.
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): Không báo cáo (N/R); quy mô pilot (pilot-scale).
+    - Kiểm định ngoại bộ (External Validation): Không có (phân chia ngẫu nhiên train–test split).
+    - Chỉ số sai số (RMSE/MSE): Không báo cáo (N/R).
+  - **Mô hình LSSVM (tốt nhất - best)** [42]:
+    - Biến mục tiêu (Target Variable): Trở lực tắc nghẽn màng (Fouling resistance).
+    - Quy mô vận hành (Scale): Phòng thí nghiệm (Lab).
+    - Hệ số xác định tốt nhất (Best $R^2$): $0.990$.
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): Không báo cáo (N/R); quy mô phòng thí nghiệm (lab-scale).
+    - Kiểm định ngoại bộ (External Validation): Không có (phân chia ngẫu nhiên train–test split).
+    - Chỉ số sai số (RMSE/MSE): $\text{MSE} = 0.0002$.
+  - **Mô hình ANN-MLP** [42]:
+    - Biến mục tiêu (Target Variable): Trở lực tắc nghẽn màng (Fouling resistance).
+    - Quy mô vận hành (Scale): Phòng thí nghiệm (Lab).
+    - Hệ số xác định tốt nhất (Best $R^2$): Thấp hơn LSSVM (Lower than LSSVM).
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): Không báo cáo (N/R); quy mô phòng thí nghiệm (lab-scale).
+    - Kiểm định ngoại bộ (External Validation): Không có (phân chia ngẫu nhiên train–test split).
+    - Chỉ số sai số (RMSE/MSE): Lớn hơn LSSVM ($>\text{LSSVM}$).
+  - **Các mô hình AI cho hệ OMBR** [22]:
+    - Biến mục tiêu (Target Variable): Thông lượng nước và tắc nghẽn màng (Water flux + fouling).
+    - Quy mô vận hành (Scale): Phòng thí nghiệm (Lab).
+    - Hệ số xác định tốt nhất (Best $R^2$): $0.92\text{--}0.98$.
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): Không báo cáo (N/R); hệ OMBR phòng thí nghiệm (lab OMBR).
+    - Kiểm định ngoại bộ (External Validation): Không có (phân chia ngẫu nhiên train–test split).
+    - Chỉ số sai số (RMSE/MSE): Có báo cáo trong nghiên cứu gốc (Reported).
+  - **Mô hình Rừng ngẫu nhiên (Random Forest - RF, tốt nhất)** [26]:
+    - Biến mục tiêu (Target Variable): TMP tại nhà máy xử lý nước thải quy mô thực tế (TMP, full-scale WWTP).
+    - Quy mô vận hành (Scale): Quy mô đầy đủ (Full-scale).
+    - Hệ số xác định tốt nhất (Best $R^2$): $0.927\text{--}0.996$.
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): $> 80{,}000$ mẫu (samples).
+    - Kiểm định ngoại bộ (External Validation): Không có (chỉ đánh giá trên một nhà máy đơn lẻ - single plant).
+    - Chỉ số sai số (RMSE/MSE): $\text{RMSE} = 0.264\text{--}0.904\text{ kPa}$.
+  - **Mô hình LSTM** [26]:
+    - Biến mục tiêu (Target Variable): TMP tại nhà máy xử lý nước thải quy mô thực tế (TMP, full-scale WWTP).
+    - Quy mô vận hành (Scale): Quy mô đầy đủ (Full-scale).
+    - Hệ số xác định tốt nhất (Best $R^2$): Thấp hơn RF (không báo cáo giá trị cụ thể - Lower than RF, no exact value reported).
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): $> 80{,}000$ mẫu (samples).
+    - Kiểm định ngoại bộ (External Validation): Không có (chỉ đánh giá trên một nhà máy đơn lẻ - single plant).
+    - Chỉ số sai số (RMSE/MSE): Cao hơn RF (Higher than RF).
+  - **Mô hình ANN** [26]:
+    - Biến mục tiêu (Target Variable): TMP tại nhà máy xử lý nước thải quy mô thực tế (TMP, full-scale WWTP).
+    - Quy mô vận hành (Scale): Quy mô đầy đủ (Full-scale).
+    - Hệ số xác định tốt nhất (Best $R^2$): Thấp hơn RF (không báo cáo giá trị cụ thể - Lower than RF, no exact value reported).
+    - Quy mô tập dữ liệu xấp xỉ (Approx. Dataset Size): $> 80{,}000$ mẫu (samples).
+    - Kiểm định ngoại bộ (External Validation): Không có (chỉ đánh giá trên một nhà máy đơn lẻ - single plant).
+    - Chỉ số sai số (RMSE/MSE): Cao hơn RF (Higher than RF).
+
+- **Khả năng tổng quát hóa liên cơ sở (cross-site generalization) và hiện tượng dịch chuyển tập dữ liệu (dataset shift)**: Năng lực của một mô hình được huấn luyện tại một cơ sở MBR duy trì độ chính xác dự đoán khi áp dụng sang cơ sở thứ hai rất hiếm khi được đánh giá trong y văn hiện có:
+  - Khái niệm tổng quát hóa liên cơ sở (cross-site generalization) chỉ khả năng mô hình thích ứng khi chuyển sang cơ sở mới có hình học module màng (membrane module geometry), thành phần nước thải đầu vào (influent composition), hoặc chế độ vận hành (operating regime) khác biệt.
+  - Hiện tượng dịch chuyển tập dữ liệu (dataset shift) là cơ chế cốt lõi dẫn đến sự suy giảm hiệu suất dự đoán khi chuyển đổi liên cơ sở.
+  - Các nguyên nhân chính thúc đẩy hiện tượng dataset shift gồm:
+    - Sự khác biệt về thành phần hệ vi sinh vật trong bùn hoạt tính (sludge microbiology).
+    - Tính chất hóa học cục bộ của dòng nước thải (local wastewater chemistry).
+    - Các quy luật biến thiên theo mùa do khí hậu chi phối (climate-driven seasonal patterns).
+  - Các giải pháp kỹ thuật khả thi hướng tới các mô hình ML có khả năng tổng quát hóa cho MBR:
+    - Học chuyển giao (Transfer learning): mô hình được tiền huấn luyện (pre-trained) trên một cơ sở nguồn giàu dữ liệu (data-rich source facility), sau đó được tinh chỉnh (fine-tuned) bằng một lượng dữ liệu hạn chế từ nhà máy mục tiêu (target plant).
+    - Thích ứng miền (Domain adaptation): phương pháp giảm thiểu trực tiếp sự sai lệch về phân phối xác suất (distributional discrepancy) giữa không gian đặc trưng nguồn và đích.
+  - Cả hai hướng tiếp cận transfer learning và domain adaptation đều đã ghi nhận thành công trong các bối cảnh kỹ thuật môi trường liên quan [17, 47] và là định hướng phương pháp luận ưu tiên hàng đầu cho các nghiên cứu MBR ML trong tương lai.
+
+- **Rào cản triển khai thực tế trong vận hành MBR được điều tiết và động lực phát triển AI có thể giải thích (Explainable AI - XAI)**: Các giới hạn về dữ liệu và rào cản tổng quát hóa ảnh hưởng trực tiếp đến việc ứng dụng ML trong vận hành MBR chịu sự kiểm soát của quy chuẩn pháp lý (regulated MBR operations):
+  - Kỹ sư vận hành và cơ quan quản lý không chỉ đòi hỏi các dự đoán đạt độ chính xác cao mà còn yêu cầu cơ sở giải trình minh bạch, có thể kiểm toán được (transparent, auditable justification) cho mọi khuyến nghị do mô hình đưa ra.
+  - Đòi hỏi này thúc đẩy việc ứng dụng các phương pháp trí tuệ nhân tạo có thể giải thích (Explainable Artificial Intelligence - XAI).
+  - Khung đánh giá mức độ rủi ro sai lệch (bias risk level) đối với các mô hình ML áp dụng trong dự đoán tắc nghẽn MBR được xây dựng dựa trên tiêu chí của Reviewer 2 và các hướng dẫn công bố về tiêu chuẩn kiểm định ML trong kỹ thuật môi trường [28, 48]:
+    - Mức rủi ro Cao (High): không báo cáo kiểm định ngoại bộ trên cơ sở độc lập và tập dữ liệu nghiên cứu có quy mô dưới $500$ mẫu ($< 500$ mẫu).
+    - Mức rủi ro Trung bình (Moderate): tập dữ liệu có quy mô lớn nhưng quy trình kiểm định chỉ giới hạn nội bộ trong một cơ sở đơn lẻ.
+    - Mức rủi ro Thấp (Low): sử dụng tối thiểu hai tập dữ liệu kiểm tra độc lập thu thập từ các nhà máy đang vận hành thực tế ($\ge 2$ tập kiểm tra).
+
+- **So sánh phản biện các thuật toán ML chủ đạo (dữ liệu Bảng 2)**: Đánh giá chi tiết ưu điểm then chốt, hạn chế chính, hệ số $R^2$ tốt nhất và phân loại mức độ rủi ro sai lệch trong dự đoán nghẽn màng MBR và TMP dựa trên dữ liệu đã xác thực từ các tài liệu gốc:
+  - **Mô hình ANN (MLP + RBF)** [23]:
+    - Phân loại (Category): ANN nông (Shallow ANN).
+    - Ưu điểm then chốt (Key Strength): Tốc độ hội tụ nhanh; xử lý tốt các mối quan hệ phi tuyến giữa đầu vào và đầu ra.
+    - Hạn chế chính (Key Limitation): Không báo cáo định lượng giá trị $R^2$; khả năng tổng quát hóa chưa được kiểm định.
+    - Giá trị $R^2$ tốt nhất: Không báo cáo (Not reported).
+    - Mức độ rủi ro sai lệch (Bias Risk): CAO (HIGH) — theo tiêu chí không có kiểm định ngoại bộ và dữ liệu $< 500$ mẫu.
+  - **Mô hình ANN (lan truyền ngược - backpropagation)** [24]:
+    - Phân loại (Category): ANN nông (Shallow ANN).
+    - Ưu điểm then chốt (Key Strength): Kiến trúc mạng đã được thiết lập vững chắc; mang tính thực tiễn cao cho ứng dụng quy mô pilot.
+    - Hạn chế chính (Key Limitation): Chỉ đạt $R^2 = 0.850$; độ chính xác ở mức vừa phải; không có định lượng độ không đảm bảo đo (no uncertainty quantification).
+    - Giá trị $R^2$ tốt nhất: $0.850$.
+    - Mức độ rủi ro sai lệch (Bias Risk): CAO (HIGH) — theo tiêu chí không có kiểm định ngoại bộ và dữ liệu $< 500$ mẫu.
+  - **Mô hình LSSVM** [42]:
+    - Phân loại (Category): Dựa trên hàm hạt nhân (Kernel-based).
+    - Ưu điểm then chốt (Key Strength): Đạt $R^2$ cao nhất trong điều kiện phòng thí nghiệm ($0.99$); vận hành bền vững trên các tập dữ liệu nhỏ; tích hợp sẵn tính năng phân tích độ nhạy.
+    - Hạn chế chính (Key Limitation): Không thể mở rộng quy mô cho các tập dữ liệu lớn; thiếu năng lực mô hình hóa chuỗi thời gian.
+    - Giá trị $R^2$ tốt nhất: $0.990$.
+    - Mức độ rủi ro sai lệch (Bias Risk): CAO (HIGH) — chỉ huấn luyện trên dữ liệu phòng thí nghiệm; quy mô dữ liệu không được báo cáo nhưng phù hợp với mức $< 500$ mẫu của chiến dịch phòng thí nghiệm.
+  - **Các mô hình AI cho hệ OMBR** [22]:
+    - Phân loại (Category): Đa dạng (Various).
+    - Ưu điểm then chốt (Key Strength): Nắm bắt được động học lực dẫn động thẩm thấu; $R^2 = 0.92\text{--}0.98$.
+    - Hạn chế chính (Key Limitation): Tập dữ liệu phòng thí nghiệm quy mô nhỏ; chỉ thực hiện trên một cơ sở đơn lẻ; không có kiểm định ngoại bộ.
+    - Giá trị $R^2$ tốt nhất: $0.92\text{--}0.98$.
+    - Mức độ rủi ro sai lệch (Bias Risk): CAO (HIGH) — theo tiêu chí không có kiểm định ngoại bộ và dữ liệu $< 500$ mẫu.
+  - **Rừng ngẫu nhiên (Random Forest - RF)** [26]:
+    - Phân loại (Category): Học kết hợp (Ensemble).
+    - Ưu điểm then chốt (Key Strength): Đạt độ chính xác tốt nhất ở quy mô thực tế; khả năng chống chịu tốt trước các điểm dị biệt (resilient to outliers); tích hợp sẵn đánh giá tầm quan trọng đặc trưng; xử lý tốt nhiều kiểu dữ liệu hỗn hợp.
+    - Hạn chế chính (Key Limitation): Đòi hỏi dung lượng bộ nhớ lớn; chỉ cung cấp tầm quan trọng đặc trưng ở quy mô toàn cục (global feature importance only); kiểm định giới hạn trên một nhà máy đơn lẻ.
+    - Giá trị $R^2$ tốt nhất: $0.927\text{--}0.996$.
+    - Mức độ rủi ro sai lệch (Bias Risk): TRUNG BÌNH (MODERATE) — dữ liệu thu thập từ một nhà máy đô thị hoặc công nghiệp đơn lẻ; chưa thực hiện kiểm định chéo liên cơ sở.
+  - **Mô hình LSTM** [26]:
+    - Phân loại (Category): Học sâu / Mạng nơ-ron hồi quy (Deep learning - RNN).
+    - Ưu điểm then chốt (Key Strength): Nắm bắt các phụ thuộc thời gian tầm xa của quá trình tắc nghẽn màng; phù hợp cho chuỗi thời gian TMP.
+    - Hạn chế chính (Key Limitation): Yêu cầu tập dữ liệu lớn; nhu cầu tính toán cao; độ chính xác thấp hơn RF trong cùng nghiên cứu so sánh.
+    - Giá trị $R^2$ tốt nhất: Thấp hơn RF (Lower than RF).
+    - Mức độ rủi ro sai lệch (Bias Risk): TRUNG BÌNH (MODERATE) — chỉ kiểm định trên một nhà máy đơn lẻ; chưa thực hiện kiểm định chéo liên cơ sở.
+  - **Mô hình CatBoost kết hợp XAI** [49]:
+    - Phân loại (Category): Tăng cường độ dốc (Gradient boosting).
+    - Ưu điểm then chốt (Key Strength): Hiệu suất tốt ở quy mô thực tế; kết hợp XAI giúp xác định các nhân tố chi phối quá trình nghẽn màng (tỷ lệ $\text{F/M}$, nồng độ $\text{MLSS}$).
+    - Hạn chế chính (Key Limitation): Đạt giá trị $R^2$ vừa phải ($0.8374$) trên dữ liệu công nghiệp nhiều nhiễu; chỉ áp dụng trên một nhà máy chế biến thực phẩm đơn lẻ.
+    - Giá trị $R^2$ tốt nhất: $0.8374$.
+    - Mức độ rủi ro sai lệch (Bias Risk): TRUNG BÌNH (MODERATE) — chỉ kiểm định trên một nhà máy công nghiệp đơn lẻ; chưa thực hiện kiểm định chéo liên cơ sở.
+  - **Mô hình MBR-Net (Deep Learning tùy biến)** [50]:
+    - Phân loại (Category): Học sâu (Deep learning).
+    - Ưu điểm then chốt (Key Strength): Dự đoán thời gian thực tích hợp với IoT; $R^2 > 0.87$ trên hai tập kiểm tra độc lập; có khả năng dự báo trước một ngày (one-day-ahead forecasting).
+    - Hạn chế chính (Key Limitation): Bị giới hạn bởi tính sẵn có của dữ liệu; chỉ mới kiểm định trên một loại hình cơ sở duy nhất.
+    - Giá trị $R^2$ tốt nhất: $> 0.87$.
+    - Mức độ rủi ro sai lệch (Bias Risk): THẤP (LOW) — MBR-Net được kiểm định trên hai tập kiểm tra độc lập từ cùng một nhà máy quy mô thực tế; khả năng tổng quát hóa liên cơ sở vẫn chưa được chứng minh.

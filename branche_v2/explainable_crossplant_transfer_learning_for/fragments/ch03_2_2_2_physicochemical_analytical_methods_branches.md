@@ -1,0 +1,24 @@
+## 2.2. Physicochemical analytical methods
+
+- Các thông số vận hành thường quy (routine operational parameters) được ghi nhận bao gồm $HRT$, $SRT$ và $\text{FLUX}$.
+  - Thời gian lưu nước thủy lực ($HRT$ - hydraulic retention time), thời gian lưu bùn ($SRT$ - sludge retention time) và thông lượng màng ($\text{FLUX}$) được ghi chép làm các thông số vận hành cơ sở của hệ thống.
+- Các chỉ số nhu cầu oxy hóa học ($TCOD$, $SCOD$) và hàm lượng bùn ($MLSS$, $MLVSS$) được xác định theo quy trình chuẩn:
+  - Nhu cầu oxy hóa học tổng số ($TCOD$ - total chemical oxygen demand) và nhu cầu oxy hóa học hòa tan ($SCOD$ - soluble chemical oxygen demand) được xác định bằng phương pháp so màu hồi lưu kín APHA 5220D (APHA 5220D closed reflux colorimetric method).
+  - Chất rắn lơ lửng trong hỗn dịch bùn ($MLSS$ - mixed liquor suspended solids) và chất rắn lơ lửng bay hơi trong hỗn dịch bùn ($MLVSS$ - mixed liquor volatile suspended solids) được đo theo Tiêu chuẩn Phương pháp (Standard Methods) [28].
+- Quy trình phân lập và trích ly các sản phẩm vi sinh vật hòa tan ($SMP$) và chất polyme ngoại bào ($EPS$) được xác định rõ:
+  - $SMP$ (soluble microbial products) được định nghĩa là phần hòa tan (dissolved fraction) của dịch nổi (supernatant) sau khi lọc qua màng kích thước lỗ $0.45\ \mu\text{m}$.
+  - $EPS$ (extracellular polymeric substances) được trích ly từ phần sinh khối còn lại (residual biomass) bằng phương pháp nhiệt (heat method) [29].
+- Hàm lượng protein và polysaccharide trong $SMP$ và $EPS$ ($SMP_p$, $SMP_c$, $EPS_p$, $EPS_c$) được định lượng bằng hai phương pháp hóa nghiệm riêng biệt [30]:
+  - Protein trong $SMP$ ($SMP_p$) và protein trong $EPS$ ($EPS_p$) được định lượng bằng phương pháp thử protein Lowry cải tiến (Modified Lowry Protein Assay).
+  - Polysaccharide trong $SMP$ ($SMP_c$) và polysaccharide trong $EPS$ ($EPS_c$) được định lượng bằng phương pháp Dubois (Dubois Method).
+- Phương pháp sắc ký lỏng – phát hiện cacbon hữu cơ ($\text{LC-OCD}$ - Liquid chromatography–organic carbon detection) được sử dụng để xác định đặc tính của chất hữu cơ hòa tan (dissolved organic matter):
+  - Phân tích bao gồm các polymer sinh học (biopolymers) có khối lượng phân tử ($MW$ - molecular weight) lớn hơn $20\ \text{kDa}$ ($MW > 20\ \text{kDa}$).
+  - Phân tích bao gồm các hợp chất có khối lượng phân tử thấp ($LMW$ - low-molecular-weight compounds) có $MW$ nhỏ hơn $1000\ \text{Da}$ ($MW < 1000\ \text{Da}$).
+  - Các hợp chất $LMW$ được phân loại bao gồm chất humic (humics), các khối kiến tạo (building blocks), axit $LMW$ (LMW acids), và các chất trung tính $LMW$ (LMW neutrals).
+- Đặc tính vật lý và khả năng lọc của hỗn dịch bùn được đánh giá qua phân bố kích thước hạt ($PSD$) và thời gian hút mao quản ($CST$):
+  - Phân bố kích thước hạt ($PSD$ - particle size distribution) của hỗn dịch bùn (mixed liquor) được phân tích bằng thiết bị phân tích kích thước hạt nhiễu xạ laser (laser diffraction particle analyzer).
+  - Thời gian hút mao quản ($CST$ - capillary suction time) được đo bằng thiết bị đo $CST$ (CST apparatus) [31].
+- Các chỉ tiêu hóa lý bổ sung về cacbon hữu cơ, phổ huỳnh quang và kim loại được định lượng bằng các phương pháp phân tích:
+  - Tổng cacbon hữu cơ ($TOC$ - total organic carbon) được đo bằng máy phân tích $TOC$ ($\text{TOC-V}_{\text{CSH}}$, Shimadzu, Japan).
+  - Phổ ma trận kích thích – phát xạ ($EEM$ - excitation–emission matrix spectra) được đo bằng máy quang phổ huỳnh quang (fluorescence spectrophotometer) [32].
+  - Sắt tổng số (Total iron) được đo bằng phương pháp quang phổ phát xạ quang học plasma ghép cặp cảm ứng ($\text{ICP-OES}$ - inductively coupled plasma optical emission spectroscopy).

@@ -1,0 +1,14 @@
+## Abstract
+
+- Hiện tượng tắc nghẽn màng (membrane fouling) là thách thức lớn trong các hệ thống bể phản ứng sinh học màng quy mô thực tế (full-scale membrane bioreactor - MBR), làm suy giảm hiệu quả vận hành (operational efficiency) và gia tăng nhu cầu bảo trì (maintenance needs).
+- Khung dự đoán và phân tích (predictive and analytic framework) cho hiện tượng tắc nghẽn màng được thiết lập thông qua việc tích hợp kỹ thuật đặc trưng dựa trên trí tuệ nhân tạo (artificial intelligence (AI)-driven feature engineering) và AI có thể giải thích (explainable AI - XAI), sử dụng dữ liệu thực tế (real-world data) từ hệ thống MBR xử lý nước thải chế biến thực phẩm (food processing wastewater).
+  - Tinh chỉnh thông số mục tiêu (target parameter) thành thông lượng riêng ($\text{specific flux} = \text{flux} / \text{TMP}$, với $\text{TMP}$ là áp suất xuyên màng - transmembrane pressure).
+  - Tích hợp hiệu quả loại bỏ nhu cầu oxy hóa học (chemical oxygen demand (COD) removal efficiency) nhằm phản ánh hiệu năng sinh học (biological performance).
+  - Ứng dụng hàm trung bình trượt (moving average function) nhằm ghi nhận động học tắc nghẽn theo thời gian (temporal fouling dynamics).
+- Mô hình CatBoost đạt độ chính xác dự đoán cao nhất với $R^2 = 0.8374$ trong số các mô hình được thử nghiệm, đạt hiệu năng cao hơn các mô hình thống kê truyền thống (traditional statistical models) và các mô hình học máy (machine learning models) khác.
+- Tỷ lệ thức ăn trên vi sinh vật (food-to-microorganism (F/M) ratio) và nồng độ chất rắn lơ lửng trong bùn lỏng (mixed liquor suspended solids - MLSSs) được phân tích XAI xác định là các biến số có ảnh hưởng lớn nhất đến quá trình tắc nghẽn màng.
+- Phương pháp tiếp cận có độ tin cậy cao và khả năng diễn giải (robust and interpretable approach) cho phép dự đoán tắc nghẽn chủ động (proactive fouling prediction) và hỗ trợ ra quyết định có cơ sở (informed decision making) trong vận hành MBR thực tế, ngay cả trong điều kiện dữ liệu hạn chế (limited data).
+  - Thiết lập nền tảng cho việc tích hợp tương lai với hệ thống giám sát thời gian thực (real-time monitoring) và kiểm soát thích ứng (adaptive control), đóng góp vào việc vận hành xử lý nước thải bằng công nghệ màng bền vững và hiệu quả hơn.
+- Giới hạn nghiên cứu bắt nguồn từ việc sử dụng tập dữ liệu từ một hệ thống MBR quy mô thực tế đơn lẻ xử lý nước thải chế biến thực phẩm và thiếu các biến cố tắc nghẽn nghiêm trọng (severe fouling) hoặc các sự kiện làm sạch màng (cleaning events).
+  - Cần kiểm chứng bổ sung trên các bộ dữ liệu đa dạng (diverse datasets) để xác nhận khả năng áp dụng trên phạm vi rộng hơn.
+- **Từ khóa (Keywords)**: Tắc nghẽn màng (membrane fouling); bể phản ứng sinh học màng (membrane bioreactor - MBR); khung dự đoán và phân tích (predictive and analytic framework); kỹ thuật đặc trưng điều khiển bởi AI (AI-driven feature engineering); trí tuệ nhân tạo có thể giải thích (explainable AI - XAI).

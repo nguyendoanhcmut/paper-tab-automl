@@ -1,0 +1,21 @@
+### 2.2 Model optimization
+
+- **Khái niệm và vai trò của tối ưu hóa mô hình (Model optimization)**: Học máy (machine learning) bao gồm quá trình tối ưu hóa nhiều tham số (multiple parameters) trong suốt tiến trình học tập (learning process).
+- **Phương pháp kiểm định chéo (Cross-validation - CV) trong tối ưu hóa mô hình**: Kiểm định chéo (CV) là một phương pháp trực tiếp (straightforward method) để tối ưu hóa mô hình, bao gồm kiểm định chéo $k$-lần ($k$-fold CV, trong đó việc kiểm tra lựa chọn giá trị $k$ không có quy tắc thông thường):
+  - Dữ liệu huấn luyện (training data) trước tiên được chia thành $k$ tập con ($subsets$).
+  - Các tập con sau đó được phân chia thành hai phần (Browne, 2000):
+    - Phần huấn luyện (training part, gồm $k - 1$ tập con) dùng để huấn luyện mô hình.
+    - Phần kiểm định (validation part, là tập con còn lại bên ngoài phần huấn luyện) dùng để kiểm tra sai số (check the error).
+  - Hai phần dữ liệu này được sử dụng đồng thời nhằm thu được mô hình đạt sai số tổng quát hóa nhỏ nhất (least generalization error).
+  - Hạn chế về chi phí thời gian của CV: Đòi hỏi một lượng thời gian đáng kể (substantial amount of time) do phải lặp đi lặp lại quá trình tái huấn luyện (repeated re-training) và tái kiểm định (re-verification).
+- **Thuật toán tối ưu hóa thông minh heuristic (Heuristic intelligent optimization algorithms)**: Việc ứng dụng các thuật toán tối ưu hóa thông minh heuristic trong quá trình học có thể cải thiện đáng kể hiệu năng mô hình (model performance) và tốc độ hội tụ (convergence rate):
+  - Cảm hứng tự nhiên và vật lý: Các thuật toán tối ưu hóa thông minh thường lấy cảm hứng từ các hiện tượng tự nhiên (natural), sinh học (biological), hoặc vật lý (physical phenomena).
+  - Các thuật toán tối ưu hóa thông minh phổ biến: Bao gồm thuật toán di truyền (genetic algorithms - GA) (Fig. 4(a)) (Katoch et al., 2021), tối ưu hóa bầy đàn (particle swarm optimization - PSO) (Fig. 4(b)), tôi luyện mô phỏng (simulated annealing - SA) (Fig. 4(c)) (Suman and Kumar, 2006), đàn ong nhân tạo (artificial bee colony) (Karaboga and Basturk, 2007), tối ưu hóa đàn kiến (ant colony optimization) (Dorigo et al., 2006), thuật toán đom đóm (firefly algorithm - FFA) (Yang, 2009), thuật toán dơi (bat algorithm - BA) (Yang, 2010), và thuật toán tối ưu hóa bầy sói xám (gray wolf optimizer - GWO) (Mirjalili et al., 2014):
+    - **Figure 4: Optimization algorithms**
+      - ![Figure 4](assets/fig_04_p10.jpeg)
+      - Sơ đồ lưu trình tối ưu hóa của các thuật toán thông minh tiêu biểu (Fig. 4):
+        - Thuật toán di truyền (GA) (Fig. 4(a)): Khởi tạo quần thể ban đầu ($G = 0$) $\rightarrow$ Tính toán độ thích nghi (fitness calculation) $\rightarrow$ Kiểm tra điều kiện kết thúc; nếu chưa thỏa mãn, thực hiện chọn lọc (selection), lai ghép (crossover) và đột biến (mutation) để tạo thế hệ kế tiếp ($G = G + 1$) và lặp lại chu trình đánh giá độ thích nghi.
+        - Tối ưu hóa bầy đàn (PSO) (Fig. 4(b)): Khởi tạo ngẫu nhiên vị trí từng hạt $\rightarrow$ Đánh giá từng hạt và xác định điểm tối ưu toàn cục $\rightarrow$ Kiểm tra điều kiện kết thúc; nếu chưa thỏa mãn, cập nhật vị trí cùng vận tốc của từng hạt $\rightarrow$ đánh giá độ thích nghi $\rightarrow$ cập nhật vị trí tối ưu lịch sử của hạt và vị trí tối ưu toàn cục của đàn để lặp lại.
+        - Tôi luyện mô phỏng (SA) (Fig. 4(c)): Khởi tạo nghiệm $x$, tính hàm mục tiêu $f(x)$ $\rightarrow$ Gây nhiễu tạo nghiệm mới $x_{\text{new}}$, tính $f(x_{\text{new}})$ và độ chênh lệch năng lượng $dE = f(x_{\text{new}}) - f(x)$ $\rightarrow$ Nếu $dE < 0$, chấp nhận nghiệm mới $x = x_{\text{new}}$; nếu không, tính xác suất $p = \exp(-dE / T)$, chấp nhận $x_{\text{new}}$ nếu $p > \text{Random}(0, 1)$ $\rightarrow$ Kiểm tra số bước lặp và điều kiện dừng; nếu chưa dừng, hạ nhiệt độ $T = a \times T$ và lặp lại chu trình.
+  - Phạm vi ứng dụng: Các thuật toán này đã được ứng dụng rộng rãi trong nhiều lĩnh vực khác nhau để giải quyết các bài toán tối ưu hóa với hiệu quả và độ chính xác cao.
+  - Cân nhắc lựa chọn: Mỗi thuật toán đều sở hữu những ưu điểm và hạn chế riêng (strengths and weaknesses).

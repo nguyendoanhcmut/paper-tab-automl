@@ -1,0 +1,22 @@
+### 2.4 Assessment of model interpretation
+
+- Các chỉ số tầm quan trọng của biến (variable importance metrics) hỗ trợ nhà nghiên cứu hiểu rõ hơn quá trình tạo dữ liệu (data generation process) thông qua việc đánh giá tầm quan trọng tương đối của các biến độc lập (independent variables) đối với biến phụ thuộc (dependent variable) (Kruskal, 1987).
+- Phương pháp giải thích mô hình dựa trên cây (tree models):
+  - Các phương pháp giải thích mô hình cây phổ biến bao gồm giá trị Shapley (Shapley value) (Samek, 2020) và phương pháp TreeExplainer (Lundberg et al., 2020).
+  - Khả năng giải thích (interpretability) của mô hình suy giảm khi việc ra quyết định liên quan đến nhiều cây; do đó, các mô hình cây nâng cao (advanced tree models) thuộc nhóm mô hình hộp đen (black boxes) (Samek, 2020).
+  - Thước đo tầm quan trọng của biến dựa trên những thay đổi về độ chính xác dự đoán ngoài mẫu (out-of-bag prediction accuracy), ví dụ sai số toàn phương trung bình ($\text{MSE}$) hoặc độ chính xác ($\text{accuracy}$), hoặc dựa trên chỉ số Gini ($\text{Gini index}$) khi sử dụng biến đó (Grömping, 2015).
+- Phương pháp đánh giá tầm quan trọng của biến đối với mạng nơ-ron nhân tạo (ANN) và máy vector hỗ trợ (SVM):
+  - Trong các mô hình như $\text{ANN}$ và $\text{SVM}$, tầm quan trọng tương đối của các đặc trưng đầu vào có thể được đánh giá bằng hệ số xác định đơn giản $R^2$ (simple $R^2$) (Hosseinzadeh et al., 2020).
+  - Tầm quan trọng của biến có thể được đánh giá qua phân tích độ nhạy (sensitivity analysis) (Cortez and Embrechts, 2013).
+  - Đối với mạng nơ-ron, có thể tính toán tầm quan trọng của các biến đầu vào đối với đầu ra bằng các phương pháp dựa trên trọng số kết nối (connection weights) của các nơ-ron.
+    - Một số phương pháp hỗ trợ đánh giá này bao gồm Garson (1991), Goh (1995), Gedeon (1997) và Olden (Olden et al., 2004).
+    - Đáng chú ý, phương pháp của Gedeon và Olden sử dụng trọng số của tất cả các kết nối, trong đó phương pháp của Gedeon được thiết kế đặc thù cho học sâu (deep learning).
+- Ứng dụng trí tuệ nhân tạo có thể giải thích (XAI - Explainable Artificial Intelligence) và các phương pháp giải thích mô hình:
+  - $\text{XAI}$ gần đây đã được áp dụng trong nhiều lĩnh vực khoa học khác nhau, bao gồm dự đoán chất lượng nước (water quality prediction) (Madni et al., 2023) và tìm hiểu quy trình $\text{MBR}$ (understanding MBR process) (Chang et al., 2022).
+  - Các phương pháp phù hợp để giải thích mô hình bao gồm (Molnar, 2019):
+    - Biểu đồ phụ thuộc riêng phần (partial dependence plot).
+    - Kỳ vọng điều kiện cá thể (individual conditional expectation).
+    - Giải thích cục bộ độc lập với mô hình có thể diễn giải (local interpretable model-agnostic explanations - $\text{LIME}$).
+    - Giải thích cộng tính Shapley (Shapley additive explanations - $\text{SHAP}$).
+  - Riêng $\text{SHAP}$ sở hữu các đặc tính mong muốn gồm độ chính xác cục bộ (local accuracy), tính khuyết thiếu (missingness), và tính nhất quán (consistency), qua đó có thể dùng để giải thích mô hình từ các góc độ toàn cục (global), cục bộ (local), và tương tác đặc trưng (feature interaction perspectives) (Aldrees et al., 2024b).
+  - Những phương pháp này có thể được sử dụng để diễn giải hoặc giải thích cho tất cả các loại mô hình học máy (machine learning models), bao gồm cả các mô hình học sâu (deep learning models).

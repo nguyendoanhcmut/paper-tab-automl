@@ -1,0 +1,37 @@
+### 3.1. Source–target distribution and PCA analysis
+
+- Phân bố và giá trị trung bình của các biến đo đạc tại các nhà máy nguồn và nhà máy đích:
+  - Phân bố của các biến đo lường trên các nhà máy nguồn (source plants) và nhà máy đích (target plant) được thể hiện ở Fig. 2(c).
+  - Các giá trị trung bình tương ứng của các biến được tóm tắt ở Fig. 2(d).
+- Ở cấp độ các biến vận hành cốt lõi (core operating variables), nhà máy đích duy trì trong hoặc sát với phạm vi của các nhà máy nguồn:
+  - $\text{HRT}$ (hydraulic retention time - thời gian lưu thủy lực): nhà máy đích đạt $5.5\text{ h}$ so với $5.0\text{–}5.5\text{ h}$ ở các nhà máy nguồn.
+  - $\text{SRT}$ (solids retention time - thời gian lưu bùn): nhà máy đích đạt $6.8\text{ d}$ so với $5.0\text{–}7.0\text{ d}$ ở các nhà máy nguồn.
+  - $\text{FLUX}$ (thông lượng màng): nhà máy đích vận hành ở mức $25\text{ LMH}$ so với $25\text{–}44\text{ LMH}$ ở các nhà máy nguồn.
+- Trên các nhà máy nguồn, các biến đo đạc bao phủ phạm vi biến thiên rộng của các đặc tính liên quan đến sinh khối và tắc nghẽn màng (biomass-related and fouling-related properties):
+  - $\text{MLSS}$ (mixed liquor suspended solids - nồng độ chất rắn lơ lửng trong bùn lỏng): $900\text{–}9730\text{ mg/L}$.
+  - $\text{MLVSS}$ (mixed liquor volatile suspended solids - nồng độ chất rắn lơ lửng bay hơi trong bùn lỏng): $639\text{–}7671\text{ mg/L}$.
+  - $\text{EPS}_\text{p}$ (extracellular polymeric substance proteins - protein của chất polyme ngoại bào): $25.0\text{–}658.8\text{ mg/L}$.
+  - $\text{EPS}_\text{c}$ (extracellular polymeric substance carbohydrates - carbohydrate của chất polyme ngoại bào): $0.0\text{–}117.1\text{ mg/L}$.
+  - $\text{SMP}_\text{c}$ (soluble microbial product carbohydrates - carbohydrate của sản phẩm vi sinh hòa tan): $0.8\text{–}33.3\text{ mg/L}$.
+  - $\text{SMP}_\text{p}$ (soluble microbial product proteins - protein của sản phẩm vi sinh hòa tan): $2.7\text{–}44.5\text{ mg/L}$.
+- Ngược lại, nhà máy đích thể hiện các phân bố hẹp hơn tương đối đối với các biến liên quan đến sinh khối và tắc nghẽn màng:
+  - $\text{MLSS}$: $3580\text{–}7340\text{ mg/L}$.
+  - $\text{MLVSS}$: $3340\text{–}5920\text{ mg/L}$.
+  - $\text{EPS}_\text{p}$: $73.5\text{–}469.9\text{ mg/L}$.
+  - $\text{EPS}_\text{c}$: $17.1\text{–}81.3\text{ mg/L}$.
+  - $\text{SMP}_\text{c}$: $2.6\text{–}20.1\text{ mg/L}$ (từ $2.6$ đến $20.1\text{ mg/L}$).
+  - $\text{SMP}_\text{p}$: $4.8\text{–}10.8\text{ mg/L}$.
+- Mối quan hệ phân bố dữ liệu giữa các nhà máy được kiểm tra sâu hơn thông qua phân tích thành phần chính $\text{PCA}$ (principal component analysis):
+  - Hai thành phần chính đầu tiên giải thích $74.0\%$ tổng phương sai, xác nhận phần lớn độ biến thiên trong tập dữ liệu được thu nhận trọn vẹn trong phép chiếu không gian hai chiều.
+  - Các tập dữ liệu nhà máy nguồn có sự chồng lấn đáng kể (substantial overlap), phản ánh các hình mẫu biến liên quan đến tắc nghẽn nhìn chung tương đồng giữa các nhà máy nguồn.
+  - Tập dữ liệu nhà máy đích tạo thành một cụm co cụm đặc hơn (more compact cluster) với sự tách biệt một phần khỏi các nhà máy nguồn, chỉ ra một mức độ dịch chuyển phân bố đo lường được (measurable distribution shift).
+  - Vùng chồng lấn rõ ràng giữa tập dữ liệu nguồn và đích vẫn được duy trì:
+    - Vùng chồng lấn tạo cơ sở hợp lý cho việc phát triển các mô hình gốc (base models) dựa trên tập dữ liệu của các nhà máy nguồn.
+    - Củng cố tính khả thi cho việc ứng dụng kỹ thuật học chuyển giao (transfer learning) ở các bước tiếp theo.
+  - **Hình 3.** Phân bố dữ liệu nguồn–đích, cộng tuyến đặc trưng và hiệu năng mô hình gốc
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Trực quan hóa vùng giao thoa phân bố giữa nhà máy đích và ba nhà máy nguồn qua $\text{PCA}$, kèm theo cấu trúc cộng tuyến và hiệu năng dự đoán của mô hình gốc.
+    - **Từ đâu mà thấy được**
+      - Panel (a): Trục $Ox$ là $\text{PC1}$ ($55.4\%$), trục $Oy$ là $\text{PC2}$ ($18.6\%$); elip Target co cụm hẹp theo phương đứng và nằm giao thoa trong ba elip rộng của Plant 1–3.
+      - Panel (b)–(d): Ma trận Pearson $r$ giữa 11 đặc trưng cùng đồ thị phân tán dự đoán $\text{TMP}$ trên tập kiểm tra của XGBoost-base ($R^2 = 0.86$, $\text{RMSE} = 3.01\text{ kPa}$) và LSTM-base ($R^2 = 0.87$, $\text{RMSE} = 2.86\text{ kPa}$).

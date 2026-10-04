@@ -1,0 +1,22 @@
+### 2.4. Data split and robustness evaluation
+- Quy trình đánh giá tính hợp lệ (validation) áp dụng bốn phương án phân chia bổ trợ lẫn nhau nhằm xử lý cấu trúc thời gian (temporal structure) vốn có của chuỗi dữ liệu đo theo giờ liên tục:
+  - Dữ liệu ghi nhận liên tục theo giờ mang đặc tính phụ thuộc thời gian, khiến việc đánh giá qua một phân vùng đơn lẻ không đủ tin cậy.
+  - Bốn phương án kiểm định được thiết lập để kiểm tra tính vững chắc và độ tin cậy của các mô hình trong các điều kiện tách biệt dữ liệu khác nhau.
+- Phương án phân vùng ngẫu nhiên $70/30$ (random 70/30 partition) được duy trì để bảo đảm tính tương đồng và đối chiếu với các nghiên cứu công bố trước đó:
+  - Tập huấn luyện (training set) gồm $3215$ mẫu.
+  - Tập kiểm tra (test set) gồm $1378$ mẫu.
+- Phân tích đa phân vùng (multi-split analysis) định lượng mức độ biến thiên phát sinh từ quá trình phân chia tập dữ liệu:
+  - Phân tích thực hiện trên $20$ phân vùng ngẫu nhiên độc lập.
+  - Toàn bộ $16$ mô hình học máy được huấn luyện lại hoàn toàn ở mỗi lượt phân chia.
+- Phân vùng theo khối (blocked partitions) đánh giá trực tiếp khả năng tổng quát hóa từ ngày vận hành này sang ngày vận hành khác mà không làm mất tính bao phủ miền vận hành:
+  - Chuỗi dữ liệu được chia thành các khối liên tục (contiguous blocks) với các khoảng thời gian gồm $1\text{ h}$, $6\text{ h}$, $24\text{ h}$, $72\text{ h}$, $168\text{ h}$, $336\text{ h}$ và $720\text{ h}$.
+  - Toàn bộ từng khối dữ liệu được gán ngẫu nhiên vào các tập, giữ nguyên phạm vi bao phủ của miền vận hành (operating envelope) đồng thời tách biệt các giờ liền kề để loại bỏ rò rỉ tương quan ngắn hạn.
+- Phân vùng theo trình tự thời gian (strictly chronological partition) và biến thể làm sạch (purged variant) kiểm định năng lực ngoại suy theo dòng thời gian thực tế:
+  - Mô hình được huấn luyện trên $70\%$ khoảng thời gian đầu và kiểm tra trên $30\%$ khoảng thời gian cuối cùng.
+  - Biến thể làm sạch loại bỏ một khoảng trống ranh giới kéo dài một tuần ($168\text{ h}$) giữa tập huấn luyện và tập kiểm tra để triệt tiêu hiệu ứng tương quan chuỗi tại điểm chuyển tiếp.
+- Tập dữ liệu độc lập gồm $4593$ quan sát theo giờ từ nhánh B song song (parallel B stream) đánh giá khả năng chuyển giao không qua tái huấn luyện:
+  - Dữ liệu thu thập từ nhánh B độc lập trong cùng một cơ sở xử lý nước thải bán dẫn để kiểm tra mức độ chuyển giao sang một hệ thống màng lọc tách biệt về mặt vật lý.
+  - Mô hình được kiểm tra trực tiếp mà không thực hiện tái huấn luyện (without retraining).
+- Quy trình chuẩn hóa và cấu trúc phụ thuộc dữ liệu tuân thủ kiểm soát rò rỉ thông tin chặt chẽ:
+  - Các thống kê chuẩn hóa (standardisation statistics) chỉ được tính toán trên tập huấn luyện (training fold) của từng phương án thiết kế để tránh rò rỉ dữ liệu (data leakage).
+  - Cấu trúc phụ thuộc của hồ sơ vận hành và kết quả chi tiết của từng thiết kế kiểm định được trình bày tại các Bảng bổ sung từ Bảng S9 đến Bảng S12 (Supplementary Tables S9 to S12).

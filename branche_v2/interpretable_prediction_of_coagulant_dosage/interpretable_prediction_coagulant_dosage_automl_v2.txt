@@ -1,0 +1,945 @@
+<!-- Page 1 -->
+Interpretable prediction of coagulant dosage in drinking water treatment 
+plant based on automated machine learning and SHAP method
+Liyan Feng a, Ying Zhang a,*, Xiaoting Wei d, Mengyuan Wang a, Zhiguang Niu a,  
+Chenchen Wang b,c,**
+a School of Environmental Science & Engineering, Tianjin University, Tianjin 300350, China
+b School of Environmental and Municipal Engineering, Tianjin Chengjian University, Tianjin 300384, China
+c Tianjin Key Laboratory of Aquatic Science and Technology, Tianjin Chengjian University, Tianjin 300384, China
+d Tianjin Teda Jinlian Water Supply Co., Ltd., Tianjin 300457, China
+A R T I C L E I N F O
+Editor: Guangming Jiang
+Keywords:
+Automated machine learning
+SHAP interpretability
+Random Forest
+Coagulant
+Water treatment
+A B S T R A C T
+Accurate prediction of coagulant dosing is critical to ensure the efficiency and cost-effectiveness of the water 
+treatment process. This study developed an accurate prediction model for coagulant dosing in drinking water 
+treatment plants using automated machine learning (AutoML) and enhanced its transparency with the SHAP 
+(Shapley Additive explanation) method. Results showed that the Random Forest (RF) model developed by 
+AutoML outperformed the best single Gradient Boosting Tree model, with a 37 % lower RMSE of 0.89, a 52 % 
+lower MAE of 0.47, and a 5 % higher R2 of 0.96. The RF model has the potential to save 10.25 % of coagulant 
+dosage per year, specifically, 222 kg/d of PACl at a cost of 180.7 yuan/d for Yangtze River water, and 225 kg/ 
+d at a cost of 183.2 yuan/d for Luan River water, while ensuring a more stable water quality in the treated water. 
+SHAP analysis identified conductivity, ammonia nitrogen, chemical oxygen demand, and temperature of raw 
+water as key factors affecting PACl dosage, which significantly impacts treated water pH. The combination of 
+AutoML and SHAP method applied to intelligent water management, can bolster water treatment efficiency and 
+management practices, resulting in noteworthy environmental, economic, and social benefits.
+1. Introduction
+With the rapid development of water treatment technologies, the 
+issues of energy consumption and carbon emissions are becoming 
+increasingly prominent [1,2]. In order to achieve the goal of green and 
+low-carbon, traditional processes have been continuously optimized, 
+but they are still subject to technical and economic constraints: 
+adsorption technology is difficult to regenerate; photocatalytic deep 
+mineralization is limited by the efficiency; and microwave catalytic ef­
+ficiency is high, but the cost of the equipment is high [3–6]. Meanwhile, 
+the complexity of the water treatment process places higher demands on 
+the chemical dosing accuracy, especially in coagulation, whose oper­
+ating cost accounts for a high proportion of the total cost of water plants 
+[7,8], and multivariate (water temperature, pH, etc.), nonlinear dy­
+namic response, and real-time disturbances make it difficult for tradi­
+tional empirical models to balance dosing accuracy and energy 
+efficiency [9,10]. Therefore, determining the optimal coagulant dosage 
+based on raw water quality and established treated water quality criteria 
+is critical to ensure water treatment effectiveness and to realize eco­
+nomic and environmental benefits [11].
+Traditional manual dosing is highly subjective, resulting in high drug 
+consumption and difficult to adapt to large-scale production, resulting in 
+insufficient stability of water control and regulatory lag [12]. Mecha­
+nistic models, on the other hand, struggle to capture the complex re­
+actions and nonlinear relationships within the coagulation process, 
+thereby limiting their practical applicability [13]. Alternatively, data- 
+driven models utilizing machine learning can construct black-box 
+models for nonlinear, multivariate dynamic systems by learning from 
+limited datasets [14]. However, current models have limitations in 
+simulating and predicting anticoagulant dosing, particularly in terms of 
+generalizability and convergence [15]. Among the existing methods for 
+coagulation dosing prediction, DL-MV relies on parameter tuning for 
+high-precision prediction [16]; PSO-SVR optimization requires manu­
+ally preset parameters [17]; and GA-RF architectures are hardened and 
+* Corresponding author.
+** Corresponding author at: School of Environmental and Municipal Engineering, Tianjin Chengjian University, Tianjin 300384, China.
+E-mail addresses: yzhang_n@tju.edu.cn (Y. Zhang), wcc12122008@163.com (C. Wang). 
+Contents lists available at ScienceDirect
+Journal of Water Process Engineering
+journal homepage: www.elsevier.com/locate/jwpe
+https://doi.org/10.1016/j.jwpe.2025.107925
+Received 25 January 2025; Received in revised form 1 May 2025; Accepted 9 May 2025  
+Journal of Water Process Engineering 75 (2025) 107925 
+Available online 15 May 2025 
+2214-7144/© 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+have high computational requirements [18]. These methods generally 
+have two limitations: first, they rely on manual intervention, making it 
+difficult to automate the adjustment of complex nonlinear water quality 
+relationships; second, they adhere to a single optimization paradigm and 
+lack dynamic synergistic mechanisms, resulting in limited predictive 
+efficiency and generalizability.
+Automated Machine Learning (AutoML) builds efficient ML pipelines 
+by automating the entire process [19], and its distributed frameworks (e. 
+g., TPOT) enable fully automated model filtering to reduce development 
+costs and labor dependency [20]. Studies have shown that AutoML ex­
+cels in hyperparameter optimization and complex constraint solving 
+[21–24]. TPOT improves accuracy by 15–20 % without feature reduc­
+tion for 50-dimensional water quality data [25]. The H2O framework 
+accurately predicts biological nutrient removal in wastewater [26], and 
+TPOT outperforms traditional ML by 1.4 % in the lake water quality 
+classification task [27]. Nevertheless, its exploration and application in 
+coagulation agent dosing prediction have not yet been extensively 
+pursued.
+While some studies have used advanced ML techniques, their black- 
+box nature limits interpretability and hinders practical application in 
+water treatment plants, where operational transparency is critical. The 
+SHapley Additive exPlanations (SHAP) method proposed by Lundberg 
+and Lee [28], which significantly improves model transparency, credi­
+bility, and decision making by quantifying the marginal contribution of 
+features to model predictions and identifying key influences and their 
+interaction effects through global and local analysis [29]. The SHAP 
+method has been applied in many fields [30–34] and has been used with 
+high accuracy for surface water quality prediction [35–37]. However, 
+this method has not been applied to coagulant dosage prediction.
+Based on existing research, this study applies the interpretable 
+AutoML framework to coagulation dose prediction for the first time, 
+constructs the prediction system through automated model selection 
+and hyper-parameter optimization, and integrates the SHAP method to 
+achieve the global feature importance and local decision interpretation 
+of the black-box model. By using real-time data and historical infor­
+mation, it ensures that the coagulation process can be accurately 
+controlled while maintaining treated water quality standards, facili­
+tating future technological advances and upgrades in the water treat­
+ment industry.
+2. Materials and methods
+2.1. Data acquisition and preprocessing
+The data utilized in this study were sourced from a water treatment 
+plant located in Tianjin, China. This plant receives water from two pri­
+mary sources: the Luanhe River (for December, January and February 
+annually), diverted from Hebei Province, and the Yangtze River (from 
+March to November annually), originating from the Danjiangkou 
+Reservoir in Hubei Province. The water treatment process involves pre- 
+treatment, enhanced conventional treatment, and a combination of ul­
+traviolet and chlorine disinfection. The daily treatment capacity of the 
+water plant is 17.5 wt/d, and the hydraulic retention time is relatively 
+stable at 25.56 min. The plant uses two types of coagulants: ferric 
+chloride and PACl, which are dosed during the pretreatment and 
+blending stages, respectively. Water quality parameters and coagulant 
+dosing data were collected daily from October 2022 to May 2024, 
+totaling 1339 data points. These data were randomly divided into a 
+training set (1071 entries) and a test set (268 entries) in an 8: 2 ratio. The 
+feature variables consist of inflow rate (WTR) and water quality in­
+dicators such as temperature (T), pH, turbidity (NTU), and electrical 
+conductivity (EC), and chemical oxygen demand determined by potas­
+sium permanganate (CODMn) for both raw water (RW) and treated water 
+(TW), with ammonia nitrogen (NH3−N) being considered only for raw 
+water. Based on practical plant operations and professional evaluations, 
+the dosing amounts of the two coagulants are comparable, with a 
+maximum discrepancy not exceeding 5 mg/L. Therefore, PACl was used 
+as the only target variable for accurate simulation of coagulant dosing in 
+this study.
+During data collection, the occurrence of detection errors and dosing 
+system malfunctions resulted in the raw data set containing problems 
+such as missing values and noise. Therefore, preprocessing is essential to 
+improve data reliability, model performance, and decision quality [38]. 
+In this study, the K-nearest neighbor (KNN, k = 4) estimation model was 
+used to deal with missing data, which balances interpolation stability 
+and global representativeness, and provides better data retention for 
+non-randomly missing key parameters (e.g., water temperature, 
+ammonia nitrogen). The interpolation effect in the range of k = 1–10 
+was searched through the grid and the mean square error (MSE) was 
+used as the evaluation criterion, and the results showed that the MSE 
+was minimized on the test set at k = 4. In addition, noise and random 
+errors were mitigated using a moving average filter with a window size 
+of n = 5, determined based on an autocorrelation function (ACF) anal­
+ysis, a value that effectively captures short-term fluctuations in water 
+quality parameters while avoiding excessive smoothing that leads to 
+peak attenuation [39].
+To investigate the correlations between various features such as 
+WTR, raw water quality indicators, treated water quality indicators, and 
+coagulant dosage, we used the Spearman rank correlation coefficient 
+(rs) method, which is known for its low sensitivity to nonlinear re­
+lationships and outliers. By excluding features with low correlations, we 
+reduced redundant features to reduce the input dimensionality of the 
+model, thereby improving both the operational efficiency and general­
+ization capabilities of the model. A flowchart illustrating the modeling 
+methodology is shown in Fig. 1.
+2.2. Automated machine learning
+AutoML is a technique for automating the machine learning process 
+through algorithms, including feature engineering, algorithm selection, 
+and hyperparameter optimization [40]. Its primary goal is to reduce the 
+need for human intervention while improving model performance. In 
+this study, the Tree-based Pipeline Optimization Tool (TPOT), an 
+AutoML tool based on genetic programming, is used to automate model 
+construction. TPOT is an open source Python-based AutoML library 
+(version 0.11.7) with underlying dependencies on Scikit-Learn (version 
+1.0.2), DEAP (Distributed Evolutionary Algorithms Framework), and 
+extensions such as XGBoost [27]. The model runs in a Python 3.8 
+environment, and the full configuration code for TPOT is open source.
+In this study, the TPOT framework is adopted to automate the design 
+of machine learning pipelines, whose core mechanisms are: iterative 
+optimization based on tree-structured coding of genetic programming, 
+integration of Scikit-Learn multi-algorithms with predefined hyper- 
+parameter space to balance the search efficiency; and screening of the 
+Pareto-optimal pipeline by repeating the 10-fold cross-validation (run 
+independently for 3 times) to ensure the model generalization perfor­
+mance [41].
+2.3. SHAP interpretability method
+The SHAP methodology encompasses Kernel SHAP, Deep SHAP, and 
+Tree SHAP [42]. This study used the Tree SHAP package in Python 3.9 to 
+analyze the importance, dependencies, and interactions of features. The 
+modules and functions used in Python are listed in Table 1. The average 
+absolute SHAP values were used to evaluate the importance of different 
+factors in determining the dosage amount. By summing the average 
+absolute SHAP values for all relevant environmental parameters, their 
+combined impact on dosing strategies was quantified. Dependency plots 
+of SHAP values revealed interactions between features and their col­
+lective contribution to the prediction of dosing strategies for the coag­
+ulation process [43]. Two typical samples were selected to generate 
+local interpretability plots, waterfall plots, and decision plots in order to 
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+2 
+
+
+<!-- Page 3 -->
+illustrate feature importance and decision-making mechanisms within 
+the samples.
+2.4. Model evaluation
+Root mean square error (RMSE), mean absolute error (MAE), and 
+coefficient of determination (R2) were used as evaluation metrics to 
+assess the reliability and accuracy of the predictive models [44]. RMSE 
+assesses the degree of discrepancy between predicted and actual values 
+within a sample set [45]. It has an increased sensitivity to outliers and 
+acts as a metric of model accuracy by calculating the average size of 
+prediction errors. MAE reflects the average discrepancy between pre­
+dicted and actual values, with values closer to zero indicating superior 
+model performance [10]. R2 quantifies the fit of model predictions to 
+actual data, assessing the robustness and reliability of the model. A value 
+of R2 approaching one indicates a higher correlation between the 
+dependent and independent variables, which indicates a better model fit 
+and consequently smaller prediction errors [46].
+3. Results and discussion
+3.1. Analysis of water quality data and feature selection
+Fig. 2 illustrates the histogram distributions and statistical in­
+dicators, including minimum (MIN), maximum (MAX), mean, standard 
+deviation (SD), and coefficient of variation (CV) for each feature. CV 
+serves as a metric to quantify the variability in datasets [47], with higher 
+CV values indicating greater data variability. Notably, significant dif­
+ferences are observed in T (SD = 9.37, CV = 62 %), NH3-N (SD = 0.07, 
+CV = 59 %), NTU (SD = 2.58, CV = 57 %) for raw water, and T for 
+treated water (SD = 8.77, CV = 54 %). Most other features remain 
+relatively stable, with the pH fluctuation was minimal throughout the 
+entire water treatment process, with a CV of only 3 % for the raw water 
+pH and a CV of merely 2 % for the treated water pH.
+The quality of raw water has a direct impact on the safety and reli­
+ability of the final water supply, as well as coagulant requirements. Raw 
+water quality indicators at this plant, such as CODMn and ammonia ni­
+trogen, exhibit distinct seasonal trends. During summer, elevated tem­
+peratures and increased rainfall stimulate algae growth in water sources, 
+which raises the CODMn in water bodies and subsequently affects raw 
+water quality. Additionally, rising temperatures reduce water viscosity, 
+promoting ion movement in solutions and leading to decreased coagu­
+lant requirements. In contrast, during winter, low temperatures decrease 
+the solubility and diffusivity of coagulants, resulting in a deceleration of 
+chemical reactions. Consequently, higher coagulant dosages become 
+necessary to ensure the effectiveness of water treatment. Accurate 
+calculation of coagulant dosage based on real-time raw water quality 
+data and historical fluctuation information is crucial for maintaining 
+process efficiency, stable water quality output, and prudent chemical 
+use.
+The Spearman rank correlation matrix in Fig. 3 illustrates the re­
+lationships between the input parameters and the outcome variable. 
+Strong correlations with PACl coagulant dosage are observed for T-RW 
+Fig. 1. A flowchart illustrates the modeling methodology.
+Table 1 
+Python modules and their corresponding functions employed.
+Module
+Function
+Sklearn 1.5.0
+Data processing, data set division, model evaluation, cross 
+validation
+Scipy 1.13.1
+Spearman analysis
+Seaborn 0.13.2
+Statistical data visualization
+Tpot 0.12 2
+TPOT Regressor model establishment
+Shap 0.45.1
+Model interpretation, data visualization
+Matplotlib 
+3.9.0
+Graphical drawing
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+3 
+
+
+<!-- Page 4 -->
+(rs = −0.71), NH3-N-RW (rs = 0.87), pH-RW (rs = −0.9), T-RW (rs =
+−0.67), and WTR (rs = −0.68). Moderate correlations are found for 
+NTU-RW (rs = 0.45), EC-RW (rs = 0.56), pH-RW (rs = −0.33), and 
+CODMn-RW (rs = 0.56), as well as for EC-TW (rs = 0.43) and NTU-TW 
+(rs = −0.23). CODMn-TW (rs = 0.011) shows a weak correlation with 
+PACl dosage. Notably, EC-RW and EC-TW are highly linearly correlated 
+(rs = 0.98), and CODMn-RW and EC-RW are also highly linearly corre­
+lated with T-TW (rs = 0.91 and −0.95, respectively). Therefore, to avoid 
+redundancy, only one feature from each highly correlated pair is 
+retained, in addition to EC-RW and CODMn-RW. The final feature set for 
+model training includes T-RW, pH-RW, NH3-N-RW, NTU-RW, EC-RW, 
+CODMn-RW, pH-TW, NTU-TW, and WTR, with PACl dosage as the target 
+variable. This model captures the complex interactions between raw 
+water quality, dosage, and treated water quality.
+Fig. 2. Histogram distributions of various features and target variables (RW: raw water, TW: treated water, MIN: minimum, MAX: maximum, SD: standard deviation, 
+CV: coefficient of variation. Each subplot represents the distribution of sample points within a specific variable. The vertical axis reveals the occurrence frequency of 
+each feature within the dataset, while the horizontal axis depicts the sample intervals. The purple line represents the fitted frequency distribution curve, which 
+indicates the range of variable utilization within the dataset). (For interpretation of the references to colour in this figure legend, the reader is referred to the web 
+version of this article.)
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+4 
+
+
+<!-- Page 5 -->
+3.2. Model comparison and optimization
+In this study, alongside TPOT AutoML, a range of typical algorithms 
+were chosen to develop a prediction model of PACl dosage for com­
+parison, including Decision Tree (DT), Support Vector Regression (SVR), 
+K-Nearest Neighbors (KNN), Linear Regression (LR), and Gradient 
+Boosting Tree (GBT). Table 2 lists the hyperparameters of the models 
+and Table 3 lists the performance metrics for each model. The optimal 
+algorithm selected by AutoML was Random Forest (RF), which provided 
+more robust and accurate predictions compared to the other algorithms. 
+The R2 values of the RF model for the training and testing sets reached 
+1.00 and 0.96, respectively, with the corresponding lowest RMSE: 0.95 
+± 0.11 mg/L and MAE: 0.47 ± 0.83 mg/L. Kim et al. [48] predicted PAC 
+dose using a convolutional neural network and gated recurrent units, 
+and the model R2 exceeded 0.8 for both the training and test sets. This 
+may be due to the fact that the model is typically used to extract 
+spatiotemporal features, and the main drivers of PAC dose prediction are 
+static water quality parameters (e.g., pH, turbidity, temperature, etc.) 
+rather than time series or spatial patterns, which can introduce unnec­
+essary complexity and lead to information redundancy. Lin et al. [39] 
+used deep learning to predict PAC and its sulfate with a model RMSE of 
+3.55 and an R2 of 0.94, while the error was even smaller when predicting 
+coagulants using AutoML. Genetic programming for TPOT often favors 
+integrated methods, which are inherently better for small- to medium- 
+sized data with better bias-variance balance. The worst performance 
+was observed for SVR, with R2 values of only 0.13 and 0.06 for the 
+training and test sets, respectively. This is likely due to the high sensi­
+tivity of SVR to hyperparameter selection and the lack of a precise so­
+lution in defining the configuration parameters [49]. DT achieved an R2 
+of 1.00 on the training set, but performed poorly on the testing set 
+because it tends to build complex models on the training data that 
+capture noise and details rather than the true data distribution patterns, 
+resulting in poor predictive performance on new data.
+Fig. 4 shows the training and testing results of the RF model devel­
+oped using AutoML for predicting coagulant dosage. As shown in Fig. 4a 
+and b, the model exhibits robust performance and high accuracy on both 
+the training and testing sets. The low concentrations of suspended solids, 
+colloids, and other contaminants in the raw water result in high quality 
+water, and the minimal influence of pH-RW and NTU-RW on the coag­
+ulation process means that the errors observed in the testing dataset are 
+predominantly below 20 mg/L. From the scatter density plots in Fig. 4c 
+and d, it can be observed that the actual and predicted PACl dosages on 
+the training and testing set are mostly aligned along the diagonal, 
+indicating a minimal potential bias in the model.
+Fig. 3. Spearman rank correlation coefficient matrix between all input parameters and the target variable. Symbols with the suffix “RW” represent raw water quality 
+indicators, while those with “TW” are for treated water.
+Table 2 
+Hyperparameter optimization results of the models.
+Type of 
+model
+Hyperparameter setting
+DT
+max_depth = 8, min_samples_split = 10, min_samples_leaf = 5, 
+max_features = 0.5, random_state = 42
+SVR
+c = 1, epsilon = 10, gamma = scale
+KNN
+n_neighbors = 15, p = 1, metric = minkowski
+LR
+fit_intercept = True, normalize = True, positive = False
+GBT
+n_estimators = 150, learning_rate = 0.1, max_depth = 5, 
+min_samples_split = 8, subsample = 0.8, max_features = sqrt
+Table 3 
+Performance comparison of different machine learning models.
+Type of model
+Training
+Testing
+RMSE
+MAE
+R2
+RMSE
+MAE
+R2
+AutoML: RF
+0.07
+0.02
+1.00
+0.89
+0.47
+0.96
+GBT
+1.06
+0.74
+0.96
+1.41
+0.97
+0.91
+LR
+1.68
+1.21
+0.89
+1.81
+1.34
+0.84
+DT
+0.00
+0.00
+1.00
+2.07
+0.66
+0.80
+KNN
+2.90
+1.91
+0.68
+3.46
+2.55
+0.43
+SVR
+4.81
+2.85
+0.13
+4.45
+2.89
+0.06
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+5 
+
+
+<!-- Page 6 -->
+Fig. 5 shows the optimized dosage of PACl for two different water 
+sources: Yangtze River water and Luanhe River water. The gray areas in 
+the Fig represent the reduction in PACl dosage before and after opti­
+mization, highlighting the savings achieved. The optimized PACl dosage 
+was predicted using the optimal RF model, which uses actual raw water 
+quality data with specific targets for treated water quality. For Yangtze 
+River water, the targets were set at NTU-TW: 0.2 NTU, CODMn-TW: 1.2 
+mg/L, pH-TW: 8, and NH3-N-TW: 0.01 mg/L. For Luanhe River water, 
+the targets were: NTU-TW: 0.3 NTU, CODMn-TW: 1.5 mg/L, pH-TW: 8, 
+and the NH3-N-TW: 0.01 mg/L. In spring and summer, the temperature 
+of Yangtze River water is high, PACl hydrolysis is fast, and algae in the 
+water source are negatively charged and proliferate, so more PACl is 
+needed for charge neutralization. By precisely adjusting the dosage, the 
+empirical redundancy at high temperature can be avoided, the dosage of 
+chemicals can be reduced by 222 kg/d, saving 180.7 RMB/day, and the 
+consumption of PACl can be reduced by 11 % per year. Luanhe water 
+temperature in winter is low, Al3+ hydrolysis is incomplete, floc for­
+mation is slow, and the formation of virtual body of small particle size, 
+low density, but also may be affected by the upstream agricultural 
+pollution, these need to compensate for the additional amount of PACl, 
+through the optimization of PACl dosage prediction, it can reduce the 
+compensatory overdosage caused by the low temperature, saving the 
+amount of dosing from 225 kg/d, into 183.2 RMB/day, the amount of 
+medicine can be saved by 8 % per year. The plant uses Yangtze River 
+water as the sole source between March and November each year, with 
+manual PACl dosages ranging from 8 to 30 mg/L. During the low tem­
+perature months from December to February each year, the manual 
+PACl dosages for Luanhe River water are higher, ranging from 10 to 35 
+mg/L, which potentially allows for higher savings dosages, but at a 
+lower percentage. As a result, according to the weighted average, the 
+model has the potential to save 10.25 % of the annual dosage for the 
+plant.
+Fig. 4. Fitting results and scatter density plots for the AutoML: RF model on training and testing sets. The Fig includes model performance plot for samples on the 
+training set (a) and the testing set (b), and scatter plot of samples on the training set (c) and the testing set (d).
+Fig. 5. Optimization results of PACl dosage using the AutoML: RF model for the Yangtze River source (a) and the Luanhe River source (b).
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+6 
+
+
+<!-- Page 7 -->
+This method more accurately predicts the optimal dosage required to 
+consistently meet treated water standards under varying raw water 
+conditions than manual empirical judgment and saves 10.25 % of 
+coagulant dosage per year. Manual judgment often results in over- 
+dosing when raw water quality exceeds a certain threshold. 
+Conversely, model prediction enables accurate dosing while maintain­
+ing treated water standards, reducing reagent costs and ensuring more 
+stable treated water quality.
+3.3. SHAP interpretation
+Fig. 6 presents the SHAP feature importance and summary plots for 
+the model evaluated on the testing set. Feature importance ranking from 
+highest to lowest is as follows: EC-RW, pH-TW, NH3-N-RW, CODMn-RW, 
+T-RW, NTU-RW, WTR, NTU-TW, and pH-RW, as shown in Fig. 6(a). 
+Notably, the model in this study was constructed using monitoring data 
+from the water treatment plant, adhering to the principle of continu­
+ously adjusting dosage based on raw water quality to ensure stable and 
+compliant treated water quality. Therefore, the relationship between 
+dosage and treated water quality exhibits a direct causal link, despite 
+dosage exceeding a certain threshold may have minimal impact on 
+treated water quality. On the other hand, the relationship between 
+dosage and raw water quality reflects practical expertise, with water 
+plant operators relying on their experience and raw water quality to set 
+chemical dosages that meet treated water standards. Because of the wide 
+variation in raw water quality and the stability of treated water quality, 
+raw water indicators are generally more important than treated water 
+indicators in the model.
+Fig. 6 (b) displays the contribution of input features to the prediction 
+results, with features arranged in descending order along the vertical 
+axis. Consistent SHAP values aligned with characteristic values for EC- 
+RW, NH3-N-RW, CODMn-RW, and NTU-RW suggest a positive influ­
+ence on coagulant dosing, while the opposite trend for pH-RW, T-RW, 
+and WTR suggests a negative influence on dosing. For example, higher 
+EC-RW corresponds to higher SHAP values, indicating an increase in 
+dosing. Higher EC implies lower water purity, potentially containing 
+higher concentrations of dissolved salts, organics, metal ions, and other 
+contaminants. The cations in PACl can neutralize the surface charges of 
+negatively charged suspended particles or colloidal substances in water, 
+reducing the electrostatic repulsion between particles and promoting 
+aggregation [50]. In contrast, higher WTR values correspond to lower 
+SHAP values, indicating a decrease in dosage.
+Fig. 7 illustrates the SHAP values for individual variables, which 
+demonstrates the marginal effects of each feature on model predictions. 
+For the raw water indicator, conductivity reflects the total concentration 
+of dissolved ions in the water and shows a nearly linear enhancement 
+relationship with dosage when it is between 300 and 550 μS/cm, while 
+below 300 μS/cm or above 550 μS/cm this relationship shows a trend of 
+diminishing returns. High conductivity compresses the bilayer and 
+promotes coagulation, but low pH inhibits Al(OH)3 formation when 
+incremental compensation is required. Ammonia is nitrogen in the form 
+of free ammonia (NH3) and ammonium ions (NH4
++) regulated by pH and 
+temperature. NH3-N-RW in the range of 0–0.2 mg/L also exerts a posi­
+tive influence on coagulant dosage, with the relationship becoming less 
+significant beyond this range. High temperature accelerates the hydro­
+lysis, but low NH3-N can reduce the interference, at this time the PACl 
+dosage can be dosed according to professional judgment.
+CODMn reflects the total amount of organic matter and reducing 
+inorganic matter in the water body, there is no obvious correlation with 
+the dosage, if it is less than 4 mg/L, and more than 4 mg/L threshold, it 
+will compete for the active site with the PACl, and the SHAP value at this 
+time shows a sharp upward trend. Furthermore, NTU-RW generally has a 
+positive promoting effect on dosing, as an appropriate increase in 
+coagulant to promote particle aggregation and settlement, which is in 
+line with the findings of Vunain et al. [51]. However, when NTU-RW is 
+less than 2 NTU, the SHAP value shows an upward trend, as sparse and 
+dispersed colloidal particles in low-turbidity water limit the ability of 
+colloids formed after PACl hydrolysis to capture solid impurity particles. 
+Therefore, the dosage of PACl must be increased to compensate for 
+diffusion limitations and to ensure electroneutralization [52–54]. In 
+high CODMn and high turbidity water, organic matter can encapsulate 
+colloidal particles and additional amounts of PACl are needed to 
+enhance charge neutralization and break down the organic matter 
+barrier.
+In addition, the required coagulant dosage decreases as the pH-RW 
+increases within the range of 8.0 to 8.4, which is attributed to the 
+opposite charges of PACl and contaminant particles in a weakly alkaline 
+environment [55], allowing PACl to exhibit superior coagulation prop­
+erties [56]. It is likely that temperature typically has a negative effect on 
+dosing. The hydrolysis of PACl is an endothermic reaction, but the 
+increased viscosity at low temperatures impedes the thermal motion of 
+suspended particles in water, which is detrimental to the stability of 
+colloidal aggregation [57]. Therefore, the dosage of PACl should be 
+increased to achieve optimal coagulation efficacy [58].
+For treated water indicators, a distinct negative linear correlation is 
+observed between pH-TW and the quantity of coagulant administered, 
+primarily clustering within a narrow pH range of 7.6 to 7.8. This 
+negative linear relationship is primarily due to the fact that the 
+Fig. 6. SHAP feature importance (a) and summary plot (b) for the test set. The vertical axis of plot (a) represents the features in descending order of their average 
+absolute SHAP value on the model output, with larger values indicating a higher contribution of the feature to the prediction, and the horizontal axis indicates the 
+size of the SHAP value, reflecting the average degree of influence of the feature on the model output. Fig (b) each point represents the SHAP value of a sample, the 
+position of the horizontal axis shows the size of the value, the colour shades reflect the original value of the feature is high or low (red is high value, blue is low 
+value), the vertical axis represents the order by the importance of the feature, in line with Fig (a), the superimposed trend represents the relationship between the 
+feature’s value high or low and the direction of the SHAP value that can be observed from the distribution of points. (For interpretation of the references to colour in 
+this figure legend, the reader is referred to the web version of this article.)
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+7 
+
+
+<!-- Page 8 -->
+hydrolysis reaction of PACl releases H+, resulting in a decrease in 
+effluent pH [59]. However, over-dosing chemicals to meet the effluent 
+pH standard will cause the colloids to re-stabilize, resulting in a decrease 
+in flocculation efficiency. In addition, the increase in dissolved 
+aluminum residue can affect the safety of the effluent [54]. In addition, 
+no apparent linear relationship is observed between PACl dosage and 
+NTU-TW after coagulation, contrary to the results reported by Chiavola 
+[60]. NTU-TW is affected by both raw water quality and coagulant 
+dosage. Specifically, elevated NTU-RW values require a manual increase 
+in coagulant dosage to meet NTU-TW standards. Therefore, the NTU-TW 
+values from an operating plant remain relatively low and stable with 
+minimal variation, which has little impact on dosage prediction. In 
+addition, the effectiveness of PACl in the coagulation process depends 
+primarily on charge neutralization and adsorption bridging. An appro­
+priate dosage of PACl hydrolyzes to produce positively charged ions that 
+neutralize negatively charged colloids, thereby enhancing turbidity 
+removal. However, excessive PACl triggers “colloidal protection,” where 
+excess positively charged ions adsorb onto colloidal surfaces and 
+hydrophobic colloids become hydrophilic, reducing floc settling and 
+ultimately decreasing turbidity removal efficiency [56,61,62].
+Although AutoML (TPOT) and SHAP perform well in optimizing 
+machine learning models and improving interpretability, they still have 
+several limitations. AutoML may face the risk of overfitting during 
+model selection and hyperparameter optimization, and in this study, 
+despite the training set R2 = 1.00, the high consistency of the repeated 
+cross-validation and the independent test set (R2 = 0.96) suggests that 
+the model was not overfitted. The SHAP method reveals complex action 
+laws that cannot be captured by traditional linear methods, identifies 
+the threshold response behavior of key parameters, and breaks through 
+the limitations of linear statistics.
+Fig. 8 shows waterfall plots and decision plots for two specific local 
+samples using the SHAP method. Fig. 8a and b show a sample with a 
+coagulant dosage higher than the average value (14.5 mg/L). This 
+sample was collected in February, with the raw water coming from the 
+Luanhe River, and T-RW recorded at 3.8 ◦C. Fig. 8a shows that the 
+predicted coagulant dosage for this sample (34.9 mg/L) is higher than 
+Fig. 7. Nonlinear relationships between individual water quality parameters and coagulant dosage for EC-RW (a), pH-TW (b), NH3-N-RW (c), CODMn-RW (d), T-RW 
+(e), NTU-RW (f), WTR (g), NTU-TW (h), and pH-RW (i). For each data point with a positive SHAP value, the dosage of coagulant increases with the SHAP value, 
+exerting a positive impact. Conversely, for points with negative SHAP values, the opposite effect is observed. The units for these variables are consistent with those 
+in Fig. 2.
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+8 
+
+
+<!-- Page 9 -->
+the average expected value in the test set (14.5 mg/L), mainly due to 
+CODMn-RW, followed by EC-RW, NTU-RW, and NH3-N-RW, while the 
+contribution of pH-RW and WTR are negligible. Fig. 8b shows the 
+contribution of each feature in exceeding the average prediction (14.5 
+mg/L), ultimately resulting in a final output of 34.9 mg/L for this 
+sample. First, CODMn-RW reaches 5.46 mg/L, exceeding the threshold of 
+4 mg/L, the SHAP value increases significantly. In addition, with EC-RW 
+at 600.6 μS/cm, NH3-N-RW at 0.36 mg/L and NTU-RW at 7.19 NTU, 
+their SHAP values all remain above 0. Based on professional judgment of 
+the overall impact of raw water quality, the dosage of PACl was subse­
+quently increased from the average level.
+Fig. 8c and d show a sample taken in May with the Yangtze River as 
+the source water, showing a coagulant dosage below the average. Fig. 8c 
+shows that the predicted coagulant dosage for this sample (8.57 mg/L) is 
+significantly lower than the average expected value in the test set (14.5 
+mg/L). Among the factors, pH-TW (with a value of 7.906) has the most 
+significant negative effect on the dosage prediction, indicating that a 
+coagulant dosage at this level will significantly lower the pH of the of 
+treated water. This is followed by T-RW, EC-RW, and CODMn-RW, while 
+the contribution of NH3-N-RW and WTR is negligible. Fig. 8d further 
+illustrates how each feature contributes to shifting the dosage towards a 
+value below the average prediction (14.5 mg/L), ultimately resulting in 
+a final output of 8.57 mg/L for this sample. For the raw water charac­
+terized by T at 22.34 ◦C, EC at 290.2 μS/cm, CODMn-RW at 2.6 mg/L, 
+and pH at 8.15, the corresponding SHAP values for these parameters are 
+uniformly negative. Based on practical experience, it was decided to 
+reduce the dosage of PACl to a level below the average.
+In summary, the model developed in this study optimizes coagulant 
+dosing, not only enabling precise chemical addition in the coagulation 
+process of water treatment plants—thereby significantly minimizing 
+coagulant overuse—but also employing interpretable methods to reveal 
+key factors and their impact relationships influencing coagulant con­
+sumption. This empowers plant operators to make more scientific and 
+rational decisions, avoiding overdosing while ensuring effluent quality. 
+However, in practical water treatment applications, further efforts are 
+required to mitigate the environmental impacts of coagulant use. This 
+can be achieved by integrating the model with processes such as pre- 
+chlorination and activated carbon adsorption to reduce coagulant de­
+mand. Additionally, developing green and sustainable water treatment 
+technologies, such as bio-based flocculants (e.g., chitosan, microbial 
+flocculants), photocatalytic technologies[63,64], could reduce reliance 
+on non-renewable resources and minimize environmental risks posed by 
+chemical residues and byproducts (e.g., aluminum hydroxide sludge).
+4. Conclusions
+In this study, we developed a predictive model for coagulant dosing 
+in a water treatment plant using AutoML and interpreted the model 
+results to address the transparency issue associated with such predictive 
+models. The conclusions are as follows: 
+(1) The RF model developed using AutoML demonstrated superior 
+performance with a test R2 value of 0.96, RMSE of 0.89, and MAE 
+of 0.47. This model offers a faster development cycle and higher 
+prediction accuracy compared to manually selected models, and 
+Fig. 8. Decision plots and waterfall plots for two local samples, featuring three key characteristics: 1) the output value, representing the prediction for an individual 
+sample; 2) the base value, corresponding to the average expected value in the testing set; and 3) colour coding, where red variables push the prediction upwards and 
+blue variables push it downwards) are presented. The Fig includes decision plot (a) and waterfall plot (b) for a sample with dosing amount above the average, and 
+decision plot (c) and waterfall plot (d) for a sample with dosing amount below the average. (For interpretation of the references to colour in this figure legend, the 
+reader is referred to the web version of this article.)
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+9 
+
+
+<!-- Page 10 -->
+serves as a valuable tool for predicting coagulant dosing in water 
+treatment plants.
+(2) Model interpretation based on SHAP values revealed the influ­
+ence of each water quality indicator on the prediction results. 
+Specifically, when NTU-RW is low and relatively stable, raw 
+water conductivity emerges as the most significant factor influ­
+encing coagulant dosing, followed by NH3-N-RW, CODMn-RW, T- 
+RW, and WTR.
+(3) The optimized model predicts daily PACl savings of 222 kg (11 %) 
+for water from the Yangtze River and 225 kg (8 %) for water from 
+the Luanhe River. This highlights the key role of the coagulant 
+dosing model in improving water treatment efficiency and opti­
+mizing resource utilization.
+CRediT authorship contribution statement
+Liyan Feng: Writing – review & editing, Writing – original draft, 
+Visualization, Validation, Supervision, Software, Resources, Project 
+administration, Methodology, Investigation, Formal analysis, Data 
+curation, Conceptualization. Ying Zhang: Resources, Project adminis­
+tration, Methodology, Investigation, Funding acquisition, Data curation. 
+Xiaoting Wei: Writing – original draft, Visualization, Supervision, 
+Software. Mengyuan Wang: Visualization, Validation, Software, Re­
+sources, Project administration. Zhiguang Niu: Resources, Project 
+administration, Methodology, Investigation, Data curation. Chenchen 
+Wang: Writing – review & editing, Visualization, Supervision, Software, 
+Project administration.
+Declaration of competing interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgements
+This study was supported by the National Key Research and Devel­
+opment Programme (2022YFC3203803) and the Department of Science 
+and Technology of Fujian Province (2022J01522), and we also thank 
+Tianjin TEDA Water Industry Co. for providing the raw data.
+Data availability
+Data will be made available on request.
+References
+[1] G. Mannina, T.F. Rebouças, A. Cosenza, K. Chandran, A plant-wide wastewater 
+treatment plant model for carbon and energy footprint: model application and 
+scenario analysis, J. Clean. Prod. 217 (2019) 244–256.
+[2] Z. Wu, H. Duan, K. Li, L. Ye, A comprehensive carbon footprint analysis of different 
+wastewater treatment plant configurations, Environ. Res. 214 (2022) 113818.
+[3] N. Liu, D. Wang, J. Xu, L. Liu, J. Xue, T. Han, J. Wang, J. Lei, H. Shao, X. Zhang, 
+Novel 3D MIL-53(Fe)/graphene aerogel composites for boosted photocatalytic 
+ibuprofen degradation under visible light: process and mechanism, Surf. Interface 
+Anal. 46 (2024) 104192, https://doi.org/10.1016/j.surfin.2024.104192.
+[4] Y. Wang, G. Jiao, Y. Yang, J. Wang, J. Zhang, H. Jiang, N. Liu, X. Zhang, 3D 
+structure of LaFe1-δCoδO3@carbon cloth composite catalyst for promoting 
+peroxymonosulfate activation: identification of catalytic mechanism towards 
+multiple antibiotics, Desalination 602 (2025) 118643, https://doi.org/10.1016/j. 
+desal.2025.118643.
+[5] J. Xu, G. Jiao, G. Sheng, N. Lin, B. Yang, J. Wang, H. Jiang, Y. Wang, X. Zhang, 
+Microwave-assisted PMS activation Ti3C2/LaFe0.5Cu0.5O3-P catalysts for efficient 
+degradation of CIP: enhancement of catalytic performance by phosphoric acid 
+etching, Sep. Purif. Technol. 354 (2025) 129357.
+[6] Y. Yang, J. Ye, Y. Zhai, B. Yang, M. Yin, Y. Xu, J. Wang, X. Zhang, ZIF-67-derived 
+monolithic bimetallic sulfides as efficient persulfate activators for the degradation 
+of ofloxacin, Surfaces and Interfaces 51 (2024) 104713.
+[7] S. Li, G. Zhu, X. Li, P. Wan, F. Yuan, S. Xu, A.S. Hursthouse, Ecosystem-inspired 
+model and artificial intelligence predicts pollutant consumption capacity by 
+coagulation in drinking water treatment, Environ. Chem. Lett. 21 (5) (2023) 
+2499–2508.
+[8] G. Zhu, J. Lin, H. Fang, F. Yuan, X. Li, C. Yuan, A.S. Hursthouse, A flocculation 
+tensor to monitor water quality using a deep learning model, Environ. Chem. Lett. 
+20 (6) (2022) 3405–3414.
+[9] O. Bello, Y. Hamam, K. Djouani, Coagulation process control in water treatment 
+plants using multiple model predictive control, Alex. Eng. J. 53 (4) (2014) 
+939–948.
+[10] S. Peng, Y. Guo, J. Wang, Y. Wang, W. Zhang, X. Zhou, L. Jiang, B. Lai, The 
+coagulation-precipitation turbidity prediction model for precision drug delivery 
+system based on deep learning and machine vision, J. Environ. Chem. Eng. 12 (2) 
+(2024) 112211.
+[11] H. Boumezbeur, F. Laouacheria, S. Heddam, L. Djemili, Modelling coagulant 
+dosage in drinking water treatment plant using advance machine learning model: 
+hybrid extreme learning machine optimized by bat algorithm, Environ. Sci. Pollut. 
+Res. 30 (28) (2023) 72463–72483.
+[12] X. Fang, J. Zang, Z. Zhai, L. Zhang, Z. Shu, Y. Liang, Exploring potential dual-stage 
+attention based recurrent neural network machine learning application for dosage 
+prediction in intelligent municipal management, Environ. Sci. Water Res. Technol. 
+9 (3) (2023) 890–899, https://doi.org/10.1039/D2EW00560C.
+[13] L. Li, S. Rong, R. Wang, S. Yu, Recent advances in artificial intelligence and 
+machine learning for nonlinear relationship analysis and process control in 
+drinking water treatment: a review, Chem. Eng. J. 405 (2021) 126673.
+[14] A. Jakovljevic, L. Charlin, B. Barbeau, Applying recurrent neural networks and 
+blocked cross-validation to model conventional drinking water treatment 
+processes, Water 16 (7) (2024) 1042.
+[15] M. Achite, S. Samadianfard, N. Elshaboury, M. Sharafi, Modeling and optimization 
+of coagulant dosage in water treatment plants using hybridized random forest 
+model with genetic algorithm optimization, Environ. Dev. Sustain. 25 (10) (2023) 
+11189–11207.
+[16] S. Peng, Y. Guo, J. Wang, Y. Wang, W. Zhang, X. Zhou, L. Jiang, B. Lai, The 
+coagulation-precipitation turbidity prediction model for precision drug delivery 
+system based on deep learning and machine vision, J. Environ. Chem. Eng. 12 (2) 
+(2024) 112211, https://doi.org/10.1016/j.jece.2024.112211.
+[17] X. Fu, Q. Zheng, G. Jiang, K. Roy, L. Huang, C. Liu, K. Li, H. Chen, X. Song, J. Chen, 
+Z. Wang, Water quality prediction of copper-molybdenum mining-beneficiation 
+wastewater based on the PSO-SVR model, Front. Environ. Sci. Eng. 17 (8) (2023) 
+98, https://doi.org/10.1007/s11783-023-1698-9.
+[18] M. Achite, S. Samadianfard, N. Elshaboury, M. Sharafi, Modeling and optimization 
+of coagulant dosage in water treatment plants using hybridized random forest 
+model with genetic algorithm optimization, Environ. Dev. Sustain. 25 (10) (2022) 
+11189–11207, https://doi.org/10.1007/s10668-022-02523-z.
+[19] M. Baratchi, C. Wang, S. Limmer, J.N. van Rijn, H. Hoos, T. B¨ack, M. Olhofer, 
+Automated machine learning: past, present and future, Artif. Intell. Rev. 57 (5) 
+(2024) 122.
+[20] H. Eldeeb, M. Maher, R. Elshawi, S. Sakr, AutoMLBench: a comprehensive 
+experimental evaluation of automated machine learning frameworks, Expert Syst. 
+Appl. 243 (2024) 122877.
+[21] A. Brown, M. Gupta, M. Abdelsalam, Automated machine learning for deep 
+learning based malware detection, Comput. Secur. 137 (2024) 103582.
+[22] X. Chen, C.Y. Liu, R. Proietti, Z. Li, S.J.B. Yoo, Automating optical network fault 
+management with machine learning, IEEE Commun. Mag. 60 (12) (2022) 88–94.
+[23] J. Tetteroo, M. Baratchi, H.H. Hoos, Automated machine learning for COVID-19 
+forecasting, IEEE Access 10 (2022) 94718–94737.
+[24] N.P. Wu, W. Wang, D. Gadiagellan, M. Counsell, N.K. Hamidi, Y. Koike, H. 
+Q. Nguyen, An automated robotic Interface for assays: facilitating machine 
+learning in drug discovery by the automation of physicochemical property assays, 
+ACS Omega 9 (23) (2024) 24948–24958.
+[25] R.S. Olson, N. Bartley, R.J. Urbanowicz, J.H. Moore, Evaluation of a Tree-Based 
+Pipeline Optimization Tool for Automating Data Science, Proceedings of the 
+Genetic and Evolutionary Computation Conference 2016, Association for 
+Computing Machinery, Denver, Colorado, USA, 2016, pp. 485–492.
+[26] J. Luo, Y. Luo, X. Cheng, X. Liu, F. Wang, F. Fang, J. Cao, W. Liu, R. Xu, Prediction 
+of Biological Nutrients Removal in Full-Scale Wastewater Treatment Plants Using 
+H2O Automated Machine Learning and Back Propagation Artificial Neural 
+Network Model: Optimization and Comparison, Bioresour. Technol. 390 (2023) 
+129842, https://doi.org/10.1016/j.biortech.2023.129842.
+[27] D. Venkata Vara Prasad, P. Senthil Kumar, L.Y. Venkataramana, 
+G. Prasannamedha, S. Harshana, S. Jahnavi Srividya, K. Harrinei, S. Indraganti, 
+Automating water quality analysis using ML and auto ML techniques, Environ. Res. 
+202 (2021) 111720, https://doi.org/10.1016/j.envres.2021.111720.
+[28] S.M. Lundberg, S.I. Lee, A unified approach to interpreting model predictions, 
+ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS 30 (NIPS 2017), 
+2017.
+[29] J.T. Hancock, T.M. Khoshgoftaar, Q. Liang, A problem-agnostic approach to feature 
+selection and analysis using SHAP, J. Big Data 12 (1) (2025) 12.
+[30] N. Bacanin, M. Perisic, G. Jovanovic, R. Damaˇseviˇcius, S. Stanisic, V. Simic, 
+M. Zivkovic, A. Stojic, The explainable potential of coupling hybridized 
+metaheuristics, XGBoost, and SHAP in revealing toluene behavior in the 
+atmosphere, Sci. Total Environ. 929 (2024) 172195.
+[31] W. Chu, C. Zhang, H. Li, L. Zhang, D. Shen, R. Li, SHAP-powered insights into 
+spatiotemporal effects: unlocking explainable Bayesian-neural-network urban 
+flood forecasting, Int. J. Appl. Earth Obs. Geoinf. 131 (2024) 103972.
+[32] K. Lin, Y. Gao, Model interpretability of financial fraud detection by group SHAP, 
+Expert Syst. Appl. 210 (2022) 118354.
+[33] K. Miao, A. Houssou Hounye, L. Su, Q. Pan, J. Wang, M. Hou, L. Xiong, Exploring 
+explainable machine learning and Shapley additive exPlanations (SHAP) technique 
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+10 
+
+
+<!-- Page 11 -->
+to uncover key factors of HNSC cancer: An analysis of the best practices, 
+Biomedical Signal Processing and Control 89 (2024) 105752.
+[34] K. Wang, J. Tian, C. Zheng, H. Yang, J. Ren, Y. Liu, Q. Han, Y. Zhang, Interpretable 
+prediction of 3-year all-cause mortality in patients with heart failure caused by 
+coronary heart disease based on machine learning and SHAP, Comput. Biol. Med. 
+137 (2021) 104813.
+[35] R. Li, K. Feng, T. An, P. Cheng, L. Wei, Z. Zhao, X. Xu, L. Zhu, Enhanced Insights 
+into Effluent Prediction in Wastewater Treatment Plants: Comprehensive Deep 
+Learning Model Explanation Based on SHAP, ACS ES&T Water, 2024.
+[36] R.K. Makumbura, L. Mampitiya, N. Rathnayake, D.P.P. Meddage, S. Henna, T. 
+L. Dang, Y. Hoshino, U. Rathnayake, Advancing water quality assessment and 
+prediction using machine learning models, coupled with explainable artificial 
+intelligence (XAI) techniques like shapley additive explanations (SHAP) for 
+interpreting the black-box nature, Results in Engineering 23 (2024) 102831, 
+https://doi.org/10.1016/j.rineng.2024.102831.
+[37] J. Park, W.H. Lee, K.T. Kim, C.Y. Park, S. Lee, T.-Y. Heo, Interpretation of ensemble 
+learning to predict water quality using explainable artificial intelligence, Sci. Total 
+Environ. 832 (2022) 155070.
+[38] S. Narges, A. Ghorban, K. Hassan, K. Mohammad, Prediction of the optimal dosage 
+of coagulants in water treatment plants through developing models based on 
+artificial neural network fuzzy inference system (ANFIS), J. Environ. Health Sci. 
+Eng. 19 (2) (2021) 1543–1553.
+[39] S. Lin, J. Kim, C. Hua, M.-H. Park, S. Kang, Coagulant dosage determination using 
+deep learning-based graph attention multivariate time series forecasting model, 
+Water Res. 232 (2023) 119665.
+[40] B. Celik, J. Vanschoren, Adaptation strategies for automated machine learning on 
+evolving data, IEEE Trans. Pattern Anal. Mach. Intell. 43 (9) (2021) 3067–3078.
+[41] A. Abdollahi, D. Li, J. Deng, A. Amini, An explainable artificial-intelligence-aided 
+safety factor prediction of road embankments, Eng. Appl. Artif. Intell. 136 (2024) 
+108854.
+[42] A. Abdollahi, B. Pradhan, Explainable artificial intelligence (XAI) for interpreting 
+the contributing factors feed into the wildfire susceptibility prediction model, Sci. 
+Total Environ. 879 (2023) 163004.
+[43] X. Ma, Y. Tang, C. Wang, Y. Li, J. Zhang, Y. Luo, Z. Xu, F. Wu, S. Wang, 
+Interpretable XGBoost-SHAP model predicts nanoparticles delivery efficiency 
+based on tumor genomic mutations and nanoparticle properties, ACS Appl. Bio 
+Mater. 6 (10) (2023) 4326–4335.
+[44] D. Wang, L. Chen, T. Li, X. Chang, K. Ma, W. You, C. Tan, Successful prediction for 
+coagulant dosage and effluent turbidity of a coagulation process in a drinking 
+water treatment plant based on the Elman neural network and random forest 
+models, Environ. Sci.: Water Res. Technol. 9 (9) (2023) 2263–2274.
+[45] S. Tan, R. Wang, G. Song, S. Qi, K. Zhang, Z. Zhao, Q. Yin, Machine learning and 
+Shapley additive explanation-based interpretable prediction of the electrocatalytic 
+performance of N-doped carbon materials, Fuel 355 (2024) 129469.
+[46] S. Lin, J. Kim, C. Hua, S. Kang, M.-H. Park, Comparing artificial and deep neural 
+network models for prediction of coagulant amount and settled water turbidity: 
+lessons learned from big data in water treatment operations, Journal of Water 
+Process Engineering 54 (2023) 103949.
+[47] D.S. Wang, L. Chen, T.Y. Li, X. Chang, K.W. Ma, W.H. You, C.Q. Tan, Successful 
+prediction for coagulant dosage and effluent turbidity of a coagulation process in a 
+drinking water treatment plant based on the elman neural network and random 
+forest models, ENVIRONMENTAL SCIENCE-WATER RESEARCH & TECHNOLOGY 
+9 (9) (2023) 2263–2274.
+[48] J. Kim, C. Hua, K. Kim, S. Lin, G. Oh, M.-H. Park, S. Kang, Optimizing coagulant 
+dosage using deep learning models with large-scale data, Chemosphere 350 (2024) 
+140989.
+[49] P. Tsirikoglou, S. Abraham, F. Contino, C. Lacor, G. Ghorbaniasl, 
+A hyperparameters selection technique for support vector regression models, Appl. 
+Soft Comput. 61 (2017) 139–148.
+[50] A.-A. El Foulani, O. Ounas, M. Tahiri, M. Chafi, A comparative study of the 
+performance of Polyaluminum chloride-sodium alginate and Polyaluminum 
+chloride-chitosan composite coagulants in dam water treatment, J. Polym. 
+Environ. 31 (11) (2023) 4909–4918.
+[51] E. Vunain, E.F. Masoamphambe, P.M.G. Mpeketula, M. Monjerezi, A. Etale, 
+Evaluation of coagulating efficiency and water borne pathogens reduction capacity 
+of *Moringa oleifera* seed powder for treatment of domestic wastewater from 
+Zomba, Malawi, J. Environ. Chem. Eng. 7 (3) (2019) 103118, https://doi.org/ 
+10.1016/j.jece.2019.103118.
+[52] Campinas, M. , Silva, C. , Viegas, R.M.C. , Coelho, R. , Lucas, H. , Rosa, M.J. . 2020. 
+To what extent may pharmaceuticals and pesticides be removed by PAC 
+conventional addition to low-turbidity surface waters and what are the potential 
+bottlenecks?. Journal of water Process Engineering.
+[53] Z. Liu, H. Wei, A. Li, H. Yang, Enhanced coagulation of low-turbidity micro- 
+polluted surface water: properties and optimization, J. Environ. Manag. 233 (2019) 
+739–747.
+[54] Z. Zhang, R. Jing, S. He, J. Qian, K. Zhang, G. Ma, X. Chang, M. Zhang, Y. Li, 
+Coagulation of low temperature and low turbidity water: adjusting basicity of 
+polyaluminum chloride (PAC) and using chitosan as coagulant aid, Sep. Purif. 
+Technol. 206 (2018) 131–139.
+[55] P. Ca˜nizares, C. Jim´enez, F. Martínez, M.A. Rodrigo, C. S´aez, The pH as a key 
+parameter in the choice between coagulation and electrocoagulation for the 
+treatment of wastewaters, J. Hazard. Mater. 163 (1) (2009) 158–164.
+[56] X. Ji, Z. Li, M. Wang, Z. Yuan, L. Jin, Response surface methodology approach to 
+optimize parameters for coagulation process using Polyaluminum chloride (PAC), 
+Water 16 (11) (2024) 1470.
+[57] G. Kim, J. Ryu, T. Ryu, H.-i. Kim, J. Shin, D.-W. Cho, Effects of calcination 
+temperature on the adsorption ability of polyaluminum chloride (PAC) sludge- 
+derived granules for as(V), Journal of water Process. Eng. 57 (2023) 104688.
+[58] W.P. Cheng, F.H. Chi, C.C. Li, R.F. Yu, A study on the removal of organic 
+substances from low-turbidity and low-alkalinity water with metal-polysilicate 
+coagulants, Colloids Surf. A Physicochem. Eng. Asp. 312 (2-3) (2008) 238–244, 
+https://doi.org/10.1016/j.colsurfa.2007.06.060.
+[59] J. Duan, J. Gregory, Coagulation by hydrolysing metal salts, Adv. Colloid Interf. 
+Sci. 100-102 (2003) 475–502.
+[60] A. Chiavola, C. Di Marcantonio, M. D’Agostini, S. Leoni, M. Lazzazzara, 
+A combined experimental-modeling approach for turbidity removal optimization 
+in a coagulation–flocculation unit of a drinking water treatment plant, J. Process 
+Control 130 (2023) 103068.
+[61] B. Ozbey-Unal, C. Balcik-Canbolat, N. Dizge, B. Keskinler, Treatability studies on 
+optimizing coagulant type and dosage in combined coagulation/membrane 
+processes for table olive processing wastewater, J. Water Process Eng. 26 (2018) 
+301–307, https://doi.org/10.1016/j.jwpe.2018.10.023.
+[62] K. Wu, H. Wang, R. Liu, X. Zhao, H. Liu, J. Qu, Arsenic removal from a high-arsenic 
+wastewater using in situ formed Fe-Mn binary oxide combined with coagulation by 
+poly-aluminum chloride, J. Hazard. Mater. 158 (2–3) (2010) 990–995.
+[63] L. Luo, L. Zhang, H. Ye, Y. Dai, Y. Xie, Y. Chen, Z. Wang, Y. Zhang, Synchronous 
+promotion of ZnIn2S4 sacrificial agent-free photocatalytic hydrogen production by 
+non-metallic doping and construction of heterojunction, Sep. Purif. Technol. 360 
+(2025) 131102.
+[64] H. Yang, Y. Duan, Y. Dai, Y. Chen, Y. Xie, G. Zhang, Y. Zhang, CeO2-x decorated 
+CoFe-LDH on nickel foam with moderated oxygen vacancies for the oxygen 
+evolution reaction, Colloids Surf. A Physicochem. Eng. Asp. 709 (2025) 136055.
+L. Feng et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 75 (2025) 107925 
+11 

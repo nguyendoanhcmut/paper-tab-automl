@@ -1,0 +1,7 @@
+  - **Hình 7.** Biểu đồ tóm tắt SHAP minh họa tác động của từng đặc trưng
+    - <img src="assets/fig_08_p22.png" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Giá trị cao của $F/M\_MA5$, $F/M$ và $MLSS$ làm tăng mức độ nghẹt màng; giá trị $pH\_MA5$ thấp làm gia tăng rủi ro tắc nghẽn.
+    - **Từ đâu mà thấy được**
+      - Trục Ox: Giá trị SHAP (`SHAP value`), dải $-0.006\text{--}0.010$, đường chuẩn trung hòa tại $0.000$; Trục Oy: 15 đặc trưng xếp theo tầm quan trọng giảm dần.
+      - Thang màu bên phải: từ xanh lam (`Low`) đến đỏ (`High`); các điểm đỏ của $F/M\_MA5$ phân bố lệch sang phía dương (lên tới $> 0.010$), điểm xanh lệch sang phía âm.

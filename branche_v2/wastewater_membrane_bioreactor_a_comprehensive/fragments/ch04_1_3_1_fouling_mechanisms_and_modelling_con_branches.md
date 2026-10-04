@@ -1,0 +1,39 @@
+### 3.1. Fouling Mechanisms and Modelling Context
+
+- **Bản chất đa quy mô, đa cơ chế của hiện tượng nghẹt màng (membrane fouling)**: Hiện tượng nghẹt màng trong $\text{MBR}$ (membrane bioreactors - bể phản ứng sinh học màng) là một hiện tượng đa quy mô, đa cơ chế (multi-scale, multi-mechanism phenomenon), trong đó tổng trở lực lọc được phân tách theo khung mô hình các trở lực nối tiếp (resistance-in-series framework) thành ba thành phần đóng góp:
+  - Sự hình thành lớp bánh lọc thuận nghịch (reversible cake layer formation): có thể loại bỏ bằng biện pháp thư giãn / ngừng hút (relaxation) hoặc rửa ngược (backwashing).
+  - Nghẹt lỗ màng bất thuận nghịch (irreversible pore blocking): đòi hỏi phải làm sạch bằng hóa chất (chemical cleaning).
+  - Nghẹt màng do hấp phụ (adsorptive fouling): xảy ra bên trong cấu trúc nền màng (membrane matrix).
+  - Tỷ trọng đóng góp của từng cơ chế phụ thuộc vào thành phần hỗn dịch bùn lỏng (mixed-liquor composition) và thông lượng vận hành (operating flux) tương đối so với ngưỡng thông lượng tới hạn (critical flux threshold).
+- **Thành phần $\text{EPS}$ và động học tích tụ nghẹt màng theo ngưỡng thông lượng tới hạn**: Các hợp chất polyme ngoại bào ($\text{EPS}$ - extracellular polymeric substances) đóng vai trò chất gây nghẹt chính với các thành phần cốt lõi gồm:
+  - Các sản phẩm vi sinh vật hòa tan ($\text{SMP}$ - soluble microbial products).
+  - $\text{EPS}$ liên kết (bound $\text{EPS}$).
+  - Các polyme sinh học dạng keo (colloidal biopolymers).
+  - Dưới ngưỡng thông lượng tới hạn (below critical flux): sự tích tụ nghẹt màng diễn ra từ từ và phần lớn có tính chất thuận nghịch.
+  - Vượt quá ngưỡng thông lượng tới hạn (above critical flux): xảy ra hiện tượng nghẹt màng nhanh chóng và bất thuận nghịch, làm rút ngắn mạnh chu kỳ làm sạch (cleaning intervals) và tuổi thọ màng (membrane lifetime).
+- **Các thông số vận hành chi phối động học nghẹt màng và sự đánh đổi đa mục tiêu**: Động học nghẹt màng chịu sự chi phối của các thông số vận hành then chốt:
+  - Nồng độ chất rắn lơ lửng trong bùn lỏng ($\text{MLSS}$ - mixed liquor suspended solids): quyết định khối lượng vật chất sẵn có hình thành lớp bánh lọc và ảnh hưởng đến độ nhớt của hỗn dịch bùn lỏng.
+  - Thời gian lưu bùn ($\text{SRT}$ - solids retention time): kiểm soát quá trình sản sinh $\text{EPS}$ thông qua tác động lên tốc độ sinh trưởng của sinh khối và tính sẵn có của cơ chất.
+  - Thời gian lưu thủy lực ($\text{HRT}$ - hydraulic retention time): ảnh hưởng đến độ pha loãng và thời gian lưu của các vật chất gây nghẹt dạng keo.
+  - Nồng độ oxy hòa tan ($\text{DO}$ - dissolved oxygen): chi phối sự cân bằng giữa các con đường chuyển hóa hiếu khí (aerobic) và thiếu khí (anoxic), từ đó định hình thành phần $\text{EPS}$.
+  - Cường độ sục khí màng (membrane aeration intensity): cung cấp ứng suất cắt (shear stress) cần thiết nhằm hạn chế sự phát triển của lớp bánh trên bề mặt màng ngập nước.
+  - Tương tác phi tuyến và đối kháng (non-linear and antagonistic interactions): việc tăng $\text{MLSS}$ giúp cải thiện hiệu suất xử lý sinh học nhưng lại đẩy nhanh tốc độ nghẹt màng; việc tăng sục khí giúp giảm nghẹt màng nhưng làm tăng tiêu thụ năng lượng, tạo ra các đánh đổi đa mục tiêu (multi-objective trade-offs) khó mô tả đầy đủ bằng các mô hình cơ chế đơn giản.
+- **Cơ sở cơ chế cho việc lựa chọn đặc trưng trong mô hình học máy ($\text{ML}$)**: Các thông số vận hành gồm $\text{MLSS}$, $\text{SRT}$, $\text{HRT}$, $\text{DO}$ và cường độ sục khí tạo thành tập đặc trưng ứng viên chính (primary candidate feature set) cho các mô hình $\text{ML}$ dự đoán nghẹt màng $\text{MBR}$:
+  - Việc lựa chọn các thông số này làm đầu vào mô hình bắt nguồn từ hiểu biết sâu sắc về cơ chế vận hành thay vì quy ước mang tính kinh nghiệm (empirical convention).
+  - Sự gắn kết giữa tri thức quy trình (process knowledge) và kỹ thuật đặc trưng (feature engineering) là điểm tựa then chốt cho các phương pháp mô hình hóa lai (hybrid modelling approaches).
+- **Giới hạn của các mô hình cơ chế và động lực thúc đẩy mô hình học máy**: Các mô hình cơ chế, bao gồm họ mô hình $\text{ASM}$ (Activated Sludge Models) và chuẩn đối sánh $\text{BSM-MBR}$ (Benchmark Simulation Model for MBRs), đã thúc đẩy hiểu biết về động học sinh học và sự ghép nối với hiệu suất màng, nhưng độ chính xác dự đoán trong điều kiện tải động bị hạn chế:
+  - Khó khăn trong việc định lượng đặc tính các phân đoạn $\text{EPS}$ của bùn lỏng theo thời gian thực (real-time).
+  - Độ nhạy cảm cao của các tham số mô hình đối với nhiệt độ và tiền sử bùn (sludge history).
+  - Chi phí tính toán cao (high computational cost) khi chạy mô phỏng cơ chế ở các thang thời gian vận hành.
+  - Sự phức tạp gia tăng ở các cấu hình màng sinh học thẩm thấu ($\text{OMBR}$ - Osmotic $\text{MBR}$): việc ghép nối bể phản ứng sinh học với màng thẩm thấu thuận ($\text{FO}$ - forward osmosis) qua động lực thẩm thấu làm phát sinh động học phân cực nồng độ (concentration polarization dynamics), tạo động lực mạnh mẽ cho việc áp dụng các cách tiếp cận hướng dữ liệu (data-driven approaches) và $\text{ML}$.
+- **Sơ đồ cấu hình hệ thống $\text{MBR}$ và chuỗi luồng dữ liệu cảm biến hiện trường**: Thiết lập tham chiếu vận hành thực tế cho các thông số công nghệ và luồng dữ liệu trực tuyến của cả hai cấu hình $\text{MBR}$ ngập nước (submerged) và dòng nhánh (side-stream):
+  - **Hình 2.** Sơ đồ cấu hình hệ thống MBR ngập nước và dòng nhánh
+    - ![Figure 2. Schematic of a typical submerged and side-stream wastewater membrane bioreactor (MBR) system.](assets/fig_03_p6.png)
+    - **Hình này chứng minh điều gì**
+      - Thể hiện các đơn vị vận hành cốt lõi, hệ thống sục khí làm sạch màng và các điểm thu thập dữ liệu cảm biến trực tuyến (DO, TMP, lưu lượng, nhiệt độ).
+    - **Từ đâu mà thấy được**
+      - Sơ đồ chi tiết gồm bể sục khí, mô-đun màng ngập nước, bơm hút dòng thấm, các đầu đo cảm biến SCADA và đường tuần hoàn bùn.
+  - Các đơn vị vận hành cốt lõi: bể phản ứng sinh học sục khí chứa hỗn dịch bùn hoạt tính lỏng; mô-đun màng siêu lọc sợi rỗng (hollow-fiber) hoặc tấm phẳng (flat-sheet) ngập nước vận hành dưới áp suất thấm âm; bơm hút dòng thấm và cửa xả nước sau xử lý (effluent outlet); đường tuần hoàn bùn duy trì nồng độ $\text{MLSS}$ mục tiêu; và cửa xả bùn dư kiểm soát $\text{SRT}$.
+  - Hệ thống sục khí và làm sạch: hệ thống sục khí màng bọt thô (coarse-bubble membrane aeration) cung cấp ứng suất cắt để kiểm soát nghẹt màng, cùng các chu trình rửa ngược (backwash) và làm sạch hóa học tại chỗ ($\text{CIP}$ - chemical cleaning / cleaning-in-place).
+  - Các điểm đo cảm biến trực tuyến (online sensor measurement points): đầu đo oxy hòa tan ($\text{DO}$) trong bể sinh học, bộ chuyển đổi áp suất qua màng ($\text{TMP}$ - transmembrane pressure transducers) trên đường dòng thấm, đồng hồ đo lưu lượng dòng vào (influent) và dòng thấm (permeate), cảm biến độ đục trực tuyến và đầu đo nhiệt độ.
+  - Chuỗi luồng dữ liệu (data pathway): tín hiệu thu thập từ các cảm biến hiện trường đi qua hệ thống điều khiển giám sát và thu thập dữ liệu ($\text{SCADA}$ - Supervisory Control and Data Acquisition), sau đó chuyển tiếp đến tầng phân tích dự đoán $\text{ML}$ và tầng bản sao số ($\text{Digital Twin}$), thiết lập ngữ cảnh vật lý và dữ liệu phục vụ các công trình mô hình hóa.

@@ -1,0 +1,57 @@
+## 1. Introduction
+
+- Đô thị hóa và các yêu cầu tái sử dụng nước thải ngày càng tăng thúc đẩy quá trình xử lý nước thải hướng tới các quy trình tăng cường (intensified processes).
+  - Các quy trình tăng cường đòi hỏi cung cấp nước đầu ra ổn định, chất lượng cao trong điều kiện diện tích hạ tầng bị giới hạn (constrained infrastructure footprints).
+- MBR (membrane bioreactors - bể phản ứng sinh học màng) tích hợp xử lý sinh học với phân tách màng được ứng dụng rộng rãi cho xử lý nước thải sinh hoạt và công nghiệp.
+  - MBR sở hữu cấu hình nhỏ gọn (compact configuration) và mang lại chất lượng nước đầu ra cao.
+  - Membrane fouling (hiện tượng tắc nghẽn màng) là rào cản chính cản trở việc phát huy đầy đủ các lợi thế của MBR.
+- Dưới chế độ vận hành lưu lượng không đổi (constant-flux operation), tắc nghẽn màng làm tăng dần trở lực lọc (filtration resistance), thể hiện qua sự gia tăng của $\text{TMP}$ (transmembrane pressure - áp suất xuyên màng).
+  - Sự gia tăng $\text{TMP}$ làm tăng nhu cầu sục khí (aeration) và nhu cầu bơm (pumping).
+  - Tắc nghẽn màng làm tăng tần suất làm sạch bằng hóa chất (chemical cleaning), thúc đẩy quá trình lão hóa màng (membrane aging) và làm tăng chi phí vòng đời (lifecycle costs).
+- MBR tiêu thụ nhiều năng lượng hơn so với các quy trình bùn hoạt tính truyền thống (conventional activated sludge processes):
+  - Mức tiêu thụ năng lượng điển hình của MBR đạt $0.4\text{--}1.6\text{ kWh}\cdot\text{m}^{-3}$, cao hơn mức $0.3\text{--}0.8\text{ kWh}\cdot\text{m}^{-3}$ của bùn hoạt tính truyền thống.
+- Dự đoán chính xác diễn tiến tắc nghẽn màng và $\text{TMP}$ là điều kiện thiết yếu để thực hiện kiểm soát tắc nghẽn cấp tiến (feedforward fouling control) và vận hành MBR tiết kiệm năng lượng.
+  - Quản lý tắc nghẽn chủ động (proactive fouling management) trong MBR vẫn gặp nhiều khó khăn dù đã có nhiều tiến bộ trong đặc tính hóa và giảm thiểu tắc nghẽn.
+- Cả hai cách tiếp cận dựa trên cơ chế (mechanistic) và dựa trên dữ liệu (data-driven) đều được nghiên cứu để dự đoán diễn tiến tắc nghẽn màng:
+  - Các mô hình cơ chế và mô hình lai sinh học - vật lý (hybrid biological–physical models) giúp tăng cường tính giải thích được (interpretability), nhưng khó tham số hóa (parameterize) và khó hiệu chuẩn lại (recalibrate) trong các nhà máy thực tế.
+  - Các mô hình học máy (ML - machine learning) và học sâu (DL - deep learning) là các giải pháp thay thế tiềm năng nhờ khả năng nắm bắt mối quan hệ phi tuyến giữa các biến vận hành, chất lượng nước và sinh khối.
+- Các kiến trúc mô hình học máy và học sâu sở hữu những đặc tính tương thích riêng với bản chất dữ liệu tắc nghẽn màng:
+  - Các mô hình ML dạng cây (tree-based ML models, ví dụ như XGBoost - Extreme Gradient Boosting) thích hợp cho dữ liệu quy trình dạng bảng (tabular process data).
+  - Các kiến trúc DL hồi quy (recurrent DL architectures, ví dụ như mạng LSTM - long short-term memory) đặc biệt phù hợp cho dự đoán tắc nghẽn màng:
+    - Tắc nghẽn màng là một quá trình tích lũy nội tại (intrinsically cumulative) và phụ thuộc vào quỹ đạo thời gian (path-dependent).
+    - Diễn tiến tắc nghẽn được chi phối bởi những biến đổi theo thời gian của đặc tính bùn và các điều kiện thủy động lực học (hydrodynamic conditions).
+- Việc thiết kế các biến đầu vào hợp lý và đầy đủ là yếu tố then chốt để đạt được mô hình AI chính xác.
+  - Nhiều mô hình dự đoán $\text{TMP}$ hiện hữu, đặc biệt là các mô hình tại các MBR quy mô pilot hoặc quy mô thực tế (full-scale MBRs), chủ yếu dựa trên các biến truyền thống được quan trắc thường quy:
+    - Các biến truyền thống bao gồm: $\text{MLSS}$ (mixed liquor suspended solids - chất rắn lơ lửng trong hỗn hợp bùn lỏng), $\text{MLVSS}$ (mixed liquor volatile suspended solids - chất rắn lơ lửng bay hơi trong hỗn hợp bùn lỏng), $\text{HRT}$ (hydraulic retention time - thời gian lưu nước) và $\text{SRT}$ (sludge retention time - thời gian lưu bùn).
+    - Các phương pháp hiện tại nhằm theo dõi động học tắc nghẽn trong MBR thường không đủ hiệu quả khi chỉ dựa trên các biến này.
+- Các chỉ số mô tả sinh hóa chứa thông tin cơ chế như $\text{EPS}$ (extracellular polymeric substances - các chất polyme ngoại bào) và $\text{SMP}$ (soluble microbial products - các sản phẩm vi sinh hòa tan) thường bị thiếu hoặc thu thập không đủ mẫu tại các MBR quy mô pilot và quy mô thực tế.
+  - Đây là một hạn chế nghiêm trọng vì $\text{EPS}$ và $\text{SMP}$ ảnh hưởng mạnh đến xu hướng tắc nghẽn màng:
+    - Phân đoạn protein và polysaccharide trong $\text{EPS}$ và $\text{SMP}$ định hình sự hình thành lớp bánh bùn (cake formation), độ nén (compressibility) và hành vi tắc nghẽn lỗ màng (pore-blocking behavior).
+    - Axit humic (humic acid) và axit fulvic (fulvic acid) cũng tham gia đóng góp vào quá trình tắc nghẽn màng.
+  - Việc đưa trực tiếp $\text{EPS}$ và $\text{SMP}$ vào làm đầu vào mô hình vừa có căn cứ khoa học, vừa là hướng đi triển vọng để cải thiện độ chính xác dự đoán $\text{TMP}$ và nâng cao tính giải thích được cho các nhà máy MBR.
+- Dữ liệu tại các MBR quy mô pilot hoặc quy mô thực tế thường không đủ để xây dựng các mô hình dự đoán tắc nghẽn mạnh mẽ riêng biệt cho từng địa điểm (site-specific models):
+  - Các phép đo phân đoạn $\text{EPS}$ và $\text{SMP}$ trong thực tế thường thưa thớt và không định kỳ do phụ thuộc vào các phân tích phòng thí nghiệm tốn nhiều công sức thay vì cảm biến trực tuyến (online sensing).
+  - Dữ liệu vận hành thường quy và dữ liệu sinh hóa thường gặp tình trạng khuyết giá trị (missing values), lỗi cảm biến (sensor errors) và điểm ngoại lai (outliers).
+  - Các hạn chế về dữ liệu khiến một nhà máy MBR đơn lẻ bị hạn chế dữ liệu gặp khó khăn trong việc tự huấn luyện độc lập một mô hình dự đoán chất lượng cao.
+- Phần lớn các mô hình ML dự đoán tắc nghẽn MBR hiện nay được phát triển và xác thực trên các chuỗi dữ liệu lịch sử dài hoặc dày đặc của riêng từng nhà máy:
+  - Khả năng tổng quát hóa xuyên nhà máy (cross-plant generalizability) của các mô hình này trong điều kiện dữ liệu hạn chế chưa được xác lập đầy đủ.
+- Các nhà máy MBR khác nhau chia sẻ các cơ chế tắc nghẽn tương đồng, tạo cơ sở cho sự tồn tại của các mô hình có thể chuyển giao (transferable models) giữa các cơ sở xử lý:
+  - Các cơ chế tương đồng bao gồm: tích tụ lớp bánh bùn (cake-layer accumulation), tắc nghẽn lỗ màng (pore blocking) và sự đóng góp của các sản phẩm vi sinh vật vào tắc nghẽn màng.
+- Học chuyển giao (Transfer learning) cung cấp chiến lược giải quyết đồng thời sự khan hiếm dữ liệu (data scarcity) và tình trạng cô lập dữ liệu (data silos) trong dự đoán tắc nghẽn MBR:
+  - Một mô hình gốc (base model) có thể được tiền huấn luyện (pretrained) trên tập dữ liệu đa nguồn từ nhiều nhà máy MBR khác nhau để học các mối quan hệ khái quát giữa điều kiện vận hành, đặc trưng $\text{EPS}$/$\text{SMP}$ và diễn tiến $\text{TMP}$.
+  - Sau đó, mô hình gốc được tinh chỉnh (fine-tuned) bằng một lượng nhỏ dữ liệu từ nhà máy MBR mục tiêu để học các yếu tố thúc đẩy tắc nghẽn đặc thù của nhà máy đó (plant-specific fouling drivers).
+- Học chuyển giao xuyên nhà máy cho dự đoán tắc nghẽn MBR không phải là một bài toán chuyển đổi mô hình đơn thuần (model-porting problem):
+  - Nhà máy nguồn và nhà máy mục tiêu có thể khác biệt rõ rệt về thành phần nước thải đầu vào, đặc tính hóa lý của bùn, hồ sơ $\text{EPS}$/$\text{SMP}$, tương tác hữu cơ - kim loại (metal–organic interactions) và điều kiện vận hành.
+  - Ngay cả sau khi tinh chỉnh, dữ liệu hạn chế tại nhà máy mục tiêu vẫn có thể không đủ để mô hình nắm bắt đầy đủ các yếu tố thúc đẩy tắc nghẽn mới chiếm ưu thế (newly dominant fouling drivers) mà vốn yếu hoặc không hiện diện ở các nhà máy nguồn.
+- Đánh giá sự thành công của học chuyển giao không thể chỉ dựa vào độ chính xác dự đoán, mà cần đánh giá cách thức và nguyên nhân các tín hiệu tắc nghẽn có ý nghĩa vật lý được giữ lại, loại bỏ hoặc tái định trọng số trong quá trình chuyển giao:
+  - Các phân tích giải thích được như $\text{SHAP}$ (SHapley Additive exPlanations) và $\text{LOFO}$ (leave-one-feature-out) là cần thiết để xác định cách các chỉ số liên quan đến $\text{EPS}$/$\text{SMP}$ hoạt động như những yếu tố thúc đẩy chuyển giao được hay các tín hiệu được hiệu chuẩn lại theo từng nhà máy.
+  - Các ứng dụng trước đây của các phương pháp giải thích trong dự đoán tắc nghẽn màng chủ yếu tập trung vào việc xếp hạng tầm quan trọng đặc trưng ở cấp độ mô hình (model-level feature ranking).
+  - Các thuộc tính gán của $\text{SHAP}$ phụ thuộc vào mô hình và thiếu giá trị thực nghiệm chuẩn (ground truth) để kiểm chứng, do đó độ chính xác dự đoán cao không đảm bảo rằng các đặc trưng được mô hình nhấn mạnh phản ánh đúng hành vi tắc nghẽn vật lý thực tế.
+- Đặc tính hóa lý độc lập là điều kiện cần để đánh giá tính hợp lý của các thay đổi thuộc tính gán (attribution shifts) và cung cấp cơ sở giải thích cơ chế:
+  - Các phân tích hóa lý độc lập bao gồm: $\text{EEM}$ (excitation–emission matrix - ma trận kích thích - phát xạ), $\text{LC-OCD}$ (liquid chromatography–organic carbon detection - sắc ký lỏng phát hiện cacbon hữu cơ) và phân tích chất gây tắc nghẽn (foulant analysis).
+- Nghiên cứu đề xuất chiến lược học chuyển giao có thể giải thích được để dự đoán tắc nghẽn màng trong các MBR quy mô pilot dưới điều kiện dữ liệu hạn chế, bao gồm $4$ nội dung cụ thể:
+  - $(1)$ Tiền huấn luyện mô hình gốc: Các mô hình gốc (dựa trên $\text{LSTM}$ và $\text{XGBoost}$) được tiền huấn luyện trên các tập dữ liệu đa nguồn thu thập từ $3$ nhà máy MBR quy mô pilot nguồn xử lý nước thải sinh hoạt, bao gồm nhiều điều kiện vận hành khác nhau, các đặc tính sinh hóa thường quy và các thành phần then chốt trong $\text{EPS}$ và $\text{SMP}$.
+  - $(2)$ Tinh chỉnh mô hình trên nhà máy mục tiêu: Tinh chỉnh các mô hình gốc bằng tập dữ liệu của nhà máy mục tiêu (xử lý nước thải sinh hoạt) để thiết lập mô hình dự đoán tắc nghẽn cho nhà máy bị hạn chế dữ liệu; định lượng mối quan hệ giữa tỷ lệ tinh chỉnh (fine-tuning ratio) và hiệu suất dự đoán; đánh giá ảnh hưởng của kiến trúc $\text{LSTM}$ và $\text{XGBoost}$ đến hiệu suất chuyển giao sau tinh chỉnh.
+  - $(3)$ Phân tích hành vi chuyển giao và kiểm chứng cơ chế: Hành vi chuyển giao và thông tin tắc nghẽn có thể chuyển giao được phân tích thông qua các phương pháp giải thích ($\text{SHAP}$ và $\text{LOFO}$) kết hợp với đặc tính hóa lý độc lập bằng $\text{EEM}$, $\text{LC-OCD}$ và phân tích chất gây tắc nghẽn; các phân tích này làm rõ cách các chỉ số then chốt (đặc biệt là $\text{EPS}$ và $\text{SMP}$) được giữ lại hoặc tái định trọng số trong quá trình tiền huấn luyện và tinh chỉnh, cung cấp bằng chứng cơ chế cho các thay đổi này.
+  - $(4)$ Kiểm chứng trên nền nước thải công nghiệp: Khung học chuyển giao được đánh giá mở rộng trên một MBR quy mô pilot xử lý nước thải công nghiệp nhằm kiểm tra tính khả thi của học chuyển giao xuyên nhà máy dưới nền nước thải có đặc tính khác biệt rõ rệt.
+- Nghiên cứu cung cấp một lộ trình thực tiễn và có thể giải thích được để xây dựng các mô hình dự đoán tắc nghẽn màng tại các cơ sở MBR bị hạn chế dữ liệu thông qua học chuyển giao xuyên nhà máy.

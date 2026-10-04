@@ -1,0 +1,33 @@
+## 2.1. Experiment method
+
+- Nước xám nhân tạo (synthetic greywater) được chuẩn bị theo quy trình của Ongena et al. (2023) sử dụng các sản phẩm chăm sóc cá nhân (personal care products), chất tẩy rửa thương mại Hàn Quốc (detergents) và các thành phần tổng hợp từ tài liệu tham khảo.
+  - Thành phần hóa lý tổng thể của nước xám nhân tạo bao gồm:
+    - Nhu cầu oxy hóa học ($\text{COD}$ - chemical oxygen demand): $405 \pm 70\text{ mg L}^{-1}$.
+    - Amoni nitơ ($\text{NH}_4^+\text{-N}$): $20 \pm 3\text{ mg L}^{-1}$.
+    - Tổng nitơ ($\text{TN}$ - total nitrogen): $21 \pm 5\text{ mg L}^{-1}$.
+  - Lượng $\text{COD}$ và $\text{TN}$ còn lại chưa được cung cấp đủ từ các sản phẩm chăm sóc cá nhân và chất tẩy rửa được bù đắp xấp xỉ bằng cách bổ sung natri axetat (acetate) và amoni clorua (ammonium chloride).
+  - Các mẻ nước thải nhân tạo mới được chuẩn bị hàng ngày bằng nước máy (tap water).
+- Hai hệ thống phản ứng sinh học màng (MBR - membrane bioreactor) quy mô $10\text{ L}$ vận hành song song được cấy bùn hoạt tính (activated sludge) lấy từ nhà máy xử lý nước thải công nghệ Kỵ khí - Thiếu khí - Hiếu khí ($A^2O$ - Anaerobic-Anoxic-Oxic) tại Incheon, Hàn Quốc và vận hành liên tục trong $235\text{ ngày}$.
+  - Mỗi bể MBR lắp đặt hai tấm màng phẳng gốm silicon cacbua ($0.56\text{ }\mu\text{m}$ SiC flat-sheet membranes) với tổng diện tích bề mặt $0.165\text{ m}^2$.
+  - Hệ thống sục khí liên tục (continuous aeration) duy trì nồng độ oxy hòa tan ($\text{DO}$ - dissolved oxygen) trong bể ở mức $5.1 \pm 2.2\text{ mg L}^{-1}$.
+  - Dòng cấp nước xám và dòng hút nước lọc qua màng (permeate extraction) được vận hành liên tục, kết hợp cơ chế giãn nghỉ màng điều khiển bằng bộ định thời (timer-controlled relaxation) ở lưu lượng $0.06\text{ L min}^{-1}$.
+- Chiến lược vận hành của hai bể MBR song song được tổ chức thành ba giai đoạn (Phase 1, Phase 2, Phase 3) với việc điều chỉnh net flux và lưu lượng sục khí nhằm nâng cao hiệu quả xử lý nước xám, đặc biệt là quá trình loại bỏ amoni (ammonia removal).
+  - **Hình 1.** Sơ đồ bố trí thực nghiệm và các giai đoạn vận hành MBR.
+    - <img src="assets/fig_01_p2.jpeg" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Cấu hình song song MBR-1/MBR-2 và lịch trình phân kỳ 3 giai đoạn theo ngày vận hành.
+    - **Từ đâu mà thấy được**
+      - Sơ đồ trên: dòng nước từ bể cấp $120\text{ L}$ qua bơm cấp vào MBR-1 và MBR-2 ($10\text{ L}$); MBR-2 bổ sung giá thể PVDF; nước sau lọc dẫn về bể thu $11.3\text{ L}$.
+      - Bảng dưới: P1 (ngày 1–110), P2 (ngày 111–148), P3 (ngày 149–235) với bước nhảy sục khí ($2.0 \rightarrow 6.0\text{ L min}^{-1}$) và net flux ($2.9 \rightarrow 6.9\text{ L m}^{-2}\text{ h}^{-1}$).
+  - Giai đoạn 1 (Phase 1, ngày 1–110): Hiệu suất loại bỏ amoni ban đầu ở mức thấp dưới điều kiện net flux $2.9\text{ L/(m}^2\cdot\text{h)}$ và lưu lượng sục khí $2.0\text{ L/min}$.
+  - Giai đoạn 2 (Phase 2, ngày 111–148): Lưu lượng sục khí được tăng lên $6.0\text{ L/min}$ (dưới mức net flux $2.9\text{ L/(m}^2\cdot\text{h)}$) để cải thiện và nâng cao hiệu quả nitrat hóa (nitrification efficiency).
+  - Giai đoạn 3 (Phase 3, ngày 149–235): Net flux được tăng lên $6.9\text{ L/(m}^2\cdot\text{h)}$ để tiếp tục thử nghiệm độ ổn định thủy lực (hydraulic stability).
+- Giá thể vi sinh (biocarriers) được bổ sung vào bể MBR-2 trong Phase 3 với tỷ lệ lấp đầy $10\%$ (packing ratio):
+  - Hạn chế tắc nghẽn màng (membrane fouling) dưới tải trọng net flux cao ($6.9\text{ L/(m}^2\cdot\text{h)}$).
+  - Tạo các vùng thiếu khí (anoxic zones) bên trong cấu trúc giá thể màng PVDF nhằm thúc đẩy quá trình nitrat hóa - khử nitrat đồng thời (simultaneous nitrification-denitrification).
+  - Cho phép đánh giá và so sánh hiệu năng trực tiếp giữa MBR-2 (có giá thể) và MBR-1 (không có giá thể).
+  - Tỷ lệ lấp đầy $10\%$ được lựa chọn nhằm cân bằng giữa việc kiểm soát tắc nghẽn và độ an toàn vận hành, tránh các vấn đề mài mòn thiết bị và tiêu tốn năng lượng liên quan đến tải trọng giá thể cao hơn (Noor et al., 2023; Rahman et al., 2023).
+- Các biến đổi có chủ đích về net flux, lưu lượng sục khí và bổ sung giá thể vi sinh đa dạng hóa điều kiện vận hành của hệ thống:
+  - Làm giàu và mở rộng không gian tập dữ liệu (enriching the dataset).
+  - Nâng cao khả năng tổng quát hóa (generalizability) của mô hình học máy (machine learning model) trên nhiều kịch bản vận hành khác nhau.
+- Chất lượng nước đầu vào (influent), nước sau lọc qua màng (effluent) và nước trong bể phản ứng (reactor water) được phân tích hàng ngày theo các quy trình mô tả trong thông tin bổ sung (supplementary information - SI 1).

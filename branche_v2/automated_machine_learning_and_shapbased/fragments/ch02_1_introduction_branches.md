@@ -1,0 +1,71 @@
+## 1. Introduction
+
+- Perfluorooctanoic acid ($\text{PFOA}$) thuộc họ hợp chất per- and polyfluoroalkyl substances ($\text{PFAS}$) là một trong những chất ô nhiễm môi trường bền bỉ nhất hiện nay.
+  - Liên kết carbon–fluorine ($C\text{--}F$) bền vững tạo nên độ ổn định hóa học đặc biệt, dẫn đến sự phát tán ô nhiễm diện rộng trong các hệ sinh thái thủy sinh và trên cạn.
+  - Khả năng tích lũy sinh học (bioaccumulation) của $\text{PFOA}$ gắn liền với các rủi ro sức khỏe nghiêm trọng:
+    - Độc tính miễn dịch (immunotoxicity).
+    - Rối loạn chức năng gan (liver dysfunction).
+    - Bệnh tim mạch (cardiovascular disease).
+    - Nguy cơ ung thư (cancer).
+  - Các cơ quan quản lý gia tăng sự giám sát pháp lý đối với $\text{PFOA}$:
+    - Cơ quan Nghiên cứu Ung thư Quốc tế (International Agency for Research on Cancer - $\text{IARC}$) phân loại $\text{PFOA}$ vào nhóm chất gây ung thư cho người ($\text{Group 1}$).
+    - Cơ quan Bảo vệ Môi trường Hoa Kỳ (U.S. Environmental Protection Agency - $\text{EPA}$) thiết lập nồng độ ô nhiễm tối đa (maximum contaminant levels) ở mức thấp $4\text{ ng/L}$ trong nước uống.
+  - Nhu cầu cấp thiết thúc đẩy việc tìm kiếm các công nghệ xử lý có thể mở rộng quy mô (scalable) và bền vững:
+    - Yêu cầu không chỉ loại bỏ mà phải khoáng hóa hoàn toàn (fully mineralizing) $\text{PFOA}$ thành các sản phẩm vô hại như carbon dioxide ($\text{CO}_2$) và ion fluoride ($\text{F}^-$).
+    - Định hướng này phản ánh xu thế chung trong xử lý nước thải nhằm tối ưu hóa các quy trình để phân hủy các chất ô nhiễm công nghiệp khó phân hủy.
+
+- Electrochemical oxidation ($\text{EO}$ / oxy hóa điện hóa) là công nghệ phân hủy đầy tiềm năng để xử lý $\text{PFAS}$, có khả năng khoáng hóa $\text{PFOA}$ thành $\text{CO}_2$ và $\text{F}^-$.
+  - Cơ chế phân hủy của quá trình $\text{EO}$ hoạt động qua hai con đường chính (principal degradation pathways):
+    - Chuyển điện tử trực tiếp tại bề mặt cực dương (direct electron transfer at the anode surface), tạo gốc perfluoroalkyl radicals và khởi động các phản ứng cắt ngắn chuỗi (chain-shortening reactions).
+    - Quá trình oxy hóa qua trung gian gốc hydroxyl (hydroxyl radical-mediated oxidation) từ điện phân nước (water electrolysis).
+  - Quá trình tối ưu hóa hệ thống $\text{EO}$ đối mặt với nhiều thách thức do sự tương tác phức tạp giữa các thông số vận hành (operational parameters):
+    - Mật độ dòng điện (current density).
+    - Khoảng cách giữa các điện cực (electrode spacing).
+    - Thành phần chất điện phân (electrolyte composition).
+    - Độ $\text{pH}$.
+    - Nhiệt độ (temperature).
+    - Nồng độ $\text{PFOA}$ ban đầu (initial $\text{PFOA}$ concentration).
+    - Thời gian điện phân (electrolysis time).
+    - Đặc tính của nền nước xử lý (water matrix characteristics).
+  - Không gian tham số có số chiều cao (high dimensionality) và các tương tác phi tuyến (nonlinear interactions) cản trở các phương pháp tối ưu hóa truyền thống:
+    - Biến động của một thông số tác động đáng kể đến hiệu quả của các thông số còn lại.
+    - Phương pháp tiếp cận truyền thống đòi hỏi nhiều thời gian và chi phí tài nguyên lớn.
+    - Cần các phương pháp tính toán tiên tiến để định hướng không gian tham số đa chiều nhằm tìm điều kiện tối ưu cho phân hủy $\text{PFOA}$.
+
+- Machine learning ($\text{ML}$ / học máy) thể hiện tiềm năng giải quyết bài toán tối ưu hóa trong hệ thống điện hóa xử lý nước.
+  - Các thuật toán $\text{ML}$ được ứng dụng thành công để dự đoán hiệu suất quá trình điện hóa, từ oxy hóa điện hóa tổng quát đến các kịch bản xử lý $\text{PFAS}$ cụ thể.
+  - Các khung làm việc $\text{ML}$ tiên tiến đạt độ chính xác dự đoán vượt ngưỡng $R^2 = 0.84$ ($R^2 > 0.84$), đồng thời cung cấp hiểu biết về cơ chế thông qua phân tích tầm quan trọng của đặc trưng (feature importance analysis).
+  - Việc tích hợp công cụ giải thích $\text{SHAP}$ ($\text{SHapley Additive exPlanations}$) hỗ trợ trích xuất thông tin hữu ích từ các tập dữ liệu điện hóa phức tạp:
+    - Làm sáng tỏ các mối quan hệ giữa các tham số then chốt.
+    - Định hướng các chiến lược tối ưu hóa điều kiện vận hành.
+  - Các ứng dụng $\text{ML}$ hiện hữu trong lĩnh vực này còn gặp nhiều hạn chế:
+    - Phụ thuộc vào mô hình hóa truyền thống với quy trình tinh chỉnh siêu tham số thủ công (manual hyperparameter tuning) diện rộng.
+    - Việc lựa chọn thuật toán đòi hỏi chuyên gia chuyên sâu (expert-driven algorithm selection).
+    - Hạn chế khả năng tiếp cận và mở rộng quy mô đối với các kỹ sư môi trường.
+
+- Automated machine learning ($\text{AutoML}$ / học máy tự động) mang lại phương thức tiếp cận chuyển đổi cho việc tối ưu hóa quy trình dựa trên dữ liệu.
+  - $\text{AutoML}$ vận hành tự động mà không cần sự can thiệp của con người qua các khâu:
+    - Lựa chọn thuật toán (algorithm selection).
+    - Tối ưu hóa siêu tham số (hyperparameter optimization).
+    - Kỹ thuật tạo đặc trưng (feature engineering).
+  - Khung làm việc $\text{FLAML}$ ($\text{Fast Lightweight AutoML}$) do Microsoft Research phát triển áp dụng tối ưu hóa Bayesian nhận thức chi phí (cost-aware Bayesian optimization):
+    - Tự động phân bổ linh hoạt tài nguyên tính toán.
+    - Ưu tiên các mô hình có độ phức tạp thấp để tăng tốc độ hội tụ.
+  - $\text{AutoML}$ trong mô hình hóa môi trường giúp tiết kiệm chi phí tính toán và mang lại hiệu suất dự đoán cao hơn các mô hình tinh chỉnh thủ công:
+    - Thuật toán gradient boosting do $\text{AutoML}$ lựa chọn đạt sai số $\text{MSE} = 17.0$, tốt hơn so với mạng nơ-ron nhân tạo thông thường đạt $\text{MSE} = 58.0$ khi dự đoán ảnh hưởng của vi nhựa lên quá trình sinh khí methane trong phân hủy kỵ khí.
+    - Mô hình $\text{AutoML}$ mô phỏng chính xác động học loại bỏ kháng sinh trong đất ngập nước kiến tạo (constructed wetlands) qua nhiều thời lượng huấn luyện khác nhau, đạt sai số $\text{MAE} = 9.94\text{--}13.68$ và hệ số xác định $R^2 = 0.780\text{--}0.877$.
+  - Việc kết hợp giữa $\text{FLAML}$ và $\text{SHAP}$ đáp ứng hai yêu cầu thiết yếu trong kỹ thuật môi trường:
+    - Cung cấp độ chính xác dự đoán cao.
+    - Mang lại các hiểu biết minh bạch, có thể giải thích để hỗ trợ tuân thủ quy định pháp lý, tối ưu hóa vận hành và xây dựng niềm tin của các bên liên quan.
+
+- Nghiên cứu thiết lập một quy trình $\text{AutoML}$ có khả năng tái lập (reproducible) và giải thích được (interpretable) cho hệ thống oxy hóa điện hóa $\text{PFOA}$.
+  - Việc kết hợp tối ưu hóa tự động nhận thức chi phí ($\text{FLAML}$) cùng giải thích dựa trên $\text{SHAP}$ hướng đến ba mục tiêu cụ thể:
+    - Đạt hiệu suất dự đoán đáng tin cậy.
+    - Cung cấp sự quy kết minh bạch dựa trên mô hình về các yếu tố chi phối vận hành (model-based attribution of operational drivers).
+    - Xây dựng đường ống xử lý có tính linh động cao (portable pipeline), giảm bớt các bước thử nghiệm thủ công.
+  - Nghiên cứu sử dụng tập dữ liệu đã được xử lý chuẩn bị từ trước (previously curated dataset) để đảm bảo tính so sánh trực tiếp, đồng thời tách biệt đóng góp về mặt phương pháp luận giữa tự động hóa và khả năng diễn giải.
+  - $\text{FLAML}$ được xem là khung làm việc tối ưu hóa tách biệt với thuật toán học máy dự đoán cuối cùng là $\text{XGBoost}$.
+  - Hiệu suất tổng quát hóa (generalization) được kiểm định chặt chẽ thông qua:
+    - Kiểm tra giữ lại lặp lại (repeated holdout).
+    - Các kiểm định thống kê (statistical testing).
+    - Chẩn đoán đường cong học tập (learning-curve diagnostics).

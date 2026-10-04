@@ -1,0 +1,49 @@
+## 2.1. Data collection
+
+- Nhà máy quy mô pilot xử lý nước thải sinh hoạt tại Singapore được lựa chọn làm nhà máy đích (target plant) với nước thải đầu vào giàu sắt ($\text{Fe}$):
+  - Nồng độ liều lượng $\text{Fe}$ bổ sung vào nước thải đầu vào xấp xỉ $10\text{--}30\text{ mg/L}$.
+  - Công suất xử lý của hệ thống đạt $24\text{ m}^3\text{/d}$.
+  - Cấu hình công nghệ bao gồm công đoạn tiền xử lý (pretreatment), bể phản ứng sinh học nạp chia dòng 5 bậc (five-pass step-feed bioreactor) phân chia các vùng kỵ khí/hiếu khí (anaerobic/oxic zonation), và bể màng (membrane tank) (Fig. 1(a)).
+  - Khung chuyển giao học tập (cross-plant transfer learning framework) được xây dựng nhằm giải quyết các thách thức dự báo đặc thù của nhà máy đích gồm dữ liệu hạn chế, thiếu hụt dữ liệu và nhiễu đo đạc:
+    - **Hình 1.** Khung học chuyển giao dự báo TMP trong các hệ thống MBR
+      - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+      - **Hình này chứng minh điều gì**
+        - Thể hiện kiến trúc chuyển giao từ 3 nhà máy nguồn sang nhà máy đích nhằm giải quyết hạn chế thiếu hụt dữ liệu.
+      - **Từ đâu mà thấy được**
+        - Bảng (a), (b): chuỗi xử lý nhà máy đích gặp thách thức dữ liệu ít và nhiễu, được bù đắp bởi dữ liệu quy mô lớn hơn từ 3 nhà máy nguồn.
+        - Bảng (c), (d), (e): tiền huấn luyện LSTM-base và XGBoost-base ($80\%$ train, $20\%$ test), tinh chỉnh ($50\%$ train, $50\%$ test), và giải thích bằng LOFO và SHAP.
+- Hồ sơ áp suất xuyên màng (TMP) và đặc tính vận hành thực tế của nhà máy đích phản ánh các ràng buộc quan trắc công nghiệp:
+  - Tập dữ liệu nhà máy đích bao phủ chu kỳ giám sát từ tháng 9 năm 2021 đến tháng 6 năm 2022 ($2021\text{/}09\text{/}14\text{--}2022\text{/}06\text{/}18$).
+  - Diễn biến TMP vận hành thực tế dao động chủ yếu trong khoảng $13\text{--}25\text{ kPa}$, ghi nhận các mốc làm sạch tại chỗ (CIP), giai đoạn rò rỉ đường lọc MBR ($2022\text{/}01\text{/}02\text{--}2022\text{/}01\text{/}30$), và gián đoạn vận hành ($2022\text{/}03\text{/}26$) (Fig. 2(a)).
+  - Cấu tạo mô-đun màng lọc ngập tại nhà máy đích được ghi nhận qua hình ảnh thực địa (Fig. 2(b)), với các thông số quy trình và vận hành chi tiết được tóm lược tại Text S1.
+  - Do tần suất phân tích các chất cao phân tử ngoại bào (EPS) và sản phẩm vi sinh hòa tan (SMP) chỉ đạt $2\text{ lần/tuần}$ (twice-weekly), mô hình chỉ được phát triển trên các ngày có đầy đủ phép đo đồng bộ cho tất cả biến đầu vào và TMP, thu được $71\text{ bản ghi}$ hợp lệ khớp thời gian (71 valid temporally matched records).
+  - Thiết lập thực nghiệm giới hạn dữ liệu tại nhà máy đích phản ánh đúng các ràng buộc giám sát thực tế trong vận hành MBR quy mô pilot, cung cấp kịch bản thực tế để đánh giá khung học chuyển giao liên nhà máy.
+  - **Hình 2.** Bối cảnh vận hành nhà máy đích và đặc tính dữ liệu nguồn–đích
+    - <img src="assets/fig_02_p4.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện biến động TMP thực tế cùng sự tương đồng và khác biệt về phân phối 11 biến số giữa 4 nhà máy.
+    - **Từ đâu mà thấy được**
+      - Bảng (a), (b): diễn biến TMP ($13\text{--}25\text{ kPa}$) từ 2021/09/14 đến 2022/06/18 với các mốc CIP, rò rỉ đường lọc và gián đoạn; ảnh mô-đun màng.
+      - Bảng (c), (d): biểu đồ phân phối và bảng giá trị trung bình 11 biến (nhà máy đích có MLSS $5535\text{ mg/L}$, cao hơn Plant 1–3 từ $3122\text{--}3839\text{ mg/L}$).
+- Ba nhà máy MBR ngập quy mô pilot xử lý nước thải sinh hoạt tại Singapore được lựa chọn làm các nhà máy nguồn (source plants), cung cấp tổng cộng $332\text{ bản ghi}$ dữ liệu:
+  - Số lượng bản ghi đóng góp từ từng nhà máy nguồn:
+    - Plant 1: $100\text{ bản ghi}$.
+    - Plant 2: $132\text{ bản ghi}$.
+    - Plant 3: $100\text{ bản ghi}$ (Fig. 1(b)).
+  - Hình ảnh thực địa của 3 nhà máy nguồn được cung cấp tại Fig. S1, và hồ sơ TMP trong chu kỳ giám sát tương ứng được thể hiện tại Fig. S2.
+  - Cấu hình công nghệ của các nhà máy nguồn tương đồng với nhà máy đích, bao gồm xử lý sinh học thiếu khí/hiếu khí (anoxic/oxic biological treatment) kết hợp phân tách màng ngập (immersed membrane separation), với tuần hoàn bùn truyền thống (conventional sludge recirculation) và xả bùn thải (sludge wasting).
+  - Các đặc tính kỹ thuật chi tiết của hệ thống màng và thiết lập vận hành được tổng hợp tại Table S1.
+- Cơ sở vật lý và hóa lý hỗ trợ áp dụng học chuyển giao giữa các nhà máy nguồn và nhà máy đích:
+  - Mặc dù nhà máy đích có sự khác biệt về thành phần nước thải đầu vào do bổ sung $\text{Fe}$ ở thượng nguồn ($10\text{--}30\text{ mg/L}$), cấu hình xử lý tổng thể vẫn tương đồng với các nhà máy nguồn.
+  - Cơ chế tắc nghẽn màng (MBR fouling mechanisms) giữa nhà máy đích và các nhà máy nguồn tương đồng trên diện rộng, tạo tiền đề khoa học cho việc chuyển giao tri thức mô hình.
+- Tập dữ liệu của mỗi nhà máy bao gồm 11 biến đầu vào kết hợp cùng biến mục tiêu TMP:
+  - Danh mục 11 biến số đầu vào phục vụ mô hình hóa:
+    - Nhóm thông số vận hành thủy lực: Thời gian lưu thủy lực (HRT - hydraulic retention time), thời gian lưu bùn (SRT - solids retention time), và thông lượng màng (membrane flux - $\text{FLUX}$).
+    - Nhóm thông số hóa lý chất lượng nước và bùn lỏng: Nhu cầu oxy hóa học tổng số (TCOD - total chemical oxygen demand), nhu cầu oxy hóa học hòa tan (SCOD - soluble chemical oxygen demand), nồng độ chất rắn lơ lửng trong bùn lỏng (MLSS - mixed liquor suspended solids), và nồng độ chất rắn lơ lửng bay hơi trong bùn lỏng (MLVSS - mixed liquor volatile suspended solids).
+    - Nhóm thành phần sinh học màng: Protein trong chất cao phân tử ngoại bào ($\text{EPS}_\text{p}$), carbohydrate trong chất cao phân tử ngoại bào ($\text{EPS}_\text{c}$), protein trong sản phẩm vi sinh hòa tan ($\text{SMP}_\text{p}$), và carbohydrate trong sản phẩm vi sinh hòa tan ($\text{SMP}_\text{c}$).
+  - Biến mục tiêu: Áp suất xuyên màng (TMP) thu nhận từ hệ thống giám sát trực tuyến thường quy (routine online monitoring), được khớp theo từng ngày lấy mẫu để phân tích.
+  - Phân phối và giá trị trung bình của các thông số đầu vào tại 4 nhà máy (Fig. 2(c), (d)):
+    - Plant 1: $\text{SCOD} = 170\text{ mg/L}$, $\text{TCOD} = 330\text{ mg/L}$, $\text{MLSS} = 3122\text{ mg/L}$, $\text{MLVSS} = 2430\text{ mg/L}$, $\text{SMP}_\text{c} = 5.2\text{ mg/L}$, $\text{SMP}_\text{p} = 10.8\text{ mg/L}$, $\text{EPS}_\text{c} = 39.2\text{ mg/L}$, $\text{EPS}_\text{p} = 184\text{ mg/L}$, $\text{HRT} = 5.5\text{ h}$, $\text{SRT} = 5.1\text{ d}$, $\text{FLUX} = 25\text{ LMH}$.
+    - Plant 2: $\text{SCOD} = 156\text{ mg/L}$, $\text{TCOD} = 303\text{ mg/L}$, $\text{MLSS} = 3839\text{ mg/L}$, $\text{MLVSS} = 3056\text{ mg/L}$, $\text{SMP}_\text{c} = 6.4\text{ mg/L}$, $\text{SMP}_\text{p} = 11.7\text{ mg/L}$, $\text{EPS}_\text{c} = 43.5\text{ mg/L}$, $\text{EPS}_\text{p} = 229\text{ mg/L}$, $\text{HRT} = 5.5\text{ h}$, $\text{SRT} = 5\text{ d}$, $\text{FLUX} = 29\text{ LMH}$.
+    - Plant 3: $\text{SCOD} = 159\text{ mg/L}$, $\text{TCOD} = 300\text{ mg/L}$, $\text{MLSS} = 3538\text{ mg/L}$, $\text{MLVSS} = 2714\text{ mg/L}$, $\text{SMP}_\text{c} = 11.5\text{ mg/L}$, $\text{SMP}_\text{p} = 13.8\text{ mg/L}$, $\text{EPS}_\text{c} = 32.3\text{ mg/L}$, $\text{EPS}_\text{p} = 204\text{ mg/L}$, $\text{HRT} = 5\text{ h}$, $\text{SRT} = 5\text{ d}$, $\text{FLUX} = 38.7\text{ LMH}$.
+    - Nhà máy đích (Target plant): $\text{SCOD} = 93\text{ mg/L}$, $\text{TCOD} = 271\text{ mg/L}$, $\text{MLSS} = 5535\text{ mg/L}$, $\text{MLVSS} = 4157\text{ mg/L}$, $\text{SMP}_\text{c} = 6.4\text{ mg/L}$, $\text{SMP}_\text{p} = 7.1\text{ mg/L}$, $\text{EPS}_\text{c} = 49.6\text{ mg/L}$, $\text{EPS}_\text{p} = 213\text{ mg/L}$, $\text{HRT} = 5.5\text{ h}$, $\text{SRT} = 6.8\text{ d}$, $\text{FLUX} = 25\text{ LMH}$.

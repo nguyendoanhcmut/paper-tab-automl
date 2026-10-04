@@ -1,0 +1,24 @@
+### 3.3. Correlating microbiological data with the physicochemical events in the water intake (Dataset 3)
+
+- Tập dữ liệu Dataset 3 được thiết lập bằng cách tích hợp dữ liệu của $7$ thông số hóa lý đã nghiên cứu trước đó trong Dataset 2 với dữ liệu lưu lượng dòng chảy sông (river flow) và dữ liệu vi sinh vật (microbiological data) thu thập trong cùng $52$ ngày:
+  - Tổng số $14$ biến được đưa vào phân tích, bao gồm $6$ chỉ số vi khuẩn (bacteriological parameters), lưu lượng dòng chảy sông và $7$ thông số hóa lý.
+  - Tất cả $14$ biến trong Dataset 3 đều được chuẩn hóa theo tỷ lệ (autoscaled).
+- Mô hình PCA với $3$ thành phần chính (PCs - Principal Components) giải thích $> 80\%$ ($N80\%$) tổng phương sai của tập dữ liệu thực nghiệm:
+  - Thành phần chính thứ nhất (PC1) giải thích $> 50\%$ ($N50\%$, trên biểu đồ ghi nhận $52.02\%$) tổng phương sai dữ liệu.
+  - PC1 nắm bắt hầu hết biến thiên của tất cả các phép đếm số lượng vi khuẩn (bacteria counts) cùng với một số thông số hóa lý như lưu lượng dòng chảy sông và độ đục ($\text{TURB}$).
+- Phân tích điểm số (scores) và biểu đồ hệ số tải (loadings plot) của PC1 làm rõ các sự kiện ô nhiễm và mối tương quan đa biến giữa dữ liệu vi sinh với các thông số hóa lý tại cửa thu nước (Fig. 7A và Fig. 7B):
+  - **Figure 7. PC1 results of dataset combining microbiological and physicochemical data**
+    - ![Figure 7](assets/fig_07_p9.jpeg)
+  - Biểu đồ điểm số PC1 (PC1 scores, Fig. 7A) phát hiện và phân định các sự kiện ô nhiễm khác nhau diễn ra trong từng tuần cụ thể đối với chất lượng nước tại cửa thu.
+  - Phân tích biểu đồ hệ số tải (loadings plot, Fig. 7B) ghi nhận nồng độ của toàn bộ các vi khuẩn (văn bản gốc nêu toàn bộ $7$ nồng độ vi khuẩn / $6$ nhóm vi khuẩn) cùng với lưu lượng dòng chảy sông, độ đục ($\text{TURB}$) và độ hấp thụ $\text{UV}_{254}$ đều có hệ số tải dương cao trên PC1, thể hiện mối tương quan thuận mạnh giữa chúng.
+  - Ngược lại, quan sát thấy các tương quan nghịch giữa nồng độ vi khuẩn với độ dẫn điện ($\text{COND}$) và $\text{pH}$ trong nước sông (cả hai thông số đều mang hệ số tải âm trên PC1).
+  - Tương quan nghịch chỉ ra rằng nồng độ vi khuẩn tăng cao liên kết trực tiếp với các giá trị độ dẫn điện và $\text{pH}$ thấp hơn trong nước sông.
+- Các giá trị đỉnh (peak values) về nồng độ của toàn bộ vi khuẩn được giám sát xuất hiện đồng thời khi lưu lượng dòng chảy sông dâng cao, kèm theo độ đục lớn và giá trị độ hấp thụ $\text{UV}_{254}$ tăng vọt:
+  - Trong các điều kiện này, các giá trị $\text{COND}$ và $\text{pH}$ suy giảm do các hiệu ứng pha loãng (dilution effects), dấu hiệu chỉ điểm cho các giai đoạn có mưa (rainy episodes).
+  - Nước mưa rửa trôi các màng sinh học đáy sông (river biofilms) và tạo ra dòng chảy tràn từ khu vực nông nghiệp và đô thị (agricultural and urban runoffs) đổ vào lòng sông, đóng góp vào sự gia tăng đáng kể của các sự kiện vi sinh quan sát được.
+  - Hiện tượng tràn nước thải từ các tuyến cống gom của các nhà máy xử lý nước thải (WWTPs - Wastewater Treatment Plants) dọc lưu vực sông Llobregat có khả năng xảy ra trong các sự kiện này.
+- Ghi nhận $5$ sự kiện có sự xuất hiện vi khuẩn mạnh (strong bacterial occurrence) trong chu kỳ $52$ tuần quan trắc:
+  - Sự kiện có cường độ mạnh nhất được phát hiện vào ngày thứ Hai của tuần/mẫu thứ $47$ (Monday - 47th week/sample).
+  - Các sự kiện khác có cường độ thấp hơn xuất hiện trong tuần thứ $5$, tuần thứ $17$, tuần thứ $20$ và tuần thứ $40$ của thời gian giám sát.
+  - Khảo sát các điều kiện khí tượng (qua website `www.meteoclimatic.com`) cho các ngày tương ứng khẳng định mối tương quan trực tiếp của các sự kiện ở tuần thứ $17$, tuần thứ $20$, tuần thứ $40$ và tuần thứ $47$ với các đợt mưa lớn.
+  - Sự kiện xảy ra trong tuần thứ $5$ không gắn với các dị thường thời tiết (weather anomalies), nhưng nồng độ ion amoni ($\text{NH}_4$) tăng rất cao trong nước sông gợi ý khả năng xảy ra sự cố xả thải nước ô nhiễm từ nhà máy xử lý nước thải (WWTP).

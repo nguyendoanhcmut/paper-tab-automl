@@ -1,0 +1,35 @@
+## 5. Conclusions
+
+- Tính khả thi của các mô hình học máy có khả năng giải thích (interpretable ML-based models) trong giám sát quá trình nitrat hóa (nitrification) của màng sinh học hiếu khí (MBR - Membrane Bioreactor):
+  - Khung mô hình áp dụng ba thuật toán gồm hồi quy logistic ($\text{LR}$ - Logistic Regression), rừng ngẫu nhiên ($\text{RF}$ - Random Forest), và tăng cường độ dốc cực đại ($\text{XGB}$ - Extreme Gradient Boosting).
+  - Sử dụng sáu đặc trưng tương thích với cảm biến (six sensor-compatible features):
+    - Lưu lượng khí cấp ($\text{airflow}$).
+    - Lưu lượng dòng vào ($\text{influent flow}$).
+    - Áp suất xuyên màng ($\text{TMP}$ - Transmembrane Pressure).
+    - Nồng độ dòng ra của nhu cầu oxy hóa học ($\text{effluent COD}$).
+    - Nồng độ nitrat dòng ra ($\text{effluent }\text{NO}_3^-\text{-N}$).
+    - Nồng độ amoni dòng ra ($\text{effluent }\text{NH}_4^+\text{-N}$).
+- Hiệu năng phân loại và khả năng chuyển giao xuyên kịch bản (cross-scenario testing):
+  - Chiến lược lựa chọn đặc trưng cho phép phân loại mạnh mẽ (robust classification) với độ chuẩn xác $\text{precision} > 0.85$ đối với $\text{LR}$ và $\text{XGB}$.
+  - Mô hình $\text{RF}$ đạt kết quả cao trong thử nghiệm xuyên kịch bản với độ chuẩn xác $\text{precision} = 0.87$ khi dự đoán vận hành có giá thể sinh học (biocarrier operations) bằng dữ liệu huấn luyện từ các hệ thống không có giá thể sinh học (non-biocarrier systems).
+  - Tỷ lệ dương tính giả ($\text{FPR}$ - False Positive Rate) suy giảm do sự dịch chuyển phân phối đặc trưng (feature distribution shifts).
+  - Tất cả các mô hình duy trì tỷ lệ dương tính thật $\text{TPR} \ge 0.80$ và độ chính xác $\text{accuracy} > 0.75$ trong thử nghiệm xuyên kịch bản.
+  - Tập dữ liệu giới hạn tạo ra ràng buộc đối với độ ổn định của mô hình.
+  - Kết quả nhấn mạnh tiềm năng của ML trong việc tăng cường kiểm soát MBR thông qua cân bằng độ chuẩn xác ($\text{precision}$, giảm thiểu các trường hợp dương tính giả $\text{FP}$ - False Positives) với khả năng chuyển giao giữa các cấu hình vận hành khác nhau.
+- Phân tích hậu nghiệm (post hoc analysis) và nhận diện các biến dự đoán chi phối:
+  - Các phương pháp phân tích hậu nghiệm gồm độ quan trọng đặc trưng ($\text{feature importance}$), ước lượng mật độ nhân ($\text{KDE}$ - Kernel Density Estimation), biểu đồ từng cặp ($\text{pairwise plots}$), và phân tích giá trị $\text{SHAP}$ ($\text{SHapley Additive exPlanations}$).
+  - Xác nhận nồng độ dòng ra của $\text{NO}_3^-\text{-N}$ và $\text{NH}_4^+\text{-N}$ là các biến dự đoán chi phối (dominant predictors).
+  - Khoảng tin cậy $95\,\%$ rộng ($95\,\%$ confidence intervals) phản ánh sự không ổn định bắt nguồn từ quy mô tập dữ liệu nhỏ.
+- Định hướng nghiên cứu tương lai và khung triển khai thực tế:
+  - Ưu tiên thu thập dữ liệu có hệ thống và huấn luyện mô hình trên các điều kiện chất lượng nước đầu vào đa dạng cùng nhiều chế độ oxy hòa tan ($\text{DO}$ - Dissolved Oxygen) khác nhau.
+  - Mở rộng các điều kiện biên (boundary conditions), cụ thể là tập trung thu thập dữ liệu trong điều kiện $\text{NO}_3^-\text{-N}$ cao và $\text{NH}_4^+\text{-N}$ thấp nhằm tối ưu hóa kiến trúc mô hình.
+  - Nghiên cứu thiết lập khung làm việc triển khai các mô hình dựa trên dữ liệu có khả năng giải thích trong tái sử dụng nước xám phân tán (decentralized greywater reuse), thúc đẩy kiểm soát MBR thông minh và giải quyết rào cản chuyển giao trong triển khai thực tế.
+- Tuyên bố đóng góp tác giả, công nghệ AI hỗ trợ, xung đột lợi ích và lời cảm ơn (Authorship, AI declaration, conflicts of interest, and acknowledgments):
+  - Đóng góp tác giả CRediT ($\text{CRediT authorship contribution statement}$):
+    - Siyuan Wang: Viết – soát xét & biên tập ($\text{Writing – review \& editing}$), viết – bản thảo gốc ($\text{Writing – original draft}$), trực quan hóa ($\text{Visualization}$), phần mềm ($\text{Software}$), phương pháp luận ($\text{Methodology}$), điều tra ($\text{Investigation}$), phân tích chính thức ($\text{Formal analysis}$), và hình thành ý tưởng ($\text{Conceptualization}$).
+    - Duc-Viet Nguyen: Viết – soát xét & biên tập ($\text{Writing – review \& editing}$), điều tra ($\text{Investigation}$).
+    - How Seow-Wah: Phương pháp luận ($\text{Methodology}$), điều tra ($\text{Investigation}$), phân tích chính thức ($\text{Formal analysis}$), và quản lý dữ liệu ($\text{Data curation}$).
+    - Di Wu: Viết – soát xét & biên tập ($\text{Writing – review \& editing}$), giám sát ($\text{Supervision}$), điều tra ($\text{Investigation}$), huy động tài trợ ($\text{Funding acquisition}$), và hình thành ý tưởng ($\text{Conceptualization}$).
+  - Tuyên bố về trí tuệ nhân tạo tạo sinh trong quá trình viết ($\text{Declaration of Generative AI and AI-assisted technologies in the writing process}$): Sử dụng $\text{DEEPSEEK}^{\text{TM}}$ nhằm cải thiện độ đọc và ngôn ngữ bản thảo; các tác giả đã rà soát, chỉnh sửa nội dung và chịu trách nhiệm về toàn bộ bài báo xuất bản.
+  - Tuyên bố về xung đột lợi ích ($\text{Declaration of Competing Interest}$): Các tác giả tuyên bố không có xung đột lợi ích tài chính hoặc mối quan hệ cá nhân nào ảnh hưởng đến công trình nghiên cứu.
+  - Lời cảm ơn ($\text{Acknowledgments}$): Ghi nhận sự hỗ trợ của Emile van Holsbeke, Helena Deberdt, Yujin Kim, Joonhyung Bai, Ji Eun Kim, Siyoung Kim, Loïc Ruiz và Dongha Kim từ Đại học Ghent ($\text{Ghent University}$) trong lắp đặt và vận hành hệ thống MBR; công trình nhận tài trợ từ Quỹ Nghiên cứu Đặc biệt của Đại học Ghent, Bỉ ($\text{BOF22/DOC/135}$), Hội đồng Tài trợ Nghiên cứu Hồng Kông ($\text{T21–604/19-R}$), và Ủy ban Đổi mới và Công nghệ Hồng Kông ($\text{ITC-CNERC14EG03}$).

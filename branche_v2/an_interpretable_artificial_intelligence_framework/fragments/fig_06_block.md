@@ -1,0 +1,8 @@
+- **Hình 6.** Bản đồ nhiệt tầm quan trọng đặc trưng SHAP và biểu đồ beeswarm cho 16 mô hình
+  - <img src="assets/fig_06_p9.jpeg" alt="Hình 6" />
+  - **Hình này chứng minh điều gì**
+    - Cột SRT đồng nhất màu đỏ sẫm ($1.0$) trên toàn bộ 16 mô hình cho TMP và 15 mô hình cho mức nước bể màng.
+    - Biểu đồ beeswarm thể hiện SRT cao kéo giảm mạnh giá trị SHAP của TMP (đạt $-2.0$), trong khi HRT tối ưu quanh dải trung bình.
+  - **Từ đâu mà thấy được**
+    - Panel (A1--A3): Trục hoành gồm 7 đặc trưng đầu vào, trục tung gồm 16 mô hình học máy; thang màu biểu thị Normalized importance không thứ nguyên từ $0.0$ (xanh lam) đến $1.0$ (đỏ sẫm).
+    - Panel (B1--B3): Trục hoành đo SHAP value (tác động lên đầu ra mô hình, không thứ nguyên), trục tung liệt kê 7 đặc trưng; màu điểm từ xanh lam (giá trị thấp) đến đỏ sẫm (giá trị cao).

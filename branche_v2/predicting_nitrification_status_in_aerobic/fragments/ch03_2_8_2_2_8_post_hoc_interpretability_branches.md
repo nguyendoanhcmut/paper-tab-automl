@@ -1,0 +1,18 @@
+#### 2.2.8. Post hoc interpretability
+- Diễn giải hậu nghiệm (post hoc interpretation) là yêu cầu cần thiết đối với các mô hình phức tạp dù các phương pháp dựa trên cây quyết định (decision tree-based methods) sở hữu khả năng diễn giải cố hữu (inherent interpretability) (Murdoch et al., 2019).
+- Độ quan trọng của đặc trưng (feature importance) định lượng mức độ đóng góp của các biến đầu vào (input variables):
+  - Đóng vai trò hỗ trợ cải thiện khả năng diễn giải của mô hình và định hướng chiến lược thu thập dữ liệu nhằm nâng cao hiệu suất.
+  - Trong mô hình Logistic Regression (LR), các hệ số đặc trưng (feature coefficients) thu được từ việc cực tiểu hóa hàm mất mát (loss function) dạng log-likelihood âm (negative log-likelihood) thông qua các phương pháp tối ưu hóa như hạ độ dốc (gradient descent) (Hastie et al., 2009).
+  - Các hệ số trong LR thể hiện độ mạnh và chiều hướng của mối quan hệ tuyến tính giữa từng đặc trưng với biến mục tiêu (target variable) (Murphy, 2012).
+  - Trong mô hình Random Forest (RF), feature importance được đánh giá thông qua mức độ giảm tạp chất (reduction in impurity), chẳng hạn như chỉ số Gini (Gini index), khi một đặc trưng được sử dụng để phân chia nút (split a node) (Liaw and Wiener, 2002).
+  - Điểm số quan trọng trong RF được tính trung bình trên toàn bộ các cây, phản ánh mức đóng góp tổng thể của từng đặc trưng vào mô hình.
+  - Trong mô hình XGBoost (XGB), feature importance thường được tính toán theo phương pháp độ lợi (Gain method) bằng cách tính tổng và chuẩn hóa các mức lợi (gains) từ tất cả các điểm phân tách liên quan đến đặc trưng đó để xác định điểm số quan trọng (Chen and Guestrin, 2016).
+- Phân tích SHAP (SHapley Additive exPlanations) ứng dụng lý thuyết trò chơi (game theory) để gán cho từng đặc trưng một giá trị quan trọng đối với các dự đoán cụ thể:
+  - Các giá trị SHAP thỏa mãn ba tiên đề gồm tính hiệu quả (efficiency), tính đối xứng (symmetry) và tính cộng (additivity), mang lại khả năng diễn giải nhất quán trên cả quy mô cục bộ (local interpretability) và toàn cục (global interpretability) (Lundberg and Lee, 2017).
+  - Tiên đề hiệu quả thỏa mãn hệ thức: $\text{prediction} = \text{base value} + \sum \text{feature contributions}$.
+- Mối quan hệ giữa từng cặp đặc trưng (pairwise feature relationships) được trực quan hóa thông qua ước lượng mật độ nhân (KDE - Kernel Density Estimation) và biểu đồ từng cặp đặc trưng (pairwise feature plot):
+  - KDE xấp xỉ phi tham số (nonparametrically approximate) các hàm mật độ xác suất liên tục (continuous probability density functions) bằng phương pháp làm mịn các điểm dữ liệu quan sát thông qua các hàm nhân đối xứng (symmetric kernel functions) và tham số độ rộng băng thông (bandwidth parameters) (Scott, 2015).
+  - Biểu đồ từng cặp đặc trưng được triển khai dưới dạng ma trận biểu đồ phân tán (scatterplot matrices), biểu thị các mẫu tương quan (correlation) và cụm (clustering patterns) giữa các đặc trưng (Pekalska et al., 2005).
+  - Trực quan hóa hỗ trợ nhận định hiệu suất phân loại của mô hình bằng cách biểu diễn trực quan ma trận nhầm lẫn (confusion matrix) (Waskom, 2021).
+- Môi trường phần mềm và triển khai tính toán:
+  - Toàn bộ các phân tích trong nghiên cứu được triển khai trên môi trường Python phiên bản $3.9.13$ (Van Rossum and Drake, 2009).

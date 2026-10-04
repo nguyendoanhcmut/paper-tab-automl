@@ -1,0 +1,32 @@
+### 3.3. Impact of data volume on predictive performance
+
+- Mô hình hóa dựa trên học máy (ML-based modeling) là phương pháp tiếp cận định hướng bởi dữ liệu (data-driven approach), có hiệu năng phụ thuộc chủ yếu vào chất lượng và số lượng của dữ liệu (Fan and Shi, 2022; Liu et al., 2023):
+  - Khi áp dụng vào các tập dữ liệu thực nghiệm, học máy gặp phải các thách thức cố hữu liên quan đến tính khả dụng (data availability) và độ tin cậy của dữ liệu (data reliability).
+  - Các thí nghiệm trong phòng thí nghiệm thường chỉ thu được kích thước mẫu nhỏ do những rào cản về thời gian, chi phí và không gian khả dụng.
+  - Dữ liệu thực nghiệm dễ bị ảnh hưởng bởi nhiều nguồn sai số khác nhau, bao gồm sai số do con người (human errors) và sai số thiết bị đo (instrumental errors), làm tăng độ khó khăn cho việc áp dụng hiệu quả mô hình học máy.
+  - Khả năng một tập dữ liệu nhỏ nhưng chất lượng cao mang lại kết quả suy luận tốt hơn so với một tập dữ liệu lớn nhưng chất lượng thấp vẫn là vấn đề thường gây tranh luận (Faraway and Augustin, 2018; Kokol et al., 2022).
+- Thiết lập thực nghiệm khảo sát tác động của việc gia tăng dữ liệu đối với mô hình hóa AnMBR sử dụng cùng tập kiểm tra để bảo đảm tính đồng nhất khi đánh giá:
+  - Dữ liệu bổ sung được thu thập từ cùng các bể phản ứng AnMBR nhưng trong một khoảng thời gian vận hành khác biệt.
+  - Nghiên cứu kết hợp tập dữ liệu gốc ($\text{M1}$, $50\text{--}414\text{ d}$) và tập dữ liệu mở rộng ($\text{M2}$, $7\text{--}546\text{ d}$) để thiết lập $3$ lược đồ kiểm định (validation schemes) dựa trên kiểm định chéo $10$ phần ($10\text{-fold cross-validation}$):
+    - $\text{M1T1}$: đại diện cho hiệu năng đường cơ sở (baseline) sử dụng kiểm định chéo tiêu chuẩn trên $\text{M1}$, trong đó tập kiểm tra $\text{T1}$ được phân chia từ $\text{M1}$.
+    - $\text{M2T1}$: dữ liệu bổ sung chỉ được tích hợp vào các phần huấn luyện (training folds), cho phép mô hình học hỏi từ phạm vi rộng hơn ($\text{M2}$) trong khi kiểm tra trên tập $\text{T1}$.
+    - $\text{M2T2}$: áp dụng kiểm định chéo tiêu chuẩn trên toàn bộ tập dữ liệu $\text{M2}$, trong đó tập kiểm tra $\text{T2}$ được phân chia từ $\text{M2}$.
+- Việc bổ sung thêm dữ liệu làm suy giảm hệ số $R^2$ và làm tăng các chỉ số sai số dự đoán $\text{RMSE}$, $\text{MAE}$, $\text{MAPE}$, cho thấy việc thêm dữ liệu không nhất thiết mang lại lợi ích cho mô hình hóa:
+  - So sánh giữa nhóm $\text{M1T1}$ và $\text{M2T1}$ chỉ ra rằng việc đưa thêm dữ liệu vào tập huấn luyện làm giảm giá trị $R^2$ và làm tăng đồng thời $\text{RMSE}$, $\text{MAE}$ cùng $\text{MAPE}$.
+  - So sánh giữa nhóm $\text{M1T1}$ và $\text{M2T2}$ cho thấy việc mở rộng tập dữ liệu làm tăng sai số dự đoán, trong đó $\text{M2T2}$ thể hiện hiệu năng mô hình hóa kém nhất.
+  - **Hình 6. Tác động của kích thước tập dữ liệu lên hiệu năng mô hình**
+    - ![assets/fig_06_p7.jpeg](assets/fig_06_p7.jpeg)
+    - **Hình này chứng minh điều gì**
+      - Tích hợp thêm dữ liệu mở rộng $\text{M2}$ làm giảm $R^2$ và làm gia tăng sai số dự đoán trên toàn bộ $8$ cấu hình đặc trưng.
+    - **Từ đâu mà thấy được**
+      - Bảng (a): Trục $Oy$ biểu thị $R^2$; nhóm $\text{M1T1}$ (cột xám) đạt giá trị cao nhất ($0.45\text{--}0.55$), $\text{M2T1}$ (cột xanh lam) sụt giảm mạnh xuống giá trị âm ở nhiều cấu hình, $\text{M2T2}$ (cột đỏ) dao động trong khoảng $0.3\text{--}0.5$.
+      - Bảng (b), (c), (d): Trục $Oy$ lần lượt là $\text{RMSE}$ ($0\text{--}7\%$), $\text{MAE}$ ($0\text{--}3.7\%$) và $\text{MAPE}$ ($0\text{--}6\%$); sai số tăng dần từ $\text{M1T1}$ (thấp nhất) qua $\text{M2T1}$ đến $\text{M2T2}$ (cao nhất); thanh sai số là khoảng tin cậy $95\%$.
+- Nguyên nhân suy giảm hiệu năng mô hình khi tăng kích thước dữ liệu được quy cho sự biến thiên điều kiện thực nghiệm và độ lệch phân phối:
+  - Dữ liệu thu thập dưới các điều kiện thực nghiệm biến động đưa vào sự biến thiên (variability), độ lệch (biases), và các sai số đặc thù, cùng tác động làm suy giảm hiệu năng mô hình.
+  - Phân tích tương quan Spearman (Spearman's correlation analysis) giữa $\text{M1}$ và $\text{M2}$ chỉ ra rằng các đặc trưng trong $\text{M2}$ có mức độ tương quan với hiệu suất loại bỏ COD thấp hơn so với các đặc trưng trong $\text{M1}$ (Figure S3 và Figure S4).
+  - Mức độ liên quan của dữ liệu (relevance of data) đóng vai trò then chốt; sự thiếu liên quan có thể bắt nguồn từ sự dịch chuyển phân phối (distribution shift) trong trạng thái nước thải đầu vào/bể phản ứng AnMBR hoặc từ các nhiễu loạn không đo lường được (unmeasured disturbances).
+  - Các yếu tố không liên quan đưa vào độ nhiễu (noise) lấn át lợi ích của kích thước mẫu lớn hơn, do đó hiệu năng suy giảm phản ánh tín hiệu của việc đưa dữ liệu không liên quan vào mô hình.
+  - Kết quả này nhấn mạnh yêu cầu tuyển chọn dữ liệu (data curation), ưu tiên dữ liệu chất lượng cao và đặc thù theo ngữ cảnh hơn là việc gộp dữ liệu quy mô rộng nhưng bừa bãi không phân biệt (indiscriminate data aggregation).
+- Định hướng áp dụng học máy trên các tập dữ liệu thực nghiệm quy mô nhỏ đòi hỏi đánh giá khắt khe nguồn gốc và tính phù hợp của dữ liệu:
+  - Việc tăng thể lượng dữ liệu mà không tính đến tính không đồng nhất (heterogeneity) hoặc mức độ liên quan có thể làm giảm độ chính xác và tính ổn định của mô hình.
+  - Các nghiên cứu tương lai cần tập trung vào các phương pháp tích hợp hiệu quả dữ liệu đa nguồn (multi-source data) đồng thời giảm thiểu các độ lệch tiềm ẩn, bảo đảm độ tin cậy và độ chuẩn xác của mô hình học máy trong các ứng dụng thực nghiệm.

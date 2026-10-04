@@ -1,0 +1,71 @@
+### Practical implications and limitations
+
+- Dự báo độ ổn định và hiệu năng vận hành của các quá trình khử nitơ dựa trên anammox ($anammox\text{-}based\ nitrogen\ removal\ processes$) giữ vai trò thiết yếu đối với các vận hành kỹ thuật công trình, đặc biệt trong xử lý nước thải đô thị ($municipal\ wastewater$) vốn thường kém ổn định trong thực tế:
+  - Phân tích và so sánh dữ liệu lớn ($big\ data$) thu thập từ các nghiên cứu anammox khác nhau làm sáng tỏ sự khác biệt về đặc tính dữ liệu giữa các điều kiện thực nghiệm:
+    - Bể phản ứng sinh học theo mẻ nối tiếp ($SBR$ - Sequencing Batch Reactor) so với bể phản ứng dòng chảy liên tục ($continuous\ flow\ reactor$).
+    - Bùn dạng bông ($floc$) so với hạt bùn vi sinh ($microbial\ aggregates$).
+    - Nước thải tổng hợp ($synthetic\ wastewater$) so với nước thải đô thị ($municipal\ wastewater$).
+    - Các kiểu quy trình công nghệ anammox khác nhau.
+  - Bể phản ứng dòng chảy liên tục vận hành bằng hạt vi sinh thể hiện tiềm năng lớn trong việc xử lý tải lượng chất ô nhiễm nitơ nồng độ cao.
+  - Sự khác biệt đáng kể giữa các đặc tính của nước thải tổng hợp và nước thải đô thị trong các thí nghiệm hiện thời làm suy giảm nghiêm trọng ý nghĩa thực tiễn của các nghiên cứu anammox dùng nước thải tổng hợp.
+  - Thí nghiệm quy trình $PNA$ (Partial Nitrification coupling with Anammox - nitrat hóa một phần kết hợp anammox) và thí nghiệm $PNA$ kết hợp $PDA$ (Partial Denitrification coupling with Anammox - khử nitrat một phần kết hợp anammox) đạt hiệu suất loại bỏ $TIN$ (Total Inorganic Nitrogen - tổng nitơ vô cơ) cao hơn so với thí nghiệm quy trình $PDA$ đơn lẻ.
+  - Mối tương quan thuận mạnh hơn ($0.55\text{--}0.95$) giữa nồng độ nitơ đầu vào ($influent\ nitrogen$) và nồng độ nitơ đầu ra ($effluent\ nitrogen$) được ghi nhận ở các thí nghiệm $PNA$, cho thấy độ nhạy cảm cao hơn của quy trình $PNA$ trước các đặc tính của dòng vào.
+- Thuật toán $AutoML$ ($Automated\ Machine\ Learning$ - học máy tự động) mở ra góc nhìn mới với tốc độ triển khai nhanh và độ chính xác cao đối với các biến đầu ra quan trọng:
+  - Bảy biến mục tiêu đầu ra then chốt được mô hình hóa gồm:
+    - $\text{NH}_4^+\text{-N}$ nước đầu ra ($effluent\ \text{NH}_4^+\text{-N}$).
+    - $\text{NO}_3^-\text{-N}$ nước đầu ra ($effluent\ \text{NO}_3^-\text{-N}$).
+    - $\text{NO}_2^-\text{-N}$ nước đầu ra ($effluent\ \text{NO}_2^-\text{-N}$).
+    - $TIN$ nước đầu ra ($effluent\ TIN$).
+    - Hiệu suất loại bỏ $\text{NH}_4^+\text{-N}$ ($\text{NH}_4^+\text{-N}\ removal\ efficiency$).
+    - Hiệu suất loại bỏ $TIN$ ($TIN\ removal\ efficiency$).
+    - Tốc độ khử nitơ qua con đường anammox ($NARR$ - nitrogen removal rate through the anammox reaction pathway).
+  - Thuật toán $AutoML$ trở thành công cụ đắc lực để khai phá thông tin bên trong các tập dữ liệu anammox và dự báo vận hành thực tế của các quá trình khử nitơ bằng anammox.
+  - Mô hình $GBM$ (Gradient Boosting Machine) và mô hình $XGBoost$ (eXtreme Gradient Boosting) được xác định là hai mô hình học máy đạt độ chính xác cao nhất trong việc dự đoán các biến nước đầu ra của quá trình anammox ($R^2 = 0.814\text{--}0.993$).
+  - Độ chính xác cao của các mô hình không chỉ đạt được trên dữ liệu thu thập từ y văn mà còn được kiểm chứng độc lập trên tập dữ liệu chưa từng thấy ($unseen\ data$) từ thí nghiệm anammox của nghiên cứu, khẳng định khả năng tổng quát hóa ($generalization\ ability$) tốt trong dự báo hiệu năng quá trình khử nitơ dựa trên anammox.
+- Các chiến lược cải tiến tiềm năng ($potential\ improvement\ strategies$) cho các quá trình dựa trên anammox được đề xuất dựa trên kết quả giải thích mô hình tối ưu sinh bởi thuật toán $AutoML$:
+  - Kết quả biểu đồ phụ thuộc một phần 1D và 2D ($1D\ and\ 2D\ PDP$ - Partial Dependence Plots) xác định các dải thông số vận hành then chốt thích hợp gồm: tỷ lệ cacbon trên nitơ ($C/N$), $\text{NH}_4^+\text{-N}$ đầu vào, $TIN$ đầu vào, $COD$ (Chemical Oxygen Demand - nhu cầu oxy hóa học) đầu vào, thời gian lưu nước thủy lực ($HRT$ - Hydraulic Retention Time), và tải nạp nitơ ($NLR$ - Nitrogen Loading Rate).
+  - Điều kiện khuyến nghị nhằm giảm nồng độ $\text{NH}_4^+\text{-N}$ nước đầu ra:
+    - Duy trì tỷ lệ $C/N$ trong khoảng $2.72\text{--}6.32$.
+    - Duy trì $TIN$ đầu vào trong khoảng $18.85\text{--}87.76\text{ mg/L}$.
+  - Điều kiện kiểm soát nhằm giảm nồng độ $\text{NO}_3^-\text{-N}$ nước đầu ra:
+    - $\text{NO}_3^-\text{-N}$ là sản phẩm phụ sinh ra từ quá trình trao đổi chất của vi khuẩn anammox và chiếm phần lớn lượng $TIN$ trong nước đầu ra của các quá trình khử nitơ dựa trên anammox.
+    - Mức nồng độ $\text{NO}_3^-\text{-N}$ đầu ra thấp đạt được tại các điều kiện vận hành cụ thể:
+      - $COD$ trong dải $200.42\text{--}305.91\text{ mg/L}$.
+      - $HRT < 9.95\text{ h}$ và $11.50\text{--}12.54\text{ h}$.
+      - $TIN$ đầu vào trong dải $59.38\text{--}87.76\text{ mg/L}$.
+      - $NLR > 0.95\text{ kg/m}^3\text{/d}$.
+  - Quy luật đáp ứng của $TIN$ nước đầu ra và hiệu suất loại bỏ $TIN$:
+    - Thể hiện hình thái tương tự nhưng có tính chất đặc thù hơn so với $\text{NO}_3^-\text{-N}$ đầu ra.
+    - Nồng độ $TIN$ đầu ra thấp hơn cùng hiệu suất loại bỏ $TIN$ cao hơn đạt được thông qua hai tổ hợp thông số vận hành ăn khớp:
+      - Tổ hợp $TIN$ đầu vào thấp ($71.54\text{--}87.76\text{ mg/L}$) kết hợp với $HRT$ thấp ($0.63\text{--}6.84\text{ h}$).
+      - Tổ hợp $TIN$ đầu vào cao ($> 108.03\text{ mg/L}$) kết hợp với $HRT$ cao ($24.45\text{--}26\text{ h}$).
+    - Việc lựa chọn cặp thông số $HRT$ và nồng độ $TIN$ đầu vào tương thích là điều kiện then chốt để nâng cao hiệu năng của các quy trình dựa trên anammox.
+    - Mức nồng độ $COD$ đầu vào thấp hơn trong khoảng $168.78\text{--}200.42\text{ mg/L}$ đóng vai trò quyết định trong việc đạt hiệu suất loại bỏ $TIN$ cao.
+  - Quy luật đáp ứng của tốc độ khử nitơ qua con đường anammox ($NARR$):
+    - $NARR$ là chỉ số quan trọng phản ánh hoạt tính của vi khuẩn anammox, biểu hiện xu hướng tăng rõ rệt khi tải nạp nitơ gia tăng và $HRT$ giảm xuống.
+    - Giá trị $NARR$ cao đạt được đồng thời tại các ngưỡng điều kiện:
+      - $HRT < 7.36\text{ h}$.
+      - $NLR > 1.28\text{ kg/m}^3\text{/d}$.
+      - $TIN$ đầu vào $> 176.89\text{ mg/L}$.
+      - $\text{NO}_2^-\text{-N}$ đầu vào $> 18.78\text{ mg/L}$.
+      - $\text{NH}_4^+\text{-N}$ đầu vào $> 152.61\text{ mg/L}$.
+    - Mặc dù mức tải nạp nitơ cao này không phổ biến trong nước thải đô thị thông thường, việc phối trộn hợp lý giữa nước thải đô thị và nước thải công nghiệp ($industrial\ wastewater$) có thể hỗ trợ đạt mức $NARR$ cao trong các quy trình anammox dòng chính ($mainstream\ anammox\ processes$).
+  - Tích hợp các đặc tính dữ liệu nội tại trong tập dữ liệu lớn giúp làm sâu sắc thêm hiểu biết về quá trình khử nitơ anammox, đồng thời giảm thiểu đáng kể độ khó trong công tác quản lý và vận hành kỹ thuật.
+- Hạn chế thứ nhất của nghiên cứu liên quan đến sự suy giảm nhẹ độ chính xác dự báo ở một số biến đầu ra cụ thể:
+  - Độ chính xác dự đoán của các mô hình tối ưu sinh bởi thuật toán $AutoML$ bị giảm nhẹ đối với $\text{NO}_2^-\text{-N}$ nước đầu ra, $\text{NO}_3^-\text{-N}$ nước đầu ra và chỉ số $NARR$.
+  - Sự suy giảm khả năng tổng quát hóa này có thể xuất phát từ sự khác biệt về điều kiện vận hành và thành phần vi sinh vật ($microbial\ compositions$) giữa tập dữ liệu huấn luyện thu thập từ y văn và tập dữ liệu chưa từng thấy từ thực nghiệm độc lập của nghiên cứu.
+  - Các biến đầu ra gồm $\text{NO}_2^-\text{-N}$ đầu ra, $\text{NO}_3^-\text{-N}$ đầu ra và $NARR$ có độ nhạy cảm cao hơn trước các thay đổi về điều kiện vận hành và thành phần cộng đồng vi sinh vật trong hệ thống anammox.
+  - Khả năng tổng quát hóa của các mô hình ứng viên tạo bởi thuật toán $AutoML$ có thể được cải thiện thông qua việc bổ sung thêm các biến đầu vào thiết yếu có liên quan trực tiếp đến các biến đầu ra này vào tập dữ liệu huấn luyện.
+- Hạn chế thứ hai liên quan đến sự đa dạng và phức tạp của các hợp chất hữu cơ trong nước thải đô thị:
+  - Nước thải đô thị chứa nhiều loại hợp chất hữu cơ có cấu trúc hóa học phức tạp và mang các nhóm thế chức năng khác nhau:
+    - Các nhóm thế như nhóm metyl ($-\text{CH}_3$) và nhóm hydroxyl ($-\text{OH}$) tác động đến khả năng khuếch tán cơ chất ($substrate\ diffusion$) và độ ổn định màng tế bào ($membrane\ stability$) do làm biến đổi tính kỵ nước ($hydrophobicity$).
+    - Các nhóm thế mang tính độc sinh học ($biotoxicity$) như clo ($-\text{Cl}$) và flo ($-\text{F}$) có khả năng ức chế trực tiếp hoạt tính của vi khuẩn anammox.
+  - Chỉ số $COD$ được sử dụng làm đại diện gộp cho tất cả các loại chất hữu cơ này trong hầu hết các thí nghiệm anammox xử lý nước thải đô thị.
+  - Việc thiếu hụt dữ liệu về nồng độ định lượng của từng nhóm hợp chất hữu cơ nhạy cảm trong bộ dữ liệu làm giới hạn khả năng của mô hình máy học trong việc nhận biết và phân tích tác động đặc thù của các chất hữu cơ khác nhau lên quá trình khử nitơ dựa trên anammox.
+- Hạn chế và tiềm năng trong việc khai thác dữ liệu cộng đồng vi sinh vật:
+  - Mặc dù nghiên cứu đã tích hợp các chi anammox chiếm ưu thế ($dominant\ anammox\ genera$) vào bộ dữ liệu dưới dạng biến phân loại ($categorical\ variable$), các biến số liên quan đến vi sinh vật cần được xem xét sâu rộng hơn trong các nghiên cứu tương lai.
+  - Quy mô dữ liệu vi sinh vật trong các thí nghiệm hiện thời nhỏ hơn rất nhiều so với quy mô dữ liệu của các biến đo đạc dòng vào và dòng ra.
+  - Cần nghiên cứu phát triển các phương pháp phù hợp để thu thập và khai thác dữ liệu vi sinh vật nhằm khắc phục tình trạng dung lượng dữ liệu không đầy đủ ($insufficient\ data\ volume$).
+  - Việc áp dụng các thuật toán máy học để phân tích sâu các tập dữ liệu vi sinh vật không chỉ thúc đẩy hiểu biết sâu sắc hơn về các vi sinh vật tham gia quá trình anammox, mà còn cung cấp các hiểu biết giá trị giúp nâng cao hiệu suất loại bỏ nitơ của các hệ thống anammox thực tế trong xử lý nước thải đô thị.
+  - Định hướng phát triển chiến lược tối ưu hóa đa yếu tố ($multifactor\ optimization\ strategies$) cho xử lý bằng anammox cần tăng cường khai thác nguồn thông tin giá trị ẩn chứa trong dữ liệu vi sinh vật.
+  - Sự hợp nhất giữa dữ liệu dấu vân tay cộng đồng vi sinh vật đa chiều ($high\text{-}dimensional\ microbial\ community\ fingerprints$) và các biến số vận hành quy trình sẽ tạo tiền đề xây dựng các bản sao kỹ thuật số tích hợp sinh học ($biology\text{-}informed\ digital\ twins$), thúc đẩy chuyển dịch mô thức tối ưu hóa anammox từ kiểm soát thủy lực theo kinh nghiệm ($empirical\ hydraulic\ control$) sang quản lý hệ vi sinh vật chính xác ($precision\ microbiome\ management$).

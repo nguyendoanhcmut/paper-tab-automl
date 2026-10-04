@@ -1,0 +1,7 @@
+  - **Hình 3.** Phân bố dữ liệu nguồn–đích, cộng tuyến đặc trưng và hiệu năng mô hình gốc
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Trực quan hóa vùng giao thoa phân bố giữa nhà máy đích và ba nhà máy nguồn qua $\text{PCA}$, kèm theo cấu trúc cộng tuyến và hiệu năng dự đoán của mô hình gốc.
+    - **Từ đâu mà thấy được**
+      - Panel (a): Trục $Ox$ là $\text{PC1}$ ($55.4\%$), trục $Oy$ là $\text{PC2}$ ($18.6\%$); elip Target co cụm hẹp theo phương đứng và nằm giao thoa trong ba elip rộng của Plant 1–3.
+      - Panel (b)–(d): Ma trận Pearson $r$ giữa 11 đặc trưng cùng đồ thị phân tán dự đoán $\text{TMP}$ trên tập kiểm tra của XGBoost-base ($R^2 = 0.86$, $\text{RMSE} = 3.01\text{ kPa}$) và LSTM-base ($R^2 = 0.87$, $\text{RMSE} = 2.86\text{ kPa}$).

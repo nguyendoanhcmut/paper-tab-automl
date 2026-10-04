@@ -1,0 +1,33 @@
+#### 2.1.1 Support vector machine
+
+- **Định nghĩa nền tảng và cơ chế phân loại của $SVM$**:
+  - Máy vector hỗ trợ ($SVM$ - support vector machine) là một phương pháp phân loại nhị phân (binary classification method) bắt nguồn từ lý thuyết học thống kê (statistical learning theory), thực thi chiến lược giảm thiểu rủi ro cấu trúc (structural risk minimization strategy).
+  - $SVM$ thực hiện biến đổi dữ liệu (data transformation) từ không gian số chiều thấp (low-dimensional space) sang không gian số chiều cao (high-dimensional space) bằng cách xây dựng hàm nhân (kernel function).
+  - Mô hình có thể áp dụng để giải quyết cả bài toán phân loại (support vector classification - $SVC$) và bài toán hồi quy (support vector regression - $SVR$) thông qua việc xác định siêu phẳng phân chia tối ưu (optimal dividing hyperplane) nhằm phân loại dữ liệu mẫu vào các lớp khác nhau với độ rộng biên (“margin”) tại ranh giới lớn nhất.
+  - Các điểm mẫu nằm gần ranh giới nhất có vai trò quyết định vị trí của siêu phẳng và được gọi là các vector hỗ trợ (support vectors).
+- **Đặc điểm ánh xạ, cấu trúc dữ liệu đầu vào và ưu thế trên tập mẫu nhỏ**:
+  - $SVM$ là phương pháp phù hợp để giải quyết các bài toán ánh xạ phi tuyến (nonlinear mapping problems) trong không gian số chiều cao với số lượng mẫu hạn chế (limited samples), đồng thời sở hữu khả năng tổng quát hóa (generalization ability) nhất định.
+  - Dữ liệu đầu vào của $SVM$ thường bao gồm một chuỗi các điểm dữ liệu chứa nhiều đặc trưng (multiple features), với số lượng đặc trưng thường là $\ge 2$ tùy thuộc vào bài toán mô hình hóa cụ thể.
+  - Khi xử lý tập dữ liệu có kích thước mẫu nhỏ (ví dụ: kích thước mẫu huấn luyện nhỏ hơn $125$ mẫu (Qian et al., 2015)), mô hình $SVM$ nhìn chung thể hiện hiệu năng tổng quát hóa cao và độ chính xác dự đoán tốt (superior generalization performance and prediction accuracy).
+  - Lợi thế này xuất phát từ độ phức tạp mô hình tương đối thấp (relatively low complexity) và nền tảng lý thuyết học thống kê vững chắc (solid statistical theoretical foundation).
+- **Hạn chế tính toán, độ nhạy dữ liệu và yêu cầu tiền xử lý**:
+  - Hiệu quả tính toán (computational efficiency) của $SVM$ giảm khi kích thước mẫu lớn, có thể đòi hỏi thời gian tính toán kéo dài hơn.
+  - $SVM$ nhạy cảm với sự hiện diện của dữ liệu bị thiếu (susceptible to missing data); do đó, bắt buộc phải sàng lọc tập dữ liệu để loại bỏ các giá trị ngoại lai (outliers) và xử lý triệt để các giá trị bị khuyết thiếu (missing values) trước khi tiến hành mô hình hóa $SVM$.
+  - Cần phải xem xét đến khả năng giải thích (interpretability) của phép ánh xạ trong không gian số chiều cao.
+- **Tổng hợp đặc tính kỹ thuật và kịch bản ứng dụng trong $MBR$ (Bảng 1 - Table 1)**:
+  - Thuộc nhóm học có giám sát (supervised learning) với cơ sở toán học rõ ràng (clear mathematical basis).
+  - Ưu điểm: Hiệu năng vững chắc với kích thước mẫu hạn chế (reliable performance with limited sample size), khả năng dự đoán nhanh (rapid prediction capabilities), và khả năng giải thích mạnh (strong interpretability).
+  - Nhược điểm: Dễ bị ảnh hưởng bởi dữ liệu bị thiếu (susceptibility to missing data), độ phức tạp tính toán cao (high computational complexity), và không phù hợp cho tập dữ liệu lớn (inappropriateness for large data set).
+  - Phạm vi áp dụng môi trường: Các bài toán phân loại hoặc hồi quy khi kích thước mẫu không quá lớn.
+  - Ứng dụng tiềm năng trong hệ thống màng sinh học ($MBR$ - membrane bioreactor): Dự đoán áp suất xuyên màng ($TMP$ - transmembrane pressure) và trở lực màng (resistance) (Liu et al., 2020a).
+- **Các kịch bản ứng dụng trong kỹ thuật nước và môi trường**:
+  - Trong kỹ thuật nước và môi trường nước (water engineering and water environments), $SVM$ được triển khai cho nhiều nhiệm vụ:
+    - Phát hiện rò rỉ trong hệ thống cấp nước (leakage detection in water supply system) (McMillan et al., 2024).
+    - Phân tích cấu trúc hoặc đặc trưng hóa chất ô nhiễm (structural analysis or characterization of pollutants) (Zhong and Guan, 2023).
+    - Phân tích quang phổ chất lượng nước (spectral analysis of water quality) (Mallet et al., 2022).
+    - Giám sát vận hành bể phản ứng (monitoring of reactor operation) (Vasilaki et al., 2020).
+    - Giám sát và kiểm soát sinh thái trong lưu vực (ecological monitoring and control in watersheds) (Kim et al., 2021a).
+    - Cảnh báo sớm sự cố ô nhiễm chất lượng nước (early warning of water quality pollution event) (Oliker and Ostfeld, 2014).
+  - Trong các lĩnh vực môi trường khác:
+    - Giám sát và đánh giá chất lượng không khí (air quality monitoring and assessment) (Li et al., 2017).
+    - Ước tính nhanh hàm lượng carbon hữu cơ trong đất (soil organic carbon rapid estimation) (Li et al., 2015).

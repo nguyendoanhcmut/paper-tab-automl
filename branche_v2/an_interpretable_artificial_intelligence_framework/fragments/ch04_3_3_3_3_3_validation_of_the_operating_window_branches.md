@@ -1,0 +1,21 @@
+#### 3.3.3. Validation of the operating window on a withheld period
+
+- Phép kiểm chứng khắt khe nhất đối với các chỉ dẫn vận hành rút ra từ dữ liệu lịch sử (historical data) là kiểm tra khả năng cải thiện kết quả trong một giai đoạn sau đó hoàn toàn không tham gia vào quá trình xây dựng chỉ dẫn:
+  - Phép thử này không sử dụng dự đoán của mô hình (model prediction), do đó hoàn toàn độc lập với việc đánh giá độ chính xác (accuracy assessment) của Mục 3.1.
+- Dữ liệu vận hành được phân chia theo trình tự thời gian (chronological division), tái lập cửa sổ vận hành trên $70\,\%$ thời lượng đầu (7 tháng đầu) và đánh giá hiệu quả trên $30\,\%$ thời lượng còn lại (các tháng 8–11):
+  - Cửa sổ vận hành từ 7 tháng đầu đặt điều kiện chính lên thời gian lưu bùn $\text{SRT}$ (solids retention time, $\le 84.5\text{ ngày}$) và điều kiện phụ lên thời gian lưu thủy lực $\text{HRT}$ (hydraulic retention time).
+  - Trong giai đoạn giữ lại (withheld period), cửa sổ xác định được $415\text{ h}$ với tỷ lệ đạt đồng thời cả 3 mục tiêu là $61.9\,\%$ so với mức cơ sở (baseline) $39.3\,\%$ ($\text{odds ratio} = 3.89$, kiểm định Fisher exact $p = 3 \times 10^{-29}$):
+    - **Hình 11.** Cửa sổ vận hành khuyến nghị và kiểm chứng trên giai đoạn giữ lại
+      - <img src="assets/fig_11_p13.jpeg" alt="Hình 11" />
+      - **Hình này chứng minh điều gì**
+        - Tỷ lệ đạt đồng thời 3 mục tiêu trong giai đoạn giữ lại tăng từ $39.3\,\%$ lên $61.9\,\%$ khi vận hành trong cửa sổ suy ra từ 7 tháng đầu.
+      - **Từ đâu mà thấy được**
+        - Panel (B): Cột xám thể hiện toàn bộ giờ giữ lại ($39.3\,\%$); cột xanh lục thể hiện các giờ nằm trong cửa sổ học ($61.9\,\%$, hộp thông số ghi $n = 415\text{ h}$, $\text{OR} = 3.89$, $p = 3 \times 10^{-29}$).
+        - Panel (A): Thanh xanh lục (trong dải khuyến nghị) dài hơn thanh xám (ngoài dải) ở cả 7 thông số, cao nhất ở $\text{HRT}$ ($82\,\%$ so với $32\,\%$) và $\text{SRT}$ ($77\,\%$ so với $32\,\%$).
+- Từng đòn bẩy kiểm soát sinh học chính (principal biological controls) khi xét riêng rẽ cũng duy trì hiệu quả chuyển giao trên giai đoạn giữ lại (Hình S18):
+  - Nồng độ chất rắn lơ lửng trong hỗn dịch lỏng $\text{MLSS}$ (mixed liquor suspended solids) chuyển giao với mức tăng $30.9$ điểm phần trăm (percentage points).
+  - Thời gian lưu bùn $\text{SRT}$ mang lại mức tăng $22.7$ điểm phần trăm.
+  - Tỷ lệ thức ăn trên vi sinh vật $\text{F/M}$ (food-to-microorganism ratio) mang lại mức tăng $15.7$ điểm phần trăm.
+- Tuổi bùn (sludge age), nồng độ sinh khối (biomass concentration) và tải trọng hữu cơ (organic loading) là ba biến số người vận hành có thể can thiệp trong khoảng thời gian từ vài giờ đến vài ngày:
+  - Đây là các đòn bẩy có chỉ dẫn vận hành được xác lập vững chắc nhất trong nghiên cứu.
+  - Quy trình vận hành (operating protocol) đặt ba biến số này làm trọng tâm cốt lõi.

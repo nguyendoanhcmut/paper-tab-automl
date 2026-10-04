@@ -1,0 +1,141 @@
+2. Methodology
+
+2.1. Dataset characteristics and preprocessing
+This study leverages a dataset originally curated by Alnaimat et al. 
+[30], which captures the electrochemical degradation of PFOA under 
+varied conditions. The dataset comprises unique treatment scenarios, 
+each defined by a combination of operational parameters and environ­
+mental contexts. Key independent variables include electrolysis dura­
+tion, current density, anode and cathode material types, electrolyte 
+concentration and composition, and the water matrix. Exploratory an­
+alyses were performed to characterize the inputs and the target prior to 
+modeling. The dependence structure among predictors is shown in 
+Figure S1 (Spearman rank-correlation heatmap with significance 
+marks). Bivariate relationships are visualized in Figure S2 (pairwise 
+scatterplots with LOWESS fits and Pearson/Spearman annotations). The 
+target distribution, together with a Shapiro–Wilk normality diagnostic, 
+appears in Figure S3. Several electrochemical variables exhibit moder­
+ate positive association (for example, electrolysis time with current 
+density; |ρ|≈0.35–0.55), reflecting typical experimental co-variation. 
+Preprocessing followed algorithm-appropriate conventions. Contin­
+uous variables were standardized (z-score) for distance- and 
+gradient-based baselines to ensure numerical stability and commensu­
+rate scaling, whereas tree-based learners were trained on unscaled in­
+puts given the scale-invariance of split criteria. Categorical descriptors 
+(anode, cathode, electrolyte, water matrix) were one-hot encoded to 
+maintain parity across baseline algorithms and to permit later aggre­
+gation by parent feature in model interpretation. Cardinalities were 
+small (≤6 per field), limiting sparsity and dimensionality.
+
+2.2. Data splitting and evaluation protocol
+Model evaluation used an 80:20 holdout stratified on anode type to 
+mitigate covariate shift arising from uneven anode distribution across 
+the dataset. The target variable (removal, %) was not stratified, 
+consistent with the regression setting. A fixed random seed (42) was 
+used for reproducibility. Stability of this protocol across repeated runs 
+and alternative split realizations is documented in Figure S4 (stratifi­
+cation sensitivity), and the internal model-selection procedure and 
+performance consistency are summarized in Figure S5 (nested cross- 
+validation diagnostics)
+
+2.3. Automated model selection via FLAML
+Automated model and hyperparameter selection was conducted with 
+FLAML, a cost-aware AutoML framework that replaces manual, grid- 
+style tuning with budgeted, early-stopped search. A wall-time budget 
+of 300 s was enforced for FLAML’s search. FLAML initializes with 
+inexpensive configurations, adaptively allocates trials toward promising 
+learner–hyperparameter regions, and prunes underperforming runs 
+when validation error plateaus within the allotted budget. The optimi­
+zation objective was 5-fold cross-validation RMSE, with early stopping 
+applied at both the boosting-iteration level (for iterative learners) and 
+the trial level (for unpromising configurations). Convergence was 
+declared when no improvement was observed within the budget win­
+dow and the incumbent remained unchanged across successive evalua­
+tions. The best-performing model selected by FLAML was an XGBoost 
+regressor (learning rate = 0.1403; n_estimators = 379; max_leaves = 13; 
+L1/L2 regularization α = 0.0995, λ = 0.0010), with subsample = 0.85 
+and colsample_bytree = 0.83. This configuration balances bias–variance 
+by combining a moderate learning rate with constrained tree complexity 
+and regularization. The full search space and the selected hyper­
+parameters for XGBoost and all baseline learners are summarized in SI 
+Table S1.
+
+2.4. Comparative benchmarking and statistical validation
+To contextualize performance, the FLAML-optimized XGBoost model 
+was benchmarked against five commonly used regressors: Decision 
+Trees (DT), Random Forests (RF), Gradient Boosting Decision Trees 
+(GBDT), Deep Learning (DL), and k-Nearest Neighbors (KNN). Each 
+model was evaluated on the same one-hot encoded dataset and sub­
+jected to identical stratified train-test splits to ensure methodological 
+H. Elnakar                                                                                                                                                                                                                                        
+Desalination and Water Treatment 325 (2026) 101598 
+2 
+
+
+<!-- Page 3 -->
+parity. Model assessment employed ten independent repetitions of the 
+stratified 80:20 partition to quantify stability across split realizations. 
+For each repetition, five metrics were computed: root mean squared 
+error (RMSE), mean absolute error (MAE), mean absolute percentage 
+error (MAPE), correlation coefficient (CC; Pearson’s r), and coefficient 
+of determination (R²). RMSE, MAE, and MAPE quantify error magni­
+tude, whereas CC (r) and R² summarize association and explained 
+variance. Statistical significance of pairwise differences was evaluated 
+with paired two-tailed t-tests (α = 0.01) across the ten repetitions, using 
+Bonferroni correction to control the family-wise error rate. Cohen’s 
+d was additionally reported to quantify effect sizes. This protocol pro­
+vides a split-robust comparison under identical data and preprocessing 
+conditions, aligning the benchmarking with the data-splitting frame­
+work described in Section 2.2.
+
+2.5. Interpretability via SHAP analysis
+Model interpretability was assessed using SHapley Additive exPla­
+nations (SHAP), which attribute to each feature its marginal contribu­
+tion to individual predictions under the cooperative game–theoretic 
+formulation. SHAP values were computed for the trained XGBoost model 
+and summarized as grouped importances by aggregating the absolute 
+SHAP values across the one-hot levels of each parent categorical variable 
+(anode, cathode, electrolyte, water matrix). Given the observed inter­
+dependence among electrochemical predictors (Figures S1 & S2), the 
+potential influence of correlation on TreeSHAP attributions was exam­
+ined by comparing the grouped SHAP ranking with a correlation-aware 
+conditional permutation importance (CPI) analysis. Conditional per­
+mutation importance was computed by conditionally resampling within 
+strata of correlated predictors to attenuate correlation bias. Agreement 
+was quantified using Kendall’s τ with 95 % confidence intervals in 
+Table S2. Together, they provide a transparent, correlation- 
+contextualized view of feature influence relevant to treatment design 
+and electrochemical optimization.
+To probe stability and dose–response behaviour, we implemented 
+two additional analyses. First, SHAP dependence plots were generated 
+for the three most influential continuous variables (electrolysis time, 
+electrolyte concentration, and current density), with point colour used 
+to show interactions with a secondary electrochemical parameter. Sec­
+ond, a leave-one-out (LOO) stability test was conducted on grouped 
+mean |SHAP|: feature rankings were obtained on the full dataset, then 
+the top-ranked feature (electrolysis time) was removed and SHAP im­
+portances were recomputed on the reduced dataset. Agreement between 
+the two rankings was summarized using Kendall’s τ.
+
+2.6. Reproducibility and deployment considerations
+All computations were executed in Python 3.10 using version- 
+controlled dependencies: FLAML 1.2.0, SHAP 0.44.0, and scikit-learn 
+1.4.0. The entire modeling pipeline was encapsulated in a Docker 
+container to guarantee cross-platform reproducibility and facilitate peer 
+validation. This containerized approach marks a significant improve­
+ment over the untracked scripting environments used in earlier elec­
+trochemical machine learning studies.
+
+2.7. Methodological contributions and distinctions
+Relative to Alnaimat et al. [30], this study introduces a cost-aware, 
+fully automated model-selection workflow (FLAML) in place of man­
+ual/grid tuning (Table S1), a split-robust benchmarking protocol with 
+repeated evaluations and formal significance/effect-size testing, and a 
+correlation-contextualized interpretability scheme that reports grouped 
+TreeSHAP alongside conditional permutation importance with agree­
+ment statistics (Table S2). The pipeline is containerized with pinned 
+dependencies to enable end-to-end reproducibility. Taken together, 
+these elements provide a transparent, efficient, and reproducible 
+methodology tailored to electrochemical treatment datasets, clarifying 
+performance gains and interpretability under documented assumptions 
+and validation settings.

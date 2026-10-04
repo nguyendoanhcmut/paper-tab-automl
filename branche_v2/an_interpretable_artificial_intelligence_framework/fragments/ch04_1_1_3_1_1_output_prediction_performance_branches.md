@@ -1,0 +1,47 @@
+#### 3.1.1. Output prediction performance
+
+- Hiệu suất dự đoán của toàn bộ $16$ mô hình học máy được đánh giá đối với $3$ biến mục tiêu gồm áp suất xuyên màng (transmembrane pressure: TMP), lưu lượng nước sau lọc (permeate flow) và mức nước bể màng (membrane tank water level).
+- Bản đồ nhiệt $R^2$ và đồ thị phân tán giữa giá trị dự đoán so với giá trị thực tế thể hiện thứ bậc rõ ràng về năng lực mô hình và mức độ dự đoán được của các biến mục tiêu:
+  - **Hình 4.** Bản đồ nhiệt $R^2$ và đồ thị phân tán dự đoán của Extra Trees
+    - <img src="assets/fig_04_p6.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phân tầng hiệu suất rõ rệt: các mô hình họ cây tổ hợp chiếm ưu thế với Extra Trees đạt độ chính xác cao nhất trên cả ba biến mục tiêu theo thứ tự giảm dần từ TMP đến lưu lượng permeate và mức nước bể màng.
+    - **Từ đâu mà thấy được**
+      - Panel (A): Bản đồ nhiệt $16$ mô hình $\times$ $3$ biến mục tiêu; dải màu đỏ sẫm ($R^2 > 0.9$) chiếm trọn hàng Extra Trees và cột TMP, giảm dần sang màu xanh dương ở các mô hình tuyến tính ($R^2 < 0.5$).
+      - Panel (B1)–(B3): Đồ thị phân tán của Extra Trees; các điểm dữ liệu phân bố bám sát đường lý tưởng $1:1$ (nét đứt) với $93.4\%$ điểm TMP và $99.4\%$ điểm lưu lượng nằm trong dải sai số $\pm 10\%$, và $100.0\%$ điểm mức nước nằm trong dải $\pm 5\%$.
+  - TMP đạt độ chính xác dự đoán cao nhất, tiếp theo là lưu lượng permeate và sau đó là mức nước bể màng.
+- Chất lượng nước sau xử lý (effluent quality) được chủ động loại trừ khỏi danh sách biến mục tiêu dự đoán:
+  - Hàm lượng tổng cacbon hữu cơ trong nước sau lọc (permeate TOC) được đo bằng máy phân tích trực tuyến (online analyser) có dải đo $0.03\text{--}1000\text{ ppb}$, khiến giá trị đo nằm gần giới hạn phát hiện (detection limit) trong phần lớn chuỗi dữ liệu.
+  - Màng siêu lọc (ultrafiltration: UF) giữ lại hầu như toàn bộ các chất rắn lơ lửng và vật liệu có khối lượng phân tử cao, do đó tín hiệu đo TOC bị chi phối bởi nhiễu máy phân tích (analyser noise).
+  - Về mặt bản chất, chất lượng nước sau lọc UF trong hệ MBR ngập bị chi phối bởi tính toàn vẹn của màng (membrane integrity) — một hiện tượng thay đổi đột ngột (step-change phenomenon) liên quan đến sự đứt gãy sợi màng (fibre breakage) thay vì là hàm liên tục theo các biến vận hành, biến đây thành bài toán giám sát tính toàn vẹn (integrity-monitoring problem) thay vì mục tiêu hồi quy (regression target).
+  - Ba biến mục tiêu được lựa chọn đại diện cho các thông số mà người vận hành có thể chủ động điều chỉnh và đánh đổi (trade against one another) theo từng giờ.
+- Bảng 2 tóm tắt cấu trúc của $16$ thuật toán học máy thuộc $6$ họ mô hình (model families):
+  - Tuyến tính (Linear, $1$ thuật toán): Hồi quy tuyến tính (Linear Regression).
+  - Tuyến tính điều chuẩn (Regularised Linear, $3$ thuật toán): Ridge, Lasso, Elastic Net.
+  - Máy vector hỗ trợ (Support Vector Machine: SVM, $1$ thuật toán): SVR với hàm nhân RBF (RBF kernel).
+  - Dựa trên cá thể (Instance-based, $1$ thuật toán): $k$ láng giềng gần nhất (K-Nearest Neighbours: KNN).
+  - Cây tổ hợp (Ensemble Tree, $9$ thuật toán): Cây quyết định (Decision Tree), Rừng ngẫu nhiên (Random Forest), Extra Trees, Bagging, AdaBoost, Gradient Boosting, Hist Gradient Boosting, XGBoost, LightGBM.
+  - Mạng nơ-ron (Neural Network, $1$ thuật toán): Perceptron đa lớp (Multi-Layer Perceptron: MLP).
+- Đối với áp suất xuyên màng (TMP), các mô hình học kết hợp dạng cây chiếm ưu thế rõ rệt:
+  - Extra Trees đạt độ chính xác cao nhất với $R^2 = 0.988$, $\text{RMSE} = 0.010\text{ bar}$, và $\text{MAE} = 0.005\text{ bar}$.
+  - Nhóm các mô hình bám sát phía sau gồm Bagging, Random Forest và LightGBM (cùng đạt $R^2 = 0.978$), và XGBoost ($R^2 = 0.977$), cả $5$ mô hình dẫn đầu đều có $R^2 > 0.97$ (Hình 4, Hình S1).
+  - Khả năng dự đoán mạnh mẽ của TMP có cơ sở diễn giải vật lý trực tiếp: trong các hệ thống màng ngập, TMP bị chi phối bởi trở lực tắc nghẽn (fouling resistance) tích lũy tiệm tiến theo nồng độ chất rắn lơ lửng trong bùn lỏng (mixed liquor suspended solids: MLSS), cường độ sục khí làm sạch màng (aeration scouring intensity) và các đặc tính bùn phụ thuộc vào thời gian lưu bùn (sludge retention time: SRT).
+  - Toàn bộ các thông số chi phối này đều được cung cấp trực tiếp làm biến đầu vào cho mô hình.
+  - TMP được đo lường dưới dạng áp suất hút (suction pressure) ở phía nước sau lọc (permeate side), mang lại tín hiệu ổn định hơn và có tỷ số tín hiệu trên nhiễu (signal-to-noise ratio: SNR) cao hơn so với các cấu hình màng điều áp (pressurised configurations).
+- Dự đoán lưu lượng permeate duy trì thứ tự xếp hạng mô hình tương tự nhưng có giá trị $R^2$ thấp hơn một mức vừa phải:
+  - Extra Trees tiếp tục dẫn đầu với $R^2 = 0.933$, $\text{RMSE} = 0.066\text{ m}^3\text{/min}$, và $\text{MAE} = 0.052\text{ m}^3\text{/min}$.
+  - Top 5 mô hình hoàn thiện với Bagging ($R^2 = 0.910$), Random Forest ($R^2 = 0.909$), XGBoost ($R^2 = 0.906$), và Hist Gradient Boosting ($R^2 = 0.899$) (Hình 4, Hình S2).
+  - Độ chính xác giảm so với TMP phù hợp với cơ chế vận hành của hệ thống MBR:
+    - Lưu lượng permeate không chỉ chịu tác động từ trạng thái tắc nghẽn màng mà còn phụ thuộc vào các điểm đặt do người vận hành kiểm soát (operator-controlled setpoints), chu kỳ rửa ngược (backwash cycling) và các nhiễu động thủy lực tức thời (transient hydraulic disturbances) vốn không được phản ánh trọn vẹn qua các biến đầu vào lấy trung bình theo giờ (hourly-averaged input parameters).
+    - Tác động của chế độ sục khí gián đoạn (intermittent aeration scouring) lên lưu lượng permeate tức thời gây ra độ biến thiên mà các mô hình độ trung thực cao không thể nắm bắt đầy đủ nếu chỉ dựa thuần túy vào các đặc trưng sinh học và vận hành sẵn có.
+- Mức nước bể màng là mục tiêu thách thức nhất trong ba biến đầu ra:
+  - Mô hình đạt hiệu quả cao nhất là Extra Trees với $R^2 = 0.908$, $\text{RMSE} = 0.341\%$, và $\text{MAE} = 0.227\%$ dưới phép phân chia ngẫu nhiên (random partition).
+  - Các mô hình tổ hợp hàng đầu đạt $R^2$ dao động trong khoảng từ $0.82$ đến $0.91$, trong khi toàn bộ các họ mô hình khác đều thấp hơn đáng kể.
+- Thứ bậc độ chính xác giữa ba biến mục tiêu phản ánh cơ chế vật lý trực tiếp:
+  - TMP dễ dự đoán nhất do đại lượng này tích phân trở lực tắc nghẽn qua nhiều giờ đến nhiều ngày; các biến chi phối sự tích lũy này (chủ yếu là SRT và MLSS) biến thiên chậm và được đo đạc trực tiếp.
+  - Lưu lượng permeate nằm ở mức trung gian vì chỉ phản ánh một phần đặc tính của màng, phần còn lại bị quy định bởi nhu cầu lưu lượng xử lý (throughput demand), chu kỳ rửa ngược và các biến động thủy lực ngắn hạn mà mức trung bình theo giờ không thể phân giải được.
+  - Mức nước bể màng khó dự đoán nhất do là một trạng thái thủy lực biến thiên nhanh (fast hydraulic state), bị chi phối bởi cân bằng tức thời giữa lưu lượng đầu vào (influent), lưu lượng hút permeate, lưu lượng tuần hoàn nội bộ (internal recirculation), xả bùn dư (sludge wasting) và thuật toán logic điều khiển bơm theo mức nước — trong đó nhiều yếu tố diễn ra ở thang phút và không yếu tố nào trong số này là biến đầu vào của mô hình.
+- Độ dốc khả năng dự đoán (predictability gradient) phân hạng các biến mục tiêu theo mức độ động học của chúng được định hình bởi trạng thái sinh học biến thiên chậm thay vì các hành động điều khiển tức thời:
+  - Hoạch định vận hành dựa trên mô hình (model-based planning) có độ tin cậy cao nhất đối với TMP.
+  - Mức nước bể màng thích hợp hơn khi được quản lý bằng các đòn bẩy điều khiển nhanh (fast levers) được xác định tại Mục 3.3.
+  - Độ chính xác dự đoán mức nước vẫn duy trì giá trị hữu ích trong thực tế vận hành, với $\text{MAE} < 0.23\%$ so với biên độ kiểm soát $2\%$ (control window).

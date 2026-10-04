@@ -1,0 +1,38 @@
+#### 3.3.1. Effect of fine-tuning ratio on transfer learning performance
+
+- Khảo sát ảnh hưởng của tỷ lệ tinh chỉnh $\text{FT}$ (fine-tuning ratio) đối với hiệu suất học chuyển giao:
+  - Xác định lượng dữ liệu cần thiết từ nhà máy mục tiêu (target-plant data) để quá trình thích ứng (adaptation) đạt hiệu quả.
+- Giới hạn dự đoán dưới điều kiện chuyển giao không cần mẫu (zero-shot transfer) tại mốc $\text{FT} = 0$:
+  - Mức $\text{FT} = 0$ đại diện cho kịch bản chuyển giao trực tiếp (direct transfer) không thực hiện thích ứng với nhà máy mục tiêu.
+  - Cả hai mô hình tiền huấn luyện $\text{LSTM}$ và $\text{XGBoost}$ đều ghi nhận hệ số xác định $R^2$ ở mức thấp tương đương nhau, lần lượt đạt $0.41$ và $0.39$.
+  - Kết hợp với kết quả phân tích thành phần chính $\text{PCA}$ (principal component analysis) cho thấy sự dịch chuyển phân phối có thể đo lường giữa nguồn và mục tiêu (source–target distribution shift), kết quả này khẳng định chuyển giao trực tiếp đơn thuần không đủ để dự đoán tin cậy áp suất qua màng $\text{TMP}$ (transmembrane pressure) tại nhà máy mục tiêu [53].
+- Hiệu suất mô hình $\text{LSTM-FT}$ tăng mạnh nhất ở khoảng tinh chỉnh ban đầu và tiệm cận mức bão hòa tại $\text{FT} = 40\,\%$:
+  - Bước nhảy hiệu suất lớn nhất diễn ra trong khoảng từ $\text{FT} = 0$ đến $\text{FT} = 10\,\%$, với $R^2$ tăng từ $0.41$ lên $0.81$ (Hình 5(a)).
+  - Khi $\text{FT}$ tiếp tục tăng, hiệu suất cải thiện với tốc độ chậm dần, lần lượt đạt $R^2 = 0.89$, $\text{RMSE} = 0.50\text{ kPa}$ và $\text{MAE} = 0.33\text{ kPa}$ tại $\text{FT} = 40\,\%$ (Hình 5(b) và (c)).
+  - Tại mốc $\text{FT} = 50\,\%$, mức cải thiện hiệu suất so với $\text{FT} = 40\,\%$ chỉ ở mức biên (marginal).
+  - **Hình 5.** Ảnh hưởng của tỷ lệ tinh chỉnh lên hiệu suất mô hình
+    - <img src="assets/fig_05_p8.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - $\text{LSTM-FT}$ giảm sai số nhanh hơn $\text{XGBoost-FT}$ ở dải $\text{FT}$ thấp; thanh sai số thu hẹp đáng kể khi đạt $\text{FT} = 40\,\%$.
+    - **Từ đâu mà thấy được**
+      - Bảng (a)–(c): Trục hoành là $\text{FT}$ ($0\text{--}50\,\%$); trục tung hiển thị $R^2$, $\text{RMSE}\text{ (kPa)}$ và $\text{MAE}\text{ (kPa)}$.
+      - Đường đỏ ($\text{LSTM-FT}$) dốc đứng từ $0\text{--}10\,\%$, duy trì sai số thấp hơn đường xanh ($\text{XGBoost-FT}$).
+      - Bảng (d), (e): Đối chiếu giá trị dự đoán với thực tế và phân tích $\text{LOFO}$ tại $\text{FT} = 40\,\%$.
+- Hiệu suất mô hình $\text{XGBoost-FT}$ cải thiện với biên độ nhỏ hơn và tốc độ chậm hơn theo $\text{FT}$:
+  - Giá trị $R^2$ tăng từ $0.39$ tại $\text{FT} = 0$ lên $0.58$ tại $\text{FT} = 40\,\%$, và chỉ tăng thêm một lượng nhỏ lên $0.61$ tại $\text{FT} = 50\,\%$.
+  - Mức độ cải thiện các chỉ số của $\text{XGBoost-FT}$ diễn ra dần dần hơn qua các mức $\text{FT}$.
+- So sánh phản ứng hiệu suất tổng thể giữa hai mô hình chuyển giao:
+  - $\text{LSTM-FT}$ ghi nhận mức tăng hiệu suất lớn hơn ở các tỷ lệ $\text{FT}$ thấp so với $\text{XGBoost-FT}$.
+  - Tăng tỷ lệ $\text{FT}$ vượt quá $40\,\%$ mang lại mức cải thiện bổ sung rất hạn chế cho cả hai mô hình.
+- Bản chất của sự cải thiện hiệu suất trong điều kiện giới hạn dữ liệu thực tế:
+  - Cả hai mô hình chuyển giao đều được thích ứng từ các mô hình đã tiền huấn luyện trên tập dữ liệu của ba nhà máy nguồn.
+  - Các bước cải thiện hiệu suất phản ánh quá trình thích ứng với nhà máy mục tiêu thông qua học chuyển giao trong điều kiện hạn chế dữ liệu thực tế (realistic data-limited conditions).
+  - Không diễn giải kết quả này như quy trình phát triển mô hình truyền thống (conventional model development) chỉ dựa trên $71$ bản ghi dữ liệu của nhà máy mục tiêu.
+- Mối liên hệ giữa quy mô dữ liệu tinh chỉnh và độ bền vững của quá trình thích ứng (robustness of adaptation):
+  - Độ lệch chuẩn ($\text{standard deviation}$) giữa các phân đoạn tinh chỉnh và các lần chạy lặp lại đạt mức lớn nhất tại $\text{FT} = 10\,\%$ cho cả hai mô hình chuyển giao.
+  - Độ lệch chuẩn giảm dần ở các mức $\text{FT}$ cao hơn và trở nên nhỏ khi đạt $\text{FT} = 40\,\%$.
+  - Số lượng bản ghi mục tiêu quá ít làm giảm độ bền vững của quá trình thích ứng, trong khi lượng dữ liệu mục tiêu vừa phải là đủ để bảo đảm hiệu suất ổn định.
+- Lựa chọn điều kiện tinh chỉnh đại diện và quy trình đánh giá thống kê:
+  - Tỷ lệ $\text{FT} = 40\,\%$ được lựa chọn làm điều kiện tinh chỉnh đại diện (representative fine-tuning condition) cho các phân tích tiếp theo.
+  - Đối với từng thiết lập $\text{FT} > 0$ trong Hình 5(a)–(c), hiệu suất được báo cáo dưới dạng giá trị trung bình kèm độ lệch chuẩn ($\text{mean} \pm \text{standard deviation}$) qua tất cả các phân đoạn tinh chỉnh và các lần chạy lặp lại.
+  - Quy trình sử dụng tối đa $6$ phân đoạn liên tiếp (contiguous segments) lấy mẫu từ tập dữ liệu tinh chỉnh và $5$ hạt giống ngẫu nhiên (random seeds) cho mỗi phân đoạn được giữ lại.

@@ -1,0 +1,1841 @@
+<!-- Page 1 -->
+An interpretable artificial intelligence framework for defining the 
+operational basin of full-scale membrane bioreactors in semiconductor 
+wastewater treatment
+Yujae Jeon a, Duc Anh Nguyen b, Kim Anh Nguyen Thi b, Quoc Thai Nong b, Am Jang b,c,*
+a Department of Semiconductor Display Engineering, Sungkyunkwan University (SKKU), (16419) 2066, Seobu-ro, Jangan-gu, Suwon, Gyeonggi-do, Republic of Korea
+b Department of Global Smart City, Sungkyunkwan University (SKKU), (16419) 2066, Seobu-ro, Jangan-gu, Suwon, Gyeonggi-do, Republic of Korea
+c SKKU Institute of Energy Science and Technology (SIEST), Sungkyunkwan University (SKKU), (16419) 2066, Seobu-ro, Jangan-gu, Suwon, Gyeonggi-do, Republic of 
+Korea
+A R T I C L E I N F O
+Editor: Soroush Abolfathi
+Keywords:
+Membrane bioreactor
+Interpretable machine learning
+SHAP feature importance
+Semiconductor wastewater
+Multi-objective operating optimization
+A B S T R A C T
+Full-scale membrane bioreactors treating semiconductor wastewater operate under conditions laboratory studies 
+rarely reproduce: fluctuating organic and ionic loads tied to production schedules, specialty solvents and 
+chelating agents from photoresist stripping and CMP, and extended sludge ages far outside the short-SRT regimes 
+on which most fouling theory is based. Operators must simultaneously control transmembrane pressure (TMP), 
+permeate throughput, and hydraulic balance, yet no data-driven framework has identified which operating 
+combinations reliably achieve this. We developed an interpretable machine-learning framework using 4593 
+hourly SCADA records from a 1125 m3/h industrial MBR to define its operational basin. Sixteen algorithms 
+across six families were benchmarked for TMP, permeate flow, and membrane-tank level. Extra Trees achieved 
+the highest accuracy for all targets (R2 = 0.988, 0.933, 0.908) and retained first rank under blocked, chrono­
+logical, and cross-train validation, including an independent parallel train. When refit daily, it held R2 = 0.871 
+for TMP over a four-month out-of-time period. SHAP analysis identified sludge retention time as the dominant 
+driver, with fouling worsening monotonically across the plant's extended-aeration range. Feasibility mapping 
+using local-covariance resampling constrained to the plant's attainable operating manifold identified 207,238 
+feasible states out of 500,000 sampled. Model-derived feasibility tracked measured attainment across 70 bins (r 
+= 0.99), and operation inside recommended bands met all three targets 61–82% of the time versus 37% baseline. 
+A window derived from the first seven months raised target attainment to 61.9% in the final three months (odds 
+ratio 3.89). The framework yields an actionable control protocol, SRT 43.2–72.2 days, HRT 5.9–6.4 h, MLSS 
+5580–6138 mg/L, F/M 0.023–0.025 day−1, aeration 4868–5892 m3/h, and is transferable to other industrial 
+MBRs with site-specific retraining.
+1. Introduction
+The semiconductor manufacturing industry is one of the most water- 
+intensive sectors globally [1–6], consuming between 1400 and 4200 L of 
+ultrapure water per square centimeter of fabricated wafer [7–10]. As 
+device geometries shrink and production volumes rise, securing supply 
+while managing contaminated effluent has become critical, and the 
+effluent itself demands multi-barrier treatment [11–13]: organic com­
+pounds from photoresist processes, ionic contaminants from etching and 
+cleaning, and colloidal particles from polishing must all be removed, 
+with each unit process operating reliably to safeguard the ones down­
+stream [9,14]. Membrane bioreactors (MBRs) have become the 
+preferred solution because they combine biological degradation with 
+high-efficiency membrane separation in one compact process. In a 
+submerged configuration, ultrafiltration (UF) membranes sit directly in 
+the activated sludge bioreactor in place of a secondary clarifier, pro­
+ducing permeate largely free of suspended solids, bacteria and high- 
+molecular-weight organics. The configuration gives effluent quality 
+* Corresponding author at: Department of Global Smart City, Sungkyunkwan University (SKKU), (16419) 2066, Seobu-ro, Jangan-gu, Suwon, Gyeonggi-do, Re­
+public of Korea.
+E-mail addresses: junyujae@naver.com (Y. Jeon), nguyenducanh@g.skku.edu (D.A. Nguyen), toikimanh@gmail.com (K.A.N. Thi), thainq@g.skku.edu
+(Q.T. Nong), amjang@skku.edu (A. Jang). 
+Contents lists available at ScienceDirect
+Journal of Water Process Engineering
+journal homepage: www.elsevier.com/locate/jwpe
+https://doi.org/10.1016/j.jwpe.2026.110865
+Received 9 July 2026; Received in revised form 17 August 2026; Accepted 29 August 2026  
+Journal of Water Process Engineering 92 (2026) 110865 
+Available online 7 September 2026 
+2214-7144/© 2026 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+independent of sludge settleability, a smaller footprint, operation at 
+elevated mixed liquor suspended solids (MLSS), and decoupling of solids 
+retention time (SRT) from hydraulic retention time (HRT), which en­
+riches slow-growing nitrifiers and enhances nutrient removal [15–19].
+In semiconductor wastewater reclamation, MBRs act as the pre­
+treatment barrier upstream of reverse osmosis (RO) polishing [20,21], 
+and the quality of the UF permeate sets the fouling trajectory of the 
+downstream RO membranes [22,23]. Fouling remains the dominant 
+operational constraint, and it is more complex in submerged MBRs than 
+in pressure-driven standalone UF because the membrane sits in mixed 
+liquor carrying biomass, extracellular polymeric substances (EPS), sol­
+uble microbial products (SMP) and colloidal organic matter [24–26]. Its 
+rate is set by an interacting group of factors: MLSS and sludge rheology 
+govern cake formation, the food-to-microorganism (F/M) ratio and SRT 
+control EPS and SMP production, aeration supplies the shear that miti­
+gates cake build-up, and HRT modulates organic loading [27–29]. 
+Semiconductor wastewater imposes a fouling signature unlike munic­
+ipal streams in three respects. The organic load is dominated not by 
+readily biodegradable substrate but by photoresist strippers, developers, 
+solvents and chelating agents, a recalcitrant fraction of which adsorbs 
+preferentially onto PVDF to form a poorly reversible layer [30–34]. 
+Chemical–mechanical polishing contributes silica and sub-micron 
+abrasive colloids that seed a dense, low-porosity cake [35–37]. And 
+loading follows the fab's batch production calendar rather than diurnal 
+human activity, so organic and nitrogen pulses arrive on a schedule that 
+is steep and only weakly predictable from the wastewater side. Because 
+carbon is often limited for denitrification in these nitrogen-rich streams, 
+glucose dosing becomes a routine control lever that couples the carbon- 
+to‑nitrogen balance directly to fouling [38,39]. Together these features 
+place the plant in an extended-aeration, high-SRT regime in which 
+conventional short-SRT heuristics do not transfer, and they create a non- 
+linear process landscape that defies simple correlation and rule-based 
+optimisation.
+Ubiquitous SCADA sensing and advances in machine learning (ML) 
+have opened data-driven prediction and optimisation of MBR operation 
+[40–42]. Artificial neural networks have predicted TMP from MLSS, flux 
+and aeration rate [43]; random forest and gradient boosting have pre­
+dicted fouling in pilot-scale MBRs with R2 above 0.90 [44]; long short- 
+term memory networks have captured the temporal dynamics of TMP 
+[45]; support vector regression and random forest have been applied to 
+permeate quality [46]; and XGBoost has related operating conditions to 
+fouling rates in municipal MBRs with reported R2 of 0.94–0.97 [47]. 
+Three limitations hinder translation into industrial practice. Most 
+studies use laboratory- or pilot-scale systems fed synthetic or municipal 
+wastewater [48,49], which cannot reproduce full-scale complexity, 
+where feedwater composition follows manufacturing schedules, clean­
+ing residuals perturb the biology and equipment degradation introduces 
+non-stationarity [50]. Most treat the model as a black box, reporting 
+accuracy while offering little insight into which parameters govern 
+membrane performance [51,52], and without that transparency a model 
+cannot inform decisions or earn the trust of the operators who must act 
+on it. And, less often acknowledged, hourly plant records are strongly 
+autocorrelated, so the random train–test partitions used almost univer­
+sally in this literature place near-duplicate observations on both sides of 
+the split, making reported accuracies difficult to read as performance on 
+genuinely unseen operating conditions.
+Two gaps follow. The first concerns interpretability. Explainable 
+artificial intelligence methods, principally SHAP and partial dependence 
+plots, have been applied across wastewater treatment, including aera­
+tion control, nutrient removal and anaerobic digestion monitoring, but 
+their application to MBR fouling is limited and confined to single models 
+and narrow parameter ranges. What is missing is multi-model inter­
+pretability, in which SHAP is applied across algorithmic families to 
+expose model-dependent bias in the importance rankings [53]; such bias 
+matters because different architectures can assign conflicting impor­
+tance to the same variable [54], so the recommendation depends on 
+which model is consulted, a phenomenon documented for RO systems 
+but not for MBRs. The second gap concerns the step from prediction to 
+guidance. Existing ML-based optimisation of membrane processes either 
+pairs a trained model with a search algorithm to locate point optima 
+[55], or derives qualitative guidance from feature importance without 
+formal optimisation [56]. The first returns single solutions without 
+indicating how robust they are or how wide the feasible envelope is; the 
+second gives understanding without quantitative bounds. Neither 
+approach, moreover, takes account of the fact that the operating vari­
+ables of a full-scale plant are strongly interdependent, so that a feasible 
+region is informative only if it is mapped over the joint operating space 
+the facility can actually reach. For semiconductor MBR systems, where 
+biology and filtration are coupled through shared variables such as 
+MLSS, SRT and aeration, a unified framework is needed that treats TMP, 
+permeate flow and membrane tank level simultaneously and that sam­
+ples only states the plant can actually reach.
+This study introduces an interpretable artificial intelligence frame­
+work for optimising MBR operation in semiconductor wastewater 
+treatment, developed from 4593 hourly measurements collected over 
+306 consecutive days at a full-scale industrial facility in Asan City, Re­
+public of Korea. The MBR, comprising submerged PVDF ultrafiltration 
+membranes integrated with a multi-stage biological process, is the 
+pretreatment step ahead of RO polishing in a reclamation train rated at 
+1125 m3/h. Unlike laboratory datasets acquired under controlled con­
+ditions, the analysis uses SCADA records that carry the full complexity of 
+industrial operation, including variable organic loading from upstream 
+manufacturing, routine maintenance and recovery cleaning events, and 
+progressive membrane ageing over the record.
+The complete framework is set out stage by stage in Fig. 1, and the 
+work makes three contributions. First, it provides the most compre­
+hensive ML benchmarking reported for semiconductor-wastewater 
+MBRs, sixteen algorithms across six families predicting TMP, permeate 
+flow and membrane tank level simultaneously, evaluated under four 
+validation designs so that genuine predictive skill is separated from the 
+accuracy conferred by temporal autocorrelation. Second, it applies 
+SHAP across all sixteen models and distinguishes consensus process 
+conclusions from artefacts of a particular learner, a distinction unavai­
+lable from the single-model analyses that dominate this literature. Third, 
+it maps the feasible operating region by manifold-constrained resam­
+pling rather than independent sampling of marginal ranges, and vali­
+dates the resulting window against the plant's measured attainment rate 
+and out of time on months the models never saw. The framework is 
+directly transferable in method, though quantitative windows are site- 
+specific and require retraining on facility data.
+2. Models and methods
+2.1. System description and data collection
+The experimental data were collected from a full-scale submerged 
+membrane bioreactor (MBR) system at a semiconductor wastewater 
+treatment plant in Asan City, Republic of Korea. The facility utilizes an 
+anoxic–oxic–anoxic–oxic (A-O-A-O) biological configuration, followed 
+by submerged UF membranes, which combine biological nutrient 
+removal with solid–liquid separation in a single integrated process. The 
+MBR system operates at a design capacity of 1125 m3/h, treating 
+semiconductor fabrication wastewater before it is sent to the down­
+stream reverse osmosis system. The UF system consists of 9700 poly­
+vinylidene 
+fluoride 
+(PVDF) 
+hollow-fibre 
+membrane 
+modules 
+manufactured by SUEZ, providing a total membrane area of 329,800 m2. 
+Detailed system specifications and sensor information are available in 
+Section S1 and Table S1 of the supplementary document.
+The membrane tank and biological reactor volumes are reported 
+here for the first time so that the hydraulic terms can be reproduced. The 
+A-O-A-O bioreactor has working volumes of 3841 m3 for the anoxic 
+zones and 8604 m3 for the oxic zones, together with a 376 m3 pH 
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+2 
+
+
+<!-- Page 3 -->
+adjustment tank and a 1437 m3 membrane tank. The HRT used in this 
+study refers to the hydraulic retention time of the oxic tanks and is 
+recorded as a virtual parameter (VP) automatically calculated by the 
+plant control system. The mean HRT over the study period was 7.33 h.
+Data was collected continuously from 1 January 2025 to 3 November 
+2025, spanning 306 consecutive operational days. Process parameters 
+were logged at five-minute intervals by the plant's supervisory control 
+and data acquisition (SCADA) system and aggregated to hourly aver­
+ages, giving 4593 hourly observations after exclusion of chemical 
+cleaning-in-place (CIP) periods, comprising maintenance cleaning (MC) 
+and recovery cleaning (RC) events, which do not represent normal 
+fouling behaviour. Because the record covers ten consecutive months 
+rather than a full annual cycle, no seasonal decomposition was 
+attempted and no seasonal effect is claimed anywhere in this work; the 
+long-timescale variation present in the record is treated as progressive 
+operational drift, principally membrane ageing and the evolving 
+cleaning history, rather than as a seasonal signal.
+2.2. Process parameters and operating ranges
+Seven input parameters describing biological treatment conditions 
+and membrane operating state were monitored continuously: glucose 
+dosing rate (Glu, a surrogate for supplemental organic loading), mixed 
+liquor suspended solids (MLSS), aeration rate (Air), food-to- 
+microorganism ratio (F/M), the ratio of total organic carbon to total 
+nitrogen (C/N), hydraulic retention time (HRT) and sludge retention 
+time (SRT). Three target variables were predicted: transmembrane 
+pressure (TMP) as the primary fouling indicator, permeate flow rate 
+(Flow) as the measure of productive output, and membrane tank water 
+level (Level) as an indicator of hydraulic balance. The abbreviations 
+defined in this paragraph, namely Glu, MLSS, Air, F/M, C/N, HRT, SRT, 
+TMP, Flow and Level, are used consistently thereafter in the text, tables 
+and figures, including the abstract and keywords. The carbon- 
+to‑nitrogen ratio is measured as TOC/TN; the two terms denote the same 
+quantity and only C/N is used hereafter. Table 1 summarises the sta­
+tistical characteristics of all measured parameters.
+2.3. Data preprocessing and standardisation
+Following quality control, input features and output targets were 
+standardised using z-score normalization to ensure that all variables 
+contributed equally to model training, regardless of their original 
+measurement scales. The visualization and distribution of features 
+before and after normalization are shown in Fig. 2.
+Standardisation parameters were computed exclusively from the 
+training partition and applied to the test set to prevent information 
+leakage; the formulation is given in Supplementary Section S2. The step 
+also clarifies the structure of the record. The time series of Flow, TMP 
+and Level show substantial short-term variability together with slower 
+drift, so the system exhibits both gradual operational movement and 
+abrupt transitions across all three outputs (Fig. 2A). Standardisation 
+preserves the shape of each empirical distribution, including skewness, 
+multimodality and tail behaviour (Fig. 2B), while placing variables 
+Fig. 1. Workflow of the interpretable machine-learning framework, from SCADA acquisition through model benchmarking and multi-design validation, cross-model 
+SHAP interpretability, manifold-constrained feasibility sampling and conditional-rate window derivation, to the three independent validations and the resulting 
+operating protocol. Follow the numbered stages left to right and top to bottom; the three purple boxes are independent checks on the result, and the green bar is the 
+operating protocol they support. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Table 1 
+The statistical characteristics of all measured parameters.
+Feature
+Count
+Mean
+Std
+Min
+Max
+Glu (L/min)
+4593
+0.6775
+0.1807
+0.4027
+1.3515
+MLSS (mg/L)
+4593
+4889.5
+1075.2
+1919.4
+7628.8
+Air (m3/h)
+4593
+5945.7
+534.5
+4469.1
+7268.3
+F/M (1/day)
+4593
+0.0275
+0.0078
+0.0118
+0.0658
+C/N ratio
+4593
+9.4314
+2.2581
+4.8040
+17.5029
+HRT (h)
+4593
+7.3346
+0.7947
+5.8738
+11.0411
+SRT (day)
+4593
+87.828
+14.564
+43.323
+108.333
+TMP (bar)
+4593
+−0.122
+0.090
+−0.462
+−0.034
+Flow (m3/min)
+4593
+1.817
+0.257
+0.618
+2.289
+Level (lv) (%)
+4593
+65.774
+1.114
+64.005
+73.942
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+3 
+
+
+<!-- Page 4 -->
+whose raw ranges and units differ substantially on a common zero- 
+mean, unit-variance scale so that their magnitudes and variability 
+become directly comparable.
+The Pearson correlation matrices before and after normalization 
+confirm that z-scoring leaves the linear relationships among variables 
+unchanged (Fig. 3), preserving dependencies such as the negative as­
+sociation between TMP and Flow, the coupling between Level and 
+loading-related variables, and the hydraulic relationships involving HRT 
+and SRT that jointly constrain Flow and Level. The correlations 
+involving Level emphasise its role as an integrative state variable 
+reflecting both hydraulic conditions and biomass accumulation rather 
+than a purely independent target.
+2.4. Data split and robustness evaluation
+Because a continuously logged hourly record carries temporal 
+structure by construction, validation was deliberately made more 
+demanding than a single partition, and four complementary schemes 
+were applied. A random 70/30 partition (3215 training and 1378 test 
+samples) is the design used throughout this literature and is retained for 
+comparability with it. A multi-split analysis over 20 independent 
+random partitions, retraining all 16 models each time, quantifies the 
+variability attributable to partitioning. Blocked partitions divide the 
+record into contiguous blocks of 1, 6, 24, 72, 168, 336 and 720 h and 
+assign whole blocks at random, preserving coverage of the operating 
+envelope while separating adjacent hours, so that generalisation from 
+one operating day to another is measured directly. And a strictly chro­
+nological partition trains on the first 70% and tests on the final 30%, 
+Fig. 2. (A) Time series and (B) distribution of the input and output features of the MBR mainstream (1) before and (2) after normalization. Input features are in blue; 
+output features are in red. The upper row is the raw time series and the lower row the same variables after standardisation; comparing them shows that scaling 
+changes magnitude but not shape. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Fig. 3. Relationship of the input and output features of the MBR mainstream (A) before and (B) after normalization. Each cell is a pairwise Pearson correlation, so 
+darker cells mark the variable pairs that move together; comparing the two panels shows that standardisation leaves those relationships unchanged.
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+4 
+
+
+<!-- Page 5 -->
+with a purged variant discarding a one-week gap at the boundary. An 
+independent set of 4593 hourly observations from a parallel B stream 
+within the same facility assesses transfer to a physically distinct mem­
+brane system without retraining. Standardisation statistics were 
+computed on the training fold only in every design. The dependence 
+structure of the record and the full results under each design are tabu­
+lated in Supplementary Tables S9 to S12.
+2.5. Machine learning model selection and training
+Sixteen regression algorithms spanning six modelling families were 
+evaluated for the three targets from the seven operational parameters 
+(Table 2). The portfolio was not assembled for its own sake: each family 
+tests a falsifiable hypothesis about the structure of the bio­
+logy–membrane relationship, so the comparison is a structured hy­
+pothesis test rather than an undirected modelling exercise. Linear and 
+regularised linear models test whether the relationship is adequately 
+additive and monotonic, with regularisation additionally probing 
+whether apparent importance is an artefact of collinearity. Support 
+vector regression with an RBF kernel tests whether a smooth global non- 
+linear surface suffices. K-nearest neighbours tests whether fouling 
+behaviour is locally regular in operating space, that is whether similar 
+conditions reliably give similar responses, which is the assumption un­
+derlying any operating-window recommendation. Tree-based ensembles 
+test whether threshold effects and feature interactions dominate, as 
+classical fouling theory predicts, and the bagging-versus-boosting 
+contrast within that family tests whether variance reduction or 
+sequential bias reduction is the better response to noisy industrial sensor 
+data. A multi-layer perceptron with two hidden layers tests whether 
+hierarchical representations add anything beyond these. The pattern of 
+which families succeed and which fail is therefore itself the evidence for 
+the structure of fouling in this system, and it is reported in Section 3.1. A 
+single model was carried forward for interpretation and optimisation to 
+keep the framework consistent across the three targets. Formulations, 
+hyperparameters and training configurations for all 16 algorithms are 
+given in Section S3 and Table S2; all work was performed in Python 3.10 
+using NumPy, pandas, scikit-learn, XGBoost, LightGBM and SHAP.
+2.6. Interpretability analysis through multi-model SHAP
+SHapley Additive exPlanations (SHAP) analysis was applied across 
+all 16 models and 3 targets, giving 48 interpretability profiles. This 
+multi-model framework reveals whether different algorithms agree on 
+feature importance and exposes model-dependent bias that single-model 
+analyses cannot detect. TreeSHAP was used for the nine tree-based 
+models and KernelSHAP for the seven non-tree models, and beeswarm 
+plots, mean absolute SHAP values and dependence plots were generated 
+for each model–target combination. Because SHAP quantifies each fea­
+ture's contribution to the model output, it reflects association within the 
+training distribution rather than verified physical causation; the mech­
+anistic explanations offered in Section 3.2 are physically plausible and 
+literature-consistent interpretations, not demonstrated mechanisms.
+2.7. Optimal operating condition identification
+A multi-objective feasibility framework was used to identify oper­
+ating regions satisfying the target criteria for all three outputs simulta­
+neously. Because the seven operating variables are interdependent in 
+practice, candidates were generated so as to respect that joint structure; 
+the rationale and a comparison against independent sampling of the 
+marginal ranges are given in Supplementary Section S5. Feasibility was 
+mapped by local-covariance kernel resampling constrained to the plant's 
+real joint operating manifold: a seed hour is drawn uniformly from the 
+4593 logged observations, the local covariance of its 30 nearest neigh­
+bours in standardised input space is formed, the seed is perturbed by a 
+Gaussian increment scaled by a bandwidth factor of 0.6 applied to that 
+covariance, and the candidate is rejected if it leaves the observed mar­
+ginal range of any input or if its nearest-neighbour distance to the real 
+record exceeds the 99th percentile of real-to-real nearest-neighbour 
+distance (0.539 in standardised units). The resulting 500,000 candidates 
+have a median nearest-neighbour distance of 0.121 against 0.119 be­
+tween real hours, so the sample explores continuously around the 
+manifold without leaving it. A candidate was classed feasible only where 
+all three predictions fell within their target ranges, with predictive un­
+certainty taken from the dispersion of the 100 individual trees. Windows 
+were then defined from the conditional feasibility rate, the probability 
+that all three targets are met given the value of an input, rather than 
+from the density of feasible points, which reflects how often the plant 
+visited a region and not how well it performed there. Each input was 
+divided into deciles and the recommended band taken as the widest 
+contiguous run whose measured attainment remains within 5 percent­
+age points of the maximum, subject to a minimum support of 250 logged 
+hours; four of the seven bands are unchanged by this criterion, indi­
+cating genuinely sharp optima. Kernel density estimation (KDE), a non- 
+parametric method that reconstructs a continuous density by summing a 
+smooth kernel centred on each observation and so avoids the bin- 
+placement dependence of histograms, was used with a Gaussian kernel 
+and Scott's-rule bandwidth. Detailed algorithms are given in Supple­
+mentary Section S5.
+2.8. Evaluation metrics
+Prediction accuracy was quantified using three complementary 
+metrics: the coefficient of determination (R2), root mean squared error 
+(RMSE) and mean absolute error (MAE). Their mathematical formula­
+tions are provided in Supplementary Section S4.
+3. Results and discussion
+3.1. ML model prediction performance
+3.1.1. Output prediction performance
+The predictive performance of all 16 models was evaluated for TMP, 
+permeate flow and membrane tank water level. Fig. 4 shows the R2 
+heatmap and predicted-versus-observed scatter across model–target 
+combinations, revealing a clear hierarchy in both model capability and 
+target predictability: TMP was predicted most accurately, followed by 
+permeate flow and then water level. Effluent quality was deliberately 
+excluded as a target. Permeate TOC is measured by an online analyser 
+whose 0.03–1000 ppb range leaves it near its detection limit for most of 
+the record, because the UF membrane retains essentially all suspended 
+and high-molecular-weight material, so the signal is dominated by 
+analyser noise. More fundamentally, UF permeate quality in a sub­
+merged MBR is governed by membrane integrity, a step-change phe­
+nomenon associated with fibre breakage rather than a continuous 
+function of the variables considered here, making it an integrity- 
+monitoring problem rather than a regression target. The three targets 
+selected instead are those the operator can trade against one another 
+hourly.
+Table 2 
+Summary of 16 machine learning algorithms across six model families.
+Model family
+Algorithms
+Count
+Linear
+Linear Regression
+1
+Regularised Linear
+Ridge, Lasso, Elastic Net
+3
+Support Vector 
+Machine
+SVR (RBF kernel)
+1
+Instance-based
+K-Nearest Neighbours
+1
+Ensemble Tree
+Decision Tree, Random Forest, Extra Trees, Bagging, 
+AdaBoost, Gradient Boosting, Hist Gradient 
+Boosting, XGBoost, LightGBM
+9
+Neural Network
+Multi-Layer Perceptron
+1
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+5 
+
+
+<!-- Page 6 -->
+For TMP, tree-based ensembles were clearly superior. Extra Trees 
+achieved the highest accuracy (R2 = 0.988, RMSE = 0.010 bar, MAE =
+0.005 bar), followed by Bagging, Random Forest and LightGBM (0.978 
+each) and XGBoost (0.977) (Fig. 4, Fig. S1), all five above R2 = 0.97. The 
+strong predictability of TMP is physically interpretable: in submerged 
+systems TMP is governed by fouling resistance, which develops pro­
+gressively with MLSS, aeration scouring intensity and SRT-dependent 
+sludge characteristics, and all of these were supplied to the models 
+directly [28,29,35,36]. TMP is also measured as suction pressure on the 
+permeate side, giving a more stable signal and a higher signal-to-noise 
+ratio than pressurised configurations [35].
+Permeate flow prediction followed a similar model ranking but with 
+moderately lower R2 values. Extra Trees again led (R2 = 0.933, RMSE =
+0.066 m3/min, MAE = 0.052 m3/min), with Bagging (R2 = 0.910), 
+Random Forest (R2 = 0.909), XGBoost (R2 = 0.906), and Hist Gradient 
+Boosting (R2 = 0.899) completing the top five (Fig. 4 and Fig. S2). The 
+reduced accuracy compared to TMP is consistent with the mechanics of 
+MBR operation. Permeate flow is influenced not only by the state of 
+membrane fouling but also by operator-controlled setpoints, backwash 
+cycling, and transient hydraulic disturbances that may not be fully 
+captured by the hourly-averaged input parameters [23–26]. The influ­
+ence of intermittent aeration scouring on instantaneous permeate flow 
+introduces variability that high-fidelity models cannot fully account for 
+based solely on the available biological and operational features.
+Membrane tank water level proved the most challenging target, the 
+best model reaching R2 = 0.908 (Extra Trees, RMSE 0.341%, MAE 
+0.227% under the random partition), with the leading ensembles be­
+tween 0.82 and 0.91 and all other families substantially below. The 
+ordering across the three targets has a direct physical reading. TMP is 
+the most predictable because it integrates fouling resistance over hours 
+to days, and the variables governing that accumulation, principally SRT 
+and MLSS, are slowly varying and were measured directly. Permeate 
+flow is intermediate because it is only partly a membrane property, 
+being set also by throughput demand, backwash cycling and short hy­
+draulic transients that hourly averaging cannot resolve [57–59]. Water 
+level is least predictable because it is a fast hydraulic state governed by 
+the instantaneous balance of influent, permeate extraction, internal 
+recirculation, sludge wasting and level-controlled pump logic, several of 
+which act over minutes and none of which is a model input. The gradient 
+therefore ranks the targets by how far their dynamics are captured by 
+Fig. 4. (A) Test R2 heatmap of all 16 models and predicted vs. actual scatter plot of the Extra Tree model across three target variables: (B1) TMP, (B2) permeate flow, 
+and (B3) membrane tank water level. Blue indicates low R2 values, and red indicates high R2 values in the heatmap. Scatter colour indicates residual magnitude; the 
+dashed line represents perfect prediction; shaded bands indicate ±5% and ± 10% error tolerance. In the heatmap each cell is one model-target combination and 
+redder is more accurate; in the scatter panels points should fall on the dashed 1:1 line, and the shaded bands are the 5% and 10% error tolerances. (For interpretation 
+of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+6 
+
+
+<!-- Page 7 -->
+slow biological state rather than fast control action, implying that 
+model-based planning is most reliable for TMP while water level is 
+better managed by the fast levers identified in Section 3.3. Level accu­
+racy remains operationally useful even so, with MAE below 0.23% 
+against a 2% control window.
+3.1.2. Model comparison, consistency and independent validation
+A large and systematic gap separated linear from non-linear models 
+across all three targets (Table 3). Linear and Ridge Regression reached 
+R2 of only 0.499 for TMP, 0.469 for flow and 0.195 for water level, the 
+regularised variants slightly worse as aggressive shrinkage removed 
+small but informative coefficients, while the best ensembles exceeded 
+0.90 on all three. This is the structured hypothesis test anticipated in 
+Section 2.5: the failure of the additive family together with the success of 
+recursive partitioning is evidence that the biology–membrane relation­
+ship is governed by thresholds and interactions rather than proportional 
+effects, consistent with fouling theory in which cake resistance accel­
+erates beyond critical MLSS, aeration shows diminishing returns above a 
+critical scouring velocity, and F/M and SRT interact non-additively 
+[25,29,36,38]. Within the ensemble family the bagging variants 
+consistently outperformed sequential boosting, although XGBoost 
+(0.977) and LightGBM (0.978) nearly matched them for TMP. AdaBoost 
+was markedly worse on every target (0.781, 0.655, 0.308), consistent 
+with the sensitivity of adaptive reweighting to the sensor artefacts of 
+industrial SCADA data, and the advantage of Extra Trees over Random 
+Forest is attributable to the additional randomisation of split thresholds. 
+Among non-tree non-linear models KNN performed strongly (0.969, 
+0.894, 0.813), indicating that membrane response is locally regular in 
+operating space, the property that makes an operating-window recom­
+mendation meaningful at all. Only the Decision Tree for water level 
+showed substantial overfitting (0.890 against 0.650), and the 20-split 
+analysis (Table S3, Figs. S4–S6) confirmed Extra Trees as the best 
+model on mean R2 and the lowest RMSE and MAE for all three targets.
+Transfer to a physically distinct membrane system was assessed on 
+an independent set of 4593 hourly observations from a parallel B stream 
+in the same facility, operating under different influent conditions and 
+with an independent fouling history (Fig. S7). Extra Trees, applied 
+without retraining, achieved R2 = 0.996, 0.980 and 0.972 for TMP, flow 
+and water level (Table S4, Fig. 5A–C), with near-zero mean errors and 
+error standard deviations of 0.014 bar, 0.052 m3/min and 0.306% 
+(Fig. 5D). The TMP error distribution is slightly right-skewed (skewness 
+1.025), indicating occasional underestimation under extreme fouling, 
+which is the conservative direction operationally because it prompts 
+earlier rather than later cleaning. The B stream runs over the same 
+calendar period and shares the same influent, so this establishes transfer 
+across membrane trains rather than across time; temporal transfer is 
+addressed next.
+Taken together, the primary test-set performance, the 20-split 
+robustness analysis and the parallel-stream validation identify Extra 
+Trees as the best model for all three targets, and it was carried forward 
+for the interpretability analysis in Section 3.2 and the optimisation in 
+Section 3.3. Using one model for all three targets keeps the operational 
+framework and the feature-importance interpretation consistent across 
+the three performance indicators.
+3.1.3. Robustness of the model selection to the validation design
+Model selection for a full-scale plant record should not rest on a 
+single partition, so the choice of Extra Trees was tested under four in­
+dependent designs: the conventional random 70/30 partition, a blocked 
+design in which contiguous blocks are allocated as whole units so that 
+coverage of the operating envelope is preserved while adjacent hours are 
+separated, a strictly chronological partition, and the independent par­
+allel B stream. The outcome is a strong one. Extra Trees ranks first in 
+eight of the nine model–design–target combinations and first for every 
+target under both the random and the 24-h blocked designs (Table S10), 
+and accuracy under 24-h blocking remains high for a full-scale industrial 
+system, with R2 = 0.830 for TMP corresponding to an RMSE of 0.036 bar 
+against an operating range of 0.43 bar and a mean absolute error of 
+16.3% of the interquartile range of the measured series. Because the 
+record is a continuously logged hourly series and therefore autocorre­
+lated by construction, blocked and random values are reported side by 
+side throughout; the dependence structure, the full per-model results 
+and the divergence between R2 and absolute error as blocks lengthen are 
+given in Supplementary Section S6 and Fig. S17. More important than 
+absolute accuracy is the stability of the conclusions: SRT remains the 
+first-ranked driver of TMP and of water level under random, blocked 24- 
+h, blocked 168-h and chronological training alike, so the process con­
+clusions are properties of the plant record rather than of any particular 
+partition.
+The chronological partition deserves separate comment, because as 
+usually implemented it describes a deployment scenario no plant would 
+adopt: it fits the model once on the first seven months and applies it 
+frozen to the following four, although every new hour reaches the his­
+torian within the hour and refitting Extra Trees on the entire record 
+takes about a second. Refitting at a fixed interval on all data logged so 
+far, with every prediction still made strictly ahead of the data used to 
+produce it, resolves the result. Out-of-time accuracy improves mono­
+tonically as the interval shortens, and at a daily refit R2 on the withheld 
+final 30% reaches 0.871 for TMP, 0.580 for water level and 0.574 for 
+permeate flow, with TMP predicted to 0.008 bar, an 80% reduction 
+Table 3 
+Test set performance of 16 machine learning models for three target variables (TMP, permeate flow, membrane tank water level). Models ranked by mean R2 across 
+targets; best values in each column are underlined.
+Model
+TMP (bar)
+Flow (m3/min)
+Level (%)
+R2
+RMSE
+MAE
+ΔR2
+R2
+RMSE
+MAE
+ΔR2
+R2
+RMSE
+MAE
+ΔR2
+Extra Trees
+0.988
+0.010
+0.005
+0.012
+0.933
+0.066
+0.052
+0.067
+0.908
+0.341
+0.227
+0.092
+Bagging
+0.978
+0.014
+0.006
+0.019
+0.910
+0.076
+0.059
+0.076
+0.839
+0.450
+0.282
+0.140
+Random Forest
+0.978
+0.014
+0.006
+0.019
+0.909
+0.077
+0.059
+0.076
+0.839
+0.450
+0.282
+0.140
+XGBoost
+0.977
+0.014
+0.007
+0.022
+0.906
+0.078
+0.061
+0.081
+0.843
+0.444
+0.292
+0.143
+LightGBM
+0.978
+0.014
+0.008
+0.015
+0.898
+0.081
+0.063
+0.048
+0.822
+0.473
+0.321
+0.109
+Hist Grad. Boost.
+0.976
+0.014
+0.008
+0.016
+0.899
+0.081
+0.064
+0.048
+0.839
+0.450
+0.312
+0.094
+KNN
+0.969
+0.016
+0.007
+0.011
+0.894
+0.083
+0.063
+0.036
+0.813
+0.485
+0.298
+0.062
+MLP Neural Net.
+0.951
+0.020
+0.011
+0.003
+0.861
+0.095
+0.074
+0.022
+0.756
+0.554
+0.387
+0.015
+Decision Tree
+0.942
+0.022
+0.010
+0.042
+0.785
+0.118
+0.086
+0.096
+0.650
+0.663
+0.383
+0.240
+GBoosting
+0.937
+0.023
+0.014
+0.011
+0.824
+0.107
+0.084
+0.024
+0.698
+0.616
+0.437
+0.059
+SVR
+0.893
+0.030
+0.016
+−0.005
+0.771
+0.122
+0.092
+0.004
+0.498
+0.794
+0.458
+0.034
+AdaBoost
+0.781
+0.042
+0.037
+0.002
+0.655
+0.150
+0.120
+0.023
+0.308
+0.932
+0.796
+−0.020
+Lin Regression
+0.499
+0.064
+0.045
+0.015
+0.469
+0.185
+0.147
+0.010
+0.195
+1.006
+0.696
+0.001
+Rid Regression
+0.499
+0.064
+0.045
+0.015
+0.469
+0.185
+0.147
+0.010
+0.195
+1.006
+0.696
+0.001
+ElasticNet
+0.480
+0.065
+0.046
+0.005
+0.435
+0.192
+0.151
+0.008
+0.159
+1.028
+0.735
+−0.001
+Las Regression
+0.440
+0.068
+0.049
+0.000
+0.393
+0.199
+0.158
+0.007
+0.117
+1.053
+0.767
+−0.002
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+7 
+
+
+<!-- Page 8 -->
+against the frozen model (Fig. S17D, Table S12). Temporal generalisa­
+tion is therefore governed by the refresh schedule rather than by any 
+intrinsic limit of the model, and the deployment recommendation is 
+concrete: refit on the accumulated record at least weekly, and daily 
+where the historian connection makes it free.
+3.2. Process interpretability analysis
+3.2.1. Cross-model feature importance consensus and divergence
+SHAP was applied across all 16 models and three targets, giving 48 
+feature-importance profiles (Figure 6A1–3; TreeSHAP–KernelSHAP 
+comparison in Fig. S8A). The central result is a consensus one. Despite 
+spanning six algorithmic families, every one of the 16 models ranked 
+SRT first for TMP (consistency score 1.00) and 15 of 16 ranked it first for 
+water level (mean rank 1.07 ± 0.25), the MLP being the sole exception; 
+for permeate flow the picture is less unanimous, HRT ranking first in 7 of 
+16 models (2.28 ± 1.39) against 4.67 ± 1.89 for SRT. This convergence 
+establishes that the dominance of SRT is a property of the data rather 
+than of any single learner's inductive bias, a distinction the single-model 
+analyses that constitute most of this literature cannot draw, and it sur­
+vives the validation design, SRT remaining first-ranked for TMP and 
+water level under blocked 24 h, blocked 168 h and chronological 
+training even where predictive accuracy degrades. Flow rankings 
+beyond the top two features are less stable and should be treated as 
+indicative. Where the models diverge, the divergence is systematic and 
+traceable to the explainer: linear models ranked C/N third or higher for 
+TMP while every tree-based model ranked it last, and aeration ranked 
+first for flow under KernelSHAP but fourth under TreeSHAP. Kernel­
+SHAP approximates Shapley values using random feature coalitions and 
+so conflates correlated features [60], whereas TreeSHAP exploits the 
+exact tree structure and is more reliable under correlation [61]; since Air 
+and HRT co-vary here, higher aeration being deployed during higher- 
+loading periods that also compress HRT, KernelSHAP absorbs part of 
+the HRT contribution into aeration. All mechanistic discussion below 
+therefore rests on the Extra Trees attributions.
+3.2.2. Mechanistic interpretation of the dominant drivers
+The dominance of SRT is the most physically interpretable finding of 
+the analysis. SRT governs the composition, morphology and activity of 
+the sludge community, and at this facility it ranged from 43.3 to 108.3 
+days, placing the entire operating range within the extended-aeration 
+regime. Across the Extra Trees dependence and beeswarm plots 
+(Fig. 6B1, Fig. S9), SHAP values are positive at 45–75 days, pass through 
+a wide-scatter transition at 80–90 days where the effect becomes 
+strongly conditional on co-occurring variables, and fall sharply beyond 
+90 days, reaching −0.3 to −2.0 at 100–108 days. That increasing SRT 
+worsens TMP appears to contradict the expectation that longer sludge 
+age reduces fouling through endogenous respiration and hydrolysis of 
+EPS and SMP, but that expectation was established below 30–40 days. 
+Here even the shortest SRT is already deep in the extended-aeration 
+domain, so the EPS and SMP benefit is largely exhausted, and what 
+changes between 45 and 108 days is accumulated biomass: less sludge is 
+wasted, MLSS rises, and the accompanying increases in viscosity, cake 
+thickness and cake compressibility outweigh any residual SMP reduc­
+tion [61,62]. At very long SRT the floc becomes dominated by inert and 
+recalcitrant particulates that deposit as a dense, poorly reversible layer, 
+a mechanism with particular force in semiconductor wastewater where 
+non-biodegradable fractions from photoresist and cleaning chemistries 
+adsorb preferentially onto PVDF. The same logic explains the other 
+targets: permeate flow is suppressed at the longest SRT as viscosity raises 
+internal hydraulic resistance [63], and water level rises monotonically 
+with SRT. The 80–90 day transition band is where operating choices 
+decide the outcome, and the HRT × SRT interaction (0.056; Fig. S8B1) 
+quantifies the coupling: at short HRT the biomass-driven penalty of 
+rising SRT is partly offset, whereas at long HRT the two compound.
+3.2.3. Hydraulic and aeration effects
+HRT ranked second for TMP (2.33 ± 0.47) and first for permeate 
+flow among the leading tree-based models, reflecting its dual role as a 
+control on organic loading and on hydraulic capacity. Short HRT of 6–7 
+h yields positive SHAP for TMP and the contribution declines steadily 
+above 7 h, reaching −1.3 to −2.2 at 10–11 h. The conventional expec­
+tation is the opposite, since short HRT should leave more residual SMP, 
+but three features of full-scale operation reconcile it: short HRT corre­
+sponds to high throughput, which at this fab coincides with active 
+production and a more dilute wastewater; long HRT periods above 9 h 
+co-occur with reduced wasting and therefore with biomass accumula­
+tion; and during high-throughput operation the control system main­
+tains more frequent backwash and relaxation cycles. For permeate flow 
+the dependence is non-monotonic with an optimum near 6.5–7.5 h 
+Fig. 5. (A) Model performance comparison, (B) Prediction quality, (C) Residual plot, (D) Error distribution analysis of the best-performing model (Extra Trees) on the 
+independent validation dataset. Points on the 1:1 line and residuals scattered evenly about zero indicate that the model transfers to the independent stream without 
+systematic bias.
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+8 
+
+
+<!-- Page 9 -->
+before the hydraulic ceiling asserts itself, since HRT = V/Q at fixed tank 
+volume. The aeration rate ranked second for water level (0.216) and 
+third for permeate flow but only sixth for TMP (0.063), an asymmetry 
+following from its mechanism: it acts through hydrodynamic shear at 
+the membrane surface, so it governs the hydraulic outputs more directly 
+than TMP, which is additionally controlled by internal and adsorptive 
+fouling that shear cannot dislodge. For TMP the dependence is non- 
+monotonic, insufficient scouring below about 5000 m3/h allowing 
+fouling to proceed unchecked and the response bifurcating above about 
+6500 m3/h, since high aeration relieves fouling only where the cake 
+remains amenable to shear and is ineffective once long SRT and high 
+MLSS have consolidated the layer [38]. For water level the large Air ×
+SRT interaction (0.1318, the largest off-diagonal term across all targets; 
+Fig. S8B3) shows that the benefit of additional aeration is amplified at 
+low SRT and diminishes at high SRT [64].
+The aeration rate also shows an apparent negative association with 
+permeate flow. This is not a physical suppression of flux: in a pumped 
+submerged MBR the flux is set by the suction pump, and the association 
+instead reflects control logic, low aeration occurring during low-loading 
+periods when the membrane is under minimal hydraulic stress while 
+high aeration is deployed reactively during high loading or active 
+fouling when flow is already constrained. TreeSHAP partially disen­
+tangles the confounding, ranking aeration fourth for flow behind HRT, 
+SRT and C/N, but the residual association is mediated through co- 
+variation with HRT and SRT rather than any direct hydrodynamic ef­
+fect. It is an instructive example of why dependence plots from obser­
+vational plant data record association and not necessarily causal 
+mechanism.
+3.2.4. Secondary biological drivers
+MLSS ranked third for TMP (3.33 ± 1.35) and for water level (3.87 
+± 1.15), with an inverted-U dependence for TMP: near-zero contribution 
+at 2000–3000 mg/L, a maximum near 6000–6500 mg/L, then a sharp 
+fall to −1.5 at 7000–7500 mg/L as cake resistance rises disproportion­
+ately, consistent with the near-quadratic scaling documented for PVDF 
+hollow-fibre systems [65]; the MLSS × SRT interaction (0.042) confirms 
+amplification at shorter SRT where EPS-rich sludge raises cake 
+compressibility. F/M ranked fourth for TMP, with a maximum near 
+0.030–0.035 day−1 and a decline at the highest values where SMP 
+overproduction accelerates gel-layer fouling, and a U-shape for water 
+level with a steep rise above 0.05 day−1. Glucose ranked fifth for TMP 
+with a modest, largely indirect effect mediated through MLSS and F/M. 
+C/N ranked seventh for TMP among the tree-based models, decreasing 
+monotonically from positive contributions at 5–7 to −0.3 at 14–16, since 
+carbon-rich, nitrogen-limited conditions favour carbohydrate-rich EPS 
+and filamentous growth with poor filterability [66]; the divergence 
+between model families for this variable is attributable to its correlation 
+with MLSS and F/M and is a further illustration of the value of the cross- 
+model comparison.
+3.2.5. Interaction structure and methodological implications
+Comparing TreeSHAP across the nine tree-based models with Ker­
+nelSHAP across the seven non-tree models reveals consistent directional 
+bias (Fig. S8A). For TMP the two agree on SRT dominance (0.530 against 
+0.458) and on HRT second (0.143), MLSS diverging most (0.144 against 
+0.109). For permeate flow the divergence is largest for aeration, first 
+under KernelSHAP (0.243) and fourth under TreeSHAP (0.150) behind 
+HRT (0.318), C/N (0.230) and F/M (0.160) [67]. For water level the two 
+agree. The systematic pattern is that KernelSHAP overstates the leverage 
+of readily adjustable short-term variables at the expense of the slower 
+biological variables that dominate outcomes, reinforcing the use of 
+TreeSHAP for operational guidance. The interaction matrices (Fig. S8) 
+place the strongest couplings at HRT × SRT for TMP (0.056) and flow 
+(0.0510), MLSS × SRT for TMP (0.042) and Air × SRT for water level 
+(0.1318). These non-additive dependencies are the quantitative basis for 
+treating the seven inputs jointly in Section 3.3 rather than optimising 
+Fig. 6. (A) SHAP features importance comparison heatmaps and (B) Beeswarm plot across all 16 models for (1) TMP, (2) permeate flow, and (3) water level 
+prediction. Cell values indicate mean |SHAP| for each model–feature pair. In the heatmaps each row is a model and each column a variable, so a column that is dark 
+across every row marks a driver all 16 models agree on; in the beeswarm plots each point is one observation, its horizontal position the effect on the prediction and its 
+colour the value of that variable.
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+9 
+
+
+<!-- Page 10 -->
+them one at a time.
+3.3. Optimal operating conditions for semiconductor MBR wastewater 
+treatment
+3.3.1. From feature importance to viable operating space
+The interpretability analysis in Section 3.2 established, with 
+consensus across 16 algorithms, which variables govern each perfor­
+mance indicator and in which direction they act. SRT is the dominant 
+driver of TMP, worsening fouling monotonically across the facility's 
+extended-aeration range through biomass accumulation, elevated vis­
+cosity and cake compaction; HRT sets the hydraulic ceiling on permeate 
+flow; and aeration acts on TMP through a non-monotonic optimum with 
+diminishing returns. What SHAP cannot supply is the set of input con­
+ditions under which all three targets are met at once, nor whether the 
+direction that improves one target conflicts with the constraints of 
+another. Section 3.3 addresses that gap, and it is the step that converts 
+model insight into operating guidance.
+Feasibility was mapped with the Extra Trees model using the 
+manifold-constrained resampling scheme of Section 2.7, under three 
+simultaneous constraints: TMP between −0.09 and −0.03 bar, permeate 
+flow between 1.5 and 2.2 m3/min and water level between 65.0 and 
+67.0% (Figs. S12–S13). Of 500,000 candidate states on the operating 
+manifold, 207,238 (41.4%) satisfied all three. Ensemble dispersion 
+across the 100 trees gives 95% prediction intervals of ±0.008 bar for 
+TMP, ±0.17 m3/min for flow and ± 0.71% for water level, so operation 
+toward the interior of the envelope rather than at its edge is advisable for 
+the two hydraulic targets in particular. Fig. 7 sets out the feasible range 
+of each input against the attainment rate the plant actually achieved 
+there. Two features of the scheme give the map its practical value. Every 
+sampled state lies on the manifold the plant has explored, the median 
+nearest-neighbour distance from sample to record being 0.121 stand­
+ardised units against 0.119 between real hours, so every prediction is an 
+interpolation among conditions the facility has genuinely operated and 
+every recommendation is physically attainable. And windows are 
+graded by the conditional feasibility rate rather than by the number of 
+feasible points, which identifies where the plant performs best rather 
+than where it has spent the most time, and is what allows each recom­
+mendation in Table 4 to be stated with the frequency at which the plant 
+has actually met its targets there.
+The feasible region is not a rectangular box but a structured, corre­
+lated set. Fig. 8 maps the probability of meeting all three targets across 
+every pair of operating variables, and in most pairs the high-probability 
+region forms a narrow ridge rather than a rectangle, most clearly for 
+MLSS against F/M, which run in strict opposition, and for C/N against 
+HRT, where favourable operation follows a rising band. Treating the 
+seven recommendations as independently adjustable set-points would 
+therefore overstate the freedom available, and Fig. 8 is the reference for 
+which combinations can be held simultaneously. In 20 of the 21 pairs the 
+intersection of the two recommended bands lies in a high-probability 
+region, with feasibility rates of 60–100% against a plant-wide rate of 
+about 40%, so the per-variable recommendations compose without 
+conflict. The single exception is a genuinely non-additive result that per- 
+variable analysis cannot reach. Taken individually, SRT of 43.2–72.2 
+days and HRT of 5.875–6.381 h are the two strongest levers in the study, 
+with measured attainment of 77.0% and 82.4%; taken together they are 
+not. Only 35 logged hours combine both, and on those hours attainment 
+falls to 34.3%, below the 37.1% plant-wide baseline. The reason is 
+visible in the record: when SRT is held at 43.2–72.2 days the plant runs 
+at an HRT of 6.2–7.5 h, whereas the 5.9–6.4 h band occurs at sludge ages 
+of 72–108 days. Short HRT is a high-throughput condition, and sus­
+taining high throughput at low sludge age demands a wasting rate the 
+plant does not operate, so forcing both moves the system into a regime it 
+has essentially never occupied. SRT and HRT should therefore not be set 
+independently at their marginal optima: sludge age is the variable to fix 
+first, being the slower of the two and the dominant driver of TMP, and 
+HRT chosen conditionally on it, which is the structure of the joint rule 
+validated in Section 3.3.4.
+Fig. 7. Feasible region and measured plant performance for each of the seven inputs. Of the 500,000 sampled operating states, 207,238 (41.4%) satisfy all three 
+performance targets simultaneously; the blue curve is a Gaussian kernel density estimate of their distribution, fitted to a random subsample of 15,000 of those states. 
+The red step function is the measured attainment rate of the logged plant record, drawn across the true extent of each decile bin because the deciles differ widely in 
+width, with the highest-attainment decile marked in dark red. The green band is the recommended operating zone of Table 4, which coincides with that decile by 
+construction. Feasible-point density and attainment rate are distinct quantities and need not peak together: the density indicates where the plant has spent its 
+operating time, whereas the rate indicates how often the three targets were met there. The recommended zone follows the rate. The blue curve shows where the plant 
+can operate, the red step how often it met its targets there, and the green band is the recommendation, which follows the red step and not the blue curve. (For 
+interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+10 
+
+
+<!-- Page 11 -->
+3.3.2. Density structure of the feasible regions
+The recommended operating window that follows is given in Table 4, 
+where every row carries the measured attainment rate in the logged 
+record alongside the model-derived rate, so that no recommendation 
+rests on the model alone. HRT is the sharpest lever. Within the feasible 
+region the conditional rate is 82.8% at 5.88–6.38 h and falls mono­
+tonically thereafter, reaching zero above 7.95 h; the measured attain­
+ment in the same bands is 82.4% and 0% (Fig. 7). This is the hydraulic 
+ceiling identified in Section 3.2 expressed as an operating constraint: at 
+fixed tank volume, HRT above roughly 8 h corresponds to influent flows 
+at which the 1.5 m3/min permeate target cannot be met regardless of 
+membrane condition.
+The aeration rate exhibits the opposing-target structure anticipated 
+in Section 3.2. Measured attainment is highest at 4868–5892 m3/h 
+(61.1%) and falls to 17.2% above 6356 m3/h (Fig. 9C). The TMP opti­
+mum sits at 5500–6000 m3/h, where sufficient shear keeps the cake 
+mobile, while higher rates confer no further TMP benefit. The apparent 
+decline of permeate flow with increasing aeration is, as established in 
+Section 3.2, a consequence of control logic rather than hydrodynamic 
+suppression of flux, so the recommended band should be read as the 
+range in which the scouring requirement is met without the plant being 
+driven into the reactive high-aeration regime that accompanies high 
+Table 4 
+Recommended operating conditions for the target performance envelope (TMP −0.09 to −0.03 bar, permeate flow 1.5–2.2 m3/min, water level 65.0–67.0%). Zones 
+are the contiguous bands maximising the conditional feasibility rate on the manifold-constrained sample. Measured attainment is the percentage of real logged hours 
+inside and outside each band that met all three targets simultaneously; the plant-wide baseline is 37.1%. The bands are per-variable recommendations. They compose 
+without conflict for 20 of the 21 variable pairs (Fig. 8); SRT and HRT interact, and the joint rule of Section 3.3.4 governs the choice of HRT once sludge age is fixed.
+Parameter
+Unit
+Observed 
+range
+Recommended zone 
+(rate-based)
+Measured attainment 
+inside / outside (%)
+Operational note and out-of-time result
+SRT
+day
+43.3–108.4
+43.2–72.2
+77.0 / 32.3
+Hold below 85 d; target 43.2–72.2 d. Attainment falls monotonically to <20% 
+above 87 d. Transferred out of time (+22.7 pp).
+HRT
+h
+5.875–11.042
+5.875–6.381
+82.4 / 32.1
+Operate 5.9–6.4 h. Attainment reaches zero above 7.95 h as the hydraulic ceiling 
+caps permeate flow.
+Air
+m3/h
+4470 - 7272
+4868 - 5892
+61.1 / 34.4
+Keep within 4868–5892 m3/h; sufficient scouring for TMP without entering the 
+reactive high-aeration regime.
+MLSS
+mg/L
+1918 - 7630
+5580 - 6138
+67.6 / 29.5
+Operate within 5580–6138 mg/L; the strongest out-of-time transfer of any lever 
+(+30.9 pp).
+C/N
+–
+4.80–17.52
+4.80–7.51
+55.0 / 32.6
+Monitoring variable rather than a fixed set-point. Favourable band 4.80–7.51 in 
+this record; because it is set by the fab discharge schedule it should be re-estimated 
+periodically.
+F/M
+day−1
+0.0117–0.0658
+0.0233–0.0252
+68.3 / 33.5
+Keep below ~0.03 day−1; increase sludge extraction ahead of high-organic-loading 
+sequences. Transferred out of time (+15.7 pp).
+Glu
+L/ 
+min
+0.402–1.352
+0.705–1.352
+59.8 / 31.3
+Conditional lever, dosed to maintain C/N; not an independent optimisation target.
+Fig. 8. Probability of meeting all three performance targets across every pair of operating variables, estimated from the manifold-constrained sample. Colour is the 
+conditional feasibility rate p(all three targets met) within each bin, green indicating a high probability and red a low one; bins containing fewer than 20 sampled 
+states are left grey. The dark green line is the 80% contour. The two navy dashed strips are the recommended bands for the variables on the two axes, taken from 
+Table 4, and the outlined rectangle where they cross is the region satisfying both; the feasibility rate achieved inside it, computed over all sampled states it contains 
+rather than bin by bin, is given above each panel. The crossing point of the two bands should sit on green. It does so in 20 of the 21 pairs; the single exception, HRT 
+against SRT, identifies an interaction discussed in the text. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version 
+of this article.)
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+11 
+
+
+<!-- Page 12 -->
+loading. Correlations involving aeration warrant the same caution: the 
+Pearson coefficient between Air and Flow is −0.410 over the raw record, 
+and the stronger linear relationships in the dataset are MLSS–F/M 
+(−0.791) and SRT–TMP (−0.606).
+The value of the framework rests on whether its feasibility surface 
+corresponds to the plant's real behaviour, and the logged record contains 
+Fig. 9. Predicted output response across the manifold-constrained feasible region. (A) Effect of SRT on water level and TMP, (B) HRT on permeate flow and TMP, (C) 
+opposing effects of aeration rate on flow and TMP, (D) non-monotonic effect of MLSS on TMP and water level, (E) F/M on water level and flow, (F) glucose dosing 
+rate on water level and flow. Each panel shows how two predicted outputs respond as one input varies across its full range; the dotted horizontal lines are the 
+performance limits, so a curve crossing them marks where that target fails, and the shaded band is the recommended operating zone.
+Fig. 10. Agreement between the model-derived conditional feasibility rate (blue) and the plant's measured target-attainment rate (red) across deciles of each of the 
+seven inputs, with the paired comparison across all 70 operating bins shown in the final panel. The blue and red curves should lie on top of one another if the model 
+reproduces plant behaviour, and in the final panel every point should fall on the dashed 1:1 line. (For interpretation of the references to colour in this figure legend, 
+the reader is referred to the web version of this article.)
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+12 
+
+
+<!-- Page 13 -->
+the ground truth needed to test this directly. Across the whole record, 
+1703 of 4593 h (37.1%) met all three targets simultaneously. Parti­
+tioning each input into deciles and comparing the model's predicted 
+feasibility rate with the measured attainment rate in the same bin gives 
+70 paired comparisons, and the agreement is close: Pearson r = 0.988 (p 
+= 9 × 10−57), Spearman ρ = 0.984, mean absolute deviation 4.3 per­
+centage points and systematic optimism of only +4.2 points, with per- 
+variable correlations between 0.96 and 0.998 (Fig. 10). The model 
+therefore reproduces, quantitatively and without tuning to this com­
+parison, how often the plant meets its targets as a function of where it is 
+operating. This is the validation that licenses its use for operating 
+guidance, and it is a more relevant test than forward prediction of a time 
+series: the framework is asked which attainable operating states satisfy 
+the constraints, and that is the question it answers accurately.
+SRT shows the strongest and most monotone dose–response of the 
+seven inputs. Measured attainment falls from 77.0% at 43.2–72.2 days, 
+through 74.5% at 77–84 days and 59.0% at 84–86 days, to 18.7% at 
+87–92 days and 0% above 108 days; the model-derived rates track these 
+values within a few percentage points across the whole range. The 
+recommendation is therefore to hold SRT below approximately 85 days 
+and to target the 43.2–72.2 day band, and it is supported by three in­
+dependent lines of evidence pointing the same way: the cross-model 
+SHAP consensus of Section 3.2 (Fig. 6), the model feasibility surface 
+(Fig. 7) and the plant's own measured attainment (Fig. 11A), all of which 
+place the optimum in the lower half of the operating range.
+MLSS proves considerably more informative than a marginal reading 
+of the feasible region suggests. Measured attainment rises from 3.9% 
+below 3590 mg/L to a broad maximum of 67.6% across 5580–6138 mg/ 
+L, then falls to 25.1% above 6138 mg/L (Fig. 7, Fig. 9D, Fig. 10), and the 
+model reproduces this inverted-U within 4 percentage points at every 
+decile. The recommended band of 5580–6138 mg/L covers 918 logged 
+hours, and it reflects the balance between maintaining sufficient 
+biomass for treatment and avoiding the viscosity-driven cake resistance 
+that dominates at higher concentrations. F/M behaves similarly, with a 
+maximum of 68.3% attainment at 0.0233–0.0252 day−1 against 15.0% 
+above 0.0373 day−1, consistent with SMP overproduction accelerating 
+gel-layer fouling at high organic loading. The practical instruction is to 
+keep F/M below approximately 0.03 day−1 and to increase sludge 
+extraction proactively when the production management system signals 
+a high-organic-loading sequence.
+C/N and glucose are best treated as conditional adjustments rather 
+than primary set-points. Measured attainment for C/N is highest at 
+4.80–7.51 (55.0%) with a secondary shoulder at 11.3–12.9 (50.5%), a 
+bimodal structure (Fig. 10) that reflects the two dominant discharge 
+regimes at this facility: higher‑carbon effluent during photoresist strip­
+ping and cleaning-agent discharge, and nitrogen-rich rinse water from 
+polishing and etching steps. Glucose dosing is determined by the 
+incoming C/N rather than optimised independently for membrane per­
+formance, and its association with tank level in the feasible region 
+operates through the overall loading state rather than through F/M, with 
+which it is very weakly correlated. The C/N association also proved the 
+least stable of the seven over time, as reported in the out-of-time analysis 
+below, and C/N guidance is therefore presented as a period-specific 
+observation rather than as a transferable set-point.
+3.3.3. Validation of the operating window on a withheld period
+The most demanding test available for guidance derived from his­
+torical data is whether guidance obtained from one period improves 
+outcomes in a later period that played no part in obtaining it. This in­
+volves no model prediction and is therefore independent of the accuracy 
+assessment of Section 3.1. The record was divided chronologically, the 
+window re-derived using only the first 70%, and its effect evaluated on 
+the final 30% (Fig. 11B). The window from the first seven months places 
+its principal condition on SRT (≤84.5 days) with HRT secondary, and 
+identifies 415 h in the withheld period, of which 61.9% met all three 
+targets against a baseline of 39.3% (odds ratio 3.89, Fisher exact p = 3 ×
+10−29). Lever by lever, the principal biological controls carry the result 
+individually as well: MLSS transferred with a gain of 30.9 percentage 
+points, SRT with 22.7 and F/M with 15.7 (Fig. S18). Sludge age, biomass 
+concentration and organic loading, the three variables an operator can 
+act on over hours to days, are therefore the levers for which the guidance 
+is most firmly established, and the ones the protocol places at its centre.
+3.3.4. Feature importance shifts and real-time control implications
+Confining the SHAP analysis to the feasible region changes several 
+importance rankings in ways that carry operational meaning 
+(Tables S5–S7). These shifts are not artefacts: within the viable regime 
+the most damaging conditions, namely SRT above 100 days, MLSS above 
+7500 mg/L and HRT above 10 h, are excluded by the output constraints, 
+so shorter-timescale sources of variability become dominant. The 
+clearest case is F/M, whose importance for water level rises by 87% from 
+rank 5 to rank 4. In the full dataset, extreme SRT and high MLSS 
+dominate level variance and mask the short-timescale contribution of 
+organic loading; within the feasible region, where both are moderate, F/ 
+Fig. 11. Recommended operating window and its validation. (A) Percentage of real logged hours meeting all three performance targets inside and outside each 
+recommended band. (B) Attainment across all held-out hours and inside the operating window learned on months 1–7 and evaluated on months 8–11. In panel A, a 
+longer green bar than grey bar means the recommended band outperforms the rest of the record; in panel B the right-hand bar is the attainment achieved in months 
+the analysis never saw. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+13 
+
+
+<!-- Page 14 -->
+M emerges as the main driver of hour-to-hour level movement, following 
+the fab's batch production schedule rather than any slowly adjustable 
+biological parameter. With the parallel increase in MLSS importance for 
+level, this identifies three fast-acting levers for level management: 
+glucose dosing, responding in minutes, sludge extraction rate, in hours, 
+and F/M adjustment through equalisation, also in hours (Fig. 9E). These 
+allow operators to hold water level below the 67% threshold during 
+high-loading production without waiting for the much longer SRT 
+adjustment cycle. C/N also rises in rank for both TMP and flow; because 
+its favourable band is set by the fab's discharge schedule and shifts as 
+that schedule evolves, it is reported as a monitoring variable to be re- 
+estimated periodically rather than a fixed set-point.
+The recommendations in Table 4 do not rest on a single analytical 
+method. Each is supported by the cross-model SHAP directional evi­
+dence of Section 3.2 across all 16 models, by the conditional feasibility 
+surface of the manifold-constrained sample, and by the measured 
+attainment rate in the plant's own record, with the primary levers 
+additionally validated out of time. This convergence of model-based and 
+measurement-based evidence, rather than the use of any one technique, 
+is what distinguishes the present protocol from previous MBR optimi­
+sation studies, which typically report either importance rankings, or 
+directional effects, or a feasible range, but do not reconcile all three 
+against what the plant has actually achieved.
+3.4. Comparison and perspectives
+3.4.1. Predictive performance
+Most prior studies focus on municipal or domestic wastewater 
+treatment, often conducted at pilot or lab scales, and typically provide 
+single-target predictions, such as TMP or fouling indicators (e.g., 
+permeability, water flux, Table S8). For instance, [68] employed 
+multilayer perceptron (MLP) and long short-term memory (LSTM) net­
+works for TMP prediction in a large pilot-scale anaerobic MBR (AnMBR) 
+treating municipal wastewater, achieving R2 > 0.91. Similarly, [69]
+used random forest for fouling behaviour prediction in AnMBRs with R2 
+= 0.906, while [70] applied adaptive neuro-fuzzy inference systems for 
+water flux in osmotic MBRs, yielding R2 between 0.9755 and 0.9861.
+In contrast, the present study applies an Extra Trees regressor at full 
+scale in a semiconductor wastewater plant, a domain of wide loading 
+swings and stringent effluent requirements, and predicts three interde­
+pendent outputs simultaneously. Under a random partition, comparable 
+to the designs used in the studies above, R2 is 0.988 for TMP, 0.933 for 
+permeate flow and 0.908 for water level; under a 24-h blocked partition 
+that removes temporal near-neighbours, 0.830, 0.788 and 0.564. Both 
+are reported because comparison with published single-target accu­
+racies is meaningful only on a like-for-like partitioning basis, and the 
+studies cited use random partitions of similarly autocorrelated records. 
+Rather than claiming the highest accuracy reported to date, the appro­
+priate conclusion is that a single ensemble learner achieves competitive 
+accuracy on three coupled targets at full industrial scale without the 
+computational overhead of recurrent architectures, and that the multi- 
+target formulation addresses the operational reality that hydraulic dy­
+namics and fouling cannot be optimised independently.
+3.4.2. Optimization approach
+The largest gap in the comparative literature lies not in predictive 
+accuracy but in interpretability, which most comparison studies do not 
+report at all. The framework used here combines kernel density esti­
+mation, feasible-region analysis, SHAP beeswarm and dependence 
+analysis and Pearson correlation, applied in two analytical contexts: the 
+full operational record (Section 3.2) and the feasible operating region 
+(Section 3.3). This dual-context analysis is a methodological contribu­
+tion in itself, because the importance ranking of several variables shifts 
+when the analysis is confined to the viable regime, and those shifts have 
+implications for real-time control that a single-context analysis cannot 
+reveal. The 87% increase in F/M importance for water level within the 
+feasible region is the clearest example, identifying a near-real-time 
+control lever that full-dataset SHAP leaves hidden behind the domi­
+nant slow variables.
+Perhaps the sharpest distinction between the present study and the 
+comparative literature lies in the meaning and scope of the term “opti­
+mization.” In most comparative studies that report any optimization 
+activity, the term refers to model optimization (Table S8) includes 
+hyperparameter tuning architecture search, or training strategy selec­
+tion. Only reference [71] applies optimization to operating conditions 
+rather than model parameters, using a genetic algorithm to identify the 
+input combination that minimizes a single fouling objective.
+The present study is, to our knowledge, the first in the MBR machine- 
+learning literature to perform multi-objective operating-condition 
+optimisation within a manifold-constrained feasible input space, satis­
+fying three membrane performance constraints simultaneously and 
+mapping the joint structure of the 207,238 states that achieve this. This 
+differs qualitatively from a single-objective genetic-algorithm search. 
+Rather than returning one optimal point, the analysis produces a con­
+ditional probability surface over the attainable operating space, which 
+allows the identification of regions where the system is most resilient to 
+routine perturbation, distinct from the technically feasible boundary. 
+The methodological point that emerges, and that we suggest is trans­
+ferable well beyond this plant, is that a feasible region must be sampled 
+on the joint operating manifold rather than across independent marginal 
+ranges, and that operating recommendations must be graded by condi­
+tional attainment rate rather than by the density of feasible points.
+The distinction between the feasible range and the high-attainment 
+core is a practically significant contribution. For SRT the feasible en­
+velope extends beyond 95 days while measured attainment above 87 
+days is below 20%; for HRT the feasible envelope reaches 7.65 h while 
+attainment above 7.95 h is zero; for F/M the feasible envelope extends to 
+0.037 day−1 while attainment above 0.037 day−1 is 15%. An operator 
+relying on the feasible boundary alone, that is on the output of a con­
+ventional constraint-satisfaction analysis, would conclude that these 
+upper ranges are acceptable, when in practice they carry a high proba­
+bility of violating one or more targets.
+The rate-graded operating targets in Table 4, derived from 207,238 
+evaluated feasible states and cross-checked against 4593 logged hours, 
+therefore provide a level of evidential support that is not available from 
+a feasibility boundary alone.
+3.4.3. Perspectives and future strategies
+The structural contributions of this study, namely full-scale semi­
+conductor wastewater application, simultaneous three-output predic­
+tion, benchmarking of 16 algorithms across six families under four 
+validation designs, dual-context multi-model interpretability, and 
+manifold-constrained optimisation validated against measured attain­
+ment and out of time, advance practice in three areas. Models trained on 
+historical operating data from a complex industrial MBR can support 
+operational guidance without additional laboratory characterisation, 
+provided they are evaluated as response surfaces over the attainable 
+operating space and validated against measured outcomes rather than 
+on forecasting skill alone. Interpretability conducted within the feasible 
+region rather than across the full historical envelope reveals control- 
+relevant shifts in feature importance, a template applicable to any 
+multi-output industrial process model. And the study delivers an 
+evidence-graded operating protocol in which each recommendation 
+carries an explicit measured attainment rate and an explicit statement of 
+whether it transferred to a held-out period.
+The boundaries of the framework should be stated alongside its 
+contributions. The operating window has been verified three indepen­
+dent ways: against the plant's measured attainment across the operating 
+space, against a three-month period withheld entirely from the analysis, 
+and against an independent parallel membrane train. This is a stronger 
+evidential base than a single-period, single-split analysis, but it remains 
+a verification on historical data rather than a controlled trial, and part of 
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+14 
+
+
+<!-- Page 15 -->
+the association may be carried by variables outside the model, most 
+obviously membrane age and cleaning history. A prospective trial 
+alternating the recommended and incumbent strategies between the two 
+parallel UF trains, so that influent conditions are shared, is the natural 
+next step. Three further boundaries apply: the models were trained on 
+one facility with a single PVDF UF configuration, so the method transfers 
+but the numerical windows are site-specific; the framework character­
+ises the manifold the plant has explored and is not intended to extrap­
+olate to regimes absent from the record, with membrane age, cleaning 
+frequency and effluent conductivity the most promising additional in­
+puts; and SHAP attributions quantify association within the training 
+distribution rather than physical causation, so confirming the proposed 
+mechanisms would require membrane autopsy, zeta-potential mea­
+surement and filtrate organic fractionation.
+4. Conclusion
+This study set out to determine whether the operating record of a 
+full-scale semiconductor-wastewater membrane bioreactor contains 
+enough information to tell operators where to run the plant, and con­
+cludes that it does, provided the models are evaluated and used in the 
+right way. Three findings support this. First, sludge retention time is the 
+foundational determinant of membrane behaviour here, and the evi­
+dence is unusually robust: all 16 algorithms rank it first for trans­
+membrane pressure, the ranking survives validation designs under 
+which predictive accuracy itself degrades, and measured attainment 
+falls monotonically from 77% at 43–72 days to below 20% beyond 87 
+days. Because the facility operates entirely within the extended-aeration 
+range, the mechanism is biomass accumulation, elevated viscosity and 
+cake compaction rather than the EPS and SMP dynamics of conventional 
+short-sludge-age systems, so the expectation that longer sludge age 
+mitigates fouling is inverted. Second, the question a plant record an­
+swers well is not what the plant will do next but which attainable 
+operating states satisfy its performance constraints; mapped on the real 
+joint operating manifold and graded by conditional attainment rate, the 
+resulting surface reproduces measured attainment across 70 operating 
+bins with a correlation of 0.99 and yields a window substantially nar­
+rower than the technically feasible envelope. Third, that window carries 
+value beyond the period it came from: bands fixed on the first seven 
+months raised simultaneous attainment from 39.3% to 61.9% over the 
+following three, and refitted daily on the accumulated record the model 
+predicts TMP to 0.008 bar with R2 = 0.871 four months beyond its 
+original training data, so temporal generalisation is governed by the 
+refresh schedule rather than by any intrinsic limit of the model. The 
+wider implication concerns how such models should be judged. Hourly 
+industrial records are strongly autocorrelated, and accuracy measured 
+on random partitions describes interpolation between neighbouring 
+hours rather than generalisation to new operating conditions, whereas 
+feature attributions prove stable across partitioning schemes. Inter­
+pretability, not headline accuracy, is therefore the property that survives 
+scrutiny and should carry the operational weight, and the most useful 
+output is not a predictor but a graded map of the operating space in 
+which every recommendation carries the frequency with which the 
+plant has actually achieved its targets there. The transition from reactive 
+to proactive membrane management depends less on further gains in 
+predictive accuracy than on validating guidance against outcomes the 
+plant can verify and, ultimately, on prospective trials that test whether 
+following such guidance causes the improvement these data associate 
+with it.
+CRediT authorship contribution statement
+Yujae Jeon: Writing – original draft, Validation, Investigation, 
+Formal analysis, Conceptualization. Duc Anh Nguyen: Methodology, 
+Formal analysis. Kim Anh Nguyen Thi: Software, Investigation. Quoc 
+Thai Nong: Software, Investigation. Am Jang: Writing – review & 
+editing, Validation, Supervision, Funding acquisition, Formal analysis.
+Declaration of competing interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgements
+This work was supported by Korea Environmental Industry & 
+Technology Institute (KEITI) through Digital Desalination and Brine 
+Resource Recovery Technology Development Project, funded by Korea 
+Ministry of Climate, Energy and Environment (MCEE) (RS-2025- 
+02032971).
+Appendix A. Supplementary data
+Supplementary data to this article can be found online at https://doi. 
+org/10.1016/j.jwpe.2026.110865.
+Data availability
+The analysis code, trained model configurations, SHAP outputs, 
+feasibility-sampling routines and all derived result tables supporting this 
+study 
+are 
+openly 
+available 
+at 
+https://github. 
+com/<nguyenducanh97/ML-MBR-semiconductor.git. The repository 
+includes complete benchmarking, temporal-validation, interpretability 
+and manifold-feasibility pipelines together.
+References
+[1] N. Asghar, D.A. Nguyen, A. Jang, Application of MnFe2O4 magnetic silica-covered 
+ethylenediaminetetraacetic acid-functionalized nanomaterials to the draw solution 
+in forward osmosis, Chemosphere 330 (2023), https://doi.org/10.1016/j. 
+chemosphere.2023.138735.
+[2] D. Anh Nguyen, D. Viet Nguyen, G. Jeong, N. Asghar, A. Jang, Fabricated magnetic 
+adsorption – forward osmosis membrane hybrid system for hydroponic irrigation 
+from rich arsenic–containing heavy metal water stream, J. Hazard. Mater. (2023) 
+132126, https://doi.org/10.1016/J.JHAZMAT.2023.132126.
+[3] D. Anh Nguyen, D. Viet Nguyen, G. Jeong, N. Asghar, A. Jang, Ultrahigh-porosity 
+peony-like magnesium oxide for the superior adsorption of arsenic (III) and arsenic 
+(V) from aqueous solutions, J. Hazard. Mater. 497 (2025) 139569, https://doi.org/ 
+10.1016/j.cej.2023.141789.
+[4] D.A. Nguyen, V.B. Nguyen, A. Jang, Ultrahigh-porosity MgO adsorbent coupled 
+with predictive deep belief networks: a transformative method for phosphorus 
+treatment, Water Res. (2023) 120930, https://doi.org/10.1016/J. 
+WATRES.2023.120930.
+[5] I.A. Abbasi, A. Junejo, D.A. Nguyen, I.T. Yeom, Adsorption of polystyrene (PS) 
+microplastic from aqueous solution by black tea magnetic nanoparticles (BTMNPs): 
+adsorbability, mechanism, and reusability, Water Air Soil Pollut. 236 (13 236) 
+(2025) 844, https://doi.org/10.1007/s11270-025-08460-7.
+[6] I.A. Abbasi, D.A. Nguyen, S. Nam, I.T. Yeom, Efficient removal of polystyrene nano 
+plastics from aqueous solution by chitosan-coated black tea magnetic 
+nanocomposite: a green synthesis, influencing factors and mechanisms, J. Water 
+Process Eng. 77 (2025) 108650, https://doi.org/10.1016/J.JWPE.2025.108650.
+[7] D.A. Nguyen, Y. Jeon, K.A.T. Nguyen, A. Jang, Sustainable urea treatment by 
+environmental-friendly and highly hydrophilic vesicle-like iron phosphate-based 
+carbon, Chemosphere 365 (2024) 143351, https://doi.org/10.1016/J. 
+CHEMOSPHERE.2024.143351.
+[8] K.A. Nguyen, Y.U. Shin, D.A. Nguyen, A. Jang, A robust approach for sustainable 
+removal and recovery of fluoride via cryolite crystallization in an enhanced 
+electrocoagulation process, J. Water Process Eng. 76 (2025) 108256, https://doi. 
+org/10.1016/J.JWPE.2025.108256.
+[9] Q. Wang, N. Huang, Z. Chen, X. Chen, H. Cai, Y. Wu, Environmental data and facts 
+in the semiconductor manufacturing industry: an unexpected high water and 
+energy consumption situation, Water Cycle 4 (2023) 47–54, https://doi.org/ 
+10.1016/j.watcyc.2023.01.004.
+[10] D.A. Nguyen, V.B. Nguyen, A. Jang, Integrated adsorption using ultrahigh-porosity 
+magnesium oxide with multi-output predictive deep belief networks: a robust 
+approach for fluoride treatment, Chem. Eng. J. (2024) 149586, https://doi.org/ 
+10.1016/J.CEJ.2024.149586.
+[11] D. Gordon, F. Reuland, D.J. Jacob, al, M. Govindan, R. Adam Gopal, H. Geun Ahn, 
+Y. Li, Y. Zhu, Y. Hao, P. Xiao, Z. Dong, X. Li, Practical reviews of exhaust systems 
+operation in semiconductor industry, IOP Conf. Ser. Earth Environ. Sci. 859 (2021) 
+012074, https://doi.org/10.1088/1755-1315/859/1/012074.
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+15 
+
+
+<!-- Page 16 -->
+[12] D.A. Nguyen, A. Jang, A sustainable approach for efficient ammonium recovery, 
+and simultaneous TOC removal from aqueous solutions by vesicle-like iron 
+phosphate-based carbon nanomaterials, Water Res. 266 (2024), https://doi.org/ 
+10.1016/j.watres.2024.122537.
+[13] H. Im, S. Lee, D.A. Nguyen, D.V. Nguyen, D. Wu, A. Jang, Enhanced anti-wetting 
+and anti-fouling performance of superhydrophobic supported liquid membrane 
+contactors for selective short-chain fatty acid recovery from food waste leachate, 
+Chem. Eng. J. 523 (2025) 168433, https://doi.org/10.1016/j.cej.2025.168433.
+[14] N. Asghar, A. Hussain, D.A. Nguyen, S. Ali, Advancement in nanomaterials for 
+environmental pollutants remediation: a systematic review on bibliometrics 
+analysis, material types, synthesis pathways, and related mechanisms, 
+J. Nanobiotechnol. 22 (1) (2024) 1–28, https://doi.org/10.1186/S12951-023- 
+02151-3.
+[15] M. Tawalbeh, L. Qalyoubi, A. Al-Othman, M. Qasim, M. Shirazi, Insights on the 
+development of enhanced antifouling reverse osmosis membranes: industrial 
+applications and challenges, Desalination 553 (2023) 116460, https://doi.org/ 
+10.1016/J.DESAL.2023.116460.
+[16] D. Anh Nguyen, D. Viet Nguyen, G. Jeong, N. Asghar, A. Jang, Critical evaluation 
+of hybrid metal–organic framework composites for efficient treatment of 
+arsenic–contaminated solutions by adsorption and membrane–separation process, 
+Chem. Eng. J. (2023) 141789, https://doi.org/10.1016/J.CEJ.2023.141789.
+[17] T. Kim, D.A. Nguyen, A. Jang, Ultrahigh-purity ammonia recovery from synthetic 
+coke wastewater via membrane contactor: overcoming phenolic interference and 
+assessing cost efficiency.1, Environ. Res. (2024) 119981, https://doi.org/10.1016/ 
+J.ENVRES.2024.119981.
+[18] K.A. Nguyen, D.A. Nguyen, A.K. An, A. Jang, Electrosorption based-removal of As 
+(III) and Fluoride via interlayer-expanded Mn-doped La-Al-layered double 
+hydroxides: Role of sodium dodecyl sulfate intercalation, J. Environ. Chem. Eng. 
+14 (2026), https://doi.org/10.1016/j.jece.2026.122168.
+[19] H. Im, D. Anh Nguyen, H. Jeon, A. Jang, Simultaneous recovery of short-chain fatty 
+acids and diverse carbon sources using magnetic cationic surfactant-functionalized 
+materials integrated with membrane contactor in dark syngas fermentation, Chem. 
+Eng. J. (2024) 153717, https://doi.org/10.1016/J.CEJ.2024.153717.
+[20] S.J. Judd, A review of fouling of membrane bioreactors in sewage treatment, Water 
+Sci. Technol. 49 (2004) 229–235, https://doi.org/10.2166/wst.2004.0131.
+[21] W. Gao, H. Liang, J. Ma, M. Han, Z. lin Chen, Z. shuang Han, G. bai Li, Membrane 
+fouling control in ultrafiltration technology for drinking water production: a 
+review, Desalination 272 (2011) 1–8, https://doi.org/10.1016/j. 
+desal.2011.01.051.
+[22] M.F.R. Zuthi, W. Guo, H.H. Ngo, D.L. Nghiem, F.I. Hai, S. Xia, J. Li, J. Li, Y. Liu, 
+New and practical mathematical model of membrane fouling in an aerobic 
+submerged membrane bioreactor, Bioresour. Technol. 238 (2017) 86–94, https:// 
+doi.org/10.1016/j.biortech.2017.04.006.
+[23] A. Pollice, A. Brookes, B. Jefferson, S. Judd, Sub-critical flux fouling in membrane 
+bioreactors — a review of recent literature, Desalination 174 (2005) 221–230, 
+https://doi.org/10.1016/j.desal.2004.09.012.
+[24] L. Huang, Y. Jin, D. Zhou, L. Liu, S. Huang, Y. Zhao, Y. Chen, A review of the role of 
+Extracellular Polymeric Substances (EPS) in wastewater treatment systems, Int. J. 
+Environ. Res. Public Health 19 (19) (2022) 2022, https://doi.org/10.3390/ 
+ijerph191912191.
+[25] A.F. Silva, S. Antunes, F. Freitas, G. Carvalho, M.A.M. Reis, M.T. Barreto Crespo, 
+Impact of sludge retention time on MBR fouling: role of extracellular polymeric 
+substances determined through membrane autopsy, Biofouling 33 (2017) 556–566, 
+https://doi.org/10.1080/08927014.2017.1333112.
+[26] J. Huang, Z. Wang, J. Zhang, X. Zhang, J. Ma, Z. Wu, A novel composite conductive 
+microfiltration membrane and its anti-fouling performance with an external 
+electric field in membrane bioreactors, Sci. Rep. 5 (2015) 9268, https://doi.org/ 
+10.1038/srep09268.
+[27] S. Ognier, C. Wisniewski, A. Grasmick, Membrane bioreactor fouling in sub-critical 
+filtration conditions: a local critical flux concept, J. Membr. Sci. 229 (2004) 
+171–177, https://doi.org/10.1016/j.memsci.2003.10.026.
+[28] D.C. Sioutopoulos, A.J. Karabelas, Correlation of organic fouling resistances in RO 
+and UF membrane filtration under constant flux and constant pressure, J. Membr. 
+Sci. 407–408 (2012) 34–46, https://doi.org/10.1016/j.memsci.2012.03.036.
+[29] S. Lyko, T. Wintgens, D. Al-Halbouni, S. Baumgarten, D. Tacke, K. Drensla, 
+A. Janot, W. Dott, J. Pinnekamp, T. Melin, Long-term monitoring of a full-scale 
+municipal membrane bioreactor—characterisation of foulants and operational 
+performance, J. Membr. Sci. 317 (2008) 78–87, https://doi.org/10.1016/j. 
+memsci.2007.07.008.
+[30] H. Im, D.A. Nguyen, D. gun Jun, S. Jang, A. Jang, Efficiently enhanced short-chain 
+fatty acids (SCFAs) recovery from food waste condensate: real-time wettability 
+monitoring with supported liquid membrane contactor, Water Res. 274 (2025), 
+https://doi.org/10.1016/j.watres.2025.123093.
+[31] H. Im, D.A. Nguyen, T. Kim, D. gun Jun, A. Jang, Magnetic nanoparticle-enhanced 
+supported liquid membrane contactors: advanced tertiary amine integration for 
+long-chain fatty acids recovery in Chlorella vulgaris biorefineries, J. Clean. Prod. 
+488 (2025), https://doi.org/10.1016/j.jclepro.2025.144668.
+[32] H. Im, D.A. Nguyen, S. Lee, D. gun Jun, A. Jang, Efficient n-caprylic acid 
+production from syngas fermentation: chain elongation and recovery with 
+magnetic nanomaterials and supported liquid membrane contactor, Chem. Eng. J. 
+516 (2025) 164142, https://doi.org/10.1016/J.CEJ.2025.164142.
+[33] H. Im, D.A. Nguyen, D. gun Jun, S. Lee, A. Jang, High-value medium-chain fatty 
+acid production from food waste condensate via chain elongation during syngas 
+fermentation: selective recovery and real-time wettability using a supported liquid 
+membrane contactor, Chem. Eng. J. 521 (2025) 167032, https://doi.org/10.1016/ 
+J.CEJ.2025.167032.
+[34] H. Im, D.A. Nguyen, Y. Jeon, D. Jun, A. Jang, Selective recovery of ammonium 
+nitrogen from ammonium-rich wastewater using a supported liquid membrane 
+contactor: effect of organic extractant, membrane pore size, and reusability, 
+J. Membr. Sci. 735 (2025) 124520, https://doi.org/10.1016/J. 
+MEMSCI.2025.124520.
+[35] H. Lin, W. Peng, M. Zhang, J. Chen, H. Hong, Y. Zhang, A review on anaerobic 
+membrane bioreactors: applications, membrane fouling and future perspectives, 
+Desalination 314 (2013) 169–188, https://doi.org/10.1016/j.desal.2013.01.019.
+[36] F. Meng, S. Zhang, Y. Oh, Z. Zhou, H.S. Shin, S.R. Chae, Fouling in membrane 
+bioreactors: an updated review, Water Res. 114 (2017) 151–180, https://doi.org/ 
+10.1016/j.watres.2017.02.006.
+[37] B.Q. Liao, D.M. Bagley, H.E. Kraemer, G.G. Leppard, S.N. Liss, A review of 
+biofouling and its control in membrane separation bioreactors, Water Environ. Res. 
+76 (2004) 425–436, https://doi.org/10.2175/106143004x151527.
+[38] Z.F. Cui, S. Chang, A.G. Fane, The use of gas bubbling to enhance membrane 
+processes, J. Membr. Sci. 221 (2003) 1–35, https://doi.org/10.1016/S0376-7388 
+(03)00246-1.
+[39] E. Braak, M. Alliet, S. Schetrite, C. Albasi, Aeration and hydrodynamics in 
+submerged membrane bioreactors, J. Membr. Sci. 379 (2011) 1–18, https://doi. 
+org/10.1016/j.memsci.2011.06.004.
+[40] K.P. Singh, S. Gupta, Artificial intelligence based modeling for predicting the 
+disinfection by-products in water, Chemom. Intell. Lab. Syst. 114 (2012) 122–131, 
+https://doi.org/10.1016/j.chemolab.2012.03.014.
+[41] M. Bagheri, A. Akbari, S.A. Mirbagheri, Advanced control of membrane fouling in 
+filtration systems using artificial intelligence and machine learning techniques: a 
+critical review, Process Saf. Environ. Prot. 123 (2019) 229–252, https://doi.org/ 
+10.1016/j.psep.2019.01.013.
+[42] A.S. Rathore, S. Nikita, G. Thakur, S. Mishra, Artificial intelligence and machine 
+learning applications in biopharmaceutical manufacturing, Trends Biotechnol. 41 
+(2023) 497–510, https://doi.org/10.1016/j.tibtech.2022.08.007.
+[43] M. Bagheri, S.A. Mirbagheri, Z. Bagheri, A.M. Kamarkhani, Modeling and 
+optimization of activated sludge bulking for a real wastewater treatment plant 
+using hybrid artificial neural networks-genetic algorithm approach, Process Saf. 
+Environ. Prot. 95 (2015) 12–25, https://doi.org/10.1016/j.psep.2015.02.008.
+[44] L. Wang, Z. Li, J. Fan, Z. Han, The intelligent prediction of membrane fouling 
+during membrane filtration by mathematical models and artificial intelligence 
+models, Chemosphere 349 (2024) 141031, https://doi.org/10.1016/j. 
+chemosphere.2023.141031.
+[45] D.J. Kovacs, Z. Li, B.W. Baetz, Y. Hong, S. Donnaz, X. Zhao, P. Zhou, H. Ding, 
+Q. Dong, Membrane fouling prediction and uncertainty analysis using machine 
+learning: a wastewater treatment plant case study, J. Membr. Sci. 660 (2022) 
+120817, https://doi.org/10.1016/j.memsci.2022.120817.
+[46] M. Muniz de Queiroz, V.R. Moreira, M.C.S. Amaral, S.M.A.C. Oliveira, Machine 
+learning algorithms for predicting membrane bioreactors performance: a review, 
+J. Environ. Manag. 380 (2025) 124978, https://doi.org/10.1016/j. 
+jenvman.2025.124978.
+[47] Z. liu, The application of genetic algorithm to optimize XGBoost algorithm in MBR 
+simulation, Int. Educ. Appl. Sci. Res. J. 4 (2019). https://ieasrj.com/journals/inde 
+x.php/ieasrj/article/view/156 (accessed February 17, 2026).
+[48] K.J. Nam, S.K. Heo, G.H. Rhee, M.J. Kim, C.K. Yoo, Dual-objective optimization for 
+energy-saving and fouling mitigation in MBR plants using AI-based influent 
+prediction and an integrated biological-physical model, J. Membr. Sci. 626 (2021) 
+119208, https://doi.org/10.1016/j.memsci.2021.119208.
+[49] Z. Frontistis, G. Lykogiannis, A. Sarmpanis, Machine learning implementation in 
+membrane bioreactor systems: progress, challenges, and future perspectives: a 
+review, Environments 10 (10) (2023) 2023, https://doi.org/10.3390/ 
+environments10070127.
+[50] M.S. Duarte, G. Martins, P. Oliveira, B. Fernandes, E.C. Ferreira, M.M. Alves, 
+F. Lopes, M.A. Pereira, P. Novais, A review of computational modeling in 
+wastewater treatment processes, ACS EST Water 4 (2023) 784–804, https://doi. 
+org/10.1021/acsestwater.3c00117.
+[51] C. Rudin, Stop explaining black box machine learning models for high stakes 
+decisions and use interpretable models instead, Nat. Mach. Intell. 1 (5) (2019) 
+206–215, https://doi.org/10.1038/s42256-019-0048-x.
+[52] A. Barredo Arrieta, N. Díaz-Rodríguez, J. Del Ser, A. Bennetot, S. Tabik, 
+A. Barbado, S. Garcia, S. Gil-Lopez, D. Molina, R. Benjamins, R. Chatila, F. Herrera, 
+Explainable Artificial Intelligence (XAI): concepts, taxonomies, opportunities and 
+challenges toward responsible AI, Inf. Fusion 58 (2020) 82–115, https://doi.org/ 
+10.1016/j.inffus.2019.12.012.
+[53] Y. Jeon, D.A. Nguyen, H. Im, H. Jeon, A. Jang, Interpretable artificial intelligent 
+models for reverse osmosis optimization in semiconductor wastewater, J. Water 
+Process. Eng. 92 (2026) 110790, https://doi.org/10.1016/J.JWPE.2026.110790.
+[54] J.H. Friedman, Greedy function approximation: a gradient boosting machine, Ann. 
+Stat. 29 (2001) 1189–1232, https://doi.org/10.1214/aos/1013203451.
+[55] Y. Shi, Z. Wang, X. Du, B. Gong, V. Jegatheesan, I.U. Haq, Recent advances in the 
+prediction of fouling in membrane bioreactors, Membranes (Basel) 11 (2021) 381, 
+https://doi.org/10.3390/membranes11060381.
+[56] J. Liang, S. Lee, X. Ren, Y. Guo, J. Park, S.G. Park, J.Y. Kim, M.H. Hwang, 
+Predictive framework for membrane fouling in full-scale Membrane Bioreactors 
+(MBRs): integrating AI-driven feature engineering and explainable AI (XAI), 
+Processes 13 (13) (2025) 2025, https://doi.org/10.3390/pr13082352.
+[57] A. Drews, Membrane fouling in membrane bioreactors—characterisation, 
+contradictions, cause and cures, J. Membr. Sci. 363 (2010) 1–28, https://doi.org/ 
+10.1016/j.memsci.2010.06.046.
+[58] H.E. Jijingi, S.K. Yazdi, Y.A. Abakar, E. Etim, Evaluation of membrane bioreactor 
+(MBR) technology for industrial wastewater treatment and its application in 
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+16 
+
+
+<!-- Page 17 -->
+developing countries: a review, Case Stud. Chem. Environ. Eng. 10 (2024) 100886, 
+https://doi.org/10.1016/j.cscee.2024.100886.
+[59] I.-S. Chang, P. Le Clech, B. Jefferson, S. Judd, Membrane fouling in membrane 
+bioreactors for wastewater treatment, J. Environ. Eng. 128 (2002) 1018–1029, 
+https://doi.org/10.1061/(asce)0733-9372(2002)128:11(1018).
+[60] T.D. Doan, D.A. Nguyen, T.H.Y. Pham, D.D. Luong, T.T. Le, N.H. Thi, H.T. Oanh, H. 
+T. Nguyen, P.T.M. Thy, T.K.D. Hoang, M.H. Hoang, High-performance 
+electrochemical sensor based on rGO/FeCo-MOF integrated with machine learning 
+for simultaneous detection of Cd2+ and Pb2+, Talanta 310 (2026) https://doi.org/ 
+10.1016/j.talanta.2026.130105.
+[61] S.M. Lundberg, G. Erion, H. Chen, A. DeGrave, J.M. Prutkin, B. Nair, R. Katz, 
+J. Himmelfarb, N. Bansal, S.I. Lee, From local explanations to global understanding 
+with explainable AI for trees, Nat. Mach. Intell. 2 (1) (2020) 56–67, https://doi. 
+org/10.1038/s42256-019-0138-9.
+[62] T. Jiang, M.D. Kennedy, B.F. Guinzbourg, P.A. Vanrolleghem, J.C. Schippers, 
+Optimising the operation of a MBR pilot plant by quantitative analysis of the 
+membrane fouling mechanism, Water Sci. Technol. 51 (2005) 19–25, https://doi. 
+org/10.2166/wst.2005.0617.
+[63] N. Yigit, G. Civelekoglu, I. Harman, H. Koseoglu, M. Kitis, Effects of various 
+backwash scenarios on membrane fouling in a membrane bioreactor, Surv. Sustain. 
+(2010) 917–929, https://doi.org/10.1007/978-3-540-95991-5_87.
+[64] L. B¨ohm, A. Drews, H. Prieske, P.R. B´erub´e, M. Kraume, The importance of fluid 
+dynamics for MBR fouling mitigation, Bioresour. Technol. 122 (2012) 50–61, 
+https://doi.org/10.1016/j.biortech.2012.05.069.
+[65] R.S. Trussell, R.P. Merlo, S.W. Hermanowicz, D. Jenkins, The effect of organic 
+loading on process performance and membrane fouling in a submerged membrane 
+bioreactor treating municipal wastewater, Water Res. 40 (2006) 2675–2683, 
+https://doi.org/10.1016/j.watres.2006.04.020.
+[66] T. Jiang, X. Liu, M.D. Kennedy, J.C. Schippers, P.A. Vanrolleghem, Calibrating a 
+side-stream membrane bioreactor using Activated Sludge Model No. 1, Water Sci. 
+Technol. 52 (2005) 359–367, https://doi.org/10.2166/wst.2005.0712.
+[67] I. Covert, S. Lundberg, S.-I. Lee, Explaining by removing: a unified framework for 
+model explanation, J. Mach. Learn. Res. 22 (2022). http://arxiv.org/abs/2 
+011.14878 (accessed February 20, 2026).
+[68] V. Agarwal, O. Akyilmaz, C.K. Shum, W. Feng, T.Y. Yang, E. Forootan, T.H. Syed, 
+U.K. Haritashya, M. Uz, Predictive modeling based on artificial neural networks for 
+membrane fouling in a large pilot-scale anaerobic membrane bioreactor for 
+treating real municipal wastewater, Sci. Total Environ. 912 (2024) 169164, 
+https://doi.org/10.1016/j.scitotenv.2022.161138.
+[69] S. Vinardell, S. Astals, M. Peces, M.A. Cardete, I. Fern´andez, J. Mata-Alvarez, 
+J. Dosta, Using artificial intelligence-based algorithms to identify critical fouling 
+factors and predict fouling behavior in anaerobic membrane bioreactors, J. Membr. 
+Sci. 687 (2023) 122076, https://doi.org/10.1016/j.rser.2020.109936.
+[70] A. Hosseinzadeh, J.L. Zhou, A. Altaee, M. Baziar, X. Li, Modeling water flux in 
+osmotic membrane bioreactor by adaptive network-based fuzzy inference system 
+and artificial neural network, Bioresour. Technol. 310 (2020) 123391, https://doi. 
+org/10.1016/j.biortech.2020.123391.
+[71] S.A. Mirbagheri, M. Bagheri, Z. Bagheri, A.M. Kamarkhani, Evaluation and 
+prediction of membrane fouling in a submerged membrane bioreactor with 
+simultaneous upward and downward aeration using artificial neural network- 
+genetic algorithm, Process. Saf. Environ. Prot. 96 (2015) 111–124, https://doi.org/ 
+10.1016/j.psep.2015.03.015.
+Y. Jeon et al.                                                                                                                                                                                                                                     
+Journal of Water Process Engineering 92 (2026) 110865 
+17 

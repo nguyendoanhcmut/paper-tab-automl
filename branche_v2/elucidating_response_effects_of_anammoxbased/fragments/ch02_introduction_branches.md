@@ -1,0 +1,49 @@
+## Introduction
+
+- Vấn đề eutrophication (phú dưỡng hóa nguồn nước) do phát thải quá mức $\text{N}$ (nitrogen / nitơ) và $\text{P}$ (phosphorus / phốt pho) là mối quan ngại toàn cầu trong thời gian dài.
+- Conventional activated sludge (bùn hoạt tính truyền thống) là quy trình sinh học được sử dụng phổ biến nhất để loại bỏ nitrogen và phosphorus.
+  - Quá trình loại bỏ nitơ thông qua nitrification (nitrat hóa) và denitrification (khử nitrat) bằng bùn hoạt tính truyền thống là quy trình tiêu tốn nhiều năng lượng (energy-intensive).
+- Anammox (anaerobic ammonium oxidation / oxy hóa amoni kỵ khí) thu hút sự quan tâm ngày càng tăng nhờ các đặc tính vận hành:
+  - Tiêu thụ năng lượng thấp (low energy consumption).
+  - Tỷ lệ sinh bùn thấp (low sludge productivity).
+  - Tốc độ loại bỏ nitơ cao (high nitrogen removal rate).
+- Quy trình anammox sử dụng nitrite ($\text{NO}_2^-$) và ammonia ($\text{NH}_4^+$) làm cơ chất và oxy hóa trực tiếp thành $\text{N}_2$, khác biệt với quy trình nitrat hóa và khử nitrat hai bước truyền thống.
+- Anammox là một trong những quy trình triển vọng nhất nhằm giảm chi phí vận hành cho các WWTPs (wastewater treatment plants / nhà máy xử lý nước thải):
+  - Giảm $100\%$ nhu cầu carbon hữu cơ (organic carbon requirements).
+  - Giảm khoảng $60\%$ năng lượng sục khí (aeration energy consumption).
+  - Giảm khoảng $90\%$ sản lượng bùn sinh ra (sludge production).
+- Nguồn cung cấp nitrite ổn định cho phản ứng anammox vẫn là một vấn đề cấp bách cần giải quyết.
+  - Nhiều loại quy trình kết hợp đã được nghiên cứu sâu nhằm cung cấp nitrite ổn định:
+    - Simultaneous nitrification, anammox and denitrification (nitrat hóa, anammox và khử nitrat đồng thời).
+    - PNA (partial nitrification coupling with anammox / nitrit hóa từng phần kết hợp anammox).
+    - PDA (partial denitrification coupling with anammox / khử nitrat từng phần kết hợp anammox).
+    - Các quy trình phức hợp kết hợp đồng thời PNA và PDA.
+- Việc ứng dụng các quy trình anammox cho mainstream wastewater (nước thải dòng chính) đối mặt với các nút thắt kỹ thuật:
+  - Nồng độ nitơ thấp trong municipal wastewater (nước thải đô thị).
+  - Nồng độ chất hữu cơ cao (high organic matter concentration).
+  - Nhiệt độ nước thấp (low water temperature) vào mùa đông.
+- Nhiều nỗ lực nghiên cứu đã được thực hiện để áp dụng anammox dòng chính thông qua điều chỉnh nhiều thông số vận hành:
+  - Influent characteristics (đặc tính nước đầu vào).
+  - Inoculation mode (phương thức cấy bùn vi sinh).
+  - Temperature (nhiệt độ).
+  - Reactor type (loại bể phản ứng).
+  - Hydraulic retention time (thời gian lưu nước thủy lực / HRT).
+- Khối lượng lớn dữ liệu thực nghiệm đã được tạo ra từ các nghiên cứu, nhưng tri thức nội tại (internal knowledge) về các quy trình loại bỏ nitơ sinh học dựa trên anammox vẫn cần được khai phá từ nguồn big data này.
+- Thuật toán machine learning (học máy) nhận được sự chú ý ngày càng lớn nhờ năng lực nhận diện các mối quan hệ nội tại trong tập dữ liệu lớn và thiết lập các mô hình dự đoán.
+  - Các phương pháp phân tích diễn giải và giải thích (explainable analysis and interpretable methods) được phát triển nhằm minh giải cơ chế hoạt động của mô hình học máy.
+  - Các nghiên cứu tiền đề ứng dụng học máy vào quá trình xử lý dựa trên anammox:
+    - Xu et al. (2022b) phân tích các hiệu ứng phản ứng của quá trình anammox trước các loại kháng sinh khác nhau thông qua mô hình học máy phổ quát ($R^2 > 0.9$).
+    - Yang et al. (2023) tập trung nghiên cứu áp lực kim loại nặng (heavy metal stress) lên các quy trình anammox dựa trên mô hình học máy.
+    - Liu et al. (2023a) khám phá phát thải $\text{N}_2\text{O}$ từ quy trình anammox, làm sáng tỏ mối quan hệ giữa phát thải $\text{N}_2\text{O}$ với các yếu tố vận hành và quần xã vi sinh vật (microbial communities) qua mô hình học máy và phân tích diễn giải.
+  - Các công trình này chứng minh mô hình học máy đạt hiệu quả cao trong phân tích dữ liệu lớn cho các quy trình anammox.
+- Hiệu ứng phản ứng (response effects) của hiệu suất xử lý nitơ đối với nhiều yếu tố vận hành trong các dạng quy trình anammox khác nhau vẫn chưa được làm rõ.
+- Việc xây dựng mô hình học máy thủ công (manually) trong các nghiên cứu dữ liệu lớn trước đây về anammox tồn tại nhiều hạn chế:
+  - Quá trình huấn luyện và tinh chỉnh (training and tuning) mô hình tiêu tốn chi phí thời gian đáng kể.
+  - Độ chính xác của mô hình phụ thuộc nhiều vào kinh nghiệm của người thiết kế, dẫn đến tính reproducibility (khả năng tái lập) và độ ổn định (stability) kém.
+- Thuật toán AutoML (automated machine learning / học máy tự động) được phát triển nhằm khắc phục các nhược điểm của phương pháp xây dựng mô hình thủ công.
+- Nghiên cứu này ứng dụng thuật toán AutoML để dự đoán hiệu suất xử lý nitơ và diễn giải các response effects của quy trình anammox trước các yếu tố vận hành:
+  - Dữ liệu từ các nghiên cứu anammox liên quan được phân tích để chọn lọc các biến đầu vào và biến đầu ra tiềm năng, cấu thành tập dữ liệu tích hợp phục vụ thuật toán H2O AutoML.
+  - Các mô hình ứng viên do thuật toán H2O AutoML tạo ra cho $7$ biến đầu ra được so sánh và đánh giá.
+  - Các thí nghiệm quy mô phòng thí nghiệm (lab-scale) được thực hiện để kiểm tra năng lực dự đoán của các mô hình ứng viên.
+  - Phân tích diễn giải (interpretable analysis) được triển khai trên mô hình tối ưu nhằm làm rõ tác động của các biến đầu vào quan trọng lên các biến đầu ra.
+  - Các phát hiện làm sáng tỏ những mối quan hệ quan trọng từng bị bỏ qua, tạo bước tiến cho việc cải thiện vận hành thực tế của các quy trình anammox dòng chính.
