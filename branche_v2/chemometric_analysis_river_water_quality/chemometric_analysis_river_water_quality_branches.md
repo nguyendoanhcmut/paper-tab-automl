@@ -70,8 +70,12 @@
   - Nhà máy xử lý nước Sant Joan Despí (SJD DWTP) đại diện cho kịch bản xử lý nước mặt chịu áp lực cao, có hơn $50$ năm kinh nghiệm ($> 50$ năm) cung cấp nước uống cho vùng đô thị Barcelona.
 
 - Nhà máy SJD DWTP nằm cách Barcelona $15\text{ km}$ về phía tây, tích hợp quy trình xử lý truyền thống với công nghệ màng gồm siêu lọc (ultrafiltration - UF) và thẩm thấu ngược (reverse osmosis - RO), đạt công suất sản xuất nước $5.5\text{ m}^3/\text{s}$ (López-Roldán et al., 2016).
-  - **Figure 1. SJD DWTP location and process scheme**
-    - ![Figure 1](assets/fig_01_p3.jpeg)
+  - **Hình 1.** Vị trí địa lý và sơ đồ công nghệ xử lý của nhà máy nước Sant Joan Despí (SJD DWTP)
+    - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện vị trí nhà máy nước SJD DWTP trên lưu vực sông Llobregat và sơ đồ tích hợp công nghệ xử lý truyền thống với màng UF/RO.
+    - **Từ đâu mà thấy được**
+      - Sơ đồ dòng chảy công nghệ từ cửa thu nước sông Llobregat qua các bể lắng, lọc cát, EDR, màng RO/UF đến trạm bơm phân phối.
 
 - Chất lượng nước sông Llobregat tại lưu vực thu nước bị suy giảm bởi các yếu tố địa chất, hoạt động công nghiệp, nông nghiệp và đô thị hóa.
   - Dòng chính của lưu vực sông tiếp nhận nước từ $3$ đập trữ nước ở thượng lưu và nhiều phụ lưu nhỏ (Marcé et al., 2012).
@@ -282,8 +286,12 @@
   - Thành phần chính thứ nhất (PC1) giải thích $35\%$ phương sai dữ liệu.
   - Thành phần chính thứ hai (PC2) giải thích $24\%$ phương sai dữ liệu.
   - Thành phần chính thứ ba (PC3) giải thích $13\%$ phương sai dữ liệu.
-  - **Figure 2. PCA of dataset 1 for 7 physicochemical parameters**
-    - ![Figure 2](assets/fig_02_p5.jpeg)
+  - **Hình 2.** Đồ thị phân tích thành phần chính (PCA) của tập dữ liệu 1 đối với 7 thông số hóa lý
+    - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Làm rõ cấu trúc phân tán phương sai và tương quan giữa 7 thông số hóa lý đại diện cho chất lượng nước thô giai đoạn 2013-2014.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ hệ số tải và điểm số trên hai thành phần chính PC1 và PC2, tách biệt rõ nhóm thông số hữu cơ (TOC, UV254) với nhóm khoáng hóa (COND).
 - PC1 ($35\%$ phương sai) mô tả biến thiên của chất hữu cơ (organic matter) như yếu tố chủ đạo trong Dataset 1:
   - Hệ số tải (loadings) trên PC1 bị chi phối mạnh bởi tương quan thuận giữa tổng carbon hữu cơ (TOC) và độ hấp thụ tử ngoại $\text{UV}_{254}$ (UV absorbance at $254\text{ nm}$), cả hai đều sở hữu hệ số tải dương cao nhất (Fig. 2A).
   - Nồng độ ion amoni ($\text{NH}_4$) và độ đục (TURB) cũng có hệ số tải dương trên PC1, thể hiện tương quan thuận với hàm lượng chất hữu cơ.
@@ -297,8 +305,12 @@
   - Chế độ thủy văn sông Llobregat thuộc kiểu Địa Trung Hải (chế độ mưa - tuyết nivo-pluvial) tạo ra hai đỉnh lưu lượng dòng chảy vào mùa xuân và mùa thu, trùng khớp với lượng mưa tích lũy hàng tháng năm 2013 (Fig. 3A).
   - Hàm lượng chất hữu cơ suy giảm đáng kể vào giữa mùa hè và giữa mùa đông năm 2013.
   - Chu kỳ hai đỉnh suy yếu rõ rệt trong năm 2014 do đợt hạn hán kéo dài (persistent drought) vào mùa xuân năm 2014 làm biến đổi chế độ thủy văn của sông Llobregat (Fig. 3B).
-  - **Figure 3. Accumulated monthly precipitation for 2013 and 2014**
-    - ![Figure 3](assets/fig_03_p6.jpeg)
+  - **Hình 3.** Lượng mưa tích lũy hàng tháng trong giai đoạn 2013 và 2014
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Phản ánh tính chu kỳ và biến động khí tượng thủy văn của lượng mưa lưu vực sông Llobregat giữa các mùa trong năm.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ cột biểu diễn lượng mưa tích lũy (mm) theo từng tháng tại các trạm đo khí tượng đại diện.
 - PC2 ($24\%$ phương sai) mô tả biến thiên theo thời gian của hàm lượng chất vô cơ (inorganic matter content) như yếu tố quan trọng thứ hai:
   - Biểu đồ hệ số tải (Fig. 2C) ghi nhận ion amoni ($\text{NH}_4$) và độ dẫn điện (conductivity) có hệ số tải dương cao, trong khi tất cả các thông số còn lại đều mang hệ số tải âm.
   - Chuỗi điểm số PC2 khớp với mô hình Fourier đạt $R^2 = 0.91$ (đường màu đỏ trong Fig. 2D), khẳng định đặc tính chuỗi thời gian của yếu tố này.
@@ -330,13 +342,21 @@
   - Dataset 1 đặc biệt hữu ích cho việc khám phá các xu hướng chất lượng nước chung (general water quality trends).
   - Dataset 2 hữu ích cho việc điều tra và so sánh các sự kiện ngắn hạn có tác động đáng kể đến chất lượng nước (short-term events with significant impact on water quality).
 - **Nhận diện ba sự kiện liên tiếp trên đồ thị điểm số PCA**: Phân tích tập trung vào ba sự kiện liên tiếp quan sát được trên các đồ thị điểm số và được đánh số 1, 2 và 3:
-  - **Figure 4. PCA results of dataset 2 (346 observations)**
-    - ![Figure 4](assets/fig_04_p7.jpeg)
+  - **Hình 4.** Kết quả phân tích PCA đối với tập dữ liệu 2 (346 quan sát)
+    - <img src="assets/fig_04_p7.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Xác định và phân lập 3 sự kiện ô nhiễm liên tiếp bất thường (Sự kiện 1, 2, 3) trên các thành phần chính PC1, PC2 và PC3.
+    - **Từ đâu mà thấy được**
+      - Khung hình A, C, E biểu diễn đồ thị hệ số tải PC1--PC3; khung hình B, D, F biểu diễn đồ thị điểm số mẫu với 3 sự kiện lệch chuẩn đánh số 1, 2, 3.
     - Đồ thị tải số $\text{PC1}\text{--}\text{PC3}$ (khung hình A, C, E) và đồ thị điểm số mẫu (khung hình B, D, F) từ tháng 7 đến tháng 11 năm 2014; ba sự kiện được đánh số 1, 2 và 3 trên các đồ thị điểm số.
   - Ba sự kiện được chọn xuất hiện đồng thời trên cả ba đồ thị điểm số $\text{PC1}$, $\text{PC2}$ và $\text{PC3}$, cho thấy ba thành phần chính này đóng góp độc lập vào từng sự kiện được nêu.
 - **Phân tích phần dư $Q$ và đối chiếu nguồn dữ liệu khí tượng địa phương**: Cả ba sự kiện đều thể hiện phần dư $Q$ rất cao ($Q$ residuals), phản ánh các giá trị cực trị (extreme values) và phương sai chưa được giải thích:
-  - **Figure 5. Three events associated with high Q residuals**
-    - ![Figure 5](assets/fig_05_p8.jpeg)
+  - **Hình 5.** Ba sự kiện ô nhiễm gắn liền với phần dư Q cao vượt ngưỡng thống kê
+    - <img src="assets/fig_05_p8.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Chứng minh mức độ bất thường cực đoan của 3 sự kiện và chỉ ra nguyên nhân phân hóa của từng thông số đóng góp vào phần dư mô hình.
+    - **Từ đâu mà thấy được**
+      - Khung hình A thể hiện phần dư Q vượt ngưỡng; khung hình B, C, D phân rã đóng góp thông số: TURB ở Sự kiện 1, NH4+ ở Sự kiện 2, và COND ở Sự kiện 3.
     - Đồ thị phần dư $Q$ của mô hình PCA 3 thành phần chính vượt ngưỡng thống kê tại cả ba sự kiện (khung hình A); đóng góp thông số vào phần dư $Q$ phân hóa theo từng sự kiện: độ đục $\text{TURB}$ ở Sự kiện 1 (khung hình B), $\text{NH}_4^+$ ở Sự kiện 2 (khung hình C), và độ dẫn điện $\text{COND}$ ở Sự kiện 3 (khung hình D).
   - Phân tích đồ thị đóng góp của các thông số vào phần dư $Q$ ($Q$ parameter contributions plots) cho phép liên kết ba sự kiện với hiện tượng tự nhiên cụ thể (khí tượng) hoặc công nghiệp (sự cố tràn đổ/xả thải).
   - Nguồn dữ liệu khí tượng: Thông tin thời tiết từ nhiều trạm khí tượng phân bố trên toàn vùng Catalonia được cung cấp có hệ thống, lưu trữ theo trình tự thời gian và công khai trên trang web `meteoclimatic.com`, cho phép kiểm tra tương quan giữa việc phát hiện sự kiện và diễn biến thời tiết địa phương.
@@ -351,8 +371,12 @@
     - Độ $\text{pH}$: $\text{pH} = 7.6$.
   - Biểu hiện phần dư $Q$: Mô hình PCA ghi nhận phần dư $Q$ bất thường của mẫu với giá trị cực trị (phương sai chưa được giải thích) tập trung chủ yếu ở thông số độ đục $\text{TURB}$ (Hình 5B, giá trị phần dư $Q = 7.787$).
   - Đối chiếu lượng mưa khí tượng: Vào các ngày 01/08 và 02/08/2014, dữ liệu thời tiết ghi nhận nhiều đợt mưa lớn diễn ra trong $24\text{ h}$ với lượng mưa tích lũy lên tới $30\text{ mm}$:
-    - **Figure 6. Accumulated rainfall on 02/08/2014 in Catalonia**
-      - ![Figure 6](assets/fig_06_p9.jpeg)
+    - **Hình 6.** Bản đồ lượng mưa tích lũy 24h ngày 02/08/2014 tại vùng Catalonia
+      - <img src="assets/fig_06_p9.jpeg" alt="Hình 6" />
+      - **Hình này chứng minh điều gì**
+        - Chứng minh Sự kiện 1 được kích hoạt trực tiếp bởi đợt mưa dông cực đoan cục bộ cuốn trôi chất hữu cơ tự nhiên vào sông.
+      - **Từ đâu mà thấy được**
+        - Dữ liệu lượng mưa tích lũy từ trạm meteoclimatic ghi nhận lượng mưa đạt 30 mm tại tâm mưa dông tương ứng thời điểm Sự kiện 1.
       - Bản đồ lượng mưa tích lũy trong $24\text{ h}$ ngày 02/08/2014 trên toàn vùng Catalonia từ cơ sở dữ liệu `meteoclimatic.com`, ghi nhận lượng mưa đạt tới $30\text{ mm}$ tại các tâm mưa dông tương ứng với Sự kiện 1.
   - Cơ chế thủy văn và hóa học của Sự kiện 1:
     - Sự kiện 1 là minh chứng điển hình cho tác động của sự gia tăng đột ngột chất hữu cơ tự nhiên bị cuốn trôi (washed out natural organic matter) vào dòng chảy của sông.
@@ -404,8 +428,12 @@
   - Thành phần chính thứ nhất (PC1) giải thích $> 50\%$ ($N50\%$, trên biểu đồ ghi nhận $52.02\%$) tổng phương sai dữ liệu.
   - PC1 nắm bắt hầu hết biến thiên của tất cả các phép đếm số lượng vi khuẩn (bacteria counts) cùng với một số thông số hóa lý như lưu lượng dòng chảy sông và độ đục ($\text{TURB}$).
 - Phân tích điểm số (scores) và biểu đồ hệ số tải (loadings plot) của PC1 làm rõ các sự kiện ô nhiễm và mối tương quan đa biến giữa dữ liệu vi sinh với các thông số hóa lý tại cửa thu nước (Fig. 7A và Fig. 7B):
-  - **Figure 7. PC1 results of dataset combining microbiological and physicochemical data**
-    - ![Figure 7](assets/fig_07_p9.jpeg)
+  - **Hình 7.** Kết quả phân tích PC1 trên tập dữ liệu tích hợp vi sinh và hóa lý
+    - <img src="assets/fig_07_p9.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Làm rõ mối tương quan thuận mạnh giữa nồng độ vi khuẩn gây bệnh với độ đục, lưu lượng sông và độ hấp thụ UV254 trong các đợt mưa lớn.
+    - **Từ đâu mà thấy được**
+      - Khung hình A biểu diễn chuỗi điểm số PC1 phân định các sự kiện ô nhiễm theo tuần; khung hình B thể hiện toàn bộ vi khuẩn mang hệ số tải dương cao trên PC1.
   - Biểu đồ điểm số PC1 (PC1 scores, Fig. 7A) phát hiện và phân định các sự kiện ô nhiễm khác nhau diễn ra trong từng tuần cụ thể đối với chất lượng nước tại cửa thu.
   - Phân tích biểu đồ hệ số tải (loadings plot, Fig. 7B) ghi nhận nồng độ của toàn bộ các vi khuẩn (văn bản gốc nêu toàn bộ $7$ nồng độ vi khuẩn / $6$ nhóm vi khuẩn) cùng với lưu lượng dòng chảy sông, độ đục ($\text{TURB}$) và độ hấp thụ $\text{UV}_{254}$ đều có hệ số tải dương cao trên PC1, thể hiện mối tương quan thuận mạnh giữa chúng.
   - Ngược lại, quan sát thấy các tương quan nghịch giữa nồng độ vi khuẩn với độ dẫn điện ($\text{COND}$) và $\text{pH}$ trong nước sông (cả hai thông số đều mang hệ số tải âm trên PC1).

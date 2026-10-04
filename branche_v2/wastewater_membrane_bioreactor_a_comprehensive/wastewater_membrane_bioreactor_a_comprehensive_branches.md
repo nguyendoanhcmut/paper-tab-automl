@@ -80,7 +80,7 @@
   - Tính phụ thuộc điều kiện: Chỉ khi kết hợp cả ba mô hình mới tạo nên hệ thống có năng lực điều khiển MBR tự động đáng tin cậy, diễn giải được và khả thi triển khai trong thực tế; đây là luận điểm phân tích cốt lõi định hình phạm vi tổng hợp của bài báo.
   - Bốn mục tiêu nghiên cứu trọng tâm: (1) Đánh giá hiệu năng mô hình ML, hạn chế của tập dữ liệu và khả năng tổng quát hóa trên dự đoán nghẹt màng, tối ưu hóa năng lượng và ước tính chất lượng nước đầu ra; (2) Đánh giá các khung diễn giải XAI và vai trò thực tế trong xây dựng quyết định tin cậy, dễ tiếp cận cho người vận hành; (3) Định hình các kiến trúc DT mới nổi, mức độ trưởng thành triển khai và yêu cầu tích hợp XAI trong nền tảng DT vận hành; (4) Nhận diện các khoảng trống nghiên cứu then chốt cần giải quyết để tích hợp XAI-DT ở quy mô vận hành thực tế.
   - **Hình 1.** Sơ đồ khung khái niệm nghiên cứu MBR kết hợp ML, XAI và DT
-    - ![Hình 1. Sơ đồ khung khái niệm nghiên cứu MBR kết hợp ML, XAI và DT](assets/fig_01_p4.png)
+    - <img src="assets/fig_01_p4.png" alt="Hình 1" />
     - **Hình này chứng minh điều gì**
       - Thể hiện sự liên kết từ các thách thức vận hành cốt lõi, ba hướng tiếp cận phân tích (ML, XAI, DT), các lĩnh vực ứng dụng chính, kết quả mang lại và các khoảng trống nghiên cứu cần giải quyết.
     - **Từ đâu mà thấy được**
@@ -146,7 +146,7 @@
   - Sự phức tạp gia tăng ở các cấu hình màng sinh học thẩm thấu ($\text{OMBR}$ - Osmotic $\text{MBR}$): việc ghép nối bể phản ứng sinh học với màng thẩm thấu thuận ($\text{FO}$ - forward osmosis) qua động lực thẩm thấu làm phát sinh động học phân cực nồng độ (concentration polarization dynamics), tạo động lực mạnh mẽ cho việc áp dụng các cách tiếp cận hướng dữ liệu (data-driven approaches) và $\text{ML}$.
 - **Sơ đồ cấu hình hệ thống $\text{MBR}$ và chuỗi luồng dữ liệu cảm biến hiện trường**: Thiết lập tham chiếu vận hành thực tế cho các thông số công nghệ và luồng dữ liệu trực tuyến của cả hai cấu hình $\text{MBR}$ ngập nước (submerged) và dòng nhánh (side-stream):
   - **Hình 2.** Sơ đồ cấu hình hệ thống MBR ngập nước và dòng nhánh
-    - ![Figure 2. Schematic of a typical submerged and side-stream wastewater membrane bioreactor (MBR) system.](assets/fig_03_p6.png)
+    - <img src="assets/fig_03_p6.png" alt="Hình 2" />
     - **Hình này chứng minh điều gì**
       - Thể hiện các đơn vị vận hành cốt lõi, hệ thống sục khí làm sạch màng và các điểm thu thập dữ liệu cảm biến trực tuyến (DO, TMP, lưu lượng, nhiệt độ).
     - **Từ đâu mà thấy được**

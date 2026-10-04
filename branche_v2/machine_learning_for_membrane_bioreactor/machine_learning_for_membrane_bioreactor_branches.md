@@ -87,8 +87,8 @@
 - Học máy (machine learning) xây dựng mô hình bằng cách sử dụng "dữ liệu huấn luyện" ("training data") để đưa ra dự đoán hoặc quyết định mà không cần giả định tiên nghiệm (a priori assumptions) rõ ràng hay lập trình tường minh.
   - Các bước tổng quát và chi tiết của quy trình học máy được mô tả tương ứng trong Figure 1(a) và Figure 1(b).
 - Các mô hình học máy phổ biến bao gồm học có giám sát (supervised learning), học không giám sát (unsupervised learning), và học tăng cường (reinforcement learning: RL).
-  - **Figure 2: Classification of machine learning methods**
-    - ![Figure 2](assets/fig_02_p5.jpeg)
+  - **Hình 2.** Phân loại các phương pháp học máy trong nghiên cứu MBR
+    - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
     - **Hình này chứng minh điều gì**
       - Phân loại học máy thành ba nhóm phương pháp chính gồm supervised learning, unsupervised learning, và reinforcement learning (RL) cùng các thuật toán thành phần.
     - **Từ đâu mà thấy được**
@@ -122,8 +122,8 @@
 - Bốn phương pháp học máy chứng minh hiệu quả trong việc giải quyết hai nhóm bài toán cốt lõi:
   - Bài toán phân loại (classification problems) đối với các biến rời rạc (discrete variables).
   - Bài toán hồi quy (regression problems) đối với các biến liên tục (continuous variables).
-  - **Figure 1: Machine learning process**
-    - ![Figure 1](assets/fig_01_p4.jpeg)
+  - **Hình 1.** Quy trình tổng quát và các bước chi tiết triển khai mô hình học máy
+    - <img src="assets/fig_01_p4.jpeg" alt="Hình 1" />
     - **Hình này chứng minh điều gì**
       - Minh họa chu trình học máy gồm quy trình vận hành tổng quát và các bước kỹ thuật chi tiết nhằm thiết lập mô hình giải quyết bài toán phân loại và hồi quy.
     - **Từ đâu mà thấy được**
@@ -191,8 +191,8 @@
 - **Các kiến trúc mạng nơ-ron: Từ mô hình mạng nông (MLP, RBFNN) đến mạng nơ-ron sâu (DNN: CNN, RNN, GNN)**:
   - Perceptron đa tầng (multilayer perceptron - $\text{MLP}$, còn gọi là mạng nơ-ron lan truyền ngược - back-propagation neural network ($\text{BPNN}$)) (Fig. 3(a)) và mạng nơ-ron hàm cơ sở xuyên tâm (radial basis function neural network - $\text{RBFNN}$) (Fig. 3(b)) là các cấu trúc mạng nơ-ron đơn giản nhất, thường được áp dụng cho bài toán hồi quy (regression), phân loại (classification) và các câu đố chuỗi thời gian (time series puzzles).
   - So với $\text{MLP}$ và $\text{RBFNN}$, mạng nơ-ron sâu (deep neural network - $\text{DNN}$) (ví dụ: mạng nơ-ron tích chập - convolutional neural network ($\text{CNN}$) (Fig. 3(c)), mạng nơ-ron hồi quy - recurrent neural network ($\text{RNN}$) (Fig. 3(d)), và mạng nơ-ron đồ thị - graph neural network ($\text{GNN}$)) sở hữu cấu trúc mạng phức tạp hơn và có năng lực tự động trích xuất đặc trưng (autonomously extracting features), giúp giảm bớt nhu cầu can thiệp của con người và nâng cao chất lượng trích xuất đặc trưng (Zhang et al., 2018).
-  - **Figure 3: Schematic diagrams of artificial neural networks**
-    - ![Figure 3](assets/fig_03_p7.jpeg)
+  - **Hình 3.** Sơ đồ kiến trúc các mạng nơ-ron nhân tạo (MLP, RBFNN, CNN, RNN)
+    - <img src="assets/fig_03_p7.jpeg" alt="Hình 3" />
     - **Hình này chứng minh điều gì**:
       - Thể hiện sơ đồ cấu trúc kiến trúc và cơ chế lan truyền tín hiệu của bốn mô hình mạng nơ-ron điển hình: $\text{MLP}$, $\text{RBFNN}$, $\text{CNN}$ và $\text{RNN}$/$\text{LSTM}$.
     - **Từ đâu mà thấy được**:
@@ -346,8 +346,8 @@
 - **Thuật toán tối ưu hóa thông minh heuristic (Heuristic intelligent optimization algorithms)**: Việc ứng dụng các thuật toán tối ưu hóa thông minh heuristic trong quá trình học có thể cải thiện đáng kể hiệu năng mô hình (model performance) và tốc độ hội tụ (convergence rate):
   - Cảm hứng tự nhiên và vật lý: Các thuật toán tối ưu hóa thông minh thường lấy cảm hứng từ các hiện tượng tự nhiên (natural), sinh học (biological), hoặc vật lý (physical phenomena).
   - Các thuật toán tối ưu hóa thông minh phổ biến: Bao gồm thuật toán di truyền (genetic algorithms - GA) (Fig. 4(a)) (Katoch et al., 2021), tối ưu hóa bầy đàn (particle swarm optimization - PSO) (Fig. 4(b)), tôi luyện mô phỏng (simulated annealing - SA) (Fig. 4(c)) (Suman and Kumar, 2006), đàn ong nhân tạo (artificial bee colony) (Karaboga and Basturk, 2007), tối ưu hóa đàn kiến (ant colony optimization) (Dorigo et al., 2006), thuật toán đom đóm (firefly algorithm - FFA) (Yang, 2009), thuật toán dơi (bat algorithm - BA) (Yang, 2010), và thuật toán tối ưu hóa bầy sói xám (gray wolf optimizer - GWO) (Mirjalili et al., 2014):
-    - **Figure 4: Optimization algorithms**
-      - ![Figure 4](assets/fig_04_p10.jpeg)
+    - **Hình 4.** Lưu đồ các thuật toán tối ưu hóa siêu tham số (GA, PSO, SA)
+      - <img src="assets/fig_04_p10.jpeg" alt="Hình 4" />
       - Sơ đồ lưu trình tối ưu hóa của các thuật toán thông minh tiêu biểu (Fig. 4):
         - Thuật toán di truyền (GA) (Fig. 4(a)): Khởi tạo quần thể ban đầu ($G = 0$) $\rightarrow$ Tính toán độ thích nghi (fitness calculation) $\rightarrow$ Kiểm tra điều kiện kết thúc; nếu chưa thỏa mãn, thực hiện chọn lọc (selection), lai ghép (crossover) và đột biến (mutation) để tạo thế hệ kế tiếp ($G = G + 1$) và lặp lại chu trình đánh giá độ thích nghi.
         - Tối ưu hóa bầy đàn (PSO) (Fig. 4(b)): Khởi tạo ngẫu nhiên vị trí từng hạt $\rightarrow$ Đánh giá từng hạt và xác định điểm tối ưu toàn cục $\rightarrow$ Kiểm tra điều kiện kết thúc; nếu chưa thỏa mãn, cập nhật vị trí cùng vận tốc của từng hạt $\rightarrow$ đánh giá độ thích nghi $\rightarrow$ cập nhật vị trí tối ưu lịch sử của hạt và vị trí tối ưu toàn cục của đàn để lặp lại.
@@ -430,8 +430,8 @@
   - Biến đầu ra mô hình (model outputs): từ các đặc trưng đầu vào kể trên, các mô hình học máy thường xuất ra kết quả dự đoán về hiệu suất loại bỏ chất ô nhiễm và hiệu suất tắc nghẽn màng.
 
 - **Đặc tính mô hình hóa dự đoán tắc nghẽn màng và loại bỏ chất ô nhiễm trong MBR (Figure 5)**: Nghiên cứu thống kê cấu trúc dữ liệu đầu vào, kiến trúc thuật toán học máy, phương pháp tối ưu hóa siêu tham số và chỉ số đầu ra mục tiêu giữa bài toán dự đoán tắc nghẽn màng và bài toán dự đoán loại bỏ chất ô nhiễm:
-  - **Figure 5: MBR machine learning application overview**
-    - ![Figure 5](assets/fig_05_p12.jpeg)
+  - **Hình 5.** Tổng quan ứng dụng học máy trong dự đoán tắc nghẽn và loại bỏ chất ô nhiễm
+    - <img src="assets/fig_05_p12.jpeg" alt="Hình 5" />
     - **Hình này chứng minh điều gì**
       - Thống kê tỷ lệ phân bố biến đầu vào, cấu trúc giải thuật, tối ưu hóa và chỉ số đầu ra giữa bài toán tắc nghẽn màng (a) và xử lý chất ô nhiễm (b).
       - Mạng nơ-ron ANN (đặc biệt là MLP) chiếm tỷ trọng áp đảo ở cả hai nhóm; mô hình tắc nghẽn màng có cấu trúc đa dạng và áp dụng nhiều giải thuật tối ưu hơn.

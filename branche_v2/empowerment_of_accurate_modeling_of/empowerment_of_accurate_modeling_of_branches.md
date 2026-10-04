@@ -97,7 +97,7 @@
   - Tập dữ liệu $185$ mẫu được phân chia thành tập huấn luyện và tập kiểm tra theo tỷ lệ $9:1$ ($166:19$) kế thừa từ nghiên cứu của Li et al. (2022).
 - Thiết kế nghiên cứu so sánh khảo sát ba khía cạnh chính gồm hiệu năng của AutoML, tác động của việc lựa chọn đặc trưng và ảnh hưởng của quy mô dữ liệu vận hành:
   - **Hình 1. Tổng quan quy trình thực nghiệm AnMBR và khung mô hình hóa**
-    - ![assets/fig_01_p2.jpeg](assets/fig_01_p2.jpeg)
+    - <img src="assets/fig_01_p2.jpeg" alt="Hình 1" />
     - **Hình này chứng minh điều gì**
       - Thiết lập cấu trúc thực nghiệm AnMBR và khung mô hình hóa AutoML với ba kịch bản (Baseline, More feature, More data) cùng cơ chế xếp hạng đặc trưng ensemble ranking.
     - **Từ đâu mà thấy được**
@@ -258,7 +258,7 @@
 - Mô hình AutoML được xây dựng trên cùng tập dữ liệu (bao gồm các đặc trưng đầu vào và mục tiêu) từ nghiên cứu của Li et al. (2022) nhằm đối chuẩn hiệu suất trực tiếp với các kết quả đã công bố:
   - Kết quả cho thấy AutoML đạt hiệu suất cạnh tranh khi so sánh với các kết quả đã báo cáo của các mô hình học sâu trước đó gồm FCN, CNN và DenseNet (Bảng 1 và Hình 2):
     - **Hình 2. Kết quả dự đoán của các mô hình và so sánh với giá trị đo thực tế**
-      - ![assets/fig_02_p5.jpeg](assets/fig_02_p5.jpeg)
+      - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
       - **Hình này chứng minh điều gì**
         - Mô hình AutoML bám sát giá trị thực tế của hiệu suất loại bỏ COD với dao động ổn định hơn các mô hình học sâu.
       - **Từ đâu mà thấy được**
@@ -282,7 +282,7 @@
   - Phân tích thể hiện độ sai khác trung bình (bias) và tính toán các giới hạn thỏa thuận (limits of agreement) phản ánh phạm vi kỳ vọng cho phần lớn các mức sai biệt; ranh giới thỏa thuận càng rộng biểu thị tính nhất quán càng kém giữa mô hình và quan sát thực tế.
   - Kết quả AutoML phân bố trong dải giới hạn thỏa thuận hẹp hơn so với các mô hình học sâu, với phân phối sai số đồng đều hơn (Hình 3):
     - **Hình 3. Phân tích Bland-Altman về độ sai khác dự đoán COD-re**
-      - ![assets/fig_03_p6.jpeg](assets/fig_03_p6.jpeg)
+      - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
       - **Hình này chứng minh điều gì**
         - AutoML đạt dải giới hạn thỏa thuận hẹp nhất và sai số phân bố đồng đều, không bị suy giảm theo giá trị trung bình như các mô hình học sâu.
       - **Từ đâu mà thấy được**
@@ -311,7 +311,7 @@
 - Xuất phát từ giả thuyết thông tin bổ sung có thể tương quan với thời gian vận hành, nghiên cứu đưa số ngày vận hành (operation days - $\text{OD}$) vào mô hình như một biến đại diện (potential proxy) cho động học vi sinh vật:
   - Việc tích hợp $\text{OD}$ cải thiện đáng kể hiệu năng mô hình so với tập đặc trưng cơ sở ($\text{T-R}$, $\text{T-in}$, $\text{T-env}$, $\text{pH-in}$, $\text{COD-in}$ và $\text{flux}$), làm tăng giá trị trung bình $R^2$ từ $0.44$ lên $0.55$ và giảm giá trị trung bình $\text{RMSE}$ từ $2.47$ xuống $2.20$ ($\text{Fig. 4}$ và $\text{Fig. S1}$):
     - **Hình 4. Hiệu năng mô hình với các tập đặc trưng đầu vào khác nhau**
-      - ![assets/fig_04_p6.jpeg](assets/fig_04_p6.jpeg)
+      - <img src="assets/fig_04_p6.jpeg" alt="Hình 4" />
       - **Hình này chứng minh điều gì**
         - Bổ sung $\text{OD}$ (Add OD) đơn lẻ đem lại mức cải thiện hiệu năng rõ rệt nhất trên cả 4 chỉ số đánh giá so với Baseline, trong khi thêm các biến đơn lẻ khác ($\text{ORP}$, $\text{HRT}$, $\text{MLSS}$, $\text{MLVSS}$) hầu như không tạo ra biến chuyển đáng kể.
       - **Từ đâu mà thấy được**
@@ -329,7 +329,7 @@
   - Khi sử dụng đồng thời $\text{OD}$, $\text{ORP}$, $\text{HRT}$, $\text{MLSS}$ và $\text{MLVSS}$ để huấn luyện mô hình, hiệu quả tổng thể thu được chỉ tương đương với kịch bản chỉ bổ sung riêng lẻ biến $\text{OD}$.
   - Phân tích Bland-Altman chứng minh việc tích hợp $\text{OD}$ vào mô hình làm giảm độ lệch giữa giá trị dự đoán và giá trị thực tế, giúp sai số phân bố đồng đều hơn quanh mốc 0 so với các mô hình không chứa thời gian vận hành ($\text{Fig. 5}$ và $\text{Fig. S2}$):
     - **Hình 5. Phân tích Bland-Altman của các mô hình AutoML**
-      - ![assets/fig_05_p7.jpeg](assets/fig_05_p7.jpeg)
+      - <img src="assets/fig_05_p7.jpeg" alt="Hình 5" />
       - **Hình này chứng minh điều gì**
         - Bổ sung $\text{OD}$ thu hẹp biên độ phân tán của sai số và đưa độ lệch trung bình về sát mức $0$, trong khi các cấu hình thiếu $\text{OD}$ có độ phân tán rộng hơn và độ lệch lớn hơn.
       - **Từ đâu mà thấy được**
@@ -359,7 +359,7 @@
   - So sánh giữa nhóm $\text{M1T1}$ và $\text{M2T1}$ chỉ ra rằng việc đưa thêm dữ liệu vào tập huấn luyện làm giảm giá trị $R^2$ và làm tăng đồng thời $\text{RMSE}$, $\text{MAE}$ cùng $\text{MAPE}$.
   - So sánh giữa nhóm $\text{M1T1}$ và $\text{M2T2}$ cho thấy việc mở rộng tập dữ liệu làm tăng sai số dự đoán, trong đó $\text{M2T2}$ thể hiện hiệu năng mô hình hóa kém nhất.
   - **Hình 6. Tác động của kích thước tập dữ liệu lên hiệu năng mô hình**
-    - ![assets/fig_06_p7.jpeg](assets/fig_06_p7.jpeg)
+    - <img src="assets/fig_06_p7.jpeg" alt="Hình 6" />
     - **Hình này chứng minh điều gì**
       - Tích hợp thêm dữ liệu mở rộng $\text{M2}$ làm giảm $R^2$ và làm gia tăng sai số dự đoán trên toàn bộ $8$ cấu hình đặc trưng.
     - **Từ đâu mà thấy được**
@@ -379,7 +379,7 @@
 
 - Đánh giá bằng phương pháp điểm xếp hạng (ranking score approach, Section 2.4) từ ba kỹ thuật giải thích xác định $\text{COD-in}$ là đặc trưng quan trọng nhất trên mọi mô hình:
   - **Hình 7. Điểm xếp hạng tầm quan trọng đặc trưng của các mô hình**
-    - ![assets/fig_07_p8.jpeg](assets/fig_07_p8.jpeg)
+    - <img src="assets/fig_07_p8.jpeg" alt="Hình 7" />
     - **Hình này chứng minh điều gì**
       - $\text{COD-in}$ giữ vị trí chi phối cao nhất trên toàn bộ các cấu hình mô hình; $\text{OD}$ trở thành đặc trưng quan trọng thứ hai khi được đưa vào; các phương pháp giải thích đơn lẻ thể hiện sự phân kỳ thứ bậc đối với các đặc trưng phụ.
     - **Từ đâu mà thấy được**
