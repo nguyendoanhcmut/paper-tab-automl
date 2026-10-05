@@ -1,0 +1,66 @@
+Appendix
+A
+Comparison with LLM-based Baseline
+We compare and summarize the differences between TOPOFE and other LLM-based methods.
+(i) Exploration Strategy. CAAFE explores greedily and sequentially: it proposes one candidate feature at a time,
+accepts or rejects it based on validation performance, and repeats for a fixed number of iterations. FeatLLM runs many
+independent LLM queries in parallel, but the trials never interact with one another. OCTree follows a single-trajectory
+iterative optimization, refining one rule at a time before moving on to the next feature. LLM-FE performs evolutionary
+search over a single population that is split into island buffers, with mutation and crossover realized implicitly through
+prompt-conditioned generation. TOPOFE evolves multiple family-specialized islands in parallel, each with explicit
+LLM-driven mutation and crossover operators, and adds saturation-triggered cross-island exploration on top. The
+essential delta is that every baseline explores either one path (CAAFE, OCTree), independent paths (FeatLLM), or
+interchangeable paths (LLM-FE), whereas TOPOFE is the only method whose paths are differentiated by inductive bias
+and actively coordinated, each island knows what kind of feature it is searching for and learns which other island to
+borrow from.
+(ii) Search Space. CAAFE’s search space consists of unconstrained code expressions, which in practice collapse
+into simple arithmetic combinations. FeatLLM deliberately restricts its space to per-class threshold and membership
+rules over individual features. OCTree searches over natural-language rules that are subsequently converted into
+code, with no pre-defined operator space. LLM-FE searches the space of full feature-transformation programs, but
+over one undifferentiated grammar. TOPOFE also searches full transformation programs, but partitions the space
+into semantically typed subspaces, and additionally makes the joint compositional spaces between families reachable
+through hybrid synthesis. TOPOFE is the only method that decomposes the program space into typed subspaces and
+treats cross-family compositions as explicit, deliberately-triggered targets: LLM-FE has the same raw expressiveness
+but one flat grammar, FeatLLM deliberately limits itself to simple rules, and CAAFE is unconstrained in principle yet
+simple in practice.
+(iii) Memory Management. CAAFE remembers only the accepted features and the most recent execution error, so
+rejected features leave no trace and near-duplicates of failed ideas can recur. FeatLLM is fully stateless, each trial is
+an independent LLM call with no memory across trials. OCTree retains the full optimization trajectory of prior rules,
+their scores, and the associated reasoning, re-sent to the LLM at every call. LLM-FE maintains a buffer of high-scoring
+programs, but it stores winners only. TOPOFE maintains a dual memory: an elite archive of exemplar programs, plus a
+Prompt Adaptation Memory that summarizes both the accepted and the rejected history of each island into a compact
+natural-language “prefer/avoid" signal, continuously updated during search.
+(iv) Elite Management. CAAFE has no explicit archive: the currently accepted feature set effectively is the elite.
+FeatLLM keeps no elites at all, the final ensemble simply averages the outputs of all trials. OCTree keeps only the
+best-scoring rule per feature, with no population behind it. LLM-FE maintains a score-clustered elite buffer, sampled to
+provide in-context demonstrations, and deduplicates programs by their performance signature. TOPOFE maintains
+a bounded per-island elite archive that enforces structural novelty, candidates too syntactically similar to existing
+members are discarded, and this archive doubles as both the in-context demonstration pool and the donor material
+for cross-island hybridization. TOPOFE’s elites are deduplicated by structure, keeping the archive behaviorally and
+syntactically diverse, which matters because elites serve as crossover and hybridization parents, so redundant parents
+would produce redundant offspring.
+(v) Optimization ObjectivM. CAAFE feeds back a scalar performance change plus any execution errors. FeatLLM
+provides no iterative feedback, the LLM sees only few-shot examples. OCTree feeds back validation scores together
+with decision-tree reasoning expressed in natural language, giving the LLM structural knowledge about the dataset.
+LLM-FE feeds back validation scores alongside high-scoring programs as in-context exemplars. TOPOFE feeds back
+the fitness score, elite exemplars, and the distilled preference signal from its prompt memory. The key distinction within
+the “rich feedback" camp is that OCTree’s decision tree summarizes the data, whereas TOPOFE’s prompt memory
+summarizes the search experience, the two are orthogonal forms of structured feedback, and TOPOFE steers the LLM’s
+proposal distribution with an explicit, cumulative account of which regions of the search space have proven productive
+or dead.
+(vi) Feedback Signal to the LLM. CAAFE maximizes validation classification performance. FeatLLM minimizes the
+loss of a simple model fitted on its binary rule features. OCTree minimizes validation loss for each rule independently.
+LLM-FE maximizes the validation score of the best program found. TOPOFE alone optimizes an explicitly multi-term
+objective that combines downstream performance, a redundancy penalty over pairwise feature correlations, a stability
+19
+
+
+<!-- Page 20 -->
+term rewarding consistency across validation folds, and a computational cost term. Every baseline treats predictive
+performance as the sole criterion, whereas TOPOFE formalizes feature quality as a multi-criteria property, and this is
+precisely why it uniquely wins on both redundancy and subspace-coverage metrics instead of on accuracy alone.
+(vii) Parallelism and Efficiency. CAAFE and OCTree are inherently sequential, each iteration depends on the previous
+one’s outcome. FeatLLM’s independent trials are trivially parallel. LLM-FE’s islands are parallelizable in principle.
+TOPOFE is parallel by design: island evaluations are mutually independent, so wall-clock time per generation is
+governed by the slowest island rather than the total number of candidates, while saturation-triggered (rather than
+continuous) transfer keeps coordination overhead negligible.

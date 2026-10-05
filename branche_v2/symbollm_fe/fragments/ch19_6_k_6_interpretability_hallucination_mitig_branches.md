@@ -1,0 +1,28 @@
+### K.6 Interpretability, Hallucination Mitigation, and Bias Analysis
+
+- Phân tích toàn diện về tính diễn giải mô hình (model interpretability), giảm thiểu ảo giác (hallucination mitigation) và phân tích độ chệch (bias analysis):
+  - Đánh giá kết hợp thông qua các nghiên cứu điển hình định tính (qualitative case studies) và các số đo định lượng (quantitative metrics).
+  - Tám nghiên cứu điển hình chi tiết được trình bày trong Appendix I; một ví dụ đại diện được chọn lọc để minh họa cơ chế cốt lõi.
+- Cơ chế cốt lõi xác lập sự phân công lao động rõ ràng (division of labor) giữa hồi quy ký hiệu (Symbolic Regression - SR) và mô hình ngôn ngữ lớn (LLMs):
+  - SR chịu trách nhiệm khám phá các cấu trúc toán học hiệu quả (effective mathematical structures).
+  - LLM chịu trách nhiệm đưa vào ngữ nghĩa đặc thù theo miền dữ liệu (domain-specific semantics).
+- Thúc đẩy sự chuyển dịch mô thức từ hộp đen mờ đục (black-box opacity) sang hộp trắng minh bạch (white-box transparency):
+  - SR tiêu chuẩn ban đầu thường tạo ra công thức lồng nhau mờ đục (opaque nested formula); SymboLLM-FE tinh chỉnh công thức thành một đặc trưng có cơ sở ngữ nghĩa vững chắc (semantically grounded feature).
+  - LLM chú giải đặc trưng bằng cách kết nối với các nguyên lý đặc thù theo miền (domain-specific doctrines), nắm bắt các biến đổi phi tuyến tính của biến mục tiêu (target variables).
+- Xác thực tính diễn giải là nội tại (intrinsic interpretability) thay vì diễn giải hậu nghiệm (post-hoc):
+  - Phân tích kiểm chứng độ trung thực (fidelity verification): đo lường độ tương đồng giữa từng cặp công thức SR và đặc trưng được LLM tinh chỉnh trên tập kiểm tra giữ lại (hold-out set).
+  - Đạt độ trung thực cao trên cả ba khía cạnh: toán học (mathematical fidelity), cấu trúc (structural fidelity) và ngữ nghĩa (semantic fidelity).
+  - Đảm bảo các đặc trưng sau tinh chỉnh tuân thủ nghiêm ngặt các tín hiệu thống kê gốc (original statistical signals).
+- Quy trình tinh chỉnh của LLM cấu thành sự đơn giản hóa logic thực chất (genuine logical simplification) thay vì chỉ đổi tên thuần túy (mere renaming):
+  - Giảm đáng kể số lượng toán tử trung bình và độ sâu lồng nhau (nesting depth).
+  - Tạo ra các biểu thức cô đọng hơn và dễ đọc hơn đối với con người (compact and human-readable expressions).
+- Đánh giá độ mạnh mẽ (robustness) và giảm thiểu ảo giác trên đa chiều kích:
+  - Phân rã ảo giác thành nhiều chiều kích đo lường: lỗi thực thi (execution failure), trôi dạt ngữ nghĩa (semantic drift), và bất thường phạm vi giá trị (value range anomalies).
+  - SymboLLM-FE đạt điểm số giảm thiểu ảo giác toàn diện ở mức cao (high comprehensive hallucination mitigation score).
+  - Tỷ lệ trôi dạt ngữ nghĩa thấp hơn đáng kể so với các phương pháp đường cơ sở (baseline methods).
+  - Việc neo giữ LLM bằng các quy tắc SR (anchoring with SR rules) giúp thu hẹp và kiểm soát căn bản không gian ảo giác (hallucination space).
+- Phân tích độ chệch (bias analysis) và bảo toàn tính chất thống kê:
+  - Độ chệch phân phối toán tử (operator distribution bias) thấp hơn đáng kể so với các phương pháp hiện có.
+  - Tính nhất quán giữa các tập dữ liệu khác nhau (cross-dataset consistency) vượt trội hơn.
+  - Hệ số tương quan cao trong việc duy trì thứ hạng tầm quan trọng của đặc trưng (rank preservation of feature importance).
+  - Xác nhận LLM bảo toàn trung thực tầm quan trọng thống kê bắt nguồn từ dữ liệu thay vì áp đặt các thiên vị chủ quan (subjective preferences).

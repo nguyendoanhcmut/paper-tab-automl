@@ -1,0 +1,22 @@
+## Abstract
+
+- **Bản chất và thách thức của Automatic Feature Engineering (AutoFE - Kỹ thuật tạo đặc trưng tự động) cho dữ liệu dạng bảng (tabular data)**:
+  - AutoFE đòi hỏi việc khám phá các phép biến đổi hữu ích (informative transformations) từ một không gian chương trình (program space) không đồng nhất và có độ phức tạp tổ hợp cực lớn (combinatorially large and heterogeneous).
+- **Ba giới hạn cốt lõi của các phương pháp AutoFE hiện nay**:
+  - *Phương pháp cổ điển (classical methods)*: Phụ thuộc vào các thư viện toán tử cố định (fixed operator libraries) với khả năng biểu đạt hạn chế (limited expressivity).
+  - *Phương pháp dựa trên LLM (LLM-based methods)*: Sinh các đề xuất (proposals) từ các prompt tĩnh (static prompts) mà không lưu giữ kinh nghiệm tìm kiếm trước đó (prior search experience).
+  - *Phương pháp tiến hóa (evolutionary methods)*: Sử dụng các chính sách di cư cố định (fixed migration policies), bỏ qua tính hữu dụng chuyển giao liên họ (cross-family transfer utility) đặc thù của từng tác vụ.
+- **Đề xuất khung làm việc TOPOFE (Topology-guided Feature Engineering)**:
+  - TOPOFE mô hình hóa AutoFE dưới dạng tìm kiếm chương trình tiến hóa đa đảo có cấu trúc đồ thị (graph-structured multi-island evolutionary program search).
+- **Cơ chế khám phá cục bộ cấp đảo (island-level exploration)**:
+  - Không gian biến đổi được phân hoạch thành các họ nhất quán về mặt ngữ nghĩa (semantically coherent families), trong đó mỗi họ được khám phá bởi một đảo chuyên trách thông qua đột biến (mutation) và lai ghép (crossover) được dẫn dắt bởi LLM (LLM-guided).
+  - Mỗi đảo duy trì một bộ nhớ thích ứng prompt (Prompt Adaptation Memory) nhằm tích lũy phản hồi chấp nhận/loại bỏ (accept/reject feedback) để định hướng các đề xuất tương lai tiến vào các vùng hiệu quả của không gian tìm kiếm mà không cần cập nhật tham số mô hình (without parameter updates).
+- **Cơ chế điều phối thăm dò toàn cục qua đồ thị tô-pô động (directed topology graph)**:
+  - TOPOFE học động một đồ thị tô-pô có hướng (directed topology graph) với trọng số cạnh mã hóa độ hữu dụng chuyển giao thực nghiệm (empirical transfer utility) giữa các họ biến đổi.
+  - Quá trình chuyển giao liên đảo (cross-island transfer) được kích hoạt bởi cơ chế phát hiện bão hòa thích ứng (adaptive saturation detection) và thực hiện qua quá trình tổng hợp lai do LLM làm trung gian (LLM-mediated hybrid synthesis).
+  - Cơ chế này cho phép phát hiện các chương trình đặc trưng có tính kết hợp tổ hợp (compositional feature programs) mà quá trình tìm kiếm cục bộ cô lập không thể tạo ra được.
+- **Kết quả thực nghiệm và tính chất của đặc trưng tìm được**:
+  - Thực nghiệm trên $29$ bộ dữ liệu dạng bảng (tabular datasets) chứng minh TOPOFE vượt trội nhất quán so với phần lớn các phương pháp AutoFE tiên tiến nhất (state-of-the-art / SOTA) trên cả tác vụ phân loại (classification) và hồi quy (regression).
+  - TOPOFE tạo ra các tập đặc trưng có độ dư thừa thấp hơn (lower redundancy) và độ bao phủ biểu diễn cao hơn (higher representational coverage).
+  - Đồ thị tô-pô học được phản ánh cấu trúc chuyển giao đặc thù tác vụ có ý nghĩa và tương quan thuận với hiệu năng hạ nguồn (downstream gains).
+  - Các chương trình đặc trưng phát hiện được chuyển giao tin cậy qua nhiều bộ dự đoán hạ nguồn (downstream predictors) và các mô hình nền tảng LLM (LLM backbones) đa dạng, khẳng định sự cải thiện bắt nguồn từ cơ chế tìm kiếm có cấu trúc và điều phối thích ứng của TOPOFE thay vì năng lực sinh đặc thù của backbone.

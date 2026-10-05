@@ -1,0 +1,72 @@
+4
+Experiments
+We conduct experiments to address the following research questions. RQ1: Can TOPOFE outperform existing
+state-of-the-art AutoFE methods across diverse tabular learning tasks and dataset characteristics? (§5.1) RQ2: Is
+TOPOFE’s performance robust to the choice of LLM backbone across models of varying capability? (§5.2) RQ3:
+Are the feature programs discovered by TOPOFE transferable across architecturally distinct downstream predictors
+beyond the search-time evaluation model? (§5.3) RQ4: Does TOPOFE produce feature sets that are more diverse,
+low-redundancy, and informationally complementary than competing methods? (§5.4) RQ5: Does the adaptive topology
+graph acquire meaningful task-specific knowledge about cross-family transfer utility during search? (§5.5) RQ6: How
+each component of TOPOFE contributes to the its overall performance? (§5.6)
+Datasets
+We evaluate TOPOFE on 29 public tabular datasets comprising 19 classification and 10 regression tasks,
+sourced from the UCI Machine Learning Repository [Asuncion et al., 2007]1, Kaggle2, and OpenML [Vanschoren et al.,
+2014] 3, following the dataset selection protocol of prior work [Hollmann et al., Han et al., 2024, Abhyankar et al.,
+2025]. The benchmark spans diverse prediction tasks, dataset scales (ninst ∈[315, 581012]), feature dimensionalities
+(nfeat ∈[4, 279]), and heterogeneous feature types including numerical, categorical, and temporal variables. Dataset
+statistics are reported in Tables 1 and 2. Each dataset is accompanied by structured metadata M comprising task-level
+descriptions and per-feature semantic annotations used to condition LLM generation. All datasets are partitioned using
+a fixed 80/20 train/test split, where the training partition is used exclusively for feature search, cross-validation, and
+model fitting, and the test partition is held out for final unbiased evaluation. All experiments are repeated over five runs
+with different random seeds and data splits. Results are reported as mean ± standard deviation.
+1https://archive.ics.uci.edu/datasets
+2https://www.kaggle.com/datasets
+3https://www.openml.org/
+8
+
+
+<!-- Page 9 -->
+Baselines
+We compare TOPOFE against six SOTA AutoFE methods spanning three categories: (i) classical methods:
+OpenFE [Zhang et al., 2023a] and AutoFeat [Horn et al., 2019], (ii) LLM-based methods: CAAFE [Hollmann et al.,
+2023a], FeatLLM [Han et al., 2024], and OCTree [Nam et al., 2024], and (iii) LLM-guided evolutionary search: LLM-
+FE [Abhyankar et al., 2025], the most closely related baseline sharing the multi-population evolutionary architecture.
+All LLM-based methods use the same backbone model and generation settings as TOPOFE to ensure a controlled
+comparison.
+Evaluation Protocol
+Classification performance is measured by accuracy (↑) and regression performance by Root
+Mean Square Error (↓). Feature evaluation follows a two-stage procedure: given a candidate feature set S, we first
+execute each program p ∈S on the training data to construct the augmented representation TS(Xtr), then train a
+downstream predictor f ∗
+S on the augmented training set and evaluate the fitness signal ˆΦ(S) on the held-out validation
+fold via 5-fold stratified cross-validation as defined in Eq. (6). For fair comparison across all methods, XGBoost
+is used as the default downstream predictor with identical train/validation protocols, evaluation budgets, and model
+configurations unless explicitly stated otherwise.
+Implementation Details.
+All LLM-based methods are implemented with three backbone models: Qwen3-8B [Yang
+et al., 2025a], Qwen2.5-Coder [Hui et al., 2024], and GPT-4o-mini [Hurst et al., 2024]. Unless otherwise specified,
+we use a sampling temperature of τ = 0.8 for all LLM genertion calls. For TOPOFE, we instantiate M = 5 family-
+specialised islands corresponding to the five canonical transformation families defined in §3.1: arithmetic interactions
+(P1), statistical aggregates (P2), temporal features (P3), relational encodings (P4), and nonlinear univariate maps (P5).
+At each generation, each LLM call produces b = 3 candidate feature programs written as executable Python functions.
+Each LLM prompt comprises four components: (i) task-level metadata Mtask summarizing the prediction objective
+and target variable, (ii) feature-level metadata Mfeat comprising feature names, value types, and one-sentence semantic
+descriptions, with representative category values included for categorical variables, (iii) in-context demonstrations
+drawn from the island’s elite archive A(t)
+i , providing high-quality previously discovered programs as exemplars for
+mutation, crossover, or hybrid synthesis, and (iv) a strict output format specification requiring a syntactically valid
+Python feature-transformation function. A small number of serialized training instances with ground-truth labels
+are additionally included as task context, following [Dinh et al., 2022, Han et al., 2024]. All generated programs
+undergo systematic validation comprising syntax checking, type consistency verification, numerical-safety filtering
+(e.g., division-by-zero and overflow guards), and metadata-consistency checks before fitness evaluation.
+For the PAM component, the sliding history window is set to W = 5 generations and the prompt-memory string is
+updated after every generation via an LLM summarization call conditioned on H+
+i (t) and H−
+i (t). The elite archive
+capacity is |A|max = 20 programs per island, with structural novelty enforced via a normalized tree-edit distance
+threshold of δmin = 0.1. For the topology graph, the exponential moving average decay coefficient is α = 0.3, and the
+saturation threshold is ε = 0.01 over a window of W = 5 consecutive generations. The redundancy penalty coefficient
+is λ1 = 0.3, stability weight λ2 = 0.1, and cost weight λ3 = 0.1 in the unified objective (Eq. 15). After search
+termination, the final feature set is assembled by pooling elite programs from all island archives and selecting at most 5
+non-redundant programs via greedy validation-score-ranked selection, discarding candidates whose absolute Spearman
+correlation with any already-selected feature exceeds τred = 0.9.

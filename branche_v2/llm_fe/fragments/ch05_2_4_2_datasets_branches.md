@@ -1,0 +1,22 @@
+### 4.2 Datasets
+
+- **Tiêu chí lựa chọn và nguồn gốc tập dữ liệu (Dataset selection & sources)**:
+  - Kế thừa phương pháp luận từ Hollmann et al. (2024) để chọn lọc các tập dữ liệu từ các nghiên cứu kỹ thuật đặc trưng (feature engineering) trước đây, bao gồm Han et al. (2024), Hollmann et al. (2024), và Zhang et al. (2023).
+  - Tiêu chuẩn tiên quyết là tập dữ liệu phải chứa thông tin đặc trưng mang tính mô tả ngữ nghĩa (descriptive feature information).
+  - Dữ liệu được thu thập từ các kho lưu trữ học máy uy tín và phổ biến: OpenML (Vanschoren et al., 2014; Feurer et al., 2021), UCI Machine Learning Repository (Asuncion et al., 2007), và Kaggle.
+- **Quy mô và cơ cấu tập dữ liệu thực nghiệm (Evaluation dataset composition)**:
+  - Phân tích bao gồm 19 tập dữ liệu phân loại (classification datasets) và 10 tập dữ liệu hồi quy (regression datasets).
+  - Mỗi tập dữ liệu đều chứa tập hợp hỗn hợp các đặc trưng phân loại (categorical features) và đặc trưng số học (numerical features).
+  - Bổ sung 8 tập dữ liệu phân loại quy mô lớn, số chiều cao (large-scale, high-dimensional classification datasets) nhằm đảm bảo năng lực đánh giá toàn diện (comprehensive evaluation).
+- **Kiểm định khả năng tổng quát hóa trên tập dữ liệu sau mốc huấn luyện (Post-cutoff datasets & memorization check)**:
+  - Thực hiện các thử nghiệm trên 5 tập dữ liệu phân loại từ Hollmann et al. (2024) và Bordt et al. (2024).
+  - Các tập dữ liệu này được công bố sau mốc thời gian chốt dữ liệu huấn luyện (training cutoff date) tháng 9/2021 của GPT (September 2021 GPT training cutoff date), giúp kiểm tra mức độ phụ thuộc vào việc ghi nhớ dữ liệu bảng (memorization) và khẳng định khả năng khái quát hóa thực chất.
+- **Siêu dữ liệu đi kèm (Dataset metadata)**:
+  - Mỗi tập dữ liệu đều được đính kèm siêu dữ liệu (metadata) đầy đủ.
+  - Bao gồm phần mô tả tác vụ dự đoán bằng ngôn ngữ tự nhiên (natural-language description of the prediction task) cùng hệ thống tên đặc trưng mang tính mô tả rõ ràng (descriptive feature names).
+- **Giao thức phân chia dữ liệu và đánh giá thực nghiệm (Data partitioning & evaluation protocol)**:
+  - Phân chia mỗi tập dữ liệu thành tập huấn luyện (train set) và tập kiểm tra (test set) theo tỷ lệ phân tách 80-20 (80-20 split).
+  - Tuân thủ thiết lập của Hollmann et al. (2024), tất cả các phương pháp được đánh giá qua 5 lần lặp độc lập (five iterations).
+  - Mỗi lần lặp sử dụng một hạt giống ngẫu nhiên riêng biệt (distinct random seed) và một phân chia train-test khác nhau.
+- **Tài liệu tham khảo chi tiết thống kê**:
+  - Thông tin thống kê chi tiết về từng tập dữ liệu (bao gồm số lượng mẫu $n$, số lượng đặc trưng $p$, và nguồn định danh) được cung cấp đầy đủ trong Appendix C.

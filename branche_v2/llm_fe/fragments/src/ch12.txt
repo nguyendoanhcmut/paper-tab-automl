@@ -1,0 +1,324 @@
+Qualitative Analysis
+E.1
+
+Interpretability Analysis
+Table 15: Percentage of generated
+features ranked among the top-k
+most impactful features by SHAP.
+Top-k
+Percentage
+Top-10
+16.67
+Top-20
+25.93
+Top-30
+37.04
+Top-40
+57.41
+Top-50
+62.96
+As illustrated in Figure 11, LLM-FE generates feature-transformation
+programs in natural language, thus supporting interpretability.
+Each
+generated feature program is evaluated independently, and successful
+ones are stored for evolutionary refinement, enabling early discoveries
+to compose into higher-order features while preserving interpretability.
+To evaluate the utility of the generated features, we conduct attribution
+analysis using SHAP values. The results demonstrate that a consistent
+subset of discovered features receives high attribution scores, indicating
+21
+
+
+<!-- Page 22 -->
+Published in Transactions on Machine Learning Research (05/2026)
+that they actively contribute to the prediction process rather than serving as spurious or unused augmentations.
+Specifically, 16.67% of generated features rank among the top-10 most impactful features, and over 60%
+appear within the top-50 (Table 15), providing strong evidence that the features discovered by LLM-FE
+meaningfully enhance model performance and decision-making.
+E.2
+
+Robustness to Noise
+0.0
+0.01
+0.05
+0.1
+Noise Level ( )
+0.85
+0.87
+0.89
+0.91
+Accuracy
+Base
+OpenFE
+CAAFE
+LLM-FE
+Figure 10: Impact of Noise Levels on XGBoost model
+performance across different approaches under increasing
+noise conditions (σ ∈{0.0, 0.1}).
+We report the mean
+accuracy across six classification datasets containing only
+numerical features.
+Noise is a pervasive challenge in real-world datasets,
+stemming from sensor imperfections, human errors,
+environmental variability, and hardware constraints.
+Such corruption can obscure meaningful structure
+and hinder a model’s ability to learn true under-
+lying relationships.
+To assess how well LLM-FE
+leverages prior knowledge and evolutionary search
+to remain effective under noisy conditions, we added
+Gaussian noise (σ = 0, 0.01, 0.05, 0.1) to numeri-
+cal classification datasets. As shown in Figure 10,
+we evaluated XGBoost with several feature engineer-
+ing approaches, using GPT-3.5-Turbo as the back-
+bone for all LLM-based methods. Across all noise
+levels, LLM-FE consistently maintains higher accu-
+racy and exhibits greater robustness than competing
+approaches, demonstrating its resilience to noise-
+induced degradation.
+E.3
+
+Impact of Domain Knowledge
+ def modify_features(df_input) -> pd.DataFrame:
+    """    
+    Thought: Taking the logarithm of serum cholesterol   
+         may help normalize the distribution and 
+         emphasize the impact of extreme values.
+    Feature: Log_Cholesterol | Log_Cholesterol =         
+                                  Logarithm(Cholesterol)
+    """
+    df_output = df_input.copy()
+    # Calculate Log_Cholesterol
+    df_output['Log_Cholesterol'] =                       
+               df_output['Cholesterol'].apply(lambda x:   
+               np.log(x) if x > 0 else 0)
+    
+    return df_output
+ def modify_features(df_input) -> pd.DataFrame:
+    """
+    Thought: Considering the importance of categorical variables in 
+             the prediction task.
+    Feature: Frequency of C_1.
+    Feature: GroupByThenMean of C_3 based on C_1.
+    """
+    df_output = df_input.copy()
+    # Frequency of C_1
+    df_output['C_1_freq'] = 
+df_output['C_1'].map(df_output['C_1'].value_counts())
+    # GroupByThenMean of C_3 based on C_1
+    df_output['C_3_mean_by_C_1'] = 
+df_output.groupby('C_1')['C_3'].transform('mean')
+    return df_output
+(c) LLM-FE (GPT-3.5-Turbo) Output
+(b) LLM-FE w/o Domain Knowledge (GPT-3.5-Turbo) Output
+(a) Quantitative Performance
+def modify_features(df_input) -> pd.DataFrame:
+    """
+    Thought: Interaction between normal nucleoli and 
+      mitoses could capture the proliferative activity 
+      and potentially enhance the predictive power for 
+      malignancy.
+    Feature: proliferation_activity | 
+      proliferation_activity = Normal_Nucleoli*Mitoses
+    """
+    df_output = df_input.copy()
+    # Calculate the proliferation activity
+    df_output['proliferation_activity'] = 
+      df_output['Normal_Nucleoli']*df_output['Mitoses']
+    return df_output
+def modify_features(df_input) -> pd.DataFrame:
+    """
+    Adding a feature representing the average value of C_0 to 
+    C_8 as a potential indicator of the overall severity
+    """
+    
+    df_output = df_input.copy()
+    df_output['avg_C'] = df_output[
+['C_0', 'C_1', 'C_2', 'C_3', 
+'C_4', 'C_5', 'C_6', 'C_7', 'C_8']
+].mean(axis=1)
+    
+    return df_output
+Heart Dataset
+Breast-W Dataset
+Figure 11: Quantitative and Qualitative Analysis on Impact of Domain Knowledge for LLM-FE on
+Heart and Breast-W datasets. (a) Comparison of XGBoost performance for LLM-FE against its domain-agnostic
+variant and traditional methods, such as OpenFE and AutoFeat, which do not integrate domain knowledge and exhibit
+reduced performance. (b) Features generated using the w/o Domain Knowledge variant of LLM-FE. (c) Feature
+discovery program generated by LLM-FE. The generated programs emphasize how incorporating domain expertise
+leads to more interpretable features that improve model performance.
+22
+
+
+<!-- Page 23 -->
+Published in Transactions on Machine Learning Research (05/2026)
+Figure 11 highlights the qualitative and quantitative benefits of domain-specific feature transforms. We
+demonstrate this using two datasets: the Breast-W dataset, which focuses on distinguishing between benign
+and malignant tumors, and the Heart dataset, which predicts cardiovascular disease risk based on patient
+attributes. These tasks underscore the crucial role of domain knowledge in identifying meaningful features. By
+leveraging embedded domain knowledge, LLM-FE not only significantly improves accuracy but also provides
+justification for selecting the chosen feature, leading to more interpretable feature engineering. For example,
+in the Heart dataset, LLM-FE suggests the feature ‘Log_Cholesterol’, recognizing cholesterol’s critical role
+in heart health and applying a logarithmic transformation to reduce the impact of outliers and stabilize the
+variance. In contrast, the ‘w/o Domain Knowledge’ variant arbitrarily combines existing features, leading
+to uninterpretable transformations and reduced overall performance (Figure 11(a)). Similarly, for breast
+cancer prediction, LLM-FE identifies ‘proliferation_activity’, a biologically relevant metric leading to
+performance improvement, whereas the absence of domain knowledge results in a simple mean of all features,
+lacking interpretability and clinical significance (Figures 11(b) and 11(c)).
+E.4
+
+Impact of Multi-Island Evolution
+At initialization, the feature discovery process is partitioned into k independent islands by evenly splitting the
+candidate feature set. Given a fixed computational budget of T iterations, each island receives approximately
+T/k iterations, making k a key factor in controlling the trade-off between exploration and exploitation.
+Smaller values of k allow deeper refinement within each island, emphasizing exploitation, while larger values
+of k encourage broader exploration by enabling multiple independent search trajectories with shallower
+refinement. As shown in Table 16, we evaluate representative settings with k = 1, 3 and 5. Moderate island
+counts consistently provide the best balance between exploration and refinement. Using a single island limits
+the diversity of discovered features, whereas too many islands reduces the refinement depth available to
+each trajectory. Overall performance is robust across island counts, with independent trajectories enabling
+complementary exploration and stable results when the compute budget is appropriately distributed.
+Table 16: Effect of the number of islands in LLM-FE. We report the mean and standard deviation over five
+splits using accuracy for classification datasets (higher is better). bold: indicates the best performance.
+# Islands
+adult
+bank
+cmc
+car
+breast-w
+vehicle
+1
+0.874 ± 0.002
+0.908 ± 0.003
+0.532 ± 0.017
+0.999 ± 0.003
+0.966 ± 0.014
+0.761 ± 0.012
+3
+0.874 ± 0.002
+0.907 ± 0.002
+0.535 ± 0.019
+0.999 ± 0.001
+0.973 ± 0.009
+0.769 ± 0.013
+5
+0.874 ± 0.003
+0.907 ± 0.003
+0.528 ± 0.010
+0.998 ± 0.003
+0.969 ± 0.014
+0.773 ± 0.015
+E.5
+
+Impact of Evolutionary Refinement
+Figure 12 shows the detailed performance trajectory of LLM-FE compared with its ‘w/o Evolutionary
+Refinement’ variant on PC1 and Balance-Scale datasets. The graph demonstrates that LLM-FE, using
+evolutionary search, consistently improves validation accuracy, while the non-refinement variant stagnates
+due to local optima. On the PC1 dataset, the non-refinement variant plateaus after seven iterations, and
+on the Balance-Scale dataset, it stagnates after five iterations. LLM-FE’s evolutionary refinement helps it
+escape local optima with more robust optimization, leading to better validation accuracy on both datasets.
+23
+
+
+<!-- Page 24 -->
+Published in Transactions on Machine Learning Research (05/2026)
+0.849
+0.860
+0.870
+0.881
+0.891
+Accuracy
+Adult
+0.892
+0.902
+0.912
+0.923
+0.933
+Bank
+0.836
+0.877
+0.918
+0.959
+1.000
+Balance-Scale
+0.694
+0.714
+0.735
+0.755
+0.775
+Accuracy
+Eucalyptus
+0.740
+0.757
+0.773
+0.790
+0.807
+Blood
+0.974
+0.981
+0.987
+0.994
+1.000
+Car
+0.519
+0.532
+0.546
+0.559
+0.573
+Accuracy
+Cmc
+0.817
+0.831
+0.845
+0.859
+0.872
+Heart
+0.670
+0.688
+0.705
+0.722
+0.740
+Credit-g
+0
+5
+10
+15
+20
+Iterations
+0.855
+0.888
+0.921
+0.954
+0.987
+Accuracy
+Junglechess
+0
+5
+10
+15
+20
+Iterations
+0.971
+0.978
+0.985
+0.993
+1.000
+Tic-tac-toe
+0
+5
+10
+15
+20
+Iterations
+0.917
+0.935
+0.953
+0.971
+0.988
+Pc1
+LLM-FE w/o Evolutionary Refinement
+LLM-FE
+Figure 12: Performance Trajectory Analysis. Validation Accuracy progression for LLM-FE w/o evolutionary
+refinement and LLM-FE. LLM-FE demonstrates better validation accuracy, highlighting the advantage of evolutionary
+iterative refinement.
+24

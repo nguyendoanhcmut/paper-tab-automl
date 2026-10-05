@@ -1,0 +1,138 @@
+Baselines
+We implement and evaluate various state-of-the-art feature engineering baselines, spanning traditional methods
+to recent LLM-based approaches, for comparison with LLM-FE. After generating features with each baseline,
+we apply a unified preprocessing pipeline to prepare the data for training and evaluation in the machine
+learning model. We implement the following baselines:
+FeatLLM.
+FeatLLM uses an LLM to generate rules to binarize features that are then used as input to
+a simple model, such as linear regression. We adapt the open-source featllm2 implementation, modifying
+the pipeline to use an XGBoost model for inference. To ensure a fair comparison with other methods, we
+train the XGBoost model on the entire training dataset, while the LLM uses only a subset (10 samples) to
+generate binary features. As FeatLLM generates multiple feature sets in parallel across LLM calls, we report
+the results through an ensemble over three samples to maintain consistency with LLM-FE.
+AutoFeat.
+AutoFeat is a classical feature engineering approach that uses iterative feature subsampling
+with beam search to select informative features. We utilize the open-source autofeat3 package, retaining the
+default parameter settings. For parameter settings, we refer to the example ‘.ipynb’ files provided in their
+official repository.
+2https://github.com/Sungwon-Han/FeatLLM
+3https://github.com/cod3licious/autofeat.git
+16
+
+
+<!-- Page 17 -->
+Published in Transactions on Machine Learning Research (05/2026)
+###
+<Role>  
+You are a data scientist expert in the field of the given dataset.  
+Your role is to apply your domain expertise to identify and create, and refine the most informative features
+that solve the <Task> effectively.  
+###
+<Instructions>  
+- You are provided with the task description, a list of existing features, and data examples.  
+- Use your domain knowledge to derive features that capture meaningful patterns, trends, or relationships
+inherent in the data.  
+- Prioritize features that have high potential to enhance the model’s ability to solve the <Task>, considering
+both relevance and predictive power.  
+- For each derived feature, provide:  
+- A clear explanation of how it was derived and justification of its relevance for solving the <Task>.  
+- Ensure your approach remains grounded in the context of the dataset and the <Task>, and aim for features
+that are interpretable and actionable.
+###
+<Task>
+Which direction does the balance scale tip to? Right, left, or balanced?
+###
+<Features>
+- Left-Weight: Left-Weight (numerical variable within range [1, 5])
+....
+....
+###
+<Examples>
+If Left-Weight is 3, Left-Distance is 3, Right-Weight is 4, Right-Distance is 5,  Then Result is right.
+....
+....
+Please generate as many new features as possible using the information from the task, feature descriptions,
+examples, and your domain understanding of the dataset. Remove any irrelevant, redundant, or less informative
+features to enhance overall performance.  
+First, describe your new feature transformation and the main steps in a concise, one-sentence docstring.Then,
+implement it in Python as a function that adheres to the given specifications.  
+Avoid providing any further explanations or additional descriptions.
+def modify_features_v0(df_input) -> pd.DataFrame:
+    """
+    Thought 1: The absolute difference between Left-Weight and Right-Weight can 
+    capture the imbalance in weight distribution.
+    Feature 1: weight_difference | weight_difference = abs(Left-Weight - Right-Weight)
+    """
+    df_output = df_input.copy()
+    # Calculate absolute difference between Left-Weight and Right-Weight
+    df_output['weight_difference'] = 
+                    abs(df_output['Left-Weight'] - df_output['Right-Weight'])
+    
+    return df_output
+Instruction
+Dataset Specification
+In-Context Example
+def modify_features_v1(df_input) -> pd.DataFrame:
+    """Improved version of modify_features_v0"""
+Function to Complete
+def evaluate(data: dict):
+    """ Evaluate the feature transformations on data observations."""
+    import torch
+    import utils
+    from sklearn.model_selection import train_test_split
+    from sklearn.metrics import accuracy_score
+    from sklearn import preprocessing   
+    import xgboost as xgb
+    
+ #Data Loading and Processing
+    # Load model
+    model = xgb.XGBClassifier(random_state=42)
+    # Training
+    model.fit(X_train, y_train)
+    # Inference
+    y_pred = model.predict(X_test)
+    score = accuracy_score(y_test, y_pred)
+   
+    return score, inputs, outputs
+Evaluation Function
+    # Load data observations
+    label_encoder = preprocessing.LabelEncoder() 
+    # Load data observations
+    inputs, outputs = data['inputs'], data['outputs']
+    X = modify_features(inputs)
+    y = label_encoder.fit_transform(outputs)
+    for col in X.columns:
+        if X[col].dtype == 'string':
+            X[col] = label_encoder.fit_transform(X[col])
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=0)
+    # Data Processing
+    X_train = utils.make_numeric(X_train)
+    X_test = utils.make_numeric(X_test)
+    X_train = torch.tensor(X_train.to_numpy())
+    X_test = torch.tensor(X_test.to_numpy())
+Figure 9: Example of an input prompt for balance-scale dataset containing (a) instruction, (b) dataset
+specification containing the details about the task, features, and data samples, (c) evaluation function, (d) initial
+in-context demonstration, and (e) function to complete.
+17
+
+
+<!-- Page 18 -->
+Published in Transactions on Machine Learning Research (05/2026)
+CAAFE.
+We utilize the official implementation of CAAFE,4, maintaining all parameter settings as specified
+in the original repository. Additionally, the repository is designed for classification datasets. Following their
+workflow, we preprocess the data before feeding it into the prediction model after feature engineering. As
+CAAFE implements sequential feature refinement and produces only a single independent candidate solution,
+ensembling is not applicable.
+OCTree.
+The official OCTree implementation5 was modified to keep the data loading and model initialization
+part common. We implemented OCTree only for classification datasets, as the official implementation is
+limited to classification datasets, and running for regression datasets on our own could have resulted in
+incorrect implementation. Furthermore, OCTree also follows a sequential optimization procedure and does
+not produce multiple independent solutions for ensembling.
+OpenFE.
+OpenFE is another state-of-the-art traditional feature engineering method using feature boosting
+and pruning algorithms. We employ the open-source openfe6 package with standard parameter settings.
+C

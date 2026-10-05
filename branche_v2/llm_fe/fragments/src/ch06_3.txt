@@ -1,0 +1,91 @@
+Impact of Domain Knowledge and Evolutionary Refinement
+Figure 7 illustrates the qualitative benefits of incorporating domain knowledge into feature engineering. In
+this example, two approaches are contrasted: one without domain knowledge (Figure 7(a)), and LLM-FE
+guided by domain-specific insights through an LLM-based feature engineering (Figure 7(b)). The domain-
+agnostic variant creates arbitrary transformations, such as combining features C1 and C3 using a square
+root of their product and dropping feature C2 without clear justification. In contrast, LLM-FE leverages
+its embedded knowledge to derive interpretable and clinically meaningful features. Figure 5 presents a
+quantitative comparison of model performance on the same dataset, showing that LLM-FE with domain
+knowledge achieves the highest accuracy, outperforming both the base model and LLM-FE without domain
+knowledge. Figure 6 illustrates the validation accuracy trajectory of LLM-FE with and without evolutionary
+refinement across 20 iterations. The variant without refinement shows early improvement but quickly plateaus,
+indicating convergence to a local optimum. In contrast, LLM-FE continues to improve across iterations,
+achieving higher accuracy overall. This comparison highlights the effectiveness of evolutionary refinement in
+enhancing performance by enabling the model to escape local optima and optimize more effectively. Further
+analyses are provided in Appendix E.
+9
+
+
+<!-- Page 10 -->
+Published in Transactions on Machine Learning Research (05/2026)
+0.730
+0.735
+0.740
+0.745
+Accuracy
+Model Performance
+Base
+LLM-FE w/o domain knowledge
+LLM-FE
+Figure 5: Quantitative impact of domain knowl-
+edge on model accuracy. Using domain knowledge
+boosts performance compared to both the base model
+and LLM-FE without domain knowledge.
+0
+5
+10
+15
+20
+Iterations
+0.750
+0.755
+0.760
+0.765
+Accuracy
+Validation Accuracy
+LLM-FE w/o Evolutionary Refinement
+LLM-FE
+Figure 6: Performance Trajectory Analysis for
+LLM-FE w/o evolutionary refinement and LLM-FE.
+LLM-FE demonstrates a better trajectory, highlight-
+ing the advantage of evolutionary refinement.
+ def modify_features(df_input) -> pd.DataFrame:
+    """ 
+     Thought 1: Insulin levels in conjunction with Glucose levels can provide 
+insights into the metabolic state.
+     Feature 1: insulin_glucose_ratio | 
+   
+insulin_glucose_ratio = Insulin / Glucose
+     Thought 2: BMI can be an indicator of potential diabetes risk, especially 
+when combined with age.
+     Feature 2: bmi_age_ratio | bmi_age_ratio = BMI / Age
+    """
+      df_output = df_input.copy()
+     # Calculate Insulin divided by Glucose
+      df_output['insulin_glucose_ratio'] = df_output['Insulin'] / 
+    df_output['Glucose']
+     # Calculate BMI divided by Age
+     df_output['bmi_age_ratio'] = df_output['BMI'] / df_output['Age']
+    
+    return df_output
+(b) LLM-FE
+(a) Feature Engineering without domain knowledge
+ def modify_features(df_input) -> pd.DataFrame:
+    """
+    Introducing a new feature 'C10' as the square root of the
+    product of 'C1' and 'C3' to capture a non-linear relationship 
+    between these variables.
+    Additionally, dropping less informative feature 'C2'.
+    """
+    df_output = df_input.copy()
+    
+    df_output['C10'] = np.sqrt(df_output['C1'] * df_output['C3'])
+    df_output.drop('C2', axis=1, inplace=True)
+    
+    return df_output
+Figure 7:
+Qualitative Analysis on Impact of Domain Knowledge.
+illustrating how LLM-FE (b)
+utilizes domain knowledge to create meaningful features with descriptions , in contrast to feature engineering with-
+out domain insights (a) leading to uninterpretable outputs.
+5.4

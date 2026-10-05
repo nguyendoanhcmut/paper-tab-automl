@@ -1,0 +1,124 @@
+B
+Prompt Design
+This section documents the prompts of TOPOFE, organized by function.
+
+B.1
+Feature-Understanding Call
+###
+<Role>
+You are an scientist working on feature engineering program generation.
+###
+<Task>
+First understand the dataset features and task.
+Explicitly reason about relationships between features and the prediction target.
+Assume all input features are usable; do not exclude or de-prioritize any column.
+Target: {task_description}
+Columns: {comma-separated columns}
+###
+<Output>
+Return concise bullets:
+1) likely feature-to-target relationships (direction, nonlinearity, thresholds, monotonic effects
+when plausible)
+2) likely useful feature-to-feature interactions/ratios/aggregations that could improve
+target prediction
+3) concrete transformation ideas for each major feature group (numeric, categorical, mixed)
+
+B.2
+Generation Context
+This prompt is shared generation context that prepended to initialize, mutation, crossover, and hyrbid.
+###
+<Objective>
+Primary mission: "extract, transform, and select variables from raw data by generating feature
+engineering Python codes based on the analysis, making machine learning models more accurate and
+efficient."
+Generation objective: create engineered features that capture both:
+- feature-to-target relationships
+- feature-to-feature relationships relevant to target prediction
+Avoid arbitrary transformations that are not tied to target-relevant signal.
+First include a concise one-sentence docstring describing the transformation intent.
+
+B.3
+Generation Rules
+###
+<Role>
+You are a data scientist with expert knowledge about the provided dataset.
+Your role is to identify and engineer informative features to solve the <Task> effectively.
+20
+
+
+<!-- Page 21 -->
+###
+<Instructions>
+- Return Python code lines only.
+- Ensure the code is executable.
+- Write the BODY of a function ‘generated_feature(df)‘.
+- Do NOT use placeholders/undefined names like member1, feature1, x, y.
+- Do NOT create toy/sample dataframes; operate on provided df only.
+- Avoid providing any additional descriptions outside code.
+- Use valid operator calls with dataframe series arguments.
+Allowed operators for this family: {family_guide}
+Current family: {family_name}
+
+B.4
+Initialization Prompt
+The initialization prompt seeds each island with a strong baseline program:
+{prompt_context}{generation_rules}
+Produce ONE initial ’{family_name}’ feature program.
+Use at least two source columns, or an axis=1 aggregation
+across many columns.
+Ground it in the analysis notes; make it a strong,
+self-contained baseline for this family.
+
+B.5
+Mutation Prompt
+The mutation prompt modifies a single parent program conditioned on PAM signals:
+{prompt_context}{generation_rules}
+Family: {family_name}
+Parent program:
+{parent.code}
+Preferred patterns (recently rewarded): {prefer}
+Avoid patterns (recently rejected/redundant): {avoid}
+Mutate the parent into a distinct, stronger ’{family_name}’
+feature. Change its structure meaningfully swap an operator, add a stabilizing transform, or
+bring in another column so the output is not merely a rescaled version of the parent.
+The {prefer} and {avoid} fields are populated from the prompt-memory vector ρ(t)
+i , providing explicit directional
+guidance derived from the island’s accumulated accept/reject history (Eq. 8).
+
+B.6
+Crossover Prompt
+The crossover prompt synthesizes a child from two parents within the same island:
+{prompt_context}{generation_rules}
+Family: {family_name}
+Parent A:
+{p1.code}
+Parent B:
+{p2.code}
+Combine the most useful structural idea from each parent into
+one new ’{family_name}’ feature.
+Do not concatenate them verbatim; synthesize a coherent signal
+that improves on both and stays low-redundancy.
+21
+
+
+<!-- Page 22 -->
+
+B.7
+Cross-Island Hybrid Synthesis Prompt
+The cross-island hybrid prompt is triggered by saturation detection and generates programs in the joint composition
+space Pi ◦Pj:
+{prompt_context}{generation_rules}
+TARGET FAMILY: {target.family_name}
+DONOR FAMILY: {donor.family_name}
+Target parent (stay in this family’s style):
+{p_t.code}
+Donor parent (borrow ONE idea from a different family):
+{p_d.code}
+The target island has stagnated. Import a single useful
+structural idea from the donor - an operator, a
+normalization, or a grouping strategy, and re-express it
+as a ’{target.family_name}’ feature.
+Do not copy either parent. The result must be robust,
+non-trivial, and structurally novel relative to the target
+island’s existing features.
+22

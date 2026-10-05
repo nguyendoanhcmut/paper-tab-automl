@@ -1,0 +1,84 @@
+3.4
+Computational Complexity
+Standard single-population evolutionary feature search evaluates n candidates per generation, each at cost Ceval, giving
+a total cost of O(T · n · Ceval) over T generations. TOPOFE distributes n candidates across M islands with P
+i ni = n,
+incurring per-generation cost:
+O
+ M
+X
+i=1
+ni · Ceval + |Et| · Ctransfer
+!
+(16)
+where |Et| is the number of active transfer edges and transfer is the cost of a single hybrid synthesis call. Under
+balanced allocation (ni ≈n/M), this reduces to O(n · Ceval + |Et| · Ctransfer), matching the single-population baseline
+up to transfer overhead. Since transfer is saturation-triggered rather than applied at every generation, |Et| remains small
+in practice and transfer overhead is negligible.
+Parallelism.
+Island evaluations are mutually independent, so all M islands execute in parallel, reducing wall-clock
+time per generation from O(n·Ceval) to O(maxi ni ·Ceval) and yielding an approximate k-fold speedup under balanced
+partitioning.
+7
+
+
+<!-- Page 8 -->
+Algorithm 1: TOPOFE
+Input: D, M, {Pi}M
+i=1, budget B, window W, threshold ε, decay α
+Output: S∗
+for i = 1, . . . , K do
+Π(0)
+i
+←LLM-Seed(Pi, M); A(0)
+i
+←∅; ρ(0)
+i
+←∅;
+Initialize G(0) with w(0)
+j→i = 1/(M −1) for all j̸ = i; t ←0, b ←0;
+while b < B do
+for i = 1, . . . , M do in parallel
+p′ ←LLM-Mutate/Crossover(A(t)
+i , M, ρ(t)
+i );
+Evaluate ˆΦ(p′); b ←b + 1;
+Update Π(t+1)
+i
+, A(t+1)
+i
+, H(t+1)
+i
+, ρ(t+1)
+i
+via Eqs. 8, 9;
+for i = 1, . . . , M do
+if Saturated(i, W, ε) then
+j∗←arg maxj̸=i w(t)
+j→i;
+p′ ←LLM-HybridSynth(A(t)
+i , A(t)
+j∗, M);
+Evaluate ˆΦ(p′); b ←b + 1;
+Update Π(t+1)
+i
+, A(t+1)
+i
+;
+w(t+1)
+j∗→i ←(1 −α)w(t)
+j∗→i + α∆(j∗→i)
+cross
+(t);
+t ←t + 1;
+return S∗←GreedySelect
+SM
+i=1 A(t)
+i , d′
+max
+
+Sample Efficiency.
+Saturation-triggered transfer concentrates oracle evaluations on high-utility regions of P, reducing
+the number of generations T required to converge relative to single-population search. TOPOFE thus achieves
+comparable asymptotic complexity to the baseline while improving both wall-clock efficiency through parallelism and
+convergence speed through principled cross-family exploration.

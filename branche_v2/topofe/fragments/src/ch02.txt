@@ -1,0 +1,75 @@
+1
+Introduction
+Feature engineering (FE) is the process of transforming raw variables into predictive representations that expose the
+latent structure of a learning problem [Dong and Liu, 2018], it remains one of the most consequential yet least principled
+stages of the tabular machine learning pipeline. In tabular settings, where data are heterogeneous, semantically rich, and
+often laden with domain-specific structure, the quality of engineered features frequently determines model performance
+more than architectural choices or hyperparameter tuning [Zhang et al., 2023a, Hollmann et al., 2023a]. Constructing
+high-value features requires more than syntactic enumeration. For example, a clinically meaningful risk ratio, a financial
+volatility indicator, or a behavioral frequency feature demands understanding of what variables mean, how they causally
+interact, and what transformations are semantically admissible. This semantic knowledge lies beyond what fixed
+operator libraries can encode.
+Early automated feature engineering (AutoFE) systems frame the problem as search over a predefined transformation
+grammar [Olson and Moore, 2016, Horn et al., 2019, Zhang et al., 2023a]. While tractable, this formulation is
+arXiv:2607.23286v2  [cs.AI]  2 Sep 2026
+
+
+<!-- Page 2 -->
+fundamentally bounded by the expressiveness of the operator library: features requiring cross-variable semantic
+reasoning lie outside the reachable space by construction. The emergence of large language models (LLMs) introduced a
+qualitatively different capability: by pretraining on massive corpora of scientific, mathematical, and domain-specific text,
+LLMs can hypothesize meaningful transformations from column names, task descriptions, and background knowledge,
+effectively shifting the paradigm from fixed operator selection to open-ended feature program synthesis [Hollmann
+et al., 2023a, Han et al., 2024]. However, existing LLM-based methods share a critical structural flaw: proposals are
+generated from static prompts with no memory of prior evaluations, leading to repeated proposals, no adaptation to
+dataset-specific patterns, and no mechanism to synthesize features requiring operators from multiple transformation
+families simultaneously.
+Recent effort of combining LLMs with evolutionary search partially mitigates this limitation by maintaining an
+experience buffer of high-scoring programs as in-context demonstrations [Abhyankar et al., 2025, Gong et al., 2025]. Yet
+even these methods operate over a single undifferentiated population. The feature program space is not homogeneous,
+it comprises qualitatively distinct transformation families (arithmetic interactions, statistical aggregates, temporal
+dynamics, relational encodings, nonlinear univariate maps), each encoding a different inductive bias about how
+predictive signal arises. Single-population search ignores this structure. Once a few successful programs from a
+dominant family saturate the experience buffer, subsequent LLM proposals become progressively confined to that
+family. Orthogonal families are under-explored, and cross-family compositions, which often yield the most expressive
+and complementary features, are structurally unreachable. This cross-family lock-in is the central failure mode of
+existing LLM-evolutionary methods, and no existing work provides a principled mechanism to detect or correct it.
+Three interrelated limitations persist across the literature. (L1) Homogeneous search dynamics: single-population
+evolution collapses onto a narrow subset of transformation types, biased toward early high-performing motifs and
+blind to the multi-modal structure of program space. (L2) Stateless LLM querying: feature generation lacks persistent
+memory of prior exploration, preventing cumulative adaptation to dataset-specific patterns. (L3) Rigid transfer structure:
+when multiple populations are used, migration is periodic or random, agnostic to when transfer is beneficial and which
+source family is most complementary to a stagnating target island.
+We introduce TOPOFE, a framework that models feature engineering as program search inspired by graph-structured
+multi-island evolution. TOPOFE rests on three principles. First, inductive bias decomposition: the program space is
+partitioned into different transformation families, each assigned a dedicated island that evolves specialized programs
+under family-specific priors, preserving diversity across transformation types by construction. Second, adaptive
+topology learning: instead of fixed or heuristic migration schedules, TOPOFE maintains a directed weighted graph
+over islands whose edge weights are updated online from observed cross-family transfer gains, learning a data-driven
+model of inter-family complementarity. Third, semantic transfer via LLM synthesis: cross-island knowledge transfer is
+not realized by copying programs, but through LLM-mediated hybrid synthesis in which programs from a source and
+target island are jointly presented as context, and the LLM generates a compositionally novel program that inherits
+structural elements from both families. Transfer is triggered by a saturation criterion: a sliding-window estimate
+of each island’s marginal improvement that detects when local search has genuinely exhausted its productive region.
+This decouples transfer from wall-clock generation count and ensures that the evaluation budget is directed toward
+cross-family exploration precisely when it is most valuable. A Prompt Adaptation Memory component further maintains
+a per-island accept/reject history and a compact natural-language summary of preferred and avoided transformation
+patterns, injected into every LLM call. This enables cumulative, dataset-specific adaptation throughout the search
+without any parameter update.
+We summarize our contributions as follows: (i) Topology-aware formulation. We formulate AutoFE as graph-
+structured multi-island program search, partitioning the feature space into family-specialized islands and replacing
+heuristic migration with a learned directed topology graph whose edge weights encode empirically observed cross-
+family transfer utility, updated online via a bandit-style rule. (ii) Saturation-triggered adaptive transfer. We introduce
+a utility-based saturation criterion that triggers cross-island transfer when local search is exhausted. A per-island
+Prompt Adaptation Memory accumulates accepted and rejected program patterns, enabling cumulative dataset-specific
+adaptation throughout search without any parameter update. (iii) Principled evaluation framework. We introduce three
+purpose-built metrics: Mean Pairwise Output Correlation and Effective Rank jointly characterise feature redundancy
+and subspace coverage, and Topology Graph Specialisation Score quantifies the degree to which the topology graph
+acquires task-specific cross-family transfer knowledge during search. (iv) Empirical validation. Across 29 datasets
+we demonstrate that TOPOFE consistently outperforms most classical and LLM-based AutoFE baselines, producing
+lower-redundancy and higher-coverage feature sets, with performance remaining stable across downstream predictors
+and LLM backbones of varying capability.
+2
+
+
+<!-- Page 3 -->

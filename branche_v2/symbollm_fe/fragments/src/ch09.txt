@@ -1,0 +1,213 @@
+A
+Implementation Details of Symbolic
+Regression
+This appendix section provides a comprehensive
+specification of symbolic regression employed
+within the SymboLLM-FE. We utilize the gplearn
+library (v0.4.1)*, which implements a Genetic Pro-
+gramming paradigm. symbolic regression is de-
+signed to discover interpretable mathematical ex-
+pressions by evolving a population of syntax trees,
+denoted as T , through mechanisms inspired by nat-
+ural selection.
+
+A.1
+Algorithmic Framework
+The core objective of symbolic regression is to
+search the space of mathematical functions to find
+an expression T ∗that minimizes the prediction er-
+ror on the training data. Let Xtrain ∈RN×d be the
+feature matrix and ytrain ∈RN be the target vec-
+tor for a given subset. The Genetic Programming
+process proceeds through four iterative phases:
+1. Population Initialization: An initial popu-
+lation P0 of size P is generated. Each in-
+dividual in P0 is a random syntax tree Ti,
+where internal nodes represent function op-
+erators and leaf nodes represent input features
+or ephemeral constants.
+2. Fitness Evaluation: For each individual Ti ∈
+Pt at generation t, we compute MSE on the
+training set as the raw fitness score E(Ti). To
+mitigate bloat, a parsimony penalty is added,
+yielding the composite fitness ˜E(Ti):
+˜E(Ti) = E(Ti) + Ω· size(Ti)
+(4)
+where size(Ti) denotes the number of nodes
+in the syntax tree Ti, and Ωis the parsimony
+coefficient controlling the trade-off between
+accuracy and complexity.
+3. Genetic Operations: Parents are selected via
+tournament selection. New offspring are gen-
+erated through:
+• Subtree Crossover:
+With probability
+pcrossover, subtrees from two parents are
+exchanged.
+• Mutation: With remaining probability,
+point mutation, subtree mutation, or re-
+production is applied to introduce diver-
+sity.
+*https://github.com/trevorstephens/gplearn
+Operator
+Arity
+Mathematical Form
+Protection Strategy
+add
+2
+x + y
+None
+sub
+2
+x −y
+None
+mul
+2
+x · y
+None
+div
+2
+x/y
+Returns 1 if y = 0
+sqrt
+1
+p
+|x|
+Absolute value input
+inv
+1
+1/x
+Returns 0 if x = 0
+neg
+1
+−x
+None
+abs
+1
+|x|
+None
+max
+2
+max(x, y)
+None
+min
+2
+min(x, y)
+None
+sin
+1
+sin(x)
+None
+cos
+1
+cos(x)
+None
+tan
+1
+tan(x)
+None
+log
+1
+ln |x|
+Returns 0 if x = 0
+Table 5: Symbolic regression operator set. Protected
+operations ensure numerical stability across the domain.
+4. Iterative Evolution: Steps 2 and 3 are re-
+peated until the stopping criteria are met. The
+best individual T ∗from the final population
+is returned as the derived symbolic rule.
+For
+regression
+tasks,
+we
+employ
+the
+SymbolicRegressor.
+While for binary clas-
+sification, the SymbolicClassifier is used.
+
+A.2
+Operator Set Configuration
+To balance expressive power with interpretabil-
+ity, we define a curated set of 14 primitive oper-
+ators. This set covers arithmetic, transcendental,
+and piecewise nonlinear functions. Table 5 details
+the operator inventory.
+The design rationale for primitive operators is
+threefold: (i) Basic arithmetic operators (add, sub,
+mul, div) form the backbone for rational function
+approximation; (ii) Transcendental functions (sin,
+cos, tan, log) enable the modeling of periodic
+and exponential dynamics; (iii) Piecewise opera-
+tors (max, min, abs) allow for threshold-based logic.
+Crucially, all operators are protected, meaning they
+return safe default values (e.g., 1 or 0) when en-
+countering undefined states (such as division by
+zero), ensuring that every syntax tree T is a valid
+function over Rd.
+
+A.3
+Hyperparameter Configuration
+The hyperparameters for symbolic regression were
+fixed across all experiments to ensure consistency.
+The configuration, summarized in Table 6, was
+selected to maximize search coverage while main-
+taining computational feasibility.
+A large population size (P = 20, 000) combined
+with a high crossover probability (pcx = 0.9) facil-
+itates extensive exploration of the solution space.
+
+
+<!-- Page 13 -->
+Parameter
+Value
+Rationale
+Population Size (P)
+20,000
+Ensures genetic diversity in high-dimensional spaces.
+Generations (Gmax)
+120
+Hard upper bound on evolution steps.
+Stopping Criteria (τ)
+10−4
+Early stopping threshold for MSE.
+Tournament Size
+100
+Moderate-to-high selection pressure.
+Crossover Probability (pcx)
+0.9
+Promotes recombination of successful sub-expressions.
+Random State
+42
+Ensures reproducibility.
+Table 6: Hyperparameter configuration for the symbolic regression.
+The tournament size of 100 imposes strong selec-
+tion pressure, driving rapid convergence toward
+high-fitness regions.
+
+A.4
+Regularization and Bloat Control
+A prevalent challenge in GP is bloat, where the
+size of syntax trees T grows excessively without
+corresponding improvements in fitness, leading to
+overfitting and reduced interpretability. We address
+this via parsimony pressure, governed by the coef-
+ficient Ωin Eq. (1).
+The optimal value for Ωwas determined
+via
+grid
+search
+over
+the
+candidate
+set
+{0.005, 0.01, 0.02, 0.03, 0.04, 0.05}
+on
+a
+val-
+idation subset. The value minimizing the Root
+Mean Squared Error (RMSE) was selected for
+all subsequent experiments. This regularization
+ensures that the evolved expression T ∗adheres to
+Occam’s razor, favoring simpler structures when
+predictive performance is comparable.

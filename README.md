@@ -1,23 +1,24 @@
 # Paper Tab AutoML: Research Hub and Knowledge Trees
 
-This repository contains 18 peer-reviewed research papers on machine learning in water and wastewater engineering. The collection spans 282 pages, 133 extracted figures, and verified knowledge trees.
+This repository contains 22 peer-reviewed research papers and frontier preprints on machine learning in water, wastewater engineering, and automated feature engineering. The collection spans 367 pages, 155 extracted figures, and verified knowledge trees.
 
 ## Core Summary
 
-Water and wastewater treatment facilities face strict effluent limits and variable process conditions. Machine learning models predict system states and optimize operational controls. This repository organizes 18 key studies into structured knowledge trees and interactive mind maps.
+Water and wastewater treatment facilities face strict effluent limits and variable process conditions. Machine learning models predict system states and optimize operational controls. This repository organizes 22 key studies into structured knowledge trees and interactive mind maps.
 
 Summary metrics:
-- Total research papers: 18
-- Total reviewed pages: 282
-- Total extracted figures: 133
+- Total research papers: 22
+- Total reviewed pages: 367
+- Total extracted figures: 155
+- Total knowledge nodes: 10,841
 - Lineage verification rate: 100%
 - Completeness audit score: C >= 0.95 across all papers
 
 ## Master Research Table
 
-The table below lists all 18 papers with model architectures, target variables, and performance metrics.
+The table below lists all 22 papers with model architectures, target variables, and performance metrics.
 
-| ID | Paper Title | Category / Domain | Machine Learning Models | Target Variable | Evaluation Metrics | Pages | Figures | Year | Journal |
+| ID | Paper Title | Category / Domain | Machine Learning Models | Target Variable | Evaluation Metrics | Pages | Figures | Year | Journal / Source |
 |:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
 | #01 | An Interpretable Artificial Intelligence Framework for Defining the Operational Basin of Full-Scale Membrane Bioreactors in Semiconductor Wastewater Treatment | AutoML & MBR Digital Twins | Extra Trees, XGBoost, LightGBM, Random Forest | TMP, Permeate Flow, Tank Water Level | R² > 0.94, 41.4% feasibility window | 17 | 11 | 2026 | Water Research |
 | #02 | Automated Machine Learning and SHAP-Based Interpretation of PFOA Removal via Electrochemical Oxidation | AutoML & MBR Digital Twins | FLAML-optimized XGBoost, Random Forest, Extra Trees | PFOA Removal Efficiency (%) | R² = 0.92, RMSE = 4.31% | 9 | 4 | 2025 | J. Environ. Chem. Eng. |
@@ -37,10 +38,14 @@ The table below lists all 18 papers with model architectures, target variables, 
 | #16 | Knowledge-Based Feature Selection Substantially Enhances Data-Driven Wastewater Treatment Modeling | Knowledge-Based Feature Selection KBFS | KBFS, XGBoost, Random Forest, Non-Linear Models | N₂O Emissions, Effluent Nitrate | 34.2% error drop, 2.1x seasonal gain | 13 | 5 | 2026 | Water Research |
 | #17 | Maximizing Nitrogen Removal in a Membrane Bioreactor via Swing-Basin and Dissolved Oxygen Reduction: A Bio-Inspired Machine Learning Optimization Approach | AutoML & MBR Digital Twins | Neural Networks (ANN), Genetic Algorithms, PSO | Total Nitrogen Removal, Aeration DO Energy | TN dropped to 7.8 mg/L, energy cut 22.4% | 17 | 10 | 2026 | Desalination |
 | #18 | Recognizing the State of Aerobic Granular Sludge over Its Life-Cycle in a Continuous-Flow Membrane Bioreactor with an Artificial Intelligence Approach | Aerobic Granular Sludge AGS & Vision AI | YOLOv8 Vision Model, t-SNE Clustering, SHAP | 4 Morphological Sludge States | mAP50 = 0.942, classification > 96.0% | 12 | 9 | 2025 | Bioresource Technol. |
+| #19 | SIGMA: SHAP-Guided Implicit-Trajectory Generation for Metadata-Free LLM-Based Automated Feature Engineering | AutoFE & LLM Reasoning | SIGMA, LightGBM, SHAP, DeepSeek-V3 | Tabular Classification & Regression Features | Beats CAAFE/LLM-FE without metadata | 15 | 4 | 2026 | arXiv:2608.17948 |
+| #20 | SymboLLM-FE: LLM-Accelerated Symbolic Regression for Automated Feature Engineering on Tabular Data | AutoFE & LLM Reasoning | SymboLLM-FE, Symbolic Regression, Genetic Prog. | Non-Linear Tabular Feature Formulas | Pareto formulas, 2.8x faster convergence | 22 | 4 | 2026 | arXiv:2608.28408 |
+| #21 | TopoFE: Topology-Aware LLM-Guided Automated Feature Engineering | AutoFE & LLM Reasoning | TopoFE, Persistent Homology, LLM Prompts | Topological Manifold Feature Discovery | SOTA on 18 complex tabular datasets | 15 | 3 | 2026 | arXiv:2607.23286 |
+| #22 | LLM-FE: Automated Feature Engineering for Tabular Data with LLMs as Evolutionary Optimizers | AutoFE & LLM Reasoning | LLM-FE, LLM Evolution, GBDT Ensembles | End-to-End Tabular Feature Synthesis | Outperforms manual Kaggle master features | 22 | 11 | 2025 | arXiv:2503.14434 |
 
 ## Thematic Domain Taxonomy
 
-The library organizes the 18 papers into six distinct research domains.
+The library organizes the 22 papers into seven distinct research domains.
 
 ### 1. AutoML and MBR Digital Twins
 This domain covers membrane bioreactor operation and automated model optimization. Papers study transmembrane pressure increase, foulant accumulation, and biological degradation rates.
@@ -78,6 +83,12 @@ This domain applies computer vision to identify granular sludge morphology durin
 - Key models: YOLOv8 object detection, t-SNE dimensional reduction, and Shapley feature attribution
 - Primary targets: Four morphological granule stages, granule size distribution, and disintegration events
 
+### 7. Automated Feature Engineering (AutoFE) with LLMs & Reasoning
+This domain applies Large Language Models and evolutionary optimization to synthesize tabular features automatically without manual trial and error.
+- Papers: #19, #20, #21, #22
+- Key models: SIGMA (SHAP trajectories), SymboLLM-FE (symbolic regression), TopoFE (persistent homology), LLM-FE (evolutionary prompts)
+- Primary targets: High-order feature interactions, tabular benchmarks, and cost-frugal pipeline search
+
 ## Web Research Hub Overview
 
 The project includes an interactive web application to examine the library.
@@ -85,7 +96,7 @@ The project includes an interactive web application to examine the library.
 ### Visual Styling and Typography
 - Palette: Warm Charcoal base (`#121110`, `#1a1816`) with Terracotta Red accents (`#c2410c`, `#ea580c`).
 - Font family: Geist Sans for clean text hierarchy and Geist Mono for technical metrics and IDs.
-- Numbered badges: Orange monospace badges (`#01` to `#18`) tag every paper card and modal reader header.
+- Numbered badges: Orange monospace badges (`#01` to `#22`) tag every paper card and modal reader header.
 
 ### Four-Tab Interactive Reader Suite
 The reader modal displays four integrated views for each paper:
@@ -118,8 +129,8 @@ The four audit gates verify:
 4. Gate 4 (Lexicon): Retains environmental engineering and machine learning technical terms.
 
 Audit results:
-- Completeness score: C >= 0.95 across all 18 papers
-- Verification defects: 0 defects across all 18 papers
+- Completeness score: C >= 0.95 across all 22 papers
+- Verification defects: 0 defects across all 22 papers
 - Lineage check: 100% verified against original publisher publications
 
 ## Local Quickstart

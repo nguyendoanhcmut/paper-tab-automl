@@ -1,0 +1,88 @@
+Experience Management
+Algorithm 1 LLM-FE
+Require: Dataset D, Metadata M, Iterations T,
+Model f, LLM πθ, Metric E
+1: P0 ←BufferInit()
+2: T ∗, s∗←null, −∞
+3: p ←UpdatePrompt(D, M)
+4: for t = 1 to T do
+5:
+pt ←p + Pt−1.topk()
+6:
+{Tj}b
+j=1 ←πθ(pt)
+7:
+for j = 1 to b do
+8:
+sj ←FeatureScore(f, Tj, D, E)
+9:
+if sj > s∗then
+10:
+T ∗, s∗←Tj, sj
+11:
+end if
+12:
+Pt ←UpdateBuffer(Pt−1, Tj, sj)
+13:
+end for
+14: end for
+15: return T ∗, s∗
+To promote diverse feature discovery and avoid stagnation in
+local optima, LLM-FE employs evolutionary multi-population
+experience management (Figure 1(d)) to store feature discov-
+ery programs in a dedicated database. Then, it uses samples
+from this database to construct in-context examples for LLM,
+facilitating the generation of novel features. This step consists
+of two components: (i) multi-population memory to main-
+tain a long-term memory buffer, and (ii) sampling from this
+memory buffer to construct in-context example demonstra-
+tions. After evaluating the feature transforms in iteration
+t, we store the pair of feature transforms and score (T , s)
+in the population buffer Pt to iteratively refine the search
+process. To effectively evolve a population of programs, we
+adopt a multi-population model inspired by the ‘island’ model
+employed by Cranmer (2023); Romera-Paredes et al. (2024);
+Shojaee et al. (2025). The program population is divided
+into m independent islands, each having access to the full
+original feature set but evolving separately and initialized
+with a copy of the user’s initial example (see Figure 9(d)). This enables parallel exploration of the feature
+space, mitigating the risk of suboptimal solutions. At each iteration t, we select one of the m islands and
+sample programs from the memory buffer to update the prompt with new in-context examples.
+The newly generated feature samples b are evaluated, and if their scores sj exceed the current best score,
+the feature score pair (Tj, sj) is added to the same island from which the in-context examples were sampled.
+To preserve diversity and ensure that programs with different performance characteristics remain in the
+buffer, we cluster programs within each island based on their program signature, defined by their validation
+performance score s. In particular, feature transformation programs that produce identical validation scores
+are consolidated into the same cluster. Following Romera-Paredes et al. (2024); Shojaee et al. (2025), we
+first sample from one of the m available islands, followed by sampling the k programs from the selected
+island to create k-shot in-context examples for the LLM (see Appendix B.1). Cluster selection is performed
+using Boltzmann sampling (De La Maza & Tidor, 1992), which assigns a higher probability to clusters
+with higher scores, using a score-based probability for choosing a cluster i: Pi =
+exp(si/τc)
+P
+i exp(si/τc), where si
+denotes the mean score of the i-th cluster and τc is the temperature parameter. The temperature τc controls
+the exploration–exploitation trade-off: lower values concentrate probability mass on the highest-scoring
+5
+
+
+<!-- Page 6 -->
+Published in Transactions on Machine Learning Research (05/2026)
+cluster (exploitation), while higher values spread mass more evenly across clusters. The sampled feature
+transformation programs from the memory buffer are then included in the prompt as in-context examples
+to guide the LLM toward generating more effective feature transformations. Detailed descriptions of the
+memory management strategy, clustering procedure, and sampling mechanism are provided in the Appendix
+B.1. Algorithm 1 presents the pseudocode of LLM-FE. We begin by initializing a memory buffer BufferInit
+with an initial population that includes a simple feature transform. This initialization serves as the starting
+point for the evolutionary search for feature transformation programs to be evolved in the subsequent steps.
+At each iteration t, the function topk is used to sample k in-context examples from the population of the
+previous iteration Pt−1 to update the prompt. Subsequently, we prompt the LLM using this updated prompt
+to sample b new programs. The sampled programs are then evaluated using FeatureScore, which represents
+the Data-Driven Evaluation (Section 3.3). After T iterations, the best-scoring program T ∗from Pt and its
+score s∗are returned as the optimal solution found for the problem. LLM-FE employs an iterative search to
+enhance programs, harnessing the LLM’s capabilities. Learning from the evolving pool of experiences in its
+buffer, the LLM steers the search toward effective solutions. Thus, unlike classical evolutionary algorithms
+that apply explicit mutation or crossover operators, LLM-FE performs implicitly through prompt-conditioned
+generation. Previously successful programs, included as in-context examples, guide the LLM to produce
+variants of individual programs and combinations of features from programs.
+4

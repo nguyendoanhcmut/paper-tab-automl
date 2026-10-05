@@ -1,0 +1,80 @@
+LLM-FE
+Feature Generation.
+Figure 9 presents an example prompt for the balance-scale dataset. The prompt
+begins with general instructions, followed by dataset-specific details, such as task descriptions, feature
+descriptions, and a subset of data instances serialized and expressed in natural language. To introduce
+diversity in prompting, we randomly sample between this approach and an alternative set of instructions,
+encouraging the LLM to explore a wider range of operators from OpenFE (Zhang et al., 2023), as prior LLMs
+tend to favor simpler operators (Küken et al., 2024) (see Figure 8). The quality of features generated has been
+detailed in Appendix 5.2. By providing this structured context, the model can leverage its domain knowledge
+to generate semantically and contextually meaningful hypotheses for new feature optimization programs.
+Data-Driven Evaluation.
+After prompting the LLM, we sample b = 3 outputs. Based on preliminary
+experiments, we set the temperature for LLM output generation to t = 0.8 to balance creativity (exploration)
+and adherence to problem constraints, as well as reliance on prior knowledge (exploitation). The data
+modification process is illustrated in Figure 9(c), where the outputs are used to modify the features via
+modify_features(input). These modified features are then input into a prediction model, and the resulting
+validation score is calculated. To ensure efficiency, our evaluation is constrained by time and memory limits
+set at T = 30 seconds and M = 2GB, respectively. Programs exceeding these limits are disqualified and
+assigned None scores, ensuring timely progress and resource efficiency in the search process.
+Memory Management.
+Following the ‘islands’ model used by Cranmer (2023); Shojaee et al. (2025);
+Romera-Paredes et al. (2024), we maintain the generated hypotheses along with their evaluation scores in
+a memory buffer comprising multiple islands (m = 3) that evolve independently. Each island is initialized
+with a simple feature transformation program specific to the dataset (def modify_features_v0()in Figure
+9(d)). In each iteration, novel hypotheses and their validation metrics are incorporated into their respective
+islands only if they exceed the island’s current best score. Within each island, we additionally cluster feature
+discovery programs based on their signature, characterized by their validation score. Feature transformation
+programs that produce identical scores are consolidated together, creating distinct clusters. This clustering
+approach helps preserve diversity by ensuring that programs with varying performance characteristics remain
+in the population. We leverage this island model to construct prompts for the LLM. After an initial update
+15
+
+
+<!-- Page 16 -->
+Published in Transactions on Machine Learning Research (05/2026)
+of the prompt template with dataset-specific information, we integrate in-context demonstrations from the
+buffer. Following Shojaee et al. (2025); Romera-Paredes et al. (2024), we randomly select one of the m
+available islands. Within the chosen island, we sample k = 3 programs to serve as in-context examples. To
+sample programs, we first select clusters based on their signatures using the Boltzmann selection strategy
+(De La Maza & Tidor, 1992), with a preference for higher-scoring clusters. Let si be the score of the i-th
+cluster, and the probability Pi for selecting the i-th cluster is:
+Pi =
+exp( si
+τc )
+P
+i exp( si
+τc ), where τc = T0(1 −u mod N
+N
+),
+(4)
+where τc is the temperature parameter, u is the current number of programs on the island, and T0 = 0.1 and
+N = 10, 000 are hyperparameters. Once a cluster is selected, we sample the programs from it.
+###
+<Role>
+You are a data scientist with expert knowledge about the provided dataset.
+Your primary responsibility is to identify the most informative features that can enhance the solution to the
+specified <Task>.
+###
+<Instructions>
+  - You are given a task description, a list of existing features, a set of advanced operators, and sample
+data.
+  - Your objective is to leverage the provided advanced operators within <Operators> to generate meaningful
+and insightful features that enhance task performance. These operators have been carefully curated to extract
+deeper patterns from the data.
+  - Avoid relying on basic arithmetic operators (e.g., addition, subtraction, multiplication, or division).
+Instead, focus exclusively on the provided advanced operators inside <Operators>.
+  - For each feature you derive, provide a concise explanation of why it is relevant and to solving the <Task>
+in the docstring.
+###
+<Operators>
+  - General Operators: Frequency (Frequency of feature in the data)
+  - Numerical Input Operators: Absolute, Logarithm, Square Root, Sigmoid, Square, Round, Residual
+  - Numeric-Numeric Operators: Minimum, Maximum
+  - Categorical-Numeric Operators: GroupByThenMin, GroupByThenMax, GroupByThenMean, GroupByThenMedian,
+GroupByThenStd, GroupByThenRank
+  - Categorical-Categorical Operators: Combine, CombineThenFreq, GroupByThenNUnique
+Instruction
+Figure 8: An example of the alternate set of instructions used to direct the model to use a complex set of
+operations over simple operators for generating features.
+B.2

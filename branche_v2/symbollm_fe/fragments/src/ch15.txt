@@ -1,0 +1,96 @@
+G
+Detection and Handling of Invalid or
+Inexecutable LLM-Generated Code
+
+G.1
+Current Error-Handling Pipeline
+The LLM code processing pipeline in the codebase
+adopts a three-stage heuristic approach with no
+formal error recovery:
+Stage 1:
+Markup stripping.
+The raw
+LLM response undergoes a sequence of string
+replacements
+(replace("```python",
+""),
+replace("```end", ""), replace("```", ""),
+etc.) to remove markdown code-block delimiters.
+This approach implicitly assumes strict adherence
+to the prescribed output format; any deviation in
+delimiter syntax will result in residual markup con-
+taminating the executable code.
+Stage 2: Line-level filtering. The stripped text
+is split into lines, and only lines beginning with
+df but not df.drop are retained. This filter car-
+ries several known failure modes: (i) legitimate
+feature-engineering statements that do not start
+with df (e.g., standalone arithmetic assignments,
+import statements) are silently discarded; (ii) lines
+with whitespace preceding df may be falsely ex-
+cluded; (iii) no validation is performed to verify
+that referenced column names exist in the current
+DataFrame.
+Stage 3: Robust execution with error feed-
+back. The filtered code string is executed within
+a try–except block. If the execution succeeds,
+the result is captured; if an exception occurs (e.g.,
+syntactic errors, undefined variables, or runtime ex-
+ceptions), the specific error message and traceback
+are caught. This error information is then automati-
+cally fed back to the LLM as context, prompting it
+to analyze the failure and regenerate the corrected
+code, thereby preventing pipeline termination and
+enabling self-correction.
+
+G.2
+Accepted Feature Ratio and Empirical
+Failure Rate
+Symbolic regression achieves a 100% acceptance
+rate, consistently yielding numerically valid pre-
+diction columns for every fit. In parallel, LLM-
+generated code exhibits a robust success rate of
+92.6% in large-scale evaluations, indicating high
+reliability in producing executable feature engineer-
+ing logic without the need for extensive manual
+intervention.
+
+
+<!-- Page 22 -->
+Table 13: Statistical analysis of ablation study results.
+Variants
+Accuracy
+Std
+95%ConfidenceInterval
+p-value(vs.Ours)
+Significant?
+Baseline
+75.81
+±0.45
+[74.93,76.69]
+< 0.001
+Yes
+w/oSP
+76.07
+±0.51
+[75.07,77.07]
+< 0.001
+Yes
+w/oES
+75.92
+±0.58
+[74.78,77.06]
+< 0.001
+Yes
+w/oLLM
+76.84
+±0.41
+[76.03,77.65]
+0.0142
+Yes
+Ours
+77.16
+±0.34
+[76.49,77.83]
+-
+-

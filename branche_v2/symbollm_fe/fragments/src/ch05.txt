@@ -1,0 +1,248 @@
+4
+Method
+To address the limitations of the current AutoFE,
+we shift our focus to synergize symbolic regres-
+sion and LLMs. Symbolic regression excels in effi-
+ciently discovering explicit mathematical formulas
+that are not only computationally lightweight but
+also address the need for performance-enhancing
+features. Complementarily, LLMs leverage their
+knowledge to refine and optimize these candi-
+date symbolic formulas.
+By injecting domain-
+specific priors, LLMs transform opaque mathemat-
+ical formulas, simultaneously enhancing their inter-
+pretability through natural language explanations
+and ensuring their alignment with business logic.
+This hybrid paradigm, namely SymboLLM-FE, ef-
+fectively bridges the gap between efficacy and in-
+terpretability. Figure 2 demonstrates the detailed
+pipeline of SymboLLM-FE.
+Dataset Split. SymboLLM-FE strictly adheres
+to a fold-wise training protocol within a cross-
+validation framework. The training set is exclu-
+sively utilized for Formula Construction by Sym-
+bolic Regression, supporting the entire pipeline
+from Spearman correlation-based feature reorder-
+ing and expanding-sliding window subset gener-
+ation to the fitting of symbolic models. The vali-
+dation set serves as the feedback environment for
+Feature Generation via LLMs. It remains isolated
+from the former process but is actively used to
+
+
+<!-- Page 5 -->
+Feature Importance ( DESC )
+200-dim
+400-dim
+200-dim
+Expanding
+201-dim
+400-dim
+Formulas
+Formula Construction by Symbolic Regression
+200-dim
+201-dim
+400-dim
+Sliding
+Sliding
+Validation
+Score
+Predictor
+Features
+Feature Generation via LLMs
+Task
+Description
+Symbolic 
+Regression
+Symbolic 
+Regression
+Symbolic 
+Regression
+Background
+（ Optional ）
+Test
+Score
+Predict
+Best Score
+Feature Merge
+Figure 2: Overview of SymboLLM-FE, including Formula Construction by Symbolic Regression and Feature
+Generation via LLMs and downstream predictors.
+compute validation scores that guide the LLM’s
+iterative code synthesis, rule mining, and feature
+optimization loop. Finally, the test set is reserved
+solely for the final downstream evaluation of the
+merged feature set to assess model performance.
+To strictly prevent data leakage, the validation set
+is employed exclusively for hyperparameter tuning.
+The downstream model architecture and param-
+eters remained fixed and independent of the test
+evaluation process, ensuring that no information
+from the validation phase inadvertently influenced
+the final performance assessment.
+
+4.1
+Formula Construction by Symbolic
+Regression
+We firstly construct numerous input feature sub-
+sets by using Spearman correlation (De Winter
+et al., 2016) and an expanding-sliding window ap-
+proach. Subsequently, symbolic regression model
+is applied to each input feature subset separately
+to derive interpretable mathematical formulas that
+capture significant relationships with the target.
+Feature Set Sampling.
+Given C with n features,
+the total number of its non-empty feature subsets
+is 2n −1. Applying symbolic regression to every
+subset would lead to exponential computational
+complexity (O(2n)). To optimize computational
+efficiency while preserving feature representational
+capacity, we propose a feature combination strategy
+based on Spearman correlation coefficient analysis
+and an expanding-sliding window approach.
+Specifically, we first evaluate the importance of
+C using Spearman correlation coefficient analysis,
+followed by a monotonic ascending sorting based
+on the correlation coefficients. This process yields
+an ordered feature sequence C′ = c′
+1, c′
+2, ..., c′
+n,
+where each feature satisfies the relation ϕc′
+1 ≤
+ϕc′
+2 ≤... ≤ϕc′n, with ϕc′
+i denoting the Spear-
+man correlation coefficient between feature c′
+i and
+the target. We choose Spearman correlation as the
+criterion for feature importance quantification be-
+cause, compared to other metrics such as Pearson
+correlation, Spearman correlation more robustly
+quantifies nonlinear dependencies between features
+and the target, thereby providing a more accurate
+measure of marginal feature importance (Cheng
+et al., 2025b). Appendix D empirically validates
+the statistical correlations between this metric and
+other feature importance criteria.
+To maintain formula quality while effectively
+controlling the quantity of generated features, we
+propose a dynamic expanding-sliding window ap-
+proach. The approach initializes with window size
+k = ⌊n/2⌋and operates through two core phases:
+• Expanding Phase: k incrementally increases
+from ⌊n/2⌋to n with unit step size.
+• Sliding Phase: For each fixed k, the win-
+dow slides rightward with single-feature steps
+to generate different feature subsets. For in-
+stance, when k = ⌊n/2⌋, the generated sub-
+sets are {{c′
+1, ..., c′
+n/2}, {c′
+2, ..., c′
+n/2+1}, ...}.
+The total number S of candidate input feature
+subsets generated by the expanding-sliding window
+
+
+<!-- Page 6 -->
+approach is upper bounded by an arithmetic series
+summation, i.e.,
+n
+X
+k=⌊n/2⌋
+(n −k + 1) =
+⌈n/2⌉+1
+X
+m=1
+m
+=
+
+
+
+
+
+
+
+(n + 2)(n + 4)
+8
+,
+if n is even
+(n + 3)(n + 5)
+8
+,
+if n is odd
+(2)
+Equation 2 shows that this approach reduces the
+sum of feature subsets from exponential O(2n) to
+polynomial O(n2).
+Formula Generating.
+For each Si where i ∈
+[1, |S|] generated by the expanding-sliding window
+approach, we train one symbolic regression model
+and generate a formula like add(mul(c1,c2),c3)
+from Si to the target as the new feature.
+Ap-
+pendix A shows details about symbolic regression.
+Through systematic training and construction, we
+ultimately establish a formula-based feature reposi-
+tory R containing |S| triples:
+R = {(Si, Pf(Si), τi)}|S|
+i=1
+(3)
+where each triple consists of: 1) the feature sub-
+set Si; 2) symbolic regression performance P of
+trained symbolic model f on Si; 3) the formula τi
+from Si to the target.
+
+4.2
+Feature Generation via LLMs
+We then implement a multi-stage refinement
+pipeline via LLMs and downstream predictors
+based on R to generate features.
+LLM-guided Code Generation.
+The input to
+LLMs is constructed by converting every for-
+mula τ in R into its corresponding natural
+language description, concatenated with struc-
+tured dataset background information and code-
+generation prompt. Subsequently, LLMs generate
+executable feature engineering code in the format
+of Python pandas through chain-of-thought reason-
+ing (Wei et al., 2022).
+Downstream Predictor Performance Validation.
+The generated code is executed to produce an aug-
+mented feature set Cnew and then enrich the orig-
+inal dataset C, i.e., Cfinal = C ⊕Cnew. Sequen-
+tially, we train a downstream predictor and get the
+model performance result under Cfinal.
+Iterative Feature Refinement.
+The predictor
+performance, along with the utilized features and
+their corresponding generation codes, is then fed
+back into LLMs for iterative optimization and fea-
+ture refinement. This feedback loop continues until
+the predictor achieves a relatively optimal perfor-
+mance level on the augmented feature set.
+It should be emphasised that SymboLLM-FE
+addresses concerns regarding feature selection
+through rigorous feature control and de-redundancy
+mechanisms. For feature budget management, we
+dynamically prune features that degrade validation
+performance via downstream predictor feedback,
+yielding a compact set of refined features that effec-
+tively avoids the curse of dimensionality compared
+to baseline methods. Redundancy elimination is
+achieved through prompt-independent constraints.
+Specifically, our template enforces explicit feature
+dropping with justification, while LLM serves as
+a semantic filter to identify mathematical equiva-
+lence between symbolic regression formulas and
+original features, thereby removing multicollinear-
+ity. To suppress noise and overfitting, we impose a
+parsimony penalty at the symbolic regression stage
+following Occam’s razor and strictly confine LLM
+operations to the statistically validated subspace,
+which eliminates hallucination and ensures the ro-
+bustness and compactness of the final feature sets.
