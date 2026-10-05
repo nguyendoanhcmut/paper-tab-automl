@@ -1,0 +1,23 @@
+## Data Availability Statement
+
+- Mã nguồn và kho lưu trữ trực tuyến:
+  - Toàn bộ mã nguồn triển khai mô hình học sâu và thuật toán lựa chọn đặc trưng được công khai trên GitHub: `https://github.com/SenyuanGu/Water-Feature-Selection`.
+  - Tài liệu bổ trợ (Supporting Information - SI) phát hành miễn phí trên cổng xuất bản ACS Publications: `https://pubs.acs.org/doi/10.1021/acs.est.6c04963`.
+- Cấu trúc nội dung tài liệu bổ trợ (Supporting Information):
+  - Mục 1 (Hình S1–S2): Sơ đồ công nghệ nhà máy và cấu hình chi tiết các bể phản ứng sinh học BNR tại WWTP-A và WWTP-B.
+  - Mục 2 (Bảng S1–S3, Hình S3–S5): Thông số hóa sinh và động học của mô hình ASM1-$N_2O$, phân loại biến trạng thái và kết quả mô phỏng động học.
+  - Mục 3 (Bảng S4–S6): Không gian tìm kiếm siêu tham số qua Optuna, cấu hình kiến trúc tối ưu và bảng tổng hợp hiệu năng tính toán phần cứng.
+  - Mục 4: Chi tiết phương pháp luận lựa chọn đặc trưng định hướng tri thức, phân tích độ nhạy cơ chế và quy trình tính điểm $\text{SC-score}$.
+  - Mục 5: Thiết kế prompt có cấu trúc cho các mô hình ngôn ngữ lớn trong khung RAG đề xuất đặc trưng.
+  - Mục 6 (Bảng S7): Bảng so sánh hiệu năng chi tiết giữa các mô hình học máy cổ điển và các biến thể LSTM tích hợp cơ chế chú ý.
+  - Mục 7 (Bảng S8–S11): Kết quả sàng lọc biến đối chứng bằng phương pháp điều chuẩn LASSO và phân tích giá trị SHAP.
+  - Mục 8: Báo cáo đầy đủ về quá trình và kết quả lựa chọn đặc trưng của ba mô hình GPT-5.2, Claude Sonnet 4.6 và Gemini 2.5 Flash qua 15 lượt chạy.
+  - Mục 9 (Hình S6): Đồ thị phân tích chi tiết khả năng tổng quát hóa và phân phối sai số dưới các kịch bản ngoại suy.
+- Thông tin tác giả và cơ quan nghiên cứu:
+  - Tác giả liên hệ chính: Haoran Duan (UNSW Water Research Centre, Đại học New South Wales; ACWEB Đại học Queensland; Đại học Hồng Kông; Email: `haoran.duan@hku.hk`).
+  - Nhóm tác giả cộng tác: Senyuan Gu, Shuting Wang, Ruihong Qiu, Kaili Li, Jaswinder Manjeet Singh (Hội đồng Thành phố Gold Coast), Jue Zhang, Bing-Jie Ni, T. David Waite, Liu Ye.
+  - Cam kết minh bạch: Các tác giả tuyên bố không có xung đột lợi ích tài chính trong nghiên cứu.
+- Nguồn tài trợ và hạ tầng tính toán:
+  - Tài trợ từ Hội đồng Nghiên cứu Úc (Australian Research Council - ARC) qua dự án Industry Fellowship (IE230100422), ARC DECRA Fellowship (DE250100919) và ARC Linkage Project (LP240200633).
+  - Học bổng nghiên cứu từ China Scholarship Council và Melbourne Water (RM2021001190).
+  - Toàn bộ các mô phỏng và huấn luyện học sâu được thực hiện trên cụm siêu máy tính Katana tại UNSW (DOI: `10.26190/669X-A286`).

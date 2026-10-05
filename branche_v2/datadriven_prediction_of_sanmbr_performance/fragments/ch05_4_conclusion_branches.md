@@ -1,0 +1,21 @@
+## 4 Conclusion
+
+- Kết luận về năng lực mô hình hóa học máy dựa trên dữ liệu
+  - Phương pháp mô hình hóa dựa trên dữ liệu đã nắm bắt chính xác các hành vi động học phi tuyến của hệ thống SAnMBR dưới các đợt sốc tải phenolic
+  - Thuật toán SVR cung cấp công cụ dự đoán tin cậy về hiệu suất loại bỏ COD trong một quy trình sinh học kỵ khí có độ nhạy cảm cao
+- Phát hiện bản chất cơ chế vận hành từ công cụ diễn giải mô hình
+  - Hiệu suất xử lý chịu tác động tương hỗ mạnh mẽ giữa giá trị pH và nồng độ chất ức chế 2,4-DCP
+  - Vận hành ổn định không chỉ phụ thuộc vào việc kiểm soát tải hữu cơ mà bắt buộc phải duy trì mức tích tụ độc chất dưới ngưỡng tới hạn
+  - Sự suy giảm hiệu suất ở nồng độ 2,4-DCP cao gợi mở yêu cầu bắt buộc phải tiền xử lý, pha loãng hoặc thu hồi có chọn lọc hợp chất phenolic trước khi xử lý sinh học
+- Phân tách cơ chế kiểm soát giữa phân hủy sinh học và vận hành màng
+  - Quá trình phân hủy và loại bỏ COD chịu sự chi phối chủ yếu của các biến hóa sinh hòa tan trong bể
+  - Động lực tắc nghẽn màng và độ ổn định cơ lý dài hạn chịu sự quyết định của các hạt chất rắn lơ lửng và sự tích tụ polyme ngoại bào
+- Định hướng phát triển và triển khai kỹ thuật số trong tương lai
+  - Tích hợp mô hình SVR vào hệ thống giám sát và điều khiển thời gian thực (real-time adaptive control) để tự động điều chỉnh độ kiềm pH và lưu lượng nạp chất độc
+  - Bổ sung các chỉ số cảnh báo tắc nghẽn màng thực nghiệm gồm nồng độ EPS, SMP và độ chênh lệch áp suất qua màng (TMP)
+  - Xây dựng khung tối ưu hóa đa mục tiêu cân bằng đồng thời giữa hiệu quả phân hủy sinh hóa và tuổi thọ vận hành kinh tế của màng lọc
+- Đóng góp của các tác giả và tuyên bố nghiên cứu
+  - Milad Mousazadehgavan chủ trì ý tưởng nghiên cứu, phương pháp luận, phát triển phần mềm và soạn thảo bản thảo ban đầu
+  - B. Abdullhadi, Farideh Malekdar, Mahsa Shahi Jouneghani tham gia khảo sát thực nghiệm và phản biện chỉnh sửa
+  - Milad Basirifard chịu trách nhiệm phân tích số liệu hình thức và phát triển phần mềm tính toán
+  - Adel Kamyab Rudsari và Reza Ghanbari giám sát tổng thể dự án nghiên cứu và phê duyệt bản thảo cuối cùng

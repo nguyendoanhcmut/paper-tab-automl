@@ -1,0 +1,189 @@
+3.2. Expert-Guided Feature Selection Improves Accuracy
+and Generalizability
+To address the generalization limitations identified in section
+3.1, we developed a knowledge-based feature selection
+approach that simultaneously incorporates statistical correla-
+tion and mechanistic importance to reduce the input feature
+space (Figure 2a). As shown in Figure 2c, our analysis revealed
+several features with a high statistical correlation to Tank 3
+N2O emissions. The top statistically correlated features
+included NO-tank3 (1.0), N2-tank1 (0.983), and NO-tank2
+(0.982). These strong correlations can be partially explained by
+the fact that nitric oxide is a direct biochemical precursor of
+N2O in both nitrifier and heterotrophic denitrification
+pathways, while N2 levels often reflect the extent of
+denitrification and may covary with intermediate gases under
+transient conditions.
+However, statistical correlation primarily reflects direct
+linear relationships among observable variables and is often
+susceptible to data-collection noise and sample-distribution
+biases. Therefore, we incorporated the mechanistic importance
+as a complementary selection criterion. Mechanistic impor-
+tance, grounded in process knowledge, captures both causal
+and indirect relationships within the system. Interestingly,
+some features demonstrated high mechanistic importance,
+despite moderate statistical correlations. For instance, In-
+flowRate, N2O-Tank3 (simulated N2O concentration), and
+Aeration Power2 all received maximum mechanistic impor-
+tance scores (1.0), suggesting their significance in N2O
+production pathways according to the process understanding.
+The high mechanistic importance of InflowRate can be
+attributed to its direct influence on the hydraulic retention
+Figure 2. Knowledge-based feature selection framework for N2O emissions prediction: (a) Schematic overview of the proposed framework,
+integrating mechanistic importance and statistical correlation to reduce 52 candidate features to a final selected subset for input to the pretrained
+LSTM model; (b) Similarity matrix of monitored parameters showing correlation patterns. (c) Statistical correlation vs mechanistic importance
+scores for different parameter categories; dashed line indicates equal contribution from both.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19887
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 7 -->
+time and substrate availability, while Aeration Power2 controls
+dissolved oxygen levels that significantly impact nitrification
+and denitrification rates.
+To mitigate feature redundancy and avoid multicollinearity,
+parameter instability, and reduced generalizability, we
+performed a similarity analysis of the normalized feature time
+series (Figure 2b). Specifically, we observed that several
+features, such as NH4
++-Tank1 and NH4
++-Tank2, exhibited
+near-identical temporal patterns after normalization. This
+pattern similarity likely arises from their shared mechanistic
+roles in the nitrification process, where NH4
++ concentrations
+are governed by similar operational conditions (e.g., inflow
+ammonia concentration, aeration intensity). This type of
+redundancy, if left unaddressed, can introduce instability in
+model training and reduce generalization performance.41 We
+defined a similarity threshold of 0.85 using Pearson’s
+correlation. Features exceeding this threshold were considered
+redundant, and we retained the one with the higher combined
+statistical and mechanistic score. For example, NH4
++-Tank2
+was removed due to high similarity (0.906) with NH4
++-Tank1,
+and NO2
+−-Tank3 was excluded due to overlap with N2O-
+Tank3 (similarity score: 0.865).
+After evaluating multiple sample-to-feature ratios and testing
+feature subsets of varying sizes, we ultimately selected seven
+features: inflow rate, N2O-tank3, aeration power2, NH4
++-tank1,
+WAS flow, COD-tank2, and NO2-tank2. These features
+collectively represent the core operational controls, nitrogen
+transformation indicators, and organic loading conditions
+relevant to N2O dynamics. InflowRate, Aeration Power2, and
+WAS flow reflect key process operations; NH4
++-Tank1 and
+NO2
+−-Tank2 capture critical steps in nitrification and
+denitrification; COD-Tank2 serves as a proxy for organic
+carbon availability governing denitrification; and N2O-Tank3
+acts as a direct proxy for the target variable in prediction. This
+selection balances mechanistic relevance and statistical
+efficiency while reducing redundancy.
+To further evaluate the effectiveness of the proposed feature
+selection strategy, the reduced feature subset was first applied
+with the basic 2-layer LSTM model structure (FS-basic-
+LSTM) introduced in Section 3.1. The FS-basic-LSTM trained
+on the selected features achieves strong predictive performance
+under in-distribution conditions, with a mean test MAE of
+0.0367 (σ = 0.0032) and a mean R2 of 0.6919. This represents
+a significant improvement over the baseline model (p < 0.001),
+the five-layer LSTM model (p < 0.001), and the LSTM-
+Attention model (p < 0.001) (Table S7). The R2 is comparable
+to that of the Attention-LSTM, with no statistic difference. In
+the best-performing run, the model achieves an R2 of 0.77,
+exceeding the best result obtained by the Attention-LSTM.
+Using the same hyperparameter search strategy as in Section
+3.1, model architecture optimization was further conducted on
+the selected feature set. Notably, the optimal configuration
+corresponds to a relatively straightforward 1-layer architecture
+(FS-tuned-LSTM). After tuning, the model exhibits improved
+stability but only marginal gains in predictive accuracy (mean
+MAE = 0.0330, σ = 0.0015; mean R2 = 0.7225). Both feature-
+selected models, as shown in Figure 3a, more effectively
+capture the diurnal patterns of N2O emissions compared to
+their full-feature counterparts. This improvement can be
+attributed to the reduction of multicollinearity and noise in
+the input space.42 Besides, the selected feature subset retained
+stable predictive performance across LSTM architectures with
+Figure 3. Performance of feature-selected LSTM models for N2O prediction: (a) measured vs predicted time series under in-distribution
+conditions (July) for baseline and tuned models; (b) same comparison for the SHAP-selected tuned model; (c) MAE distribution across 20 runs as
+a function of model size; (d) overfitting analysis based on training and validation MAE and their ratio; (e) performance under out-of-distribution
+conditions (August high-flow). FS-basic-LSTM: 2-layer basic LSTM model with selected features as input; FS-tuned-LSTM: hyperparameter-tuned
+1-layer LSTM model with selected features as input.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19888
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 8 -->
+varying depths (Tables S8 and S9), indicating that the selected
+feature subset remained robust under different model
+configurations.
+To assess whether the performance gains arise from feature
+reduction alone or from the proposed framework, we first
+applied LASSO regularization to select features based on
+coefficient shrinkage and subsequently applied SHAP to select
+seven features from the tuned 5-layer LSTM for a controlled
+comparison. However, the resulting model still under-
+performed compared to the FS models (Figure 3b; Tables
+S11 and S13). In contrast, mechanistic feature selection retains
+the most informative predictors, enabling a simpler yet more
+informative feature space for stable and efficient learning of
+system dynamics.43 These results indicate that model perform-
+ance is primarily determined by feature quality rather than
+model architecture, leading to reduced sensitivity to hyper-
+parameter settings and improved stability in practice.44
+In addition to predictive accuracy, model overfitting was
+evaluated using the validation-to-training MAE ratio. As shown
+in Figure 3d, the FS-basic-LSTM model exhibits an overfitting
+ratio of approximately 1.46×, while FS-tuned-LSTM shows a
+slightly higher ratio of 1.53× (Figure 3d). Nevertheless, the
+overall magnitude of overfitting is reduced compared to the
+results obtained using the full feature set in Section 3.1.
+Robustness under distributional shift was further evaluated
+using the out-of-distribution August data set. After feature
+selection, both the FS-basic-LSTM and FS-tuned-LSTM
+achieve positive R2 values (0.2690 and 0.2964, respectively).
+Although this data set lies outside the range of the training
+data, both models are able to capture the majority of temporal
+fluctuations in N2O emissions, including the timing and
+general shape of peak events, suggesting that the selected
+features effectively preserve the dominant system dynamics
+(Figure 3e). Importantly, prediction accuracy remains high
+across most of the August period and only begins to
+deteriorate when inflow conditions increase far beyond the
+training range. Specifically, when the inflow rate reaches 82.62
+L/s (August 14−16), representing a 56.74% increase relative
+to the mean influent flow in the training data set, model
+performance shows a noticeable decline. This indicates that
+predictive performance may be limited when extrapolating
+beyond the training domain and suggests that future
+applications could benefit from incorporating additional data
+or adaptive retraining strategies.45
+Overall, these results indicate that the main improvement in
+model performance arises from the knowledge-guided
+reduction of the input space. By removing redundant and
+less informative variables, the selected feature set enables the
+model to learn more stable relationships from limited data,
+resulting in improved predictive accuracy and better retention
+of predictive skill under a distributional shift. Compared with
+the deeper and attention-based full-feature models, the feature-
+selected models more effectively preserve the dominant
+temporal dynamics of N2O emissions under the shifted
+conditions.This suggests that, in small-sample, high-dimen-
+sional wastewater treatment modeling, mechanistically in-
+formed feature selection may be more important than
+architectural complexity for achieving robust generalization.46

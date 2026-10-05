@@ -1,0 +1,27 @@
+### 3.4 Cluster analysis
+
+- Phân tích cụm không gian ngữ nghĩa 2D chứng minh tính tách biệt hình thái giữa các giai đoạn.
+  - **Hình 6.** Phân tích phân cụm t-SNE cho toàn bộ các lớp đối tượng
+    - <img src="assets/fig_06_p9.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - 4 giai đoạn sinh trưởng tách thành 4 cụm không gian riêng biệt với độ kết tụ cao.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ phân tán 2D biểu diễn các điểm đặc trưng ngữ nghĩa:
+      - Cụm CS màu đỏ kết tụ chặt chẽ nhất;
+      - Cụm GS phân tán rộng và tiếp giáp biên với ba cụm còn lại;
+      - Cụm IS và MS tạo các vùng mật độ riêng biệt ít chồng lấn.
+- Cơ chế chiếu không gian phi tuyến và tính toàn vẹn của cấu trúc ngữ nghĩa ẩn.
+  - Kỹ thuật $t\text{-SNE}$ chuyển đổi không gian đặc trưng đa chiều của mạng sâu về tọa độ hai chiều trực quan.
+  - Thuật toán bảo toàn trọn vẹn quan hệ lân cận cục bộ và cấu trúc phân bố xác suất nội tại của tập dữ liệu kiểm tra.
+  - Quá trình hạ chiều làm lộ rõ các quy luật phân nhóm tiềm ẩn mà không gian đa chiều ban đầu khó quan sát trực tiếp.
+- Đánh giá mức độ kết tụ và tính phân tán không gian của từng phân lớp.
+  - Toàn bộ đặc trưng ngữ nghĩa từ tầng ẩn được chiếu xuống hai chiều $t\text{-SNE}$, hình thành bốn cụm độc lập có mức độ liên kết thấp.
+  - Cụm phân cắt (CS) thể hiện mức độ kết tụ chặt chẽ nhất, phản ánh tính đồng nhất hình thái cao của các hạt bùn rạn nứt cấu trúc.
+  - Cụm sinh trưởng (GS) có mức độ phân tán không gian rộng nhất và tạo các vùng giao thoa biên với cả ba nhóm còn lại.
+  - Sự phân tán của GS bắt nguồn từ tính đa dạng hình thái trong quá trình bùn tích lũy sinh khối, thay đổi màu sắc từ sáng sang tối và viền hạt từ ráp sang mịn.
+  - Mối liên kết biên của cụm GS lý giải hiện tượng một số mẫu ở các giai đoạn khác bị mô hình nhận diện nhầm thành GS trong ma trận nhầm lẫn.
+  - Cụm khởi tạo (IS) và trưởng thành (MS) duy trì ranh giới không gian độc lập, chỉ tiếp giáp nhẹ với các pha sinh trưởng kế cận.
+- Ý nghĩa sinh học và kiểm chứng tính hợp lý của bộ tiêu chuẩn phân loại.
+  - Mức độ ghép cặp thấp giữa các cụm xác nhận rằng bốn giai đoạn chu kỳ sống của bùn hạt phản ánh các trạng thái sinh học riêng biệt.
+  - Động học biến đổi hình thái từ pha khởi tạo đến pha phân hủy diễn ra liên tục nhưng vẫn có ranh giới cấu trúc định lượng rõ ràng.
+  - Kết quả phân tích cụm củng cố tính vững chắc của phương pháp chẩn đoán hình thái hạt bùn hiếu khí bằng thị giác máy tính.

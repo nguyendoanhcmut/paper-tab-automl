@@ -1,0 +1,105 @@
+Implementation
+For baseline performance assessment, we initially implemented a
+standard long short-term memory (LSTM) neural network
+architecture, which has demonstrated effectiveness in capturing
+temporal dependencies in environmental time series data.29 For
+baseline performance assessment, we implemented a two-layer LSTM
+architecture. The baseline model comprised two stacked LSTM layers
+(32 units each), with each layer followed by batch normalization and
+dropout regularization (rate = 0.2) and a final linear dense output
+layer.
+Building upon this foundation, we progressively increased the
+model architecture complexity through two primary mechanisms:
+1. Architectural Enhancement:
+Building upon the two-layer baseline, we conducted
+systematic hyperparameter optimization to search across
+architectures of varying depth and configuration. The number
+of LSTM layers, unit counts per layer, and regularization
+parameters was jointly optimized using the Optuna frame-
+work,30 allowing the search to identify the best-performing
+architecture without manual exploration.
+2. Attention−LSTM Model:
+To enhance model interpretability and performance, we
+evaluated an Attention−LSTM architecture designed to
+capture complex dependencies in the data. This model applies
+multihead self-attention across the feature dimension prior to
+temporal modeling via LSTM layers. By prioritizing
+informative features early in the processing pipeline, this
+architecture enhances model flexibility and robustness,
+particularly when dealing with high-dimensionality data sets.
+The attention mechanisms were implemented as multihead
+self-attention layers following the formulation
+QW
+KW
+VW
+head
+Attention(
+,
+,
+)
+i
+i
+Q
+i
+K
+i
+V
+=
+Q K V
+W
+MultiHead(
+,
+,
+)
+Concat(head , ..., head )
+O
+1
+h
+=
+where Q, K, and V represent the query, key, and value matrices
+derived from the input representations. The matrices Wi
+Q, Wi
+K,
+Wi
+V, and WO are learnable projection matrices that transform
+the input representations into query, key, value, and output
+spaces, respectively.31
+3. CNN−LSTM Model:
+In addition, a one-dimensional Convolutional Neural
+Network−LSTM (CNN-LSTM) hybrid architecture was
+evaluated. The CNN component applies temporal convolu-
+tional filters to extract local short-range patterns from the input
+sequence, after which the LSTM layers capture long-range
+dependencies from these condensed representations. This
+hierarchical feature extraction strategy has been shown to
+improve predictive performance in multivariate time series
+tasks.32
+To ensure rigorous and reproducible model development, all
+architectures underwent systematic hyperparameter optimization
+using the Optuna framework with Tree-structured Parzen Estimator
+(TPE) sampling and Hyperband pruning.30 For each architecture, 100
+optimization trials were conducted, with an initial random sampling
+phase of 15 trials to establish a diverse starting population before
+TPE-guided search commenced. Hyperparameter optimization was
+performed for each model architecture, including both architectural
+and training-related parameters. The complete hyperparameter search
+space and the optimal configurations identified for each model are
+summarized in Tables S4 and S5 in the Supporting Information. Each
+trial was evaluated using the validation mean absolute error (MAE)
+computed on inverse-transformed predictions to reflect true physical
+units. The optimal hyperparameter configuration identified for each
+architecture was subsequently used for the final model training.
+All models were implemented in TensorFlow using the Keras API
+and trained with the Huber loss and Adam optimization, together
+with adaptive learning rate reduction and early stopping to prevent
+overfitting. For Data Set A1, the 51-day in-distribution data set was
+split chronologically into 30 days for training, 10 days for validation,
+and 11 days for testing. For data set B1, the 39-day data set was split
+into 25 days for training, 5 days for validation, and 9 days for testing.
+In both cases, the chronological order was preserved to maintain
+temporal integrity. For robust comparison, each model configuration
+was trained 20 times with different random initializations, and
+performance metrics (MAE and R2) were averaged to account for the
+training stochasticity. The computational requirements of each
+component in the proposed framework are summarized in Table S6.
+2.3. Knowledge-Based Feature Selection Framework

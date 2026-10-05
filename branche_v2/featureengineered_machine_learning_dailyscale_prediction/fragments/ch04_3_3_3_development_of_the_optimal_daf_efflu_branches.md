@@ -1,0 +1,43 @@
+### 3.3 Development of the optimal DAF effluent T-P prediction model
+
+- Kết quả điền khuyết dữ liệu chuỗi thời gian MICE cho các biến thủy lực và chất lượng nước:
+  - **Hình 5.** Kết quả điền khuyết dữ liệu bằng thuật toán MICE cho 4 thông số cốt lõi
+    - <img src="assets/fig_05_p12.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Thuật toán MICE khôi phục các điểm khuyết thiếu liên tục theo biến động chuỗi thời gian
+      - Đảm bảo tính toàn vẹn của tập dữ liệu huấn luyện cho mô hình Random Forest
+    - **Từ đâu mà thấy được**
+      - Bốn đồ thị (a)-(d) từ trên xuống biểu diễn lưu lượng, $\text{SS}$ vào, $T\text{-}P$ vào và $T\text{-}P$ ra
+      - Các điểm tròn đỏ biểu diễn vị trí khuyết thiếu được làm đầy mượt mà trên đường đen
+- Phân tích hệ số tương quan tuyến tính Pearson giữa các đặc trưng đầu vào và photpho đầu ra:
+  - **Hình 6.** Hệ số tương quan Pearson giữa các đặc trưng ứng viên và $T\text{-}P$ đầu ra
+    - <img src="assets/fig_06_p13.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - Nồng độ $T\text{-}P$ đầu vào có tương quan dương mạnh nhất với $T\text{-}P$ đầu ra của DAF
+      - Liều lượng châm phèn sắt $Fe_2(SO_4)_3$ tương quan âm rõ rệt với $T\text{-}P$ nước sau xử lý
+    - **Từ đâu mà thấy được**
+      - Trục hoành biểu diễn hệ số tương quan từ -1.00 đến 1.00 qua các thanh ngang
+      - Thanh Inflow_T-P màu đỏ vươn sang phải (+0.40), thanh Dosage màu xanh vươn sang trái (-0.31)
+- Đánh giá cơ chế tương quan của từng nhóm đặc trưng đối với $T\text{-}P$ đầu ra:
+  - Nồng độ $T\text{-}P$ đầu vào thể hiện tương quan dương mạnh nhất, xác nhận tải lượng photpho ban đầu là động lực chính chi phối lượng photpho tồn dư.
+  - Chất rắn lơ lửng đầu vào ($\text{SS}$) có tương quan dương mức độ vừa, phản ánh vai trò của hạt cặn đóng vai trò hạt mang photpho liên kết.
+  - Liều lượng châm phèn sắt $Fe_2(SO_4)_3$ thể hiện tương quan âm rõ nét, minh chứng cơ chế kết tủa hóa lý khử photpho hiệu quả khi tăng hóa chất.
+  - Các thông số thủy lực (lưu lượng DAF, lưu lượng tuần hoàn IRFR, tỷ lệ khí nước $\text{DAF\_A/F}$) có tương quan tuyến tính rất yếu trong điều kiện vận hành chuẩn.
+  - Các biến khí tượng (nhiệt độ không khí, lượng mưa) tương quan dương yếu phản ánh hiện tượng rửa trôi bề mặt và động học phản ứng theo mùa.
+- So sánh hiệu năng thực nghiệm giữa mô hình tuyến tính Ridge và các mô hình học máy phi tuyến theo Bảng 5:
+  - Hồi quy tuyến tính Ridge kém hiệu quả trên tập kiểm tra ($\text{Test } R^2 = 0.5599$, $\text{RMSE} = 0.0504\ \text{mg/L}$, $\text{MAE} = 0.0380\ \text{mg/L}$), khẳng định tính chất phi tuyến phức tạp của hệ thống DAF.
+  - Decision Tree cải thiện độ chính xác nhưng dễ quá khớp ($\text{Train } R^2 = 0.9048$, $\text{Test } R^2 = 0.7578$, $\text{Test RMSE} = 0.0374\ \text{mg/L}$).
+  - XGBoost và LightGBM đạt độ chính xác kiểm tra cao ($\text{Test } R^2 = 0.7924$ và $0.7960$, $\text{Test RMSE} = 0.0346$ và $0.0343\ \text{mg/L}$).
+  - Random Forest (RF) đạt hiệu năng tối ưu nhất trên toàn bộ các chỉ số: $\text{Train } R^2 = 0.8678$, $\text{Test } R^2 = 0.8175$, $\text{Test RMSE} = 0.0324\ \text{mg/L}$ và $\text{Test MAE} = 0.0235\ \text{mg/L}$.
+- Đánh giá sai số dự đoán so với giới hạn xả thải tiêu chuẩn $0.2\ \text{mg/L}$:
+  - Sai số $\text{RMSE} = 0.0324\ \text{mg/L}$ và $\text{MAE} = 0.0235\ \text{mg/L}$ của mô hình Random Forest chỉ chiếm lần lượt khoảng $16\%$ và $12\%$ ngưỡng quy chuẩn xả thải $0.2\ \text{mg/L}$.
+  - Độ chính xác hiệu dụng đạt trên $80\%$ phạm vi nồng độ cho phép, cung cấp độ tin cậy vận hành cao khi nồng độ tiệm cận ngưỡng xả thải.
+  - Sai khác sai số nhỏ ($0.01\text{--}0.02\ \text{mg/L}$) mang tính quyết định thực tiễn để kịp thời kích hoạt châm phèn phòng ngừa trước khi phát sinh vi phạm.
+- Đánh giá phân tầng theo chế độ nồng độ (regime-based performance evaluation):
+  - Chế độ nồng độ thấp (tứ phân vị thứ nhất, $N = 281$ mẫu): Mô hình đạt $\text{RMSE} = 0.0214\ \text{mg/L}$ và $\text{MAE} = 0.0167\ \text{mg/L}$.
+  - Chế độ nồng độ cao (tứ phân vị thứ ba, $N = 275$ mẫu): Mô hình ghi nhận $\text{RMSE} = 0.0424\ \text{mg/L}$ và $\text{MAE} = 0.0328\ \text{mg/L}$.
+  - Mức tăng sai số ở vùng nồng độ cao phản ánh đúng biên độ dao động mạnh của các đợt đỉnh tải, không xuất hiện hiện tượng phóng đại sai số bất thường ở đuôi phân phối.
+- Chẩn đoán phần dư trên tập kiểm tra độc lập khẳng định không có độ lệch hệ thống theo Bảng 6:
+  - Hệ số góc đường hồi quy giữa giá trị dự đoán và thực tế đạt $0.835$, phản ánh quan hệ tuyến tính đồng nhất chặt chẽ.
+  - Điểm cắt trục tung (intercept) đạt $0.0175\ \text{mg/L}$, thể hiện mức dịch chuyển cực nhỏ ở vùng nồng độ tiệm cận 0.
+  - Sai số có dấu trung bình (mean signed error) đạt $0.0002\ \text{mg/L}$, chứng minh mô hình hoàn toàn không bị thiên lệch (bias) dự báo thừa hay thiếu.

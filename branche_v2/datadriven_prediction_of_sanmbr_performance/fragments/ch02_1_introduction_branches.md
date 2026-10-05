@@ -1,0 +1,40 @@
+## 1 Introduction
+
+- Tóm tắt trực quan quy trình nghiên cứu tích hợp vận hành thực nghiệm và mô hình hóa dự đoán
+  - **Hình 1-GA. Con đường trực quan liên kết vận hành thực nghiệm dài hạn và mô hình hóa dự đoán cho hệ SAnMBR**
+    - ![Hình 1-GA. Con đường trực quan hệ SAnMBR](assets/fig_01_p2.png)
+    - Phân đoạn 1 thể hiện hệ pilot SAnMBR vận hành 189 ngày với tải sốc 2,4-DCP tăng dần và 6 thông số đầu vào
+    - Phân đoạn 2 trình bày khung tiền xử lý dữ liệu và so sánh ba thuật toán học máy MLR, ANN, SVR
+    - Phân đoạn 3 xác lập cửa sổ vận hành tối ưu hẹp về pH và nồng độ 2,4-DCP đạt hiệu suất phân hủy COD cực đại
+    - Phân định rõ ràng giữa động lực xử lý sinh học và rào cản tắc nghẽn màng do chất rắn lơ lửng
+- Điểm nhấn nghiên cứu (Highlights)
+  - Hệ thống pilot SAnMBR duy trì vận hành ổn định suốt chu kỳ 189 ngày dưới các đợt sốc nồng độ 2,4-DCP
+  - Hiệu suất xử lý duy trì ở mức cao: loại bỏ COD ($80 - 95\%$), giữ lại TSS ($> 90\%$), và phân hủy 2,4-DCP ($> 80\%$)
+  - Thuật toán SVR đạt kết quả cao hơn hẳn ANN và MLR về độ chính xác dự đoán với $R^2 = 0.952$ và $\text{RMSE} = 2.96$
+  - Biến $\text{pH}$ ($8 - 9$) và nồng độ 2,4-DCP được nhận diện là các yếu tố chi phối phi tuyến chủ đạo
+  - Cửa sổ vận hành tối ưu bị giới hạn nghiêm ngặt ở nồng độ 2,4-DCP thấp ($< 50\text{ mg/L}$) và dải pH kiềm nhẹ
+- Đặc tính độc học và sự tồn lưu của hợp chất phenolic trong môi trường
+  - Hợp chất phenolic có nguồn gốc từ nước thải hóa dầu, dược phẩm, dệt nhuộm và sản xuất bột giấy
+  - Cấu trúc vòng benzen liên kết một hoặc nhiều nhóm hydroxyl tạo tính bền hóa học cao và độ tan đáng kể trong nước
+  - Khả năng tích lũy sinh học gây quan ngại nghiêm trọng về độc tính sinh thái, biến đổi nội tiết và khả năng sinh ung thư
+  - Độc tính cấp tính đối với sinh vật thủy sinh biểu hiện qua giá trị $\text{LC}_{50}$ trong khoảng từ $5\text{ mg/L}$ đến $25\text{ mg/L}$
+  - Ở nồng độ dưới mức gây chết ($< 1\text{ mg/L}$), các hợp chất phenolic vẫn gây ức chế hoạt tính enzyme và gây stress oxy hóa
+  - Phơi nhiễm kéo dài ở người gây độc tính thần kinh, tổn thương huyết học và hoại tử tế bào gan
+- Cơ chế phụ thuộc pH của sự phân ly và độc tính 2,4-dichlorophenol (2,4-DCP)
+  - Hợp chất 2,4-DCP mang tính acid yếu với hằng số phân ly acid $\text{p}K_a \approx 7.9$
+  - Trạng thái tồn tại gồm dạng phân tử trung hòa (không ion hóa) và dạng anion (ion hóa) tùy thuộc vào giá trị pH dung dịch
+  - Ở pH thấp ($\text{pH} < 7.9$), dạng không ion hóa chiếm ưu thế mang tính kỵ nước cao, dễ khuếch tán qua màng lipid kép của tế bào vi sinh vật
+  - Sự khuếch tán dạng không ion hóa làm gia tăng độc tính nội bào và ức chế các con đường chuyển hóa sinh học kỵ khí
+  - Ở điều kiện trung tính đến kiềm nhẹ ($\text{pH} > 7.9$), dạng ion hóa chiếm ưu thế làm giảm tính thấm qua màng tế bào vi khuẩn
+- Ưu thế công nghệ và giới hạn vận hành của bể phản ứng màng kỵ khí ngập nước (SAnMBR)
+  - Tích hợp quá trình phân hủy sinh học kỵ khí với tách lọc qua màng bán thấm, cho phép tách rời hoàn toàn thời gian lưu bùn (SRT) và thời gian lưu thủy lực (HRT)
+  - Duy trì mật độ sinh khối cao và lưu giữ các nhóm vi sinh vật tăng trưởng chậm như vi khuẩn phân giải phenol và vi khuẩn sinh methane
+  - Quần thể vi sinh vật cộng sinh bao gồm vi khuẩn chuyển hóa vòng thơm (*Syntrophus*, *Syntrophorhabdus*) và cổ khuẩn sinh methane (*Methanosaeta*, *Methanosarcina*)
+  - Hệ thống màng ngập nước giúp tiết kiệm diện tích mặt bằng, giảm tiêu thụ năng lượng và cho phép thu hồi năng lượng dưới dạng khí sinh học ($\text{CH}_4$)
+  - Thách thức lớn nhất là hiện tượng tắc nghẽn màng (membrane fouling) do tích tụ bánh bùn, nghẽn lỗ màng, và sự bám dính của chất ngoại bào (EPS) cùng sản phẩm vi sinh hòa tan (SMP)
+- Nhu cầu áp dụng mô hình học máy (Machine Learning) trong điều khiển và tối ưu hóa SAnMBR
+  - Tương tác giữa tải sốc hợp chất ức chế 2,4-DCP, động học bùn kỵ khí và các biến thủy lực mang tính phi tuyến cao
+  - Các mô hình cơ chế truyền thống (deterministic/mechanistic models) gặp khó khăn khi mô tả sự suy giảm hiệu suất đột ngột tại các ngưỡng độc tính
+  - Các nghiên cứu MBR trước đây (Zhong et al. 2022, Yaqub & Lee 2022, Zhuang et al. 2021) chủ yếu tập trung nâng cao chỉ số tương quan trên dữ liệu ổn định
+  - Thiếu hụt các nghiên cứu đánh giá so sánh thuật toán phi tuyến kết hợp công cụ diễn giải mô hình trong điều kiện sốc tải hóa chất độc hại kéo dài
+  - Nghiên cứu áp dụng biểu đồ phụ thuộc một phần (PDP) và phân tích độ nhạy (Sensitivity Analysis) để xác định ngưỡng vận hành kỹ thuật và hỗ trợ chiến lược điều khiển thời gian thực

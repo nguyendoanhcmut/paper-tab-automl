@@ -1,0 +1,25 @@
+### 2.2 Data collection and feature classification
+
+- Quy trình thu thập mẫu bùn hiển vi trong 100 ngày vận hành hệ thống.
+  - Mẫu bùn được lấy định kỳ mỗi ngày tại các vị trí và thời điểm cố định trong suốt 100 ngày.
+  - Sử dụng kính hiển vi quang học trường sáng Leica DM500 ở độ phóng đại $40\times$.
+  - Ảnh hiển vi được chụp bằng máy ảnh kỹ thuật số gắn kèm và cân chỉnh độ sâu trường ảnh để bảo đảm độ sắc nét.
+  - Tập dữ liệu tổng hợp gồm 862 ảnh chụp từ nghiên cứu này kết hợp công trình của Dai et al. (2020).
+- Hệ thống tiêu chí phân loại 4 giai đoạn chu kỳ sống của bùn hạt hiếu khí.
+  - Giai đoạn khởi tạo (IS - initial stage): bùn dạng tiền hạt kích thước bé.
+  - Giai đoạn sinh trưởng (GS - growth stage): hạt tăng nhanh kích thước với bề mặt gồ ghề.
+  - Giai đoạn trưởng thành (MS - maturity stage): cấu trúc hạt nén đặc và bề mặt nhẵn mịn.
+  - Giai đoạn phân cắt (CS - cleavage stage): hạt lão hóa nứt vỡ thành các mảnh nhỏ.
+- Mẫu bùn hiển vi được phân loại theo hình thái học và kích thước thành 4 giai đoạn chu kỳ sống.
+  - **Hình 1.** Hình thái bùn hạt hiếu khí qua 4 giai đoạn chu kỳ sống
+    - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Quá trình biến đổi hình thái từ bông bùn nhỏ, phát triển gờ ráp, tạo hạt cô đặc đến nứt vỡ.
+    - **Từ đâu mà thấy được**
+      - Bốn khung ảnh hiển vi độ phóng đại $40\times$ thể hiện cấu trúc hạt:
+      - (a) Giai đoạn khởi tạo, (b) Giai đoạn sinh trưởng, (c) Giai đoạn trưởng thành, (d) Giai đoạn phân cắt.
+- Phương pháp gán nhãn dữ liệu đối tượng và phân chia tập huấn luyện.
+  - Sử dụng phần mềm LabelImg v1.8.6 để gán tọa độ khung bao và tâm đối tượng theo định dạng TXT của YOLO.
+  - Khi một ảnh hiển vi chứa nhiều hạt bùn, mỗi hạt được khoanh vùng và phân loại độc lập theo từng giai đoạn.
+  - Tập dữ liệu được phân chia theo tỷ lệ $80:20$ gồm 690 ảnh huấn luyện và 172 ảnh kiểm tra.
+  - Cài đặt hạt giống ngẫu nhiên cố định để bảo đảm tính tái lập của kết quả phân chia dữ liệu.

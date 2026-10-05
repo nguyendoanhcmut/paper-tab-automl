@@ -1,0 +1,38 @@
+### 3.3 Model results for COD Removal Prediction
+
+- **Đánh giá so sánh hiệu năng giữa các mô hình học máy**:
+  - Mô hình SVR vượt trội hơn đáng kể so với MLR ($R^2 = 0.742$) và ANN ($R^2 = 0.886$), đạt hệ số $R^2 = 0.941$ trên tập kiểm tra độc lập.
+  - **Hình 9.** Phân tích phần dư của mô hình SVR tối ưu
+    - <img src="assets/fig_09_p10.jpeg" alt="Hình 9" />
+    - **Hình này chứng minh điều gì**
+      - Chứng minh mô hình SVR không bị sai lệch hệ thống và có phương sai phần dư đồng nhất.
+    - **Từ đâu mà thấy được**
+      - Các điểm phần dư phân tán ngẫu nhiên quanh trục hoành 0, nằm gọn trong dải sai số hẹp [-3%, +3%].
+  - Đồ thị so sánh giữa giá trị thực nghiệm và dự đoán cho thấy các điểm dữ liệu của SVR bám sát đường chuẩn $1:1$.
+  - **Hình 10.** So sánh giá trị thực nghiệm và dự đoán của SVR, MLR và ANN
+    - <img src="assets/fig_10_p11.jpeg" alt="Hình 10" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phân tầng độ chính xác rõ rệt: SVR bám sát đường chéo lý tưởng hơn nhiều so với MLR và ANN.
+    - **Từ đâu mà thấy được**
+      - Đồ thị phân tán với các điểm SVR (màu xanh) tập trung chặt quanh đường 45 độ, còn MLR (màu đỏ) bị phân tán rộng.
+  - Phân tích phân bố sai số phần trăm khẳng định độ tin cậy vượt trội của mô hình SVR với hơn $95\%$ mẫu có sai số tuyệt đối $< 5\%$.
+  - **Hình 11.** Phân bố sai số phần trăm so với hiệu suất loại bỏ COD
+    - <img src="assets/fig_11_p11.jpeg" alt="Hình 11" />
+    - **Hình này chứng minh điều gì**
+      - Xác nhận tính ổn định của mô hình trên toàn bộ dải biến thiên của hiệu suất loại bỏ.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ phân bố tần suất sai số của SVR tập trung hẹp tại lân cận 0%, vượt trội hơn hẳn phân bố dẹt của MLR.
+  - Đồ thị PDP một chiều phân tích sâu ảnh hưởng riêng biệt của từng thông số vận hành lên hiệu suất loại bỏ COD.
+  - **Hình 12.** Đồ thị phụ thuộc một phần (PDP) cho 6 biến đầu vào
+    - <img src="assets/fig_12_p12.png" alt="Hình 12" />
+    - **Hình này chứng minh điều gì**
+      - Vạch rõ ngưỡng suy giảm hiệu suất phi tuyến khi nồng độ 2,4-DCP vượt quá 150 mg/L.
+    - **Từ đâu mà thấy được**
+      - Đường cong phản ứng hạ dốc đột ngột ở panel 2,4-DCP khi giá trị vượt 150 mg/L, trong khi panel pH đạt bình nguyên ở 7.0–7.4.
+  - Phân tích độ nhạy toàn cục xếp hạng tầm quan trọng của các yếu tố đầu vào: pH ($34.2\%$) > $2,4	ext{-DCP}$ ($28.5\%$) > $OLR$ ($18.1\%$).
+  - **Hình 13.** Biểu đồ phân tích độ nhạy của các biến vận hành
+    - <img src="assets/fig_13_p13.jpeg" alt="Hình 13" />
+    - **Hình này chứng minh điều gì**
+      - Định lượng thứ bậc chi phối của các thông số vận hành đối với quá trình phân hủy kỵ khí phenolic.
+    - **Từ đâu mà thấy được**
+      - Các thanh tỷ lệ phần trăm đóng góp: pH và nồng độ 2,4-DCP chiếm hơn 62% tổng độ nhạy của mô hình.

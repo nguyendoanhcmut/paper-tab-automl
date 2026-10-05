@@ -1,0 +1,30 @@
+### 3.4 Partial dependence analysis
+
+- Phân tích đáp ứng biên phi tuyến của các đặc trưng thông qua đồ thị phụ thuộc một phần (PDP):
+  - Đồ thị PDP mô tả chiều hướng và cường độ tác động của từng thông số khi giữ cố định giá trị của các biến khác.
+  - Mã màu sắc thể hiện hiệu ứng tương tác: màu đỏ tương ứng giá trị biến tương tác cao, màu xanh tương ứng giá trị thấp.
+- Hàm đáp ứng phi tuyến đối với nồng độ amoni đầu ra ($NH_4^+\text{-N}_{out}$):
+  - Độ mặn thể hiện xu hướng giảm khi dưới $2\%$, nhưng tăng mạnh phi tuyến khi vượt qua mốc $2\%$ do ức chế vi sinh vật.
+  - Nồng độ $NO_2^-\text{-N}_{out}$ thể hiện xu hướng tăng tuyến tính nhất quán, chứng tỏ tích tụ nitrit là dấu hiệu của quá trình nitrat hóa bị gián đoạn.
+  - Hiệu suất $COD_{eff}$ có tác động tối thiểu khi dưới $70\%$, nhưng khi vượt qua $70\%$ thì nồng độ amoni đầu ra tăng vọt do cạn kiệt cơ chất năng lượng.
+  - Giá trị $pH$ tăng nhanh khi tiếp cận $7.0$ và bắt đầu giảm khi vượt qua $7.5$; giá trị SHAP chuyển sang âm khi $pH > 7.5$.
+  - Hiệu ứng tương tác giữa $pH$ và độ mặn trở nên rõ rệt nhất khi giá trị $pH > 8.0$.
+  - Nồng độ $NH_4^+\text{-N}_{in}$ đầu vào duy trì giá trị SHAP dương khi dưới $55\ \text{mg/L}$ và tăng nhanh trở lại khi vượt mốc $60\ \text{mg/L}$.
+  - Nồng độ $DO$ giảm nhanh trong dải $0\text{–}2\ \text{mg/L}$, tăng trong dải $2\text{–}6\ \text{mg/L}$ và giảm dần khi $DO > 6\ \text{mg/L}$.
+- Hàm đáp ứng phi tuyến đối với nồng độ tổng nitơ đầu ra ($TN_{out}$):
+  - Hiệu suất $TN_{eff}$ tương quan nghịch rõ rệt với $TN_{out}$, đặc biệt khi hiệu suất vượt ngưỡng $40\%$.
+  - Tương tác giữa $TN_{eff}$ và $HRT$ thể hiện rõ nét nhất trong phạm vi hiệu suất khử từ $20\%$ đến $60\%$.
+  - Độ mặn từ $0\%$ đến $2\%$ dẫn đến sự suy giảm rõ rệt của $TN_{out}$, nhưng khi vượt quá $2\%$ thì giá trị SHAP đi vào trạng thái bão hòa ổn định.
+  - Nhiệt độ có tác động rất nhỏ trong khoảng từ $0^\circ\text{C}$ đến $20^\circ\text{C}$, giảm dần từ $20^\circ\text{C}$ đến $25^\circ\text{C}$ và tăng vọt khi vượt quá $30^\circ\text{C}$.
+  - Khoảng nhiệt độ từ $25^\circ\text{C}$ đến $30^\circ\text{C}$ là vùng tối ưu cho hoạt động trao đổi chất của vi khuẩn nitrat hóa và khử nitrat.
+  - Tương tác giữa nhiệt độ và $COD_{eff}$ đặc biệt rõ rệt trong dải $15\text{–}30^\circ\text{C}$.
+  - Khi $COD_{eff} < 70\%$, tồn tại tương quan nghịch tuyến tính với $TN_{out}$; nhưng khi $COD_{eff} > 70\%$, giá trị SHAP tăng do thiếu hụt nguồn cacbon hữu cơ.
+  - Nồng độ $DO$ từ $0$ đến $2\ \text{mg/L}$ làm tăng giá trị SHAP của $TN_{out}$ và đạt trạng thái ổn định khi vượt quá $2\ \text{mg/L}$.
+  - Tương tác giữa $NO_2^-\text{-N}_{out}$ và $DO$ thể hiện rõ nhất khi $DO$ nằm trong khoảng $0\text{–}4\ \text{mg/L}$.
+  - Tỷ lệ $C/N$ tương quan thuận với $TN_{out}$ do tỷ lệ quá cao gây ức chế phản ứng khử nitrat; khoảng $C/N$ từ $3$ đến $8$ là thuận lợi nhất.
+- Đồ thị phụ thuộc một phần PDP xác định rõ các ngưỡng chuyển đổi phi tuyến và vùng vận hành tối ưu cho các phản ứng sinh hóa:
+  - **Hình 5. Đồ thị phụ thuộc một phần (PDP) của các đặc trưng then chốt đối với hiệu quả chuyển hóa nitơ**
+    - <img src="assets/fig_05_p8.jpeg" alt="Hình 5" />
+    - Đồ thị PDP cho 6 biến hàng đầu dự đoán $NH_4^+\text{-N}_{out}$ (a–f) và $TN_{out}$ (g–l).
+    - Đường cong phản ứng xác lập ngưỡng chuyển tiếp độ mặn $2\%$, ngưỡng $COD_{eff} = 70\%$ và dải nhiệt độ tối ưu $25\text{–}30^\circ\text{C}$.
+    - Màu sắc biểu thị hiệu ứng tương tác đa biến giữa các thông số công nghệ vận hành trong MBR.

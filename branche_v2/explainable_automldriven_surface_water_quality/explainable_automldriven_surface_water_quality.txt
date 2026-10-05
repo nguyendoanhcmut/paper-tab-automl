@@ -1,0 +1,1050 @@
+<!-- Page 1 -->
+Explainable AutoML-driven surface water quality classification with key 
+indicators identification
+Wenjie Qin a,b, Heng Zhong a,b, Jingping Hu a,b,c,*, Wei Luo a,b, Zhe Shao a,b,  
+Huijie Hou a,b, Zhenzhen Liu d, Xiaotong Zhang d, Sha Liang a,b, Jiakuan Yang a,b,c
+a Hubei Key Laboratory of Multi-media Pollution Cooperative Control in Yangtze Basin, School of Environmental Science & Engineering, Huazhong University of Science 
+and Technology (HUST), 1037 Luoyu Road, Wuhan 430074, China
+b Hubei Provincial Engineering Laboratory of Solid Waste Treatment, Disposal and Recycling, 1037 Luoyu Road, Wuhan 430074, China
+c State Key Laboratory of Coal Combustion, Huazhong University of Science and Technology (HUST), 1037 Luoyu Road, Wuhan 430074, China
+d Hubei Provincial Eco-Environmental Monitoring Centre, 338 Bayi Road, Wuhan 430072, China
+A R T I C L E I N F O
+This manuscript was handled by Huaming Guo, 
+Editor-in-Chief
+Keywords:
+Water quality classification
+Automated machine learning
+Interpretable ensemble learning
+Feature importance
+A B S T R A C T
+Surface water quality monitoring and classification face dual challenges: prohibitive costs of comprehensive 
+indicators monitoring and the labor-intensive process of traditional machine learning (ML) implementation, 
+which jointly constrain the development of efficient water quality assessment systems. This study presents an 
+automated and interpretable framework: Auto-sklearn automates the machine learning workflow to address 
+model selection complexity, while SHAP analysis quantifies feature contributions to reduce water quality indi­
+cator requirements. Using monitoring data from major river basins of China, we evaluated Auto-sklearn against 
+conventional ML algorithms and modern ensemble methods. Auto-sklearn achieved the highest mean perfor­
+mance (Weighted F1: 0.9633 ± 0.0027) via an optimized ensemble. Crucially, this high performance proved to 
+be robust and generalizable, as the framework maintained its superiority across rigorous temporal and spatial 
+validation schemes. Through Kernel SHAP analysis, we identified CODMn, TP, and DO as the key indicators. A 3- 
+indicator Auto-sklearn model achieved a high Weighted F1 (0.9205 ± 0.0097) and outperformed the rule-based 
+baseline, with higher F1-scores across all classes and an 18.9 % relative improvement for Class WV water. This 
+suggests that monitoring costs can be substantially reduced while simultaneously improving assessment reli­
+ability. Further regional analysis revealed spatial variations, with most basins aligning with the nationwide set, 
+but the Song-Liao and Yellow River Basins also requiring NH3-N monitoring. This framework provides a prac­
+tical, cost-effective solution for water environment management, especially in developing regions.
+1. Introduction
+Water quality monitoring and early warning systems play a crucial 
+role in environmental protection and public health, particularly in 
+developing countries facing rapid industrialization and urbanization 
+(Michalak, 2016; Greenhill et al., 2024; Qian et al., 2024). While the 
+United Nations has emphasized water quality management in its Sus­
+tainable Development Goals (SDGs 6 and 14), implementing effective 
+monitoring systems remains challenging due to technical and resource 
+constraints (Herrera, 2019; Byrne, 2024). Surface water quality classi­
+fication based on monitoring indicators is fundamental to sustainable 
+water environment management, yet achieving both cost-effectiveness 
+and reliability in such classification systems remains a significant chal­
+lenge in developing regions (Baccour et al., 2024).
+Automatic water quality monitoring stations started to be deployed 
+in major river basins in China since 1999, implementing classification 
+based on the single-factor evaluation method (Table S1). This evaluation 
+method requires monitoring of up to 24 water quality indicators. The list 
+includes not only conventional parameters but also numerous indicators 
+such as heavy metals (e.g., mercury, lead) and specific organic pollut­
+ants (e.g., volatile phenols), which are notoriously difficult to monitor 
+continuously in the field. This comprehensiveness poses significant 
+practical challenges. Specifically, sensors for pollutants such as heavy 
+metals and organics are expensive and less robust, leading to high 
+* Corresponding author at: Hubei Key Laboratory of Multi-media Pollution Cooperative Control in Yangtze Basin, School of Environmental Science & Engineering, 
+Huazhong University of Science and Technology (HUST), 1037 Luoyu Road, Wuhan 430074, China.
+E-mail address: hujp@hust.edu.cn (J. Hu). 
+Contents lists available at ScienceDirect
+Journal of Hydrology
+journal homepage: www.elsevier.com/locate/jhydrol
+https://doi.org/10.1016/j.jhydrol.2025.134634
+Received 29 May 2025; Received in revised form 17 November 2025; Accepted 18 November 2025  
+Journal of Hydrology 665 (2026) 134634 
+Available online 22 November 2025 
+0022-1694/© 2025 Elsevier B.V. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+operational costs and frequent data interruptions (Durgun, 2024). As a 
+direct consequence of these operational and financial constraints, the 
+national online monitoring network of China pragmatically focuses on a 
+core subset of more feasible indicators rather than the full 24 indicators. 
+This reality highlights the urgent need to identify the most critical in­
+dicators even within this reduced set to further enhance monitoring 
+efficiency and cost-effectiveness (Othman et al., 2020; Wu et al., 2023).
+Traditional statistical approaches, such as principal component 
+analysis and Pearson correlation analysis, have been widely used for 
+water quality indicator selection (Tripathi and Singal, 2019; Uddin 
+et al., 2021; Asadollah et al., 2021). With the advancement of artificial 
+intelligence, machine learning (ML) methods have demonstrated supe­
+rior capability in handling complex nonlinear relationships in water 
+quality prediction and key indicator selection (Zhu et al., 2022; Ding 
+et al., 2023; Zhang et al., 2024). However, developing an optimal and 
+robust predictive system using ML presents significant challenges. The 
+process involves a complex, multi-stage workflow, including systemat­
+ically selecting the most suitable algorithm, performing robust feature 
+engineering, and conducting rigorous, computationally intensive 
+hyperparameter optimization (HPO). While a single model might work 
+efficiently with default parameters, the HPO process, which systemati­
+cally evaluates hundreds or thousands of configurations to maximize 
+predictive accuracy, is often computationally prohibitive, demanding 
+substantial resources and specialized expertise (Peng et al., 2022; Xia 
+and Zeng, 2022; Li et al., 2024). To address these specific workflow 
+challenges, automated machine learning (AutoML) has emerged as a 
+powerful paradigm. It is designed to automate this entire end-to-end 
+pipeline, from data preprocessing and feature selection to model 
+choice and HPO, thereby greatly reducing the demand for domain- 
+specific expertise and computational oversight (Z¨oller and Huber, 
+2021). Several AutoML methods have been developed, such as TPOT, 
+H2O, and Auto-sklearn (Feurer et al., 2015; Olson et al., 2016; LeDell 
+and Poirier, 2020). Among them, Auto-sklearn has demonstrated supe­
+rior performance in multiple competitions through its integration of 
+Bayesian optimization, meta-learning, and ensemble construction. Even 
+in specially designed “Beat Auto-sklearn” challenges, manual parameter 
+tuning by experienced data scientists could not surpass its automated 
+optimization performance (Guyon et al., 2019).
+However, the automated model selection and ensemble processes of 
+AutoML intensify the “black box” nature of models, challenging the 
+understanding and interpretation of model decision processes (Barredo 
+Arrieta et al., 2020). This is particularly crucial in water quality man­
+agement, where models must maintain both prediction accuracy and 
+transparency in decision-making. The Kernel SHAP (SHapley Additive 
+exPlanations) method offers a promising solution by combining LIME 
+(Local Interpretable Model-agnostic Explanations) with Shapley values 
+to construct a unified interpretation framework. Through quantitative 
+feature importance attribution derived from cooperative game theory, 
+SHAP effectively measures the contribution of features to model pre­
+dictions (Lundberg and Lee, 2017a; Russo et al., 2023). While SHAP 
+values show great potential, their application in water quality indicator 
+screening remains unexplored, especially as an alternative to computa­
+tionally prohibitive “best subset” selection methods. These brute-force 
+approaches test every possible feature combination to guarantee 
+finding the optimal set, but their computational cost grows exponen­
+tially, making them impractical for larger feature sets (Chen et al., 
+2020).
+Herein, this study develops an automated and interpretable frame­
+work for water quality classification using monitoring data from the 
+China National Environmental Monitoring Center (CNEMC). The 
+framework classifies surface water quality into a six-level system (Class 
+I-V and worse than V) based on the nine core indicators reliably moni­
+tored by the national online monitoring network of China. The specific 
+objectives are to: (i) evaluate the performance of Auto-sklearn against 
+conventional ML algorithms and modern ensemble methods through 
+comprehensive metrics (Precision, Recall, Weighted F1, Macro F1, 
+confusion matrix, and AUC-ROC curves); (ii) interpret the Auto-sklearn 
+ensemble model using Kernel SHAP to quantify indicator contributions 
+to model predictions; and (iii) identify key water quality indicators for 
+optimizing monitoring schemes. Through this integrated approach, we 
+aim to establish a cost-effective framework that can enhance water 
+quality management and decision-making processes while simulta­
+neously improving assessment reliability.
+2. Materials and methods
+2.1. Study area and water quality dataset
+Datasets of surface water quality were collected from the CNEMC, 
+covering nine major river basins, including Continental, Hai, Huai, 
+Pearl, Song-Liao, Southeast, Southwest, Yangtze, and Yellow rivers. The 
+data were collected from approximately 1900 monitoring sites from 
+January 2021 to June 2024, with a time step of 4 h (Fig. 1a). The na­
+tional online monitoring system of CNEMC focuses on a core set of 11 
+feasible indicators for real-time tracking. However, after assessing data 
+quality, two of these indicators [chlorophyll-a (Chl-a, mg/L) and algal 
+density (cells/L)] were excluded from our study due to severe data 
+missingness (>70 %, Table S3). The final analysis was therefore con­
+ducted on the remaining nine robustly-monitored indicators: water 
+temperature (WT, ◦C), pH, dissolved oxygen (DO, mg/L), electrical 
+conductivity (EC, μS/cm), chemical oxygen demand (CODMn, mg/L), 
+ammonia nitrogen (NH3-N, mg/L), total phosphorus (TP, mg/L), total 
+nitrogen (TN, mg/L), and turbidity (NTU).
+According to the Environmental Quality Standards for Surface Water 
+(MEEPRC, 2002), water quality was classified into six classes from best 
+to worst (I-WV). This classification serves as the target variable for our 
+supervised learning models. The classification for each data record was 
+pre-determined by the CNEMC based on the “single-factor evaluation 
+method”, where the final class is assigned based on the poorest- 
+performing individual indicator relative to the standard limits as 
+shown in Table S1. Our objective is therefore to predict this official 
+classification using the nine selected water quality indicators as input 
+features.
+To ensure computational feasibility for the extensive automated 
+model search and subsequent SHAP analysis, a subset of 50,000 samples 
+was extracted from the cleaned dataset (n = 10,159,876) using stratified 
+random sampling. This sampling approach was chosen to prioritize 
+model stability, as our analysis showed that training on the full dataset 
+produced unstable, high-variance results and required computationally 
+prohibitive runtimes (Fig. S1). To rigorously evaluate the stability and 
+robustness of our findings against sampling variability, this entire 
+sampling process was repeated five times using different random seeds 
+(42, 123, 777, 1024, and 2048).
+This sampling methodology not only preserved the proportional 
+distribution of the water quality classes (Fig. 1b) but also maintained a 
+broadly consistent distribution across the major river basins. As detailed 
+in Table S2, the proportional representation of each basin in the sampled 
+subsets shows strong alignment with the full dataset, exhibiting only 
+minor deviations, thereby confirming that the sampling process did not 
+introduce significant regional bias. For the regional analysis, the same 
+stratified sampling approach was applied to each major basin separately. 
+Spearman correlation analysis was performed on the stratified dataset, 
+and indicated no significant relationships among the selected water 
+quality indicators (Fig. 1c), thus eliminating the need for removal of 
+multicollinearity features.
+2.2. Model development and validation strategies
+For model inputs, all nine water quality indicators (WT, pH, DO, EC, 
+CODMn, NH3-N, TP, TN, and NTU) were used as input features, with 
+water quality classes (I-WV) as the output target. To rigorously evaluate 
+model performance and stability, three distinct validation schemes were 
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+2 
+
+
+<!-- Page 3 -->
+employed. 
+i. Stratified random split: This was the baseline validation method. 
+For each of the five runs, the 50,000-sample subset was randomly 
+partitioned into a training set (80 %, n = 40,000) and a test set 
+(20 %, n = 10,000) while maintaining class proportions.
+ii. Temporal hold-out validation: To assess the models’ ability to 
+perform on future, unseen data, the entire clean dataset (n =
+10,159,876) was divided based on a timestamp of “2024–01-01 
+Fig. 1. Study area and dataset: (a) distribution of water quality monitoring sites in the study area; (b) distribution of water quality classes before and after stratified 
+sampling, a process repeated five times with unique random seeds; (c) Spearman correlation heatmap of water quality indicators.
+Fig. 2. Comparison of ML pipelines: (a) traditional ML pipeline requiring manual intervention at multiple stages; (b) AutoML pipeline utilizing Auto-sklearn 
+framework, which automates the model development process through meta-learning, Bayesian optimization, and ensemble construction.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+3 
+
+
+<!-- Page 4 -->
+00:00:00”. The training set (n = 40,000) was then sampled 
+exclusively from data recorded before this timestamp, while the 
+test set (n = 10,000) was sampled from data recorded after this 
+point. This process was also repeated five times using different 
+random seeds.
+iii. Spatial hold-out validation: Finally, to evaluate geographic 
+generalizability, a leave-one-basin-out validation was conducted. 
+This process consisted of nine iterations where each major river 
+basin was sequentially designated as the hold-out basin. For each 
+iteration, a training set (n = 40,000) was sampled from the 
+remaining eight basins, and a test set (n = 10,000) was sampled 
+from the single hold-out basin.
+Consequently, all quantitative performance metrics reported in this 
+study are presented as the mean ± Standard Deviation (SD) across the 
+respective runs or hold-out basins to ensure the robustness of our 
+conclusions.
+2.3. Traditional and automated machine learning
+Traditional ML pipelines require substantial human intervention 
+across multiple stages, including data preprocessing, feature engineer­
+ing, model selection, and hyperparameter tuning (Fig. 2a). For tradi­
+tional ML models, each input feature was standardized using Z-score 
+normalization (μ = 0, σ = 1) to ensure all variables had comparable 
+scales, as illustrated in Fig. S2. And Gaussian process-based Bayesian 
+optimization was employed for hyperparameter tuning in traditional ML 
+approaches (Snoek et al., 2012).
+In contrast, for AutoML implementation, raw data was used without 
+any preprocessing, allowing the algorithm to automatically determine 
+the optimal preprocessing methods (Fig. 2b). The Auto-sklearn (version 
+0.15.0) framework combines Bayesian optimization, meta-learning, and 
+ensemble construction for AutoML pipeline selection (Feurer et al., 
+2015). This framework incorporates comprehensive ML tools, including 
+classification algorithms, feature preprocessing methods, and data pre­
+processing techniques. No manual adjustments were made to the model 
+selection process, with Auto-sklearn automatically defining the search 
+space for hyperparameter optimization. For the accurate assessment of 
+model performance, due to the highly imbalanced distribution of water 
+quality classes in the dataset, both traditional ML and AutoML utilized 5- 
+fold stratified cross-validation during model training (Fig. S3).
+For comprehensive evaluation, Auto-sklearn was compared with 
+both conventional ML models implemented through scikit-learn [Lo­
+gistic Regression (LR), k-Nearest Neighbors (KNN), Decision Tree (DT), 
+Random Forest (RF)] and state-of-the-art ensemble learning models 
+[CatBoost (CatB), LightGBM (LGBM), XGBoost (XGB)]. All imple­
+mentations were conducted using Python 3.8.13. Detailed information 
+about traditional ML methods is provided in the Supplementary Mate­
+rials (Text S1).
+2.4. Model evaluation metrics
+The predictive performance of the models was assessed through a 
+comprehensive suite of multi-dimensional evaluation metrics. These 
+metrics, including their mathematical formulas and detailed statistical 
+interpretations, are summarized in Table S4. For this multi-class clas­
+sification task, we employed key metrics such as Precision, Recall, and 
+the Weighted F1, which effectively accounts for class imbalance. Addi­
+tionally, confusion matrices were used for a visual breakdown of clas­
+sification performance across all classes, while Receiver Operating 
+Characteristic (ROC) curves and the corresponding Area Under the 
+Curve (AUC) values were used to evaluate the overall discriminative 
+ability of the models.
+2.5. Explanation of Auto-sklearn
+To interpret the ensemble model generated by Auto-sklearn, we 
+employed the SHapley Additive exPlanations (SHAP) method, which 
+calculates feature importance through game theory principles (Kuhn, 
+2020). In ML context, Shapley values measure the individual impact of 
+each feature in the model, collectively contributing to the prediction. 
+Various versions of SHAP have been developed by Lundberg and Lee, 
+including DeepSHAP, Kernel SHAP, LinearSHAP, and TreeSHAP, each 
+designed to approximate SHAP values for different types of ML models. 
+A critical prerequisite for a meaningful SHAP analysis is the high pre­
+dictive accuracy of the model being explained. The SHAP interpretation 
+was therefore performed only after the high predictive performance of 
+the Auto-sklearn ensemble had been established.
+Auto-sklearn can produce heterogeneous ensembles of different al­
+gorithm types. Therefore, the model-agnostic Kernel SHAP was selected 
+for interpretation, as it is well-suited for such ensembles and requires no 
+model-specific adjustments. It approximates SHAP values through a 
+weighted local regression that bridges Model-agnostic Explanations 
+(LIME) methods with Shapley values from cooperative game theory 
+(Lundberg and Lee, 2017b). The SHAP value ∅i for feature i is calculated 
+as follows: 
+ϕi =
+∑
+S⊆F{i}
+|S|!(M −|S|! −1 )!
+M!
+[fx(S ∪{i} ) −fx(S) ]
+(1) 
+where fx (S) is defined as: 
+fx(S) = E[f(x)|xs ]
+(2) 
+where S represents the subset of features excluding feature i, F is the set 
+of all features, M is the total number of features, and fx (S) represents the 
+expected model prediction when only features in subset S are known. 
+Kernel SHAP approximates these values by sampling feature coalitions 
+and computing model predictions, making it particularly suitable for 
+ensemble models where direct interpretation of model internals is 
+challenging (Moradi and Samwald, 2021).
+3. Results
+3.1. Runtime optimization and ensemble configuration of Auto-sklearn 
+for water quality classification
+To optimize performance of Auto-sklearn for water quality classifi­
+cation, the impact of different training durations ranging from 0.5 to 12 
+h was investigated while maintaining a constant data partitioning ratio 
+of 0.8 (training dataset = 40,000, testing dataset = 10,000). Fig. 3
+presents the trend of Weighted F1 and relative improvements across 
+different runtime periods. The Weighted F1 was chosen as the primary 
+evaluation metric because it provides a balanced assessment of model 
+performance by combining both Precision and Recall, being particularly 
+suitable for evaluating the overall effectiveness of the model (detailed 
+results for Precision and Recall are provided in Table S5). The Weighted 
+F1 exhibited a substantial and statistically significant improvement 
+during the initial 4 h of training, increasing from 0.9537 ± 0.0002 (0.5 
+h) to 0.9627 ± 0.0002 (4 h). A one-way ANOVA followed by Tukey’s 
+post-hoc test confirmed that the performance at 0.5 h, 1 h, 2 h, and 4 h 
+were all significantly different from each other (p < 0.05). The high 
+baseline performance reflects the strong, inherent relationship between 
+the input indicators and the target classes, which are determined by 
+these same indicators according to the national standard (Section 2.1).
+With the increase in training time, a trend of diminishing returns was 
+observed. Crucially, while the Weighted F1 increased to 0.9631 ±
+0.0002 after 8 h, this improvement was not statistically significant 
+compared to the 4-hour result (p > 0.05). The mean Weighted F1 in­
+crease dropped from 0.0040 (1–2 h) to 0.0029 (2–4 h), and further 
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+4 
+
+
+<!-- Page 5 -->
+decreased to just 0.0004 for the 4–8 h interval. Although a further sig­
+nificant improvement was noted at 12 h, the marginal gain was minimal 
+relative to the extensive additional computation time. Therefore, based 
+on these results, the 4-hour training period was selected as the optimal 
+parameter for subsequent studies, as it strikes an effective balance be­
+tween model performance and computational cost.
+Through automated model selection and optimization, Auto-sklearn 
+generated a final ensemble model consisting of 7 ML pipelines. The 
+detailed configurations of this ensemble are now provided in the Sup­
+plementary Materials (Table S6). In summary, the automated process 
+consistently selected RF as the optimal classifier across all pipelines, 
+applying various data preprocessing and distribution-based balancing 
+strategies to optimize performance. This strong preference for RF clas­
+sifiers suggests that tree-based ensemble methods with moderate 
+complexity are particularly effective for this water quality classification 
+task.
+3.2. Water quality classification performance and generalization
+3.2.1. Comparative performance of models
+The performance of Auto-sklearn was comprehensively evaluated 
+against seven machine learning models. Based on five independent runs 
+using a stratified random split, a Tukey’s HSD statistical test (p < 0.05) 
+grouped the models into distinct performance tiers. As shown in Table 1, 
+Auto-sklearn, RF, and CatB constituted the top tier, with no statistically 
+significant performance difference among them. Within this top group, 
+however, Auto-sklearn consistently achieved the highest mean scores 
+across all evaluation metrics, with a precision of 0.9636 ± 0.0027, recall 
+of 0.9635 ± 0.0027, and a weighted F1-score of 0.9633 ± 0.0027. A 
+detailed, per-class analysis presented in Table S7 further underscores 
+this leading performance, showing that Auto-sklearn also attained the 
+highest Macro F1-score. The remaining models were grouped into sub­
+sequent performance tiers, with KNN and LR performing significantly 
+poorer than all other methods.
+The classification performance is further detailed in the confusion 
+matrices (Fig. 4). Among the evaluated models, Auto-sklearn (Fig. 4a) 
+emerged as the top-performing solution, demonstrating exceptional and 
+well-balanced accuracy across all water quality classes. It achieved near- 
+perfect scores for Class I (99.1 %) and Class II (98.4 %) and maintained 
+high accuracy on the ambiguous intermediate classes: 96.1 % for Class 
+III, 91.0 % for Class IV, and 84.4 % for Class V. This capability starkly 
+contrasts with traditional models like LR (Fig. 4d), whose accuracy 
+collapsed to just 53.3 % for Class III, 30.8 % for Class IV, and even 0 % 
+for Class V, highlighting the severe limitations of linear models. The 
+confusion matrices for other models are presented in Fig. S4.
+The Receiver Operating Characteristic (ROC) curves and corre­
+sponding Area Under the Curve (AUC) values in Fig. 5 further validate 
+the models’ discriminative ability. Auto-sklearn (Fig. 5a) achieved the 
+highest macro-average AUC (MA-AUC) of 0.9963, followed closely by 
+other top-tier models like RF (MA-AUC = 0.9961) and CatB (MA-AUC =
+0.9960). In contrast, LR (Fig. 5d) was substantially weaker with a MA- 
+AUC of 0.9027, showing particular difficulty with Class III (AUC =
+0.8257) and Class IV (AUC = 0.8762). Additional ROC analyses for the 
+remaining models are available in Fig. S5.
+This comprehensive comparison underscores the ability of the Auto- 
+sklearn framework to automatically construct a model that achieves 
+superior water quality classification performance.
+3.2.2. Generalization assessment with temporal and spatial validation
+To more rigorously assess model robustness and address potential 
+data leakage from simple random splits, two additional validation 
+schemes were implemented: a temporal hold-out (training on data 
+before Jan 1, 2024, and testing on data after) and a spatial hold-out 
+(leave-one-basin-out cross-validation). The results are summarized in 
+Table 2.
+The temporal validation results demonstrate the model’s robust 
+classification performance, which remains stable across different time 
+periods. The performance of models remained remarkably stable, with 
+no statistically significant drop in the Weighted F1-score when pre­
+dicting on future, unseen data. This indicates that the models effectively 
+learned underlying patterns that are consistent over time.
+The spatial validation provided critical insights into the geographic 
+generalizability of models. While the average performance across the 
+basin-level cross-validation remained high, the standard deviation 
+increased significantly—for Auto-sklearn, from 0.0027 in the random 
+split to 0.0154. This high variance is strong quantitative evidence of 
+underlying regional heterogeneity, indicating that the model’s perfor­
+mance, while strong overall, varies across basins with distinct charac­
+teristics (Table S8). Crucially, despite this performance variability, the 
+relative ranking of the models remained consistent. This stability in 
+relative performance confirms that the Auto-sklearn framework is a 
+robust and reliable choice for nationwide water quality classification.
+3.3. Screening of key water quality indicators based on SHAP importance 
+ranking
+To interpret the decision-making process of the Auto-sklearn model, 
+a SHAP analysis was performed on the single representative run 
+(selected based on its Weighted F1 being closest to the five-run average). 
+The analysis quantified the impact of each water quality indicator on 
+class predictions, with each point in Fig. 6 representing a Shapley value 
+where color indicates the relative magnitude of the indicator value. For 
+Class I waters (Fig. 6a), pH demonstrated the highest importance, 
+Fig. 3. Performance improvement of Auto-sklearn in water quality classifica­
+tion with different training runtimes. The red line shows the Weighted F1, and 
+the blue bars indicate the mean increase compared to the previous time point. 
+Different letters denote statistically significant differences among the runtimes 
+(Tukey’s HSD, p < 0.05). (For interpretation of the references to colour in this 
+figure legend, the reader is referred to the web version of this article.)
+Table 1 
+Benchmarking results for water quality classification models, presented as mean 
+± SD.
+Precision
+Recall
+Weighted F1
+Auto-sklearn
+0.9636 ± 0.0027 a
+0.9635 ± 0.0027 a
+0.9633 ± 0.0027 a
+RF
+0.9612 ± 0.0028 a
+0.9610 ± 0.0029 a
+0.9607 ± 0.0029 a
+CatB
+0.9597 ± 0.0027 ab
+0.9599 ± 0.0026 a
+0.9596 ± 0.0027 a
+DT
+0.9571 ± 0.0024 bc
+0.9570 ± 0.0024b
+0.9566 ± 0.0024b
+LGBM
+0.9560 ± 0.0034c
+0.9564 ± 0.0034b
+0.9560 ± 0.0035b
+XGB
+0.9546 ± 0.0030c
+0.9549 ± 0.0031b
+0.9545 ± 0.0030b
+KNN
+0.8509 ± 0.0023 d
+0.8523 ± 0.0023c
+0.8492 ± 0.0023c
+LR
+0.6503 ± 0.0025 e
+0.6787 ± 0.0023 d
+0.6457 ± 0.0026 d
+Note: For each column, different letters in superscript indicate a statistically 
+significant difference between models (Tukey’s HSD, p < 0.05).
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+5 
+
+
+<!-- Page 6 -->
+Fig. 4. Comparison of confusion matrices for water quality classification using different ML models: (a) Auto-sklearn, (b) XGB, (c) RF, and (d) LR. The results shown 
+are from a representative run for each model.
+Fig. 5. ROC curves and AUC values for different water quality classification algorithms: (a) AutoML, (b) XGB, (c) RF, and (d) LR. Both the plotted curves and the 
+corresponding AUC values are from a representative run for each model.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+6 
+
+
+<!-- Page 7 -->
+followed by DO and TP, where higher pH values (red points) signifi­
+cantly contributed to Class I classification. In Class II (Fig. 6b), TP 
+emerged as the dominant indicator, with CODMn and NH3-N showing 
+secondary importance.
+For intermediate classes (III and IV), CODMn exhibited the strongest 
+influence, with notably negative SHAP values for high indicator con­
+centrations (Figs. 6c, d). The impact of TP and DO are showed varying 
+patterns between these classes, suggesting their role in fine-tuning 
+classification decisions. Class V and WV predictions (Figs. 6e, f) were 
+primarily driven by CODMn, DO, and TP, with their extreme values being 
+particularly indicative of degraded water quality. Across all classes, TP, 
+CODMn, and DO consistently demonstrate high importance, while in­
+dicators such as WT, NTU, and EC showed relatively minor contributions 
+to the classification decisions. These SHAP importance rankings align 
+logically with the single-factor classification standard (Table S1). The 
+SHAP analysis effectively quantifies which indicators most frequently 
+serve as the “limiting factor” in the official classification rule. For 
+instance, the high importance of CODMn for predicting poorer water 
+quality classes (e.g., Class V, WV) is expected. This finding aligns 
+perfectly with the national standard (Table S1), in which high CODMn 
+values are a key condition that defines these poor water quality 
+classifications.
+A comprehensive importance ranking of the water quality indicators 
+was established (Fig. 7a). This was achieved by first calculating the 
+mean absolute SHAP values for each indicator within each of the five 
+independent runs. These values were then normalized within each run to 
+sum to one. The final importance scores shown are the average of these 
+five normalized values. A one-way ANOVA with Tukey’s post-hoc test 
+was performed on these final scores to assess statistical significance (p <
+0.05). As denoted by the letters on the chart, the analysis identified 
+CODMn and TP as the most influential indicators; their importances were 
+not statistically different from each other but were significantly greater 
+than all other indicators. DO ranked third, representing the next distinct 
+level of statistical importance. A detailed visualization of the cumulative 
+importance for each indicator, broken down by class, is provided in the 
+supplementary materials (Fig. S6).
+To screen for the key water quality indicators, we progressively 
+incorporated them into the Auto-sklearn model according to the 
+importance ranking. As shown in Fig. 7b, model performance (Weighted 
+F1) improved rapidly, reaching 0.9205 ± 0.0097 with the top three 
+indicators (CODMn, TP, and DO). Crucially, the addition of the fourth 
+indicator (NH3-N) did not yield a statistically significant improvement in 
+model performance (p > 0.05), which is visually supported by the 
+Table 2 
+Model performance (Weighted F1, Mean ± SD) across different validation 
+strategies.
+Model
+Random split 
+validation
+Temporal 
+validation
+Spatial 
+validation
+Auto- 
+sklearn
+0.9633 ± 0.0027
+0.9627 ± 0.0005
+0.9675 ± 0.0154
+RF
+0.9607 ± 0.0029
+0.9612 ± 0.0018
+0.9670 ± 0.0157
+CatB
+0.9596 ± 0.0027
+0.9595 ± 0.0004
+0.9620 ± 0.0155
+DT
+0.9566 ± 0.0024
+0.9572 ± 0.0026
+0.9640 ± 0.0160
+LGBM
+0.9560 ± 0.0035
+0.9563 ± 0.0011
+0.9577 ± 0.0146
+XGB
+0.9545 ± 0.0030
+0.9533 ± 0.0006
+0.9544 ± 0.0148
+KNN
+0.8492 ± 0.0023
+0.8453 ± 0.0036
+0.8337 ± 0.0138
+LR
+0.6457 ± 0.0026
+0.6427 ± 0.0031
+0.6453 ± 0.0610
+Fig. 6. SHAP importance plots showing the contribution of different water quality indicators to each water quality classes prediction: (a) Class I, (b) Class II, (c) Class 
+III, (d) Class IV, (e) Class V, and (f) Class WV. These plots were generated from the representative run of the Auto-sklearn model.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+7 
+
+
+<!-- Page 8 -->
+significance letters on the chart. The mean Weighted F1 increase, as 
+shown by the blue bars, was most substantial for the second (0.1851) 
+and third indicators (0.1305). This lack of significant improvement 
+beyond the top three provides strong evidence that CODMn, TP, and DO 
+can serve as a core set for efficient and cost-effective water quality 
+monitoring at a national scale.
+3.4. Regional variations in key water quality indicators across major 
+basins
+Building upon the identification of CODMn, TP, and DO as the key 
+water quality indicators at the national scale, the SHAP analysis was 
+extended to evaluate regional variations. To ensure the robustness of 
+these regional findings, the analysis for each basin was performed using 
+five independent model runs with different random seeds. The final 
+importance scores, representing the mean of the five normalized SHAP 
+values, are visualized in Fig. 8. The detailed results, including the mean 
+and SD for each indicator in every basin, are available in the supple­
+mentary material (Table S9).
+The results revealed a high degree of consistency across most of 
+China. Specifically, seven of the nine major river basins—the 
+Continental, Hai, Huai, Pearl, Southeast, Southwest, and Yangtze River 
+Basins—retained CODMn, TP, and DO as their three most critical in­
+dicators, mirroring the national-level analysis. This widespread agree­
+ment across diverse geographical regions further validates the 
+fundamental significance of these three indicators in water quality 
+assessment.
+However, notable regional variations emerged in the two northern 
+basins. In both the Song-Liao and the Yellow River Basins, NH3-N 
+replaced DO as one of the top three key indicators (Table S9). These 
+findings highlight that while CODMn, TP, and DO form an effective na­
+tional minimum indicator set, regional hydro-environmental charac­
+teristics may necessitate tailored monitoring approaches.
+4. Discussion
+4.1. Advantages of Auto-sklearn in water quality classification
+In this study, Auto-sklearn demonstrated leading performance in 
+water quality classification compared to traditional ML models, 
+achieving the highest scores across multiple evaluation metrics 
+(Table 1). Through automated model selection and optimization, Auto- 
+Fig. 7. Screening of key water quality indicators. (a) Overall indicator importance ranking showing the five-run mean of normalized SHAP values (where values 
+within each run were normalized to sum to one). (b) Model performance evolution (Weighted F1, red line) and the incremental F1 increase (blue bars) as top-ranked 
+indicators are sequentially added to the model. Different letters denote statistically significant differences (Tukey’s HSD, p < 0.05). (For interpretation of the ref­
+erences to colour in this figure legend, the reader is referred to the web version of this article.)
+Fig. 8. Regional variations in key water quality indicators across major basins in China. The bubble size represents the relative importance of each indicator for 
+water quality classification in different basins, quantified as the mean normalized SHAP value calculated from five independent runs.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+8 
+
+
+<!-- Page 9 -->
+sklearn successfully identified and combined complementary models 
+into an ensemble of 7 ML pipelines (Table 1), automating the multi-stage 
+manual workflow required by traditional ML approaches into an inte­
+grated process (Fig. 2). While we compared Auto-sklearn with various 
+ML models both inside and outside the framework to validate its per­
+formance, it is important to note that conventional ML models theo­
+retically cannot outperform AutoML since they are part of the model 
+selection library of Auto-sklearn. This aligns with previous findings 
+where even experienced data scientists could not surpass automated 
+optimization of Auto-sklearn in specially designed challenge competi­
+tions (Guyon et al., 2019).
+The performance improvement of Auto-sklearn over RF was rela­
+tively modest (Table 1), as RF was automatically selected as the optimal 
+classifier across all seven ensemble pipelines (Table 1), which aligns 
+with findings from previous studies in clinical diagnostic applications 
+(Bifarin and Fern´andez, 2024). The consistent selection of RF validates 
+the automated model search effectiveness of Auto-sklearn and indicates 
+tree-based ensemble methods with moderate complexity work particu­
+larly well for classification tasks (Chan et al., 2023; Senocak et al., 
+2023).
+All in all, AutoML frameworks such as Auto-sklearn are suggested to 
+be employed directly for ML tasks in environmental monitoring instead 
+of conducting extensive model screening and hyperparameter tuning. 
+This approach not only ensures optimal model selection through auto­
+mated processes but also saves considerable time typically spent on 
+comparing various standalone algorithms. Although AutoML may 
+require substantial computational resources, with the rapid advance­
+ment of computing infrastructure and increasing accessibility to high- 
+performance computing resources, computational demands are 
+becoming less of a constraint. The successful application in water quality 
+classification demonstrated here provides a representative case for 
+broader adoption of AutoML in environmental science research.
+4.2. Rationality and practicality of key water quality indicators screening
+4.2.1. A cost-effective nationwide indicator set
+Water quality classification assessment traditionally relies on a 
+comprehensive set of indicators, with national standards such as 
+GB3838-2002 requiring monitoring of 24 fundamental indicators 
+(MEEPRC, 2002). While this extensive monitoring approach ensures 
+accuracy, it poses significant challenges in terms of cost and time effi­
+ciency (Sun et al., 2021). Our SHAP-based analysis identified CODMn, 
+TP, and DO as the most influential indicators for water quality classifi­
+cation in China (Fig. 7a), offering a potential solution to this practical 
+challenge.
+The statistical effectiveness of this three-indicator set is robust. Our 
+SHAP-based sequential analysis showed that these indicators alone 
+could achieve a high Weighted F1 of 0.9205 ± 0.0097, capturing the 
+majority of information necessary for accurate classification. To validate 
+this further, we compared the Auto-sklearn trained on these three in­
+dicators against a programmatic baseline applying the standard single- 
+factor rule to the same limited set. As detailed in Table 3, the Auto- 
+sklearn model achieved a statistically significantly higher Weighted 
+F1-score (0.9205 ± 0.0097) compared to the rule-based baseline 
+(0.8976 ± 0.0038). More importantly, the Auto-sklearn model demon­
+strated superior performance across all classes, most critically for Class 
+WV, where it achieved an F1-score of 0.8285—a substantial 18.9 % 
+relative improvement over the baseline’s 0.6968. This superiority stems 
+from the Auto-sklearn’s ability to capture complex, non-linear in­
+teractions that the rigid rule inherently misses, confirming that the 
+combination of our key indicators with an intelligent model provides a 
+more accurate and practically valuable assessment, especially for man­
+aging the most polluted water bodies.
+The identification of these key indicators provides a practical solu­
+tion to the prohibitive costs associated with comprehensive water 
+quality monitoring. By focusing on just three indicators (CODMn, TP, and 
+DO), monitoring programs can achieve reliable assessment while 
+reducing both capital investment for equipment and operational ex­
+penses for chemical analysis. This simplified approach is particularly 
+valuable for developing regions with resource constraints, making sys­
+tematic water quality monitoring more economically feasible and 
+widely implementable.
+4.2.2. Regional heterogeneity
+While our reduced indicator set (CODMn, TP, and DO) performs well 
+for general classification at the national scale, our regional analysis 
+critically demonstrates that optimal indicator combinations vary in 
+response to distinct, regional-scale anthropogenic pressures. As shown 
+in Fig. 8 and Table S9, the Song-Liao and Yellow River Basins required a 
+different key indicator set where NH3-N replaced DO. This shift is a 
+direct reflection of the region-specific pollution drivers.
+The exceptional severity of nitrogen pollution in these basins is 
+quantitatively supported. The Song-Liao River Basin, for instance, has a 
+Net Anthropogenic Nitrogen Input estimated at a staggering 9453 kg N 
+km–2 yr–1, a value noted to be higher than that of southern basins (Cao 
+et al., 2025). Similarly, the Yellow River Basin is the most severe region 
+for agricultural non-point source pollution in China, with its provinces 
+contributing a disproportionately high 42.67 % of the entire nation’s 
+agricultural TN emissions (Tan et al., 2025). This extreme loading means 
+that raw pollutants, rich in NH3-N, are the dominant feature of the 
+pollution profile.
+This immense pollution pressure is critically amplified by the re­
+gion’s distinct hydrological conditions, which starkly contrast with 
+other major basins. The northern basins are characterized by extremely 
+low water availability. The annual average runoff of the Liaohe (36.7 
+km3) and Yellow (52.1 km3) rivers is an order of magnitude lower than 
+that of the southern Yangtze and Pearl rivers, which both exceed 300 
+km3 (Gao et al., 2020). The Yellow River exemplifies this stress, irri­
+gating 13 % of the nation’s cropland with only 3 % of its total river 
+runoff (Ren et al., 2016). This “high load, low flow” dynamic means that 
+the immense nitrogen inputs are concentrated in a minimal volume of 
+water, leading to exceptionally high pollutant concentrations that are 
+not seen in high-flow southern basins.
+This comparative analysis confirms that the nitrogen pollution in the 
+Song-Liao and Yellow River Basins is uniquely prominent. While 
+southern basins like the Yangtze may have large total nitrogen loads, 
+their vast dilution capacity mitigates the concentration and, thus, the 
+immediate severity (Wang et al., 2020). In contrast, the combination of 
+extreme nitrogen input intensity and severely limited dilution capacity 
+in the Song-Liao and Yellow River Basins creates an environment where 
+primary pollutants like NH3-N are a more direct and sensitive signal of 
+degradation than secondary ecosystem responses like DO. This evidence 
+validates the findings of our model and underscores the necessity of 
+basin-specific indicator sets for effective water quality management.
+Table 3 
+Benchmarking of the Rule-Based Baseline against Auto-sklearn using the 
+nationwide key indicator set (CODMn, TP, and DO), presented as mean ± SD.
+Rule-Based Baseline
+Auto-sklearn
+Precision
+0.9030 ± 0.0036 a
+0.9245 ± 0.0026b
+Recall
+0.9017 ± 0.0037 a
+0.9236 ± 0.0024b
+Weighted F1
+0.8976 ± 0.0038 a
+0.9205 ± 0.0156b
+Macro F1
+0.8498 ± 0.0053 a
+0.8885 ± 0.0078b
+Class I
+0.9279 ± 0.0044 a
+0.9447 ± 0.0025b
+Class II
+0.9255 ± 0.0035 a
+0.9429 ± 0.0026b
+Class III
+0.8939 ± 0.0049 a
+0.9142 ± 0.0052b
+Class IV
+0.8645 ± 0.0091 a
+0.8878 ± 0.0015b
+Class V
+0.7902 ± 0.0182 a
+0.8128 ± 0.0217b
+Class WV
+0.6968 ± 0.0077 a
+0.8285 ± 0.0097b
+Note: Different letters in superscript indicate a statistically significant difference 
+between the Rule-Based Baseline and the 3-indicator Auto-sklearn model 
+(Tukey’s HSD, p < 0.05).
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+9 
+
+
+<!-- Page 10 -->
+4.3. Limitations and future perspectives
+Several limitations of this study should be acknowledged from both 
+technical and methodological perspectives. Firstly, the indicator opti­
+mization in this study was confined to only nine commonly monitored 
+indicators, which represents a subset of the comprehensive indicator 
+system required by Chinese national standards (Table S1). Many 
+important indicators specified in the standards, such as heavy metals, 
+volatile phenols, and petroleum, were not included in our analysis. 
+Moreover, biological indicators like Chlorophyll-a and algal density had 
+to be excluded due to significant missing values in the monitoring data. 
+These data availability constraints mean that our key indicator 
+screening results might not fully reflect all aspects of water quality 
+assessment required by national standards, particularly in terms of 
+biological water quality and specific pollutants. To address this limita­
+tion, future studies should expand the scope of indicator analysis to 
+include all indicators specified in national standards, which would 
+provide a more comprehensive basis for key indicator selection.
+Secondly, while our current AutoML framework successfully reduces 
+the dimensionality of water quality indicators, it can only perform 
+classification when all key indicators (CODMn, TP, and DO) are avail­
+able. The model becomes inoperable when any of these key indicators 
+are missing due to monitoring equipment malfunction or data trans­
+mission issues, which is a common scenario in environmental moni­
+toring. To address this temporal missing data challenge, future research 
+should incorporate time series models (e.g., RNNs, Transformers) to first 
+predict missing key water quality indicators using their historical mea­
+surements, and then feed these predictions into the AutoML classifica­
+tion framework. This two-stage approach would enable continuous 
+water quality classification even during periods of missing measure­
+ments, further enhancing the practical applicability of the system.
+Despite these limitations, the framework presented in this study of­
+fers significant practical implications. Our work provides a data-driven 
+pathway to design more cost-effective monitoring networks, first by 
+identifying a generalizable set of core indicators (CODMn, TP, and DO) at 
+the national scale. Crucially, the framework also demonstrates its ability 
+to adapt to local conditions by identifying different key indicators (e.g., 
+NH3-N) in basins with unique pollution pressures. This adaptability is 
+particularly valuable for regions with limited financial or technical re­
+sources. Moreover, the integration of an AutoML framework automates 
+the otherwise complex and labor-intensive process of model selection 
+and hyperparameter tuning, lowering the technical barrier for envi­
+ronmental agencies to implement predictive analytics. Ultimately, this 
+study provides a scalable and adaptable template for creating more 
+efficient and intelligent water quality management systems, enabling a 
+more strategic allocation of resources in environmental protection.
+5. Conclusion
+This study demonstrates the effectiveness of integrating Auto-sklearn 
+with interpretable ML techniques for water quality monitoring and 
+classification optimization. Auto-sklearn outperformed most traditional 
+machine learning approaches in water quality classification, achieving 
+the top-tier performance with a Weighted F1 of 0.9633 ± 0.0027. 
+Crucially, the framework exhibited robust and generalizable perfor­
+mance, maintaining its superiority across rigorous temporal and spatial 
+validation schemes. Furthermore, SHAP analysis revealed CODMn, TP, 
+and DO as the most influential indicators. Crucially, a model using only 
+these three indicators achieved a high Weighted F1-score (0.9205 ±
+0.0097) and outperformed the rule-based baseline, yielding higher F1- 
+scores across all classes and a 18.9 % relative improvement for Class 
+WV water, offering potential for streamlined monitoring strategies. 
+Regional analysis demonstrated that while most river basins aligned 
+with the nationwide key indicator set, spatial heterogeneity exists in 
+Song-Liao and Yellow River Basin where NH3-N emerged as a key 
+indicator.
+The proposed framework addresses two critical challenges in water 
+quality assessment: it eliminates the labor-intensive process of tradi­
+tional ML implementation through automated workflow of Auto- 
+sklearn, while SHAP-based indicator screening substantially reduces 
+monitoring costs by identifying key indicators. This integration provides 
+a practical solution for water environment management, particularly 
+valuable for developing regions where both technical expertise and 
+monitoring resources are limited.
+CRediT authorship contribution statement
+Wenjie Qin: Writing – review & editing, Writing – original draft, 
+Visualization, Conceptualization. Heng Zhong: Writing – review & 
+editing. Jingping Hu: Writing – review & editing, Funding acquisition. 
+Wei Luo: Investigation. Zhe Shao: Validation. Huijie Hou: Writing – 
+review & editing, Funding acquisition. Zhenzhen Liu: Data curation. 
+Xiaotong Zhang: Validation. Sha Liang: Validation. Jiakuan Yang: 
+Funding acquisition.
+Declaration of competing interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgments
+This work was supported by the financial support from the National 
+Natural Science Foundation of China (52170134, 52222006, and 
+52070083), the National Key Research and Development Program of 
+China (2023YFC3902802), the Interdisciplinary Research Program of 
+Huazhong University of Science and Technology (HUST, 2023JCYJ005), 
+the Wuhan Power Battery Low-carbon Recycling Industry Innovation 
+Joint Laboratory (2025020802040290), and the Hubei Provincial Sci­
+ence and Technology Research Project (2024BAA012). The researchers 
+also acknowledge the support from the High-Performance Computing 
+platform at HUST.
+Appendix A. Supplementary data
+Supplementary data to this article can be found online at https://doi. 
+org/10.1016/j.jhydrol.2025.134634.
+Data availability
+Data will be made available on request.
+References
+Asadollah, S.B.H.S., Sharafati, A., Motta, D., Yaseen, Z.M., 2021. River water quality 
+index prediction and uncertainty analysis: a comparative study of machine learning 
+models. J. Environ. Chem. Eng. 9, 104599. https://doi.org/10.1016/j. 
+jece.2020.104599.
+Baccour, S., Goelema, G., Kahil, T., Albiac, J., van Vliet, M.T.H., Zhu, X., Strokal, M., 
+2024. Water quality management could halve future water scarcity cost-effectively 
+in the Pearl River Basin. Nat. Commun. 15, 5669. https://doi.org/10.1038/s41467- 
+024-49929-z.
+Barredo Arrieta, A., Díaz-Rodríguez, N., Del Ser, J., Bennetot, A., Tabik, S., Barbado, A., 
+Garcia, S., Gil-Lopez, S., Molina, D., Benjamins, R., Chatila, R., Herrera, F., 2020. 
+Explainable Artificial Intelligence (XAI): concepts, taxonomies, opportunities and 
+challenges toward responsible AI. Inf. Fusion 58, 82–115. https://doi.org/10.1016/j. 
+inffus.2019.12.012.
+Bifarin, O.O., Fern´andez, F.M., 2024. Automated machine learning and explainable AI 
+(AutoML-XAI) for Metabolomics: improving cancer diagnostics. J. Am. Soc. Mass 
+Spectrom. 35, 1089–1100. https://doi.org/10.1021/jasms.3c00403.
+Byrne, D., 2024. A checklist for delivering the sustainable development goals. Nature. 
+https://doi.org/10.1038/d41586-024-02903-7.
+Cao, M., Gao, W., Zhang, Y., Guo, F., 2025. Riverine nitrogen and phosphorus output in 
+an arid watershed: combined effects of anthropogenic nutrient inputs, land use, and 
+hydrology. Environ. Syst. Res. 14, 8. https://doi.org/10.1186/s40068-025-00399-2.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+10 
+
+
+<!-- Page 11 -->
+Chan, W.H., Fung, B.S.B., Tsang, D.H.K., Lo, I.M.C., 2023. A freshwater algae 
+classification system based on machine learning with StyleGAN2-ADA augmentation 
+for limited and imbalanced datasets. Water Res. 243, 120409. https://doi.org/ 
+10.1016/j.watres.2023.120409.
+Chen, K., Chen, H., Zhou, C., Huang, Y., Qi, X., Shen, R., Liu, F., Zuo, M., Zou, X., 
+Wang, J., Zhang, Y., Chen, D., Chen, X., Deng, Y., Ren, H., 2020. Comparative 
+analysis of surface water quality prediction performance and identification of key 
+water parameters using different machine learning models based on big data. Water 
+Res. 171, 115454. https://doi.org/10.1016/j.watres.2019.115454.
+Ding, F., Zhang, W., Cao, S., Hao, S., Chen, L., Xie, X., Li, W., Jiang, M., 2023. 
+Optimization of water quality index models using machine learning approaches. 
+Water Res. 243, 120337. https://doi.org/10.1016/j.watres.2023.120337.
+Durgun, Y., 2024. Real-time water quality monitoring using AI-enabled sensors: 
+Detection of contaminants and UV disinfection analysis in smart urban water 
+systems. Journal of King Saud University - Science 36, 103409. https://doi.org/ 
+10.1016/j.jksus.2024.103409.
+Feurer, M., Klein, A., Eggensperger, K., Springenberg, J.T., Blum, M., Hutter, F., 2015. 
+Efficient and robust automated machine learning, in: Proceedings of the 29th 
+International Conference on Neural Information Processing Systems - Volume 2, 
+NIPS’15. MIT Press, Cambridge, MA, USA, pp. 2755–2763.
+Gao, Y., Zhou, F., Ciais, P., Miao, C., Yang, T., Jia, Y., Zhou, X., Klaus, B.-B., Yang, T., 
+Yu, G., 2020. Human activities aggravate nitrogen-deposition pollution to inland 
+water over China. Natl. Sci. Rev. 7, 430–440. https://doi.org/10.1093/nsr/nwz073.
+Greenhill, S., Druckenmiller, H., Wang, S., Keiser, D.A., Girotto, M., Moore, J.K., 
+Yamaguchi, N., Todeschini, A., Shapiro, J.S., 2024. Machine learning predicts which 
+rivers, streams, and wetlands the Clean Water Act regulates. Science 383, 406–412. 
+https://doi.org/10.1126/science.adi3794.
+Guyon, I., Sun-Hosoya, L., Boull´e, M., Escalante, H.J., Escalera, S., Liu, Z., Jajetic, D., 
+Ray, B., Saeed, M., Sebag, M., Statnikov, A., Tu, W.-W., Viegas, E., 2019. Analysis of 
+the AutoML Challenge Series 2015–2018, in: Hutter, F., Kotthoff, L., Vanschoren, J. 
+(Eds.), Automated Machine Learning: Methods, Systems, Challenges. Springer 
+International Publishing, Cham, pp. 177–219. doi:10.1007/978-3-030-05318-5_10.
+Herrera, V., 2019. Reconciling global aspirations and local realities: challenges facing the 
+sustainable development goals for water and sanitation. World Dev. 118, 106–117. 
+https://doi.org/10.1016/j.worlddev.2019.02.009.
+Kuhn, H.W., 2020. Classics in Game Theory 1–328.
+LeDell, E., Poirier, S., 2020. H2O AutoML: Scalable Automatic Machine Learning.
+Li, Z., Ma, W., Zhong, D., Ma, J., Zhang, Q., Yuan, Y., Liu, X., Wang, X., Zou, K., 2024. 
+Applications of machine learning in drinking water quality management: a critical 
+review on water distribution system. J. Clean. Prod. 481, 144171. https://doi.org/ 
+10.1016/j.jclepro.2024.144171.
+Lundberg, S.M., Lee, S.-I., 2017a. A unified approach to interpreting model predictions, 
+in: Proceedings of the 31st International Conference on Neural Information Processing 
+Systems, NIPS’17. Curran Associates Inc., Red Hook, NY, USA, pp. 4768–4777.
+Lundberg, S.M., Lee, S.-I., 2017b. A Unified Approach to Interpreting Model Predictions, 
+in: Guyon, I., Luxburg, U.V., Bengio, S., Wallach, H., Fergus, R., Vishwanathan, S., 
+Garnett, R. (Eds.), ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS 
+30 (NIPS 2017), Advances in Neural Information Processing Systems. Presented at the 
+31st Annual Conference on Neural Information Processing Systems (NIPS), Neural 
+Information Processing Systems (nips), La Jolla.
+Michalak, A.M., 2016. Study role of climate change in extreme threats to water quality. 
+Nature 535, 349–350. https://doi.org/10.1038/535349a.
+Moradi, M., Samwald, M., 2021. Post-hoc explanation of black-box classifiers using 
+confident itemsets. Expert Syst. Appl. 165, 113941. https://doi.org/10.1016/j. 
+eswa.2020.113941.
+MEEPRC, 2002. National Environmental quality standards of surface water of China, 
+GB3838-2002. Ministry of Ecology and Environment of the People’s Republic of 
+China. https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/shjbh/shjzlbz/200206/ 
+t20020601_66497.shtml.
+Olson, R.S., Bartley, N., Urbanowicz, R.J., Moore, J.H., 2016. Evaluation of a Tree-based 
+Pipeline Optimization Tool for Automating Data Science, in: Proceedings of the 
+Genetic and Evolutionary Computation Conference 2016, GECCO ’16. Association for 
+Computing Machinery, New York, NY, USA, pp. 485–492. doi:10.1145/ 
+2908812.2908918.
+Othman, F., Alaaeldin, M.E., Seyam, M., Ahmed, A.N., Teo, F.Y., Ming Fai, C., Afan, H.A., 
+Sherif, M., Sefelnasr, A., El-Shafie, A., 2020. Efficient river water quality index 
+prediction considering minimal number of inputs variables. Eng. Appl. Comput. 
+Fluid Mech. 14, 751–763. https://doi.org/10.1080/19942060.2020.1760942.
+Peng, L., Wu, H., Gao, M., Yi, H., Xiong, Q., Yang, L., Cheng, S., 2022. TLT: Recurrent 
+fine-tuning transfer learning for water quality long-term prediction. Water Res. 225, 
+119171. https://doi.org/10.1016/j.watres.2022.119171.
+Qian, J., Qian, L., Pu, N., Bi, Y., Wilhelms, A., Norra, S., 2024. An intelligent early 
+warning system for harmful algal blooms: harnessing the power of big data and deep 
+learning. Environ. Sci. Technol. 58, 15607–15618. https://doi.org/10.1021/acs. 
+est.3c03906.
+Ren, D., Xu, X., Hao, Y., Huang, G., 2016. Modeling and assessing field irrigation water 
+use in a canal system of Hetao, upper Yellow River basin: application to maize, 
+sunflower and watermelon. J. Hydrol. 532, 122–139. https://doi.org/10.1016/j. 
+jhydrol.2015.11.040.
+Russo, C., Castro, A., Gioia, A., Iacobellis, V., Gorgoglione, A., 2023. A stormwater 
+management framework for predicting first flush intensity and quantifying its 
+influential factors. Water Resour. Manage. 37, 1437–1459. https://doi.org/10.1007/ 
+s11269-023-03438-8.
+Senocak, A.U.G., Yilmaz, M.T., Kalkan, S., Yucel, I., Amjad, M., 2023. An explainable 
+two-stage machine learning approach for precipitation forecast. J. Hydrol. 627, 
+130375. https://doi.org/10.1016/j.jhydrol.2023.130375.
+Snoek, J., Larochelle, H., Adams, R.P., 2012. Practical Bayesian Optimization of Machine 
+Learning Algorithms. https://doi.org/10.48550/arXiv.1206.2944.
+Sun, F., Mu, Y., Leung, K.M.Y., Su, H., Wu, F., Chang, H., 2021. China is establishing its 
+water quality standards for enhancing protection of aquatic life in freshwater 
+ecosystems. Environ. Sci. Policy 124, 413–422. https://doi.org/10.1016/j. 
+envsci.2021.07.008.
+Tan, Q., Su, H., Zhang, Y., 2025. Evolution characteristics and control suggestions for 
+agricultural non-point source pollution in the Yellow River Basin of China. Water 17, 
+1626. https://doi.org/10.3390/w17111626.
+Tripathi, M., Singal, S.K., 2019. Use of principal component analysis for parameter 
+selection for development of a novel water quality index: a case study of river Ganga 
+India. Ecol. Ind. 96, 430–436. https://doi.org/10.1016/j.ecolind.2018.09.025.
+Uddin, M.G., Nash, S., Olbert, A.I., 2021. A review of water quality index models and 
+their use for assessing surface water quality. Ecol. Ind. 122, 107218. https://doi.org/ 
+10.1016/j.ecolind.2020.107218.
+Wang, A., Yang, D., Tang, L., 2020. Spatiotemporal variation in nitrogen loads and their 
+impacts on river water quality in the upper Yangtze River basin. J. Hydrol. 590, 
+125487. https://doi.org/10.1016/j.jhydrol.2020.125487.
+Wu, J., Cheng, S.-P., He, L.-Y., Wang, Y.-C., Yue, Y., Zeng, H., Xu, N., 2023. Assessing 
+water quality in the Pearl River for the last decade based on clustering: 
+characteristic, evolution and policy implications. Water Res. 244, 120492. https:// 
+doi.org/10.1016/j.watres.2023.120492.
+Xia, J., Zeng, J., 2022. Environmental factors assisted the evaluation of entropy water 
+quality indices with efficient machine learning technique. Water Resour. Manage. 
+36, 2045–2060. https://doi.org/10.1007/s11269-022-03126-z.
+Zhang, H., Ren, X., Chen, S., Xie, G., Hu, Y., Gao, D., Tian, X., Xiao, J., Wang, H., 2024. 
+Deep optimization of water quality index and positive matrix factorization models 
+for water quality evaluation and pollution source apportionment using a random 
+forest model. Environ. Pollut. 347, 123771. https://doi.org/10.1016/j. 
+envpol.2024.123771.
+Zhu, M., Wang, J., Yang, X., Zhang, Y., Zhang, L., Ren, H., Wu, B., Ye, L., 2022. A review 
+of the application of machine learning in water quality evaluation. Eco-Environ. 
+Health 1, 107–116. https://doi.org/10.1016/j.eehl.2022.06.001.
+Z¨oller, M.-A., Huber, M.F., 2021. Benchmark and survey of automated machine learning 
+frameworks. J. Artif. Intell. Res. 70, 409–472. https://doi.org/10.1613/jair.1.11854.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+11 

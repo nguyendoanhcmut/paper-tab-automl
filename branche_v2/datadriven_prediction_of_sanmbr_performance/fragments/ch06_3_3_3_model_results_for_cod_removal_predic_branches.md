@@ -1,0 +1,55 @@
+### 3.3 Model results for COD Removal Prediction
+
+- **Đánh giá so sánh hiệu năng giữa các mô hình học máy**:
+  - Mô hình SVR thể hiện độ chính xác cao hơn rõ rệt so với MLR ($R^2 = 0.742$) và ANN ($R^2 = 0.886$), đạt hệ số $R^2 = 0.941$ trên tập kiểm tra độc lập.
+  - Sai số toàn phương trung bình của SVR đạt $RMSE = 1.83\%$, thấp hơn đáng kể so với MLR ($RMSE = 4.12\%$) và ANN ($RMSE = 2.65\%$).
+  - Sai số tuyệt đối trung bình của SVR đạt $MAE = 1.25\%$, khẳng định độ phân tán sai số cực nhỏ quanh giá trị thực tế.
+  - Kết quả kiểm định chéo $5\text{-fold}$ cho thấy SVR đạt độ lệch chuẩn nhỏ nhất giữa các fold ($\sigma = 0.015$), thể hiện tính ổn định cao.
+  - Mô hình ANN đạt $R^2 = 0.886$ trên tập kiểm tra nhưng có xu hướng dao động mạnh hơn khi gặp các giá trị cực trị ở giai đoạn sốc tải.
+  - Mô hình tuyến tính MLR chỉ đạt $R^2 = 0.742$ và $RMSE = 4.12\%$, cho thấy các giả định tuyến tính không phản ánh được động học phản ứng sinh học kỵ khí.
+  - Siêu tham số của SVR gồm tham số dung sai lỗi $\epsilon = 0.05$, hệ số phạt $C = 10.0$ và độ rộng nhân $\gamma = 0.1$.
+  - **Hình 9.** Phân tích phần dư của mô hình SVR tối ưu
+    - <img src="assets/fig_09_p10.jpeg" alt="Hình 9" />
+    - **Hình này chứng minh điều gì**
+      - Chứng minh mô hình SVR không bị sai lệch hệ thống và có phương sai phần dư đồng nhất.
+    - **Từ đâu mà thấy được**
+      - Các điểm phần dư phân tán ngẫu nhiên quanh trục hoành 0, nằm gọn trong dải sai số hẹp [-3%, +3%].
+  - Đồ thị so sánh giữa giá trị thực nghiệm và dự đoán cho thấy các điểm dữ liệu của SVR bám sát đường chuẩn $1:1$.
+  - Khả năng xử lý quan hệ phi tuyến giúp SVR theo sát cả những điểm biến động khi xảy ra tải sốc.
+  - Hệ số tương quan tương hỗ giữa các dự báo của SVR và ANN đạt $r = 0.93$, xác nhận tính nhất quán về xu hướng dự báo giữa hai cấu trúc phi tuyến.
+  - **Hình 10.** So sánh giá trị thực nghiệm và dự đoán của SVR, MLR và ANN
+    - <img src="assets/fig_10_p11.jpeg" alt="Hình 10" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự phân tầng độ chính xác: SVR bám sát đường chéo lý tưởng hơn nhiều so với MLR và ANN.
+    - **Từ đâu mà thấy được**
+      - Đồ thị phân tán với các điểm SVR (màu xanh) tập trung chặt quanh đường 45 độ, còn MLR (màu đỏ) bị phân tán rộng.
+  - Phân tích phân bố sai số phần trăm khẳng định độ tin cậy của mô hình SVR với hơn $95\%$ mẫu có sai số tuyệt đối $< 5\%$.
+  - Tỷ lệ mẫu sai số lớn của MLR tập trung nhiều ở dải hiệu suất loại bỏ thấp, phản ánh sự hạn chế của mô hình tuyến tính trong việc nắm bắt ức chế sinh học.
+  - Phân bố sai số của ANN có dạng hình chuông đối xứng nhưng đuôi phân bố rộng hơn so với SVR.
+  - **Hình 11.** Phân bố sai số phần trăm so với hiệu suất loại bỏ COD
+    - <img src="assets/fig_11_p11.jpeg" alt="Hình 11" />
+    - **Hình này chứng minh điều gì**
+      - Xác nhận tính ổn định của mô hình trên toàn bộ dải biến thiên của hiệu suất loại bỏ.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ phân bố tần suất sai số của SVR tập trung hẹp tại lân cận 0%, tốt hơn phân bố dẹt của MLR.
+  - Đồ thị PDP một chiều phân tích sâu ảnh hưởng riêng biệt của từng thông số vận hành lên hiệu suất loại bỏ COD.
+  - Khi OLR tăng từ $1.0$ lên $1.8\ \text{kg COD}/(\text{m}^3\cdot\text{day})$, hiệu suất loại bỏ tăng nhẹ nhờ sự dồi dào chất nền cho vi sinh.
+  - Tuy nhiên, ngưỡng nồng độ $2,4\text{-DCP} > 150\ \text{mg/L}$ dẫn đến sụt giảm hiệu suất dốc đứng, đánh dấu điểm tới hạn ức chế enzyme dehydrogenase.
+  - Ảnh hưởng của pH lên COD removal thể hiện rõ vùng bình nguyên ổn định khi pH nằm trong dải $7.0\text{–}7.4$.
+  - Biến thời gian vận hành cho thấy hiệu suất nhích tăng dần sau ngày thứ 60 nhờ sinh khối thích nghi với hợp chất vòng thơm.
+  - **Hình 12.** Đồ thị phụ thuộc một phần (PDP) cho 6 biến đầu vào
+    - <img src="assets/fig_12_p12.png" alt="Hình 12" />
+    - **Hình này chứng minh điều gì**
+      - Vạch rõ ngưỡng suy giảm hiệu suất phi tuyến khi nồng độ 2,4-DCP vượt quá 150 mg/L.
+    - **Từ đâu mà thấy được**
+      - Đường cong phản ứng hạ dốc đột ngột ở panel 2,4-DCP khi giá trị vượt 150 mg/L, trong khi panel pH đạt bình nguyên ở 7.0–7.4.
+  - Phân tích độ nhạy toàn cục xếp hạng tầm quan trọng của các yếu tố đầu vào: pH ($34.2\%$) > $2,4\text{-DCP}$ ($28.5\%$) > $OLR$ ($18.1\%$).
+  - Thời gian vận hành và độ đục chiếm tỷ trọng nhỏ hơn ($11.2\%$ và $8.0\%$), xác nhận các yếu tố hóa sinh đóng vai trò điều khiển chính.
+  - Phân tích độ nhạy theo phương pháp Morris xác nhận pH là tham số nhạy cảm bậc nhất với chỉ số $\mu^* = 0.42$.
+  - Nồng độ $2,4\text{-DCP}$ có chỉ số tương tác phi tuyến cao nhất với các biến khác ($\sigma = 0.38$).
+  - **Hình 13.** Biểu đồ phân tích độ nhạy của các biến vận hành
+    - <img src="assets/fig_13_p13.jpeg" alt="Hình 13" />
+    - **Hình này chứng minh điều gì**
+      - Định lượng thứ bậc chi phối của các thông số vận hành đối với quá trình phân hủy kỵ khí phenolic.
+    - **Từ đâu mà thấy được**
+      - Các thanh tỷ lệ phần trăm đóng góp: pH và nồng độ 2,4-DCP chiếm hơn 62% tổng độ nhạy của mô hình.

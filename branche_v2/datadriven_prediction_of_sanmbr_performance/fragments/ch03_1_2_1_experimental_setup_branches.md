@@ -1,0 +1,23 @@
+### 2.1 Experimental Setup
+
+- Cấu hình thiết bị và sơ đồ nguyên lý hệ thống SAnMBR
+  - **Hình 1. Sơ đồ cấu hình thực nghiệm của hệ thống bể phản ứng sinh học màng kỵ khí ngập nước (SAnMBR)**
+    - ![Hình 1. Sơ đồ cấu hình thực nghiệm](assets/fig_02_p4.jpeg)
+    - Thể tích hiệu dụng của bể phản ứng Plexiglas là $8\text{ L}$ trên tổng dung tích thiết kế $8.733\text{ L}$
+    - Mô-đun màng sợi rỗng Polypropylene đặt chìm với diện tích bề mặt lọc danh định $0.1\text{ m}^2$
+    - Hệ thống bơm nhu động đôi điều tiết chính xác lưu lượng dòng nạp và dòng dịch lọc thấm qua màng
+    - Lớp áo nước bao quanh thành bể duy trì nhiệt độ kỵ khí ổn định ở $36 \pm 1^\circ\text{C}$ qua bể điều nhiệt tuần hoàn
+- Thông số kỹ thuật của bể phản ứng và mô-đun màng
+  - Thể tích chất lỏng làm việc thực tế $V_{\text{eff}} = 8\text{ L}$ với kết cấu vỏ bằng nhựa Plexiglas trong suốt
+  - Màng sợi rỗng ngập nước (Hydrol, UK) chế tạo từ vật liệu Polypropylene kỵ nước cải tính
+  - Tổng diện tích lọc hoạt động của bó màng sợi rỗng là $0.1\text{ m}^2$
+  - Bể ổn nhiệt tuần hoàn nước sử dụng nước cất và được che phủ màng phim nhựa để hạn chế bay hơi và kết tinh muối
+- Điều kiện vận hành dòng liên tục và chế độ kiểm soát nhiệt độ
+  - Hệ thống SAnMBR vận hành theo chế độ dòng liên tục trong tổng thời gian 189 ngày
+  - Nhiệt độ bể phản ứng được kiểm soát nghiêm ngặt ở chế độ kỵ khí ấm $36 \pm 1^\circ\text{C}$ để loại trừ biến động của môi trường ngoài
+  - Hệ thống bơm nhu động song song (Shiva Amvaj, Iran) điều phối dòng nạp và dòng rút dịch lọc
+  - Hoạt động của các bơm được đồng bộ hóa thông qua bộ điều khiển kỹ thuật số đa kênh (Shiva Amvaj, Isfahan, Iran)
+- Chiến lược tải trọng hữu cơ và kịch bản sốc tải phenolic
+  - Tải trọng hữu cơ (OLR) được điều chỉnh tăng dần từ $0.125\text{ kg COD/m}^3\cdot\text{day}$ đến $0.798\text{ kg COD/m}^3\cdot\text{day}$
+  - Giai đoạn nạp nền kéo dài đến ngày thứ 117 nhằm đảm bảo hệ vi sinh vật kỵ khí thích nghi và đạt trạng thái cân bằng động
+  - Quá trình châm nồng độ 2,4-DCP bắt đầu từ ngày thứ 118 để khảo sát phản ứng động học dưới tải sốc độc chất có kiểm soát

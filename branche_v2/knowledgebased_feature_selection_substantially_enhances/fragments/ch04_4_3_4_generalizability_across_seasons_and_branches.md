@@ -1,0 +1,24 @@
+### 3.4 Generalizability across Seasons and Treatment Plants
+
+- Hai thử nghiệm kiểm định tính tổng quát hóa bổ trợ lẫn nhau:
+  - Kiểm định tính tổng quát hóa theo mùa vụ (temporal generalizability) trên Tập dữ liệu A2 tại nhà máy WWTP-A.
+  - Kiểm định khả năng chuyển giao liên trạm (cross-plant transferability) trên Tập dữ liệu B1 tại nhà máy WWTP-B có sơ đồ công nghệ khác biệt.
+- Khả năng tổng quát hóa xuyên mùa vụ trên Tập dữ liệu A2 (WWTP-A mùa hè):
+  - Áp dụng trực tiếp cấu hình mô hình từ tập A1 sang tập A2 (tháng 12 năm 2024) mà không huấn luyện lại hay tinh chỉnh trọng số (zero retraining).
+  - Điều kiện vận hành mùa hè có lưu lượng dòng vào đạt $75\text{ L/s}$, cao hơn rõ rệt so với mức trung bình tập huấn luyện ($52.71\text{ L/s}$).
+  - Mô hình FS-LSTM có độ lệch thang đo hệ thống nhưng sau chuẩn hóa vẫn nắm bắt trọn vẹn quy luật động học thời gian của phát thải $N_2O$.
+  - Ngược lại, cả LSTM-Attention và Attention-LSTM đều mất độ nhạy với dao động tức thời, làm phẳng các giá trị cực trị và bỏ lỡ các đỉnh phát thải quá độ.
+- Khung KBFS chứng minh khả năng tổng quát hóa xuyên mùa vụ tại WWTP-A và chuyển giao thành công sang nhà máy WWTP-B với quy trình Bardenpho 12 bể:
+  - Trạm WWTP-B vận hành quy trình Bardenpho 5 giai đoạn với 12 bể phản ứng sinh học song song, tạo ra không gian quan trắc khổng lồ gồm 180 đặc trưng ứng viên.
+  - Tái áp dụng độc lập quy trình KBFS trên trạm WWTP-B giúp cô đọng 180 biến xuống 7 đặc trưng khử nitrat then chốt:
+    - Lưu lượng khí sục các ngăn 6–8 ($\text{Airflow Rates Tank 6-8}$).
+    - Nồng độ sinh khối vi khuẩn dị dưỡng tại ngăn 5 và ngăn 6 ($X_H\text{-Tank 5}$, $X_H\text{-Tank 6}$).
+    - Lưu lượng dòng vào $\text{InflowRate}$.
+    - Nồng độ nhu cầu oxy hóa học tại ngăn 2 ($\text{COD-Tank 2}$).
+  - **Hình 5.** Đánh giá tính tổng quát hóa của khung lựa chọn đặc trưng định hướng tri thức
+    - ![Hình 5](assets/fig_05_p9.png)
+    - Cơ chế & Bằng chứng: Kiểm định mùa hè trên tập A2 ($75\text{ L/s}$) cho thấy FS-LSTM duy trì động học phát thải $N_2O$ trong khi Attention-LSTM làm phẳng các đỉnh dao động. Tại WWTP-B với 180 biến ứng viên, KBFS rút gọn xuống 7 đặc trưng khử nitrat giúp FS-LSTM đạt $\text{MAE} = 0.00260$ (so với $0.00568$ của Attention-LSTM) và ổn định tỷ lệ quá khớp.
+- Hiệu năng nổi bật của mô hình lựa chọn đặc trưng tại WWTP-B:
+  - Mô hình FS-LSTM đạt sai số $\text{MAE} = 0.00260$, thấp hơn đáng kể so với Attention-LSTM ($\text{MAE} = 0.00568$) và LSTM-Attention ($\text{MAE} = 0.00309$).
+  - Duy trì tỷ lệ quá khớp ổn định nhất trên các kịch bản kiểm định, loại bỏ hoàn toàn các tương quan giả và nhiễu từ không gian 180 biến ban đầu.
+  - Khẳng định tính tất yếu của việc tái đánh giá đặc trưng theo cơ chế khi chuyển giao mô hình sang các trạm xử lý nước thải mới.

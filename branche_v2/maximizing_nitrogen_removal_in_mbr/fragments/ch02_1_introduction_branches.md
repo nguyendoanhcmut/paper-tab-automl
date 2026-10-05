@@ -1,0 +1,21 @@
+## 1 Introduction
+
+- Nhà máy xử lý nước thải ($\text{WWTPs}$) ứng dụng quá trình sinh học để chuyển hóa chất ô nhiễm
+  - Các chuyển hóa vi sinh vật xử lý đồng thời chất hữu cơ, nitơ và photpho trong các phân vùng kỵ khí, thiếu khí và hiếu khí.
+  - Công nghệ màng sinh học ($\text{MBR}$) trở thành lựa chọn ưu tiên nhờ hiệu suất phân tách cao, diện tích xây dựng nhỏ và khả năng duy trì nồng độ sinh khối ($\text{MLSS}$) cao.
+- Cấu hình $\text{MBR}$ truyền thống gặp hai nút thắt vận hành liên quan mật thiết đến nhau
+  - Nhiệt độ thấp trong mùa đông ức chế hoạt tính của vi khuẩn nitrat hóa, dẫn đến hiện tượng trôi thoát amoni và suy giảm hiệu quả xử lý $\text{TN}$.
+  - Nồng độ oxy hòa tan ($\text{DO}$) dư thừa trong dòng bùn tuần hoàn xâm nhập vào vùng thiếu khí (anoxic), gây ức chế vi khuẩn khử nitrat dị dưỡng.
+  - Sự cạnh tranh cơ chất cacbon giữa vi khuẩn khử nitrat và sinh vật tích lũy photpho ($\text{PAO}$) trong điều kiện nước thải thiếu cacbon làm hiệu quả xử lý $\text{TN}$ suy giảm nghiêm trọng.
+- Các nghiên cứu cải tiến trước đây xử lý cục bộ các thông số riêng lẻ
+  - Phương pháp kiểm soát nồng độ amoni tự do làm giàu quần thể vi sinh vật nitrat hóa - khử nitrat, đạt hiệu suất khử $\text{TN}$ $97.12\%$ và giảm $33\%$ lượng tiêu thụ cacbon.
+  - Cấu hình $\text{MBR}$ màng động sục khí gián đoạn hỗ trợ nitrat hóa - khử nitrat một phần ở tỷ lệ $\text{COD/N}$ thấp, đạt hiệu suất khử $\text{TN}$ $86.14\%$.
+  - Ứng dụng khử nitrat tự dưỡng bằng lưu huỳnh kết hợp châm hóa chất keo tụ hoặc bổ sung giá thể mang lưu huỳnh cải thiện hiệu quả khử $\text{TN}$ từ $30\%$ đến $40\%$.
+  - Các giải pháp trên chưa giải quyết đồng bộ sự mất cân bằng oxy giữa các vùng phản ứng và sự suy giảm hoạt tính sinh học theo mùa.
+- Nghiên cứu đề xuất cấu hình $\text{MBR}$ tích hợp hai giải pháp kỹ thuật bổ trợ
+  - Bể chuyển đổi (swing-basin) hoạt động linh hoạt giữa chế độ thiếu khí và hiếu khí, cho phép điều chỉnh thể tích vùng hiếu khí để đảm bảo tốc độ nitrat hóa ổn định khi nhiệt độ nước thải xuống thấp.
+  - Bể giảm oxy hòa tan ($\text{DO-R}$) ngắt sục khí sau vùng hiếu khí, thúc đẩy vi sinh vật tiêu thụ $\text{DO}$ dư bằng con đường hô hấp nội bào nhằm tái lập thế khử phù hợp cho quá trình khử nitrat.
+- Tích hợp mô hình học máy giải thích được và tối ưu hóa lấy cảm hứng sinh học
+  - Mô hình hóa mối quan hệ phi tuyến phức tạp giữa thông số vận hành và chất lượng nước sau xử lý thông qua Rừng ngẫu nhiên ($\text{RF}$) và Mạng nơ-ron sâu ($\text{DNN}$).
+  - Sử dụng phương pháp Shapley Additive exPlanations ($\text{SHAP}$) để định lượng tác động tương hỗ giữa nồng độ $\text{DO}$, bùn tuần hoàn và hiệu quả khử nitơ.
+  - So sánh tốc độ hội tụ và độ chính xác của ba thuật toán tối ưu hóa lấy cảm hứng sinh học với chuẩn Tiến hóa vi phân ($\text{DE}$) nhằm tìm ra điều kiện vận hành tối ưu cho trạm $\text{MBR}$ quy mô thực tế.

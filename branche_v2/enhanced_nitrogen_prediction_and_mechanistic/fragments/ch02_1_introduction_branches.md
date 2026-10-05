@@ -1,0 +1,22 @@
+## 1 Introduction
+
+- Thách thức từ nước thải độ mặn cao và hạn chế vận hành của công nghệ MBR:
+  - Nước thải từ sản xuất hóa chất, chế biến thực phẩm, dược phẩm và khử mặn nước biển chứa nồng độ muối hòa tan rất cao.
+  - Nồng độ muối cao làm suy giảm tính thấm của đất và gây độc hại trực tiếp cho các hệ sinh thái thủy sinh.
+  - Bể phản ứng sinh học màng (MBR) tích hợp quá trình phân tách màng với xử lý sinh học để lọc bỏ các chất ô nhiễm.
+  - Khi nồng độ $NaCl > 1\%$, hoạt tính sinh học của vi khuẩn oxy hóa amoniac ($AOB$) bị ức chế nghiêm trọng.
+  - Vi sinh vật chịu áp lực thẩm thấu ưu tiên tổng hợp các chất bảo vệ thẩm thấu ($osmoprotectants$) thay vì thực hiện phản ứng khử nitrat.
+  - Các cảm biến truyền thống không thể phát hiện kịp thời sự thay đổi quần xã vi sinh vật theo thời gian thực.
+  - Sự chậm trễ trong việc điều chỉnh chế độ sục khí làm tiêu hao năng lượng và đẩy chi phí vận hành tăng thêm từ $18\%\text{–}25\%$.
+- Giới hạn của các phương pháp mô hình hóa truyền thống trong môi trường mặn:
+  - Các mô hình cơ chế (mechanistic models) và bùn hoạt tính (ASM) gặp hiện tượng trôi dạt tham số động học ($kinetic\ parameter\ drift$).
+  - Mô hình lai ghép ASM với thủy động lực học tính toán (ASM-CFD) dự đoán quá mức tốc độ nitrat hóa khi nồng độ muối tăng cao.
+  - Các mô hình thực nghiệm hồi quy thất bại trên các dải độ mặn biến đổi do áp suất thẩm thấu làm rối loạn các con đường chuyển hóa $C/N$.
+- Tiến bộ và khoảng trống ứng dụng của học máy trong xử lý nước thải:
+  - Các mạng nơ-ron nhân tạo ($ANN$), $LSTM$, $XGBoost$ và $Random\ Forest$ đã được áp dụng để dự đoán nồng độ $TN$, $COD$ và kim loại nặng.
+  - Hầu hết các nghiên cứu hiện tại chỉ tập trung vào hiện tượng nghẹt màng ($membrane\ fouling$) mà bỏ qua con đường biến dưỡng của vi sinh vật.
+  - Chưa có nghiên cứu nào sử dụng biểu đồ lực SHAP force plots hoặc đồ thị PDP để khảo sát sự đánh đổi giữa enzyme nitrat hóa và phân bổ cacbon.
+- Ba mục tiêu nghiên cứu cụ thể của bài báo:
+  - Thiết lập khung học máy có thể giải thích để giải mã các điểm nghẽn chuyển hóa nitơ do độ mặn gây ra trong hệ thống MBR.
+  - Định lượng các tương tác đa quy mô giữa thông số vận hành và chức năng nitrat hóa–khử nitrat của vi sinh vật chịu mặn.
+  - Xây dựng các công cụ trực quan hóa hỗ trợ ra quyết định để chuyển đổi dự đoán của mô hình thành chiến lược vận hành thực tế.

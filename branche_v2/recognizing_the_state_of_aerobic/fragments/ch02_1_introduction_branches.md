@@ -1,0 +1,29 @@
+## 1 Introduction
+
+- Ưu thế công nghệ của bùn hạt hiếu khí (AGS) kết hợp màng sinh học dòng liên tục (AGS-MBR).
+  - Bùn hạt hiếu khí (AGS) có mật độ sinh khối cao và cấu trúc hạt cô đặc, cho phép xử lý đồng thời chất dinh dưỡng và chất hữu cơ trong một bioreactor duy nhất.
+  - Quy trình AGS vượt qua bùn hoạt tính truyền thống (CAS) về mặt hiệu quả kinh tế và thể tích công trình.
+  - MBR truyền thống kết hợp CAS với lọc màng cho nước sau xử lý chất lượng cao nhưng gặp vấn đề nghiêm trọng về tắc nghẽn màng (membrane fouling) do bông bùn bám dính.
+  - Dạng hạt nén chặt của AGS hạn chế đáng kể sự lắng đọng lớp bùn trên bề mặt màng sợi rỗng, giảm hiện tượng tắc nghẽn màng và giảm lượng bùn hoạt tính thải bỏ (WAS).
+  - Chuyển đổi phương thức nuôi cấy từ hệ phản ứng gián đoạn theo mẻ (SBR) sang hệ dòng chảy liên tục (continuous-flow) là trọng tâm nghiên cứu ứng dụng thực tế.
+- Đặc trưng 4 giai đoạn trong chu kỳ sống của AGS và thách thức từ tính dị thể hình thái.
+  - Chu kỳ sống của bùn hạt trong bioreactor trải qua 4 giai đoạn kế tiếp: khởi tạo (initial), sinh trưởng (growth), trưởng thành (mature), và phân cắt (cleaved).
+  - Giai đoạn khởi tạo (initial stage): hạt bùn có kích thước rất nhỏ và dạng tiền hạt.
+  - Giai đoạn sinh trưởng (growth stage): hạt phát triển nhanh với các đường viền gồ ghề và bề mặt thô ráp.
+  - Giai đoạn trưởng thành (mature stage): hạt đạt kích thước ổn định, mật độ hạt cô đặc với bề mặt nhẵn mịn.
+  - Giai đoạn phân cắt (cleaved stage): các hạt lão hóa bị rạn nứt cấu trúc, hạt lớn giảm dần và xuất hiện nhiều mảnh vỡ nhỏ.
+  - Sự biến động của điều kiện nước thải đầu vào và nhiệt độ dễ làm hạt bùn bị rã thành bông cặn lơ lửng, gây mất ổn định hệ thống MBR.
+- Giới hạn của các phương pháp giám sát bùn truyền thống thúc đẩy nhu cầu công nghệ chẩn đoán không xâm lấn.
+  - Kỹ thuật lát cắt đông lạnh và đo vi điện cực oxy hòa tan (DO) có tính xâm lấn, phá vỡ vi môi trường bên trong cấu trúc hạt.
+  - Kính hiển vi quét đồng tiêu laser (CLSM) đòi hỏi quy trình chuẩn bị mẫu nhuộm phức tạp, tốn thời gian và thiếu tính lặp lại trong môi trường công nghiệp.
+  - Nhu cầu thực tế đòi hỏi công cụ chẩn đoán thông minh, không xâm lấn và phân tích trạng thái bùn thời gian thực.
+- Ứng dụng trí tuệ nhân tạo và khoảng trống nghiên cứu thị giác máy tính trong nhận dạng hạt bùn.
+  - Các nghiên cứu trước đây dùng mạng nơ-ron nhân tạo (ANN) để dự đoán hiệu quả xử lý COD, amoni ($NH_4^+$), tổng nitơ, và tổng phospho từ dữ liệu lịch sử.
+  - Chưa có giải pháp AI ứng dụng thị giác máy tính nhận dạng trực tiếp ảnh hiển vi và phân loại chu kỳ sống của hạt AGS trong bioreactor màng.
+  - Thuật toán YOLO (You Only Look Once), đặc biệt là kiến trúc YOLOv8, có độ chính xác cao và tốc độ nhận dạng thời gian thực.
+- Mục tiêu và lộ trình nghiên cứu của công trình.
+  - Xây dựng mô hình YOLOv8 để nhận diện và phân loại tự động 4 giai đoạn vòng đời của hạt AGS trong hệ thống AGS-MBR dòng liên tục.
+  - Tối ưu hóa siêu tham số mô hình thông qua việc tinh chỉnh hàm mất mát và phân tích các chỉ số đánh giá trên tập kiểm tra.
+  - Áp dụng kỹ thuật giảm chiều $t\text{-SNE}$ để trực quan hóa không gian ngữ nghĩa 2D và kiểm chứng phân cụm hạt bùn.
+  - Phân tích cơ chế ra quyết định của mô hình thông qua phương pháp giải thích SHAP.
+  - Tích hợp mô-đun đếm và thống kê hạt tự động theo từng giai đoạn hỗ trợ kiểm soát vận hành bioreactor thời gian thực.

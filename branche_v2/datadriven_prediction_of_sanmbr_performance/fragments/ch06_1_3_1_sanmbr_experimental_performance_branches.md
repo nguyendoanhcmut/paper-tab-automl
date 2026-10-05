@@ -1,0 +1,39 @@
+### 3.1 SAnMBR Experimental Performance
+
+- **Hiệu suất vận hành thực nghiệm của hệ SAnMBR dưới tải phenolic**:
+  - Nồng độ COD đầu ra duy trì ổn định dưới $100\ \text{mg/L}$ trong các giai đoạn I–III, tương ứng hiệu suất loại bỏ $COD > 90\%$.
+  - Tải lượng hữu cơ tăng dần từ $1.0\ \text{kg COD}/(\text{m}^3\cdot\text{day})$ lên $2.5\ \text{kg COD}/(\text{m}^3\cdot\text{day})$ mà không làm phá vỡ cân bằng vi sinh kỵ khí trong các giai đoạn đầu.
+  - Khi chịu tải sốc $2,4\text{-DCP} = 300\ \text{mg/L}$ ở Giai đoạn V, hiệu suất loại bỏ COD giảm tạm thời xuống $76.4\%$ do ức chế vi sinh vật.
+  - Quá trình tạo khí methane bị sụt giảm khoảng $35\%$ trong tuần đầu tiên của Giai đoạn V, sau đó phục hồi dần khi vi sinh vật thích nghi.
+  - Tốc độ sinh khí methane đạt giá trị trung bình $0.28\ \text{L CH}_4/(\text{g COD}_{removed})$ trong giai đoạn ổn định.
+  - Nồng độ axit béo bay hơi ($VFA$) trong nước lọc duy trì dưới $50\ \text{mg/L}$ ở tải phenolic thấp, nhưng tăng lên $280\ \text{mg/L}$ khi nồng độ 2,4-DCP đạt $300\ \text{mg/L}$.
+  - Tỷ lệ $VFA/Alkalinity$ giữ dưới ngưỡng an toàn $0.3$ trong các giai đoạn I–IV, đảm bảo không xảy ra hiện tượng axit hóa bể kỵ khí.
+  - Sinh khối bùn lỏng duy trì nồng độ $MLSS = 12.5\text{–}14.2\ \text{g/L}$ với tỷ lệ $MLVSS/MLSS = 0.76$, chứng minh hoạt tính sinh học ổn định.
+  - Khả năng lưu giữ sinh khối của màng PVDF giúp hệ thống bảo toàn các chủng vi sinh vật kỵ khí tăng trưởng chậm.
+  - Tải trọng thủy lực bề mặt màng duy trì ổn định ở mức thông lượng $J = 6.25\ \text{L}/(\text{m}^2\cdot\text{h})$.
+  - Tỷ lệ loại bỏ độ đục đạt trên $99\%$ xuyên suốt toàn bộ $189\ \text{ngày}$ vận hành, chất lượng nước permeate luôn trong.
+  - **Hình 5.** Chuỗi thời gian nồng độ COD và hiệu suất loại bỏ
+    - <img src="assets/fig_05_p7.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Thể hiện sự suy giảm hiệu suất tạm thời dưới tải sốc và khả năng phục hồi của hệ thống kỵ khí màng.
+    - **Từ đâu mà thấy được**
+      - Đường COD đầu ra (màu đỏ) tăng vọt tại ngày 136–150 tương ứng với thời điểm nâng nồng độ 2,4-DCP, sau đó giảm dần khi hệ vi sinh thích nghi.
+  - Nồng độ $2,4\text{-DCP}$ đầu ra được giữ ở mức $< 2\ \text{mg/L}$ trong hầu hết thời gian, chứng minh khả năng phân hủy phenolic của màng kỵ khí.
+  - Bùn kỵ khí dạng hạt giữ lại trong màng tạo điều kiện thuận lợi cho các vi khuẩn khử clo phân hủy vòng benzen.
+  - Sự tích lũy nồng độ trung gian của chlorophenol trong bể được kiểm soát nhờ thời gian lưu bùn dài ($SRT > 100\ \text{ngày}$).
+  - Tốc độ phân hủy riêng của $2,4\text{-DCP}$ đạt $12.4\ \text{mg}/(\text{g VSS}\cdot\text{day})$ tại thời điểm hệ thống thích nghi hoàn toàn.
+  - **Hình 6.** Biến thiên nồng độ 2,4-DCP và các thông số vận hành
+    - <img src="assets/fig_06_p8.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - Xác nhận hiệu suất chuyển hóa 2,4-DCP đạt trên 98% ngay cả trong điều kiện nồng độ đầu vào cao.
+    - **Từ đâu mà thấy được**
+      - Đồ thị nồng độ tích lũy 2,4-DCP đầu vào (cột xanh) và nồng độ rất thấp ở dòng permeate (đường tròn đỏ).
+  - Tác động tương hỗ phi tuyến giữa pH và COD đầu vào được thể hiện rõ nét qua bề mặt đáp ứng hai chiều.
+  - Giá trị pH thích hợp nằm trong khoảng $7.0\text{–}7.3$, giúp ổn định hệ đệm bicacbonat chống lại sự tích tụ axit béo bay hơi.
+  - Khi pH giảm xuống dưới $6.6$, độc tính của $2,4\text{-DCP}$ ở dạng không phân ly tăng mạnh, làm giảm khả năng khử COD.
+  - **Hình 7.** Đồ thị phụ thuộc một phần hai chiều (2D PDP) giữa pH và COD đầu vào
+    - <img src="assets/fig_07_p9.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Xác lập vùng đệm pH tối ưu (7.0–7.3) giúp tối đa hóa khả năng đệm trước tải lượng hữu cơ biến động.
+    - **Từ đâu mà thấy được**
+      - Bề mặt đường mức contour đạt giá trị loại bỏ COD cao nhất (> 92%) nằm tại vùng giao thoa giữa pH 7.0–7.3 và COD 1200–1600 mg/L.

@@ -1,0 +1,28 @@
+### 3.2 Feature importance ranking
+
+- Đánh giá thứ bậc tầm quan trọng toàn cục của các biến đặc trưng qua phân tích SHAP:
+  - Sáu đặc trưng hàng đầu cho từng biến mục tiêu được lựa chọn dựa trên sự kết hợp giữa xếp hạng SHAP và cơ chế sinh hóa thực tế.
+- Các đặc trưng chi phối dự đoán amoni đầu ra ($NH_4^+\text{-N}_{out}$) và cơ chế sinh học tương ứng:
+  - Độ mặn ($salinity$) là biến có tầm ảnh hưởng lớn nhất, với giá trị SHAP cao gần gấp đôi biến xếp thứ hai là $NO_2^-\text{-N}_{out}$.
+  - Nồng độ muối cao làm suy giảm thế chênh proton qua màng vi khuẩn AOB, ức chế enzyme ammonia monooxygenase ($AMO$) và hydroxylamine oxidoreductase ($HAO$).
+  - Sự tích tụ nitrit ($NO_2^-\text{-N}_{out}$) gây hiện tượng ức chế phản hồi do cạnh tranh vị trí hoạt động trên enzyme $AMO$.
+  - Hiệu suất $COD_{eff}$ phản ánh sự cạnh tranh cơ chất: hiệu suất khử $COD$ cao chứng tỏ vi khuẩn dị dưỡng chiếm ưu thế và cạnh tranh chất dinh dưỡng của vi khuẩn nitrat hóa.
+  - Giá trị $pH$ dao động ngoài vùng tối ưu $7.5\text{–}8.5$ làm mất cân bằng bơm proton dưới tác động của lực ion muối cao.
+  - Tải lượng $NH_4^+\text{-N}_{in}$ đầu vào vượt quá năng lực nitrat hóa của hệ thống sẽ dẫn tới sự gia tăng tỷ lệ thuận của amoni đầu ra.
+  - Nồng độ $DO$ thể hiện tác động phi tuyến: quá trình nitrat hóa cần $DO > 2\ \text{mg/L}$, nhưng độ mặn làm giảm độ tan của oxy và dễ gây thiếu khí cục bộ.
+  - Các biến $TN_{eff}$, nhiệt độ và $NO_3^-\text{-N}_{out}$ có ảnh hưởng rất nhỏ đến dự đoán $NH_4^+\text{-N}_{out}$.
+- Các đặc trưng chi phối dự đoán tổng nitơ đầu ra ($TN_{out}$) và cơ chế sinh học tương ứng:
+  - Hiệu suất $TN_{eff}$ là biến dự đoán mạnh nhất, phản ánh trực tiếp hiệu quả loại bỏ nitơ tổng thể của toàn bộ hệ thống.
+  - Độ mặn là yếu tố quan trọng thứ hai với giá trị SHAP bằng khoảng $2/3$ giá trị của $TN_{eff}$.
+  - Độ mặn gây ức chế kép: ngăn cản chuyển hóa amoni và ức chế enzyme nitrate reductase ($Nar$) cùng nitrite reductase ($Nir$) của vi khuẩn khử nitrat.
+  - Vi sinh vật chịu mặn phân bổ nguồn cơ chất cacbon để tổng hợp glycine betaine nhằm chống áp suất thẩm thấu thay vì cấp electron khử nitrat.
+  - Nhiệt độ ảnh hưởng rõ nét do tính chất ưa nhiệt của vi khuẩn khử nitrat (khoảng tối ưu $20\text{–}40^\circ\text{C}$); nhiệt độ $< 15^\circ\text{C}$ làm bất hoạt enzyme $Nar$.
+  - Hiệu suất $COD_{eff}$ và tỷ lệ $C/N$ cùng kiểm soát chất cho electron: tỷ lệ $C/N < 5$ gây thiếu hụt nguồn cacbon hữu cơ để khử hoàn toàn nitrat.
+  - Oxy hòa tan $DO > 0.5\ \text{mg/L}$ thâm nhập vào vùng thiếu khí sẽ ức chế hoạt tính của enzyme $Nar$.
+  - Các biến $COD_{out}$, $pH$ và $NH_4^+\text{-N}_{in}$ có mức độ ảnh hưởng hạn chế đến dự đoán nồng độ $TN_{out}$.
+- Phân tích SHAP toàn cục xác định thứ bậc tầm quan trọng và cơ chế tác động của các biến đặc trưng then chốt:
+  - **Hình 3. Phân tích khả năng diễn giải tầm quan trọng đặc trưng toàn cục SHAP cho mô hình CatBoost**
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - Biểu đồ phân tích tầm quan trọng toàn cục SHAP cho dự đoán $NH_4^+\text{-N}_{out}$ (a, b) và $TN_{out}$ (c, d).
+    - Độ mặn là yếu tố chi phối hàng đầu đối với $NH_4^+\text{-N}_{out}$, trong khi $TN_{eff}$ và độ mặn kiểm soát dự đoán $TN_{out}$.
+    - Minh họa phân bố giá trị SHAP trung bình tuyệt đối kết hợp màu sắc giá trị đặc trưng từ thấp (xanh) đến cao (đỏ).

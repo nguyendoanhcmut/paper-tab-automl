@@ -1,0 +1,42 @@
+### 3.2 Comparison of model accuracy
+
+- Mô hình Rừng ngẫu nhiên thể hiện độ chính xác cao và sai số phần dư tập trung quanh trục không
+  - Các điểm dữ liệu giữa giá trị thực tế và dự báo của mô hình $\text{RF}$ phân bố sát đường chéo lý tưởng hơn mô hình $\text{DNN}$.
+  - Cấu trúc tập hợp nhiều cây quyết định giúp $\text{RF}$ triệt tiêu nhiễu từ các điểm ngoại lai và xử lý tốt các đặc trưng có thang đo lệch nhau.
+  - Phân phối phần dư của $\text{RF}$ có độ trải rộng hẹp và tập trung quanh giá trị 0, phản ánh sai số dự đoán rất nhỏ và độ ổn định cao.
+    - **Hình 4.** Giá trị thực tế so với dự đoán và biểu đồ phần dư của mô hình RF
+      - <img src="assets/fig_04_p8.jpeg" alt="Hình 4" />
+      - **Hình này chứng minh điều gì**
+        - Độ tập trung cao của điểm dự đoán quanh đường chéo đối với $\text{TN}$, $\text{TP}$ và $\text{COD}$.
+      - **Từ đâu mà thấy được**
+        - Biểu đồ phân tán và phân phối phần dư thu hẹp quanh giá trị sai số bằng 0.
+- Mô hình mạng nơ-ron sâu thể hiện độ phân tán lớn hơn và độ lệch phần dư rộng hơn
+  - Các điểm dự đoán của $\text{DNN}$ phân tán xa đường chéo chuẩn, cho thấy độ nhạy cao với tính phi đồng nhất của dữ liệu.
+  - Phân phối phần dư của $\text{DNN}$ kéo dài về hai phía, ghi nhận nhiều sai số có độ lệch lớn đối với các chỉ tiêu xử lý chất ô nhiễm.
+    - **Hình 5.** Giá trị thực tế so với dự đoán và biểu đồ phần dư của mô hình DNN
+      - <img src="assets/fig_05_p9.jpeg" alt="Hình 5" />
+      - **Hình này chứng minh điều gì**
+        - Mức độ tán xạ rộng của mạng nơ-ron sâu khi dự đoán ba chỉ tiêu $\text{TN}$, $\text{TP}$ và $\text{COD}$.
+      - **Từ đâu mà thấy được**
+        - Các điểm dữ liệu lệch xa đường chéo lý tưởng và phân phối phần dư trải rộng hai phía.
+- Sai số kiểm định chéo năm phần và phân tích độ ổn định theo độ phức tạp mô hình
+  - Khoảng biến thiên sai số $\text{RMSE}$ qua $5$ lượt kiểm định chéo của mô hình $\text{RF}$ duy trì mức thấp rõ rệt:
+    - Dự đoán tổng nitơ ($\text{TN}$): $\text{RMSE}$ đạt từ $1.44$ đến $1.73$.
+    - Dự đoán tổng photpho ($\text{TP}$): $\text{RMSE}$ đạt từ $0.14$ đến $0.17$.
+    - Dự đoán nhu cầu oxy hóa học ($\text{COD}$): $\text{RMSE}$ đạt từ $1.02$ đến $1.20$.
+  - Mô hình $\text{DNN}$ ghi nhận biên độ sai số $\text{RMSE}$ cao hơn và biến động mạnh hơn:
+    - Dự đoán $\text{TN}$: $\text{RMSE}$ dao động từ $1.42$ đến $2.81$.
+    - Dự đoán $\text{TP}$ dao động từ $0.17$ đến $0.31$.
+    - Dự đoán $\text{COD}$ dao động từ $1.10$ đến $2.56$.
+  - Đánh giá theo sai số tuyệt đối trung bình ($\text{MAE}$) và sai số bình phương ($\text{MSE}$):
+    - Mô hình $\text{RF}$ ghi nhận $\text{MAE}$ đạt $0.372$ cho $\text{TN}$, $0.032$ cho $\text{TP}$ và $0.303$ cho $\text{COD}$; với $\text{MSE}$ tương ứng là $0.160$, $0.370$ và $0.300$.
+    - Mô hình $\text{DNN}$ có sai số lớn hơn đáng kể với $\text{MAE}$ đạt $1.038$ cho $\text{TN}$, $0.147$ cho $\text{TP}$ và $0.846$ cho $\text{COD}$; với $\text{MSE}$ tương ứng là $1.399$, $4.067$ và $0.058$.
+    - **Hình 6.** Sai số RMSE qua 5 lượt kiểm định chéo và theo độ phức tạp mô hình
+      - <img src="assets/fig_06_p10.jpeg" alt="Hình 6" />
+      - **Hình này chứng minh điều gì**
+        - Mô hình $\text{RF}$ đạt $\text{RMSE}$ thấp hơn và duy trì ổn định qua các lần phân chia dữ liệu.
+      - **Từ đâu mà thấy được**
+        - Biểu đồ cột $\text{RMSE}$ cho từng fold và đường sai số trung bình theo số lượng cây.
+- Tác động của độ phức tạp kiến trúc lên sai số dự báo
+  - Đường sai số trung bình $\text{RMSE}$ của $\text{RF}$ theo số lượng cây quyết định biến thiên êm thuận và nhanh chóng đạt trạng thái bão hòa ổn định.
+  - Mô hình $\text{DNN}$ chịu sự dao động mạnh khi thay đổi số lượng nơ-ron lớp ẩn, thể hiện độ nhạy cao với cấu trúc tham số mạng.

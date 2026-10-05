@@ -1,0 +1,27 @@
+## 1 Introduction
+
+- **Tầm quan trọng và thách thức của hệ thống quan trắc chất lượng nước mặt**:
+  - Hệ thống giám sát và cảnh báo sớm chất lượng nước mặt bảo vệ sức khỏe cộng đồng và môi trường sinh thái theo mục tiêu phát triển bền vững SDG 6 và SDG 14.
+  - Các quốc gia đang phát triển đối mặt với rào cản lớn về nguồn lực và chi phí vận hành hệ thống đo đạc liên tục.
+- **Bất cập từ phương pháp đánh giá đơn nhân tố (Single-factor evaluation)**:
+  - Mạng lưới quan trắc tự động tại Trung Quốc triển khai từ năm 1999 áp dụng quy tắc đơn nhân tố theo tiêu chuẩn môi trường.
+  - Quy chuẩn đòi hỏi quan trắc đến $24$ chỉ tiêu hóa lý, bao gồm kim loại nặng (thủy ngân, chì) và các hợp chất hữu cơ đặc thù (phenol bay hơi).
+  - Cảm biến đo kim loại nặng và chất hữu cơ đắt tiền, dễ hỏng hóc trong điều kiện hiện trường, dẫn đến gián đoạn chuỗi số liệu.
+  - Mạng lưới quan trắc quốc gia trên thực tế phải thu gọn về nhóm chỉ tiêu khả thi hơn để đảm bảo vận hành ổn định.
+- **Rào cản khi áp dụng học máy truyền thống trong thủy văn**:
+  - Phương pháp thống kê truyền thống như phân tích thành phần chính (PCA) và tương quan Pearson hạn chế trước các mối quan hệ phi tuyến phức tạp.
+  - Học máy truyền thống đòi hỏi quy trình đa tầng thủ công: tiền xử lý dữ liệu, kỹ thuật trích xuất đặc trưng, lựa chọn thuật toán và tối ưu hóa siêu tham số (HPO).
+  - Quá trình HPO phải duyệt hàng trăm đến hàng nghìn cấu hình, tiêu tốn nhiều tài nguyên tính toán và phụ thuộc kinh nghiệm chuyên gia.
+- **Giải pháp học máy tự động hóa (AutoML)**:
+  - AutoML tự động hóa hoàn toàn quy trình từ tiền xử lý, chọn mô hình đến tối ưu siêu tham số.
+  - Khung làm việc Auto-sklearn tích hợp tối ưu hóa Bayesian, học siêu dữ liệu (meta-learning) và kỹ thuật tạo cụm mô hình (ensemble construction).
+  - Hiệu năng tối ưu hóa tự động của Auto-sklearn đã được chứng minh là tương đương hoặc vượt qua việc tinh chỉnh tham số thủ công của các chuyên gia khoa học dữ liệu.
+- **Nhu cầu giải thích mô hình bằng Kernel SHAP**:
+  - Cấu trúc tích hợp nhiều thuật toán phức tạp của AutoML gia tăng tính chất hộp đen (black-box), gây khó khăn cho công tác giám sát môi trường.
+  - Kernel SHAP kết hợp phương pháp giải thích cục bộ phi mô hình (LIME) với giá trị Shapley từ lý thuyết trò chơi hợp tác.
+  - Phân tích SHAP thay thế phương pháp vét cạn tập con tốt nhất (best subset selection) vốn có độ phức tạp tính toán tăng theo cấp số nhân.
+- **Mục tiêu nghiên cứu cụ thể**:
+  - Phân loại chất lượng nước mặt thành $6$ cấp (Cấp I đến Cấp V và Cấp kém V - WV) dựa trên $9$ chỉ tiêu nòng cốt từ Trung tâm Giám sát Môi trường Quốc gia Trung Quốc (CNEMC).
+  - So sánh Auto-sklearn với các mô hình học máy truyền thống và các thuật toán ensemble hiện đại qua các chỉ số Precision, Recall, Weighted F1, Macro F1, ma trận nhầm lẫn và đường cong ROC-AUC.
+  - Giải thích mô hình Auto-sklearn bằng Kernel SHAP để định lượng mức độ đóng góp của từng chỉ số.
+  - Xác định tập chỉ số tối thiểu nhằm tối ưu hóa chi phí quan trắc và hỗ trợ ra quyết định môi trường.

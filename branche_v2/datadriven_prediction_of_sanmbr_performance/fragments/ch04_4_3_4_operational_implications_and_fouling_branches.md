@@ -1,0 +1,23 @@
+### 3.4 Operational Implications and Fouling Risk Analysis
+
+- Sự tách rời giữa hiệu suất xử lý sinh học và độ bền vững vận hành màng
+  - Mô hình SVR chứng minh hiệu suất loại bỏ COD chịu sự chi phối chủ đạo của các yếu tố hóa sinh (pH và tải 2,4-DCP)
+  - Biến tổng chất rắn lơ lửng (TSS) và độ đục thể hiện độ nhạy thấp trong mô hình dự đoán hiệu suất COD
+  - Độ nhạy thấp của TSS trong dự đoán COD không đồng nghĩa với việc hạt chất rắn không quan trọng trong vận hành thực tế
+  - Các thông số liên quan đến hạt chất rắn là tác nhân trực tiếp chi phối động lực tắc nghẽn màng và chi phí năng lượng
+- Các cơ chế tuần tự và đan xen gây tắc nghẽn màng lọc trong hệ SAnMBR
+  - **Hình 13. Sơ đồ cơ chế tắc nghẽn màng trong hệ SAnMBR dưới tải sốc phenolic**
+    - ![Hình 13. Sơ đồ cơ chế tắc nghẽn màng](assets/fig_14_p14.jpeg)
+    - Tích tụ hạt lơ lửng và chất keo gây hiện tượng phân cực nồng độ trên bề mặt màng
+    - Hình thành lớp bánh bùn sinh học ngoài gồm sinh khối vi sinh, TSS và mạng lưới polyme EPS
+    - Các phân tử hữu cơ hòa tan thâm nhập gây bít tắc cục bộ và nghẽn sâu lòng lỗ màng
+    - Gia tăng trở lực thủy lực dẫn tới leo thang áp suất qua màng TMP và rút ngắn chu kỳ rửa màng
+- Động lực hình thành lớp bánh bùn và bít tắc lỗ màng (Pore Clogging)
+  - Hiện tượng phân cực nồng độ ban đầu tạo điều kiện cho các hạt keo và sinh khối lắng đọng nhanh trên bề mặt sợi màng
+  - Sự bài tiết chất polyme ngoại bào (EPS) dưới tác động của sốc độc phenolic gắn kết các hạt bùn tạo thành lớp bánh bùn sinh học đặc khít
+  - Các phân tử chất vi sinh hòa tan (SMP) có kích thước nhỏ hơn đường kính lỗ màng thấm sâu gây nghẽn bên trong cấu trúc xốp
+  - Sự gia tăng đột ngột trở lực lọc thủy lực buộc áp suất qua màng (TMP) tăng cao, làm tăng tần suất rửa ngược và tiêu hao hóa chất
+- Yêu cầu chiến lược tối ưu hóa đa mục tiêu trong vận hành thực tế
+  - Tối ưu hóa vận hành chỉ dựa trên chỉ số loại bỏ COD sẽ dẫn đến điểm vận hành rủi ro cao đối với tuổi thọ màng
+  - Khi nồng độ hạt rắn vượt ngưỡng tới hạn, hệ thống chuyển dịch từ chế độ kiểm soát bằng hiệu suất sang chế độ kiểm soát bằng tắc nghẽn
+  - Cần kiểm soát đồng thời tải trọng chất rắn lơ lửng và áp dụng sục khí sinh học phù hợp để duy trì tính bền vững kinh tế kỹ thuật

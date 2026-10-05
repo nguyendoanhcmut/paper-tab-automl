@@ -1,0 +1,26 @@
+### 3.1 Deeper and Attention-Based Models Improve Performance
+
+- Đánh giá có hệ thống các mô hình trong điều kiện mẫu nhỏ, số chiều cao:
+  - Tỷ lệ kích thước mẫu trên số lượng đặc trưng thấp ở mức xấp xỉ $76:1$ (sample-to-feature ratio $\approx 76:1$).
+  - Khảo sát hai hướng tiếp cận dựa trên cấu trúc mạng: tăng độ sâu mô hình học chuỗi và tích hợp cơ chế chú ý (attention mechanisms).
+- Hiệu năng của các kiến trúc học sâu không sử dụng cơ chế chú ý:
+  - Mô hình cơ sở LSTM hai lớp (two-layer LSTM):
+    - Đạt sai số kiểm tra trung bình $\text{MAE} = 0.0665$ ($\sigma = 0.0110$) và $R^2 = 0.119$ qua 20 lượt chạy độc lập.
+  - Mô hình lai CNN-LSTM:
+    - Chỉ mang lại cải thiện hạn chế với $\text{MAE} = 0.0599$ và $R^2 = 0.206$.
+  - Mô hình năm lớp LSTM tối ưu hóa qua Optuna (LSTM-5-Layers):
+    - Đạt $\text{MAE} = 0.0567$ ($\sigma = 0.0065$) và $R^2 = 0.2263$ ($\sigma = 0.1843$), cải thiện vừa phải nhờ tăng dung lượng nắm bắt phụ thuộc dài hạn.
+- Cơ chế chú ý cải thiện độ chính xác dự đoán nội miền:
+  - So sánh hai biến thể vị trí đặt cơ chế chú ý:
+    - Mô hình Attention-LSTM: áp dụng chú ý theo chiều đặc trưng (feature-wise attention) để đánh trọng số lại các biến đầu vào trước khi xử lý chuỗi, đạt $\text{MAE} = 0.0326$ và $R^2 = 0.712$.
+    - Mô hình LSTM-Attention: áp dụng chú ý theo trục thời gian sau khi mã hóa chuỗi LSTM, đạt $\text{MAE} = 0.0478$ và $R^2 = 0.465$.
+    - Attention-LSTM tốt hơn LSTM-Attention $31.8\%$ về chỉ số $\text{MAE}$, chứng minh việc tái đánh trọng số đầu vào ở giai đoạn sớm hiệu quả hơn xử lý biểu diễn sau mã hóa.
+- Hiện tượng quá khớp gia tăng ở các mô hình dung lượng lớn và toàn bộ kiến trúc suy giảm khi gặp điều kiện dòng chảy cao ngoài phân phối:
+  - Tỷ lệ sai số kiểm định trên huấn luyện (validation-to-training MAE ratio) dao động từ $1.26\times$ ở LSTM năm lớp đến $1.66\times$ ở Attention-LSTM.
+  - Khi thử nghiệm trên tập dữ liệu ngoài phân phối tháng 8 với lưu lượng dòng vào đạt $64.04\text{ L/s}$ (vượt mức trung bình huấn luyện $52.71\text{ L/s}$), toàn bộ mô hình đều sụp đổ với hệ số $R^2$ chuyển sang âm: baseline đạt $-0.017$, LSTM-5-Layers đạt $-0.084$, Attention-LSTM đạt $-0.087$ và LSTM-Attention đạt $-0.199$.
+  - **Hình 1.** So sánh hiệu năng mô hình trong điều kiện mẫu nhỏ, số chiều cao
+    - ![Hình 1](assets/fig_01_p5.png)
+    - Cơ chế & Bằng chứng: Phân phối $\text{MAE}$ trên tập kiểm tra cải thiện dần từ baseline đến Attention-LSTM đạt sai số thấp nhất ($0.0326$), nhưng tỷ lệ $\text{MAE}$ kiểm định/huấn luyện đạt $1.66\times$ (quá khớp cao). Khi lưu lượng tăng lên $64.04\text{ L/s}$ vào tháng 8, hệ số $R^2$ của toàn bộ mô hình đều chuyển sang âm (từ $-0.017$ đến $-0.199$).
+- Giới hạn của việc cải tiến kiến trúc thuần túy:
+  - Dòng chảy cao đưa vào các tổ hợp đặc trưng chưa xuất hiện trong tập huấn luyện, buộc mạng nơ-ron phải ngoại suy ngoài miền phân phối đã học.
+  - Tăng độ phức tạp mạng chỉ giúp ghi nhớ mẫu thống kê nội miền tháng 7 mà không tạo ra năng lực khái quát hóa vững chắc; do đó, tối ưu hóa không gian đầu vào bằng chọn lọc đặc trưng là yêu cầu bắt buộc.

@@ -1,0 +1,25 @@
+### 3.2 Correlation Analysis of Model Variables
+
+- Đánh giá phụ thuộc tuyến tính qua hệ số tương quan Pearson
+  - Ma trận tương quan được thiết lập để đo lường mức độ phụ thuộc tuyến tính giữa 6 biến vận hành đầu vào và hiệu suất loại bỏ COD
+  - Phân tích tương quan là bước sàng lọc sơ bộ trước khi áp dụng các giải thuật học máy phi tuyến tính
+- Ma trận tương quan Pearson giữa 6 biến đầu vào và hiệu suất loại bỏ COD
+  - **Hình 7. Bản đồ nhiệt hệ số tương quan Pearson giữa các biến đầu vào và hiệu suất loại bỏ COD**
+    - ![Hình 7. Bản đồ nhiệt tương quan Pearson](assets/fig_08_p10.jpeg)
+    - Tương quan dương tuyệt đối giữa nồng độ COD đầu vào và OLR đạt $r = 1.00$ do công thức tính toán tải
+    - COD đầu vào và OLR đóng góp mối tương quan tuyến tính mạnh nhất với hiệu suất loại bỏ ($r = 0.74$)
+    - Chỉ số pH dòng vào đạt tương quan dương vừa phải với biến mục tiêu ở mức $r = 0.36$
+    - Hợp chất phenolic 2,4-DCP ($r = 0.26$) và TSS ($r = 0.07$) thể hiện liên kết tuyến tính rất thấp
+- Hiện tượng đa cộng tuyến giữa COD dòng vào và tải trọng hữu cơ
+  - Nồng độ COD dòng vào và OLR có hệ số tương quan tuyến tính tuyệt đối $r = 1.00$ do OLR được tính trực tiếp từ lưu lượng và nồng độ COD
+  - Hiện tượng đa cộng tuyến (multicollinearity) này gây sai lệch nghiêm trọng đối với các mô hình tuyến tính cổ điển như MLR
+  - Mô hình SVR vẫn giữ nguyên cả hai biến đầu vào để bảo toàn đầy đủ các chiều thông tin vận hành thực nghiệm
+- Tương quan tuyến tính của các biến vận hành với hiệu suất xử lý
+  - Nồng độ COD đầu vào và OLR có mối liên hệ tuyến tính dương mạnh nhất với hiệu suất loại bỏ COD ($r = 0.74$)
+  - Giá trị $\text{pH}$ dòng vào có tương quan dương yếu hơn nhưng rõ nét với $r = 0.36$, phản ánh tầm quan trọng của môi trường kiềm nhẹ
+  - Tổng chất rắn lơ lửng ($\text{TSS}$) có hệ số tương quan gần như triệt tiêu ($r = 0.07$), khẳng định sinh khối lơ lửng không phải động lực tuyến tính chi phối hiệu suất xử lý
+  - Độ đục có tương quan nghịch yếu ($r = -0.26$), hàm ý độ đục tăng cao gắn liền với sự xáo trộn thủy lực làm giảm chất lượng nước sau xử lý
+- Giới hạn của phân tích tương quan tuyến tính đối với chất độc phenolic
+  - Nồng độ 2,4-DCP chỉ đạt hệ số tương quan tuyến tính yếu $r = 0.26$ với hiệu suất loại bỏ COD
+  - Tác động ức chế sinh học của 2,4-DCP xảy ra theo các ngưỡng nồng độ đột ngột và tương tác phi tuyến với pH mà hệ số Pearson không thể nắm bắt
+  - Kết quả đòi hỏi tất yếu việc sử dụng các mô hình phi tuyến và công cụ diễn giải đồ thị phụ thuộc một phần (PDP)

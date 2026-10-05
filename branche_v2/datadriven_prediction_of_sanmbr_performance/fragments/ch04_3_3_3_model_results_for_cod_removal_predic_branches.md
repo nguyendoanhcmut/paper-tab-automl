@@ -1,0 +1,83 @@
+### 3.3 Model results for COD Removal Prediction
+
+- So sánh định lượng hiệu suất dự đoán giữa các thuật toán
+  - Hiệu suất dự đoán của ba mô hình (SVR, MLR, ANN) được đánh giá đối sánh qua chỉ số $R^2$ và RMSE trên tập huấn luyện và kiểm tra
+  - Mô hình SVR thể hiện độ chính xác cao nhất với $R^2 = 0.975$, $\text{RMSE} = 1.97$ trên tập huấn luyện và $R^2 = 0.952$, $\text{RMSE} = 2.96$ trên tập kiểm tra
+  - Mô hình MLR đạt mức trung bình với $R^2 = 0.734$, $\text{RMSE} = 6.45$ (huấn luyện) và $R^2 = 0.717$, $\text{RMSE} = 7.23$ (kiểm tra), bị hạn chế bởi giả định tuyến tính
+  - Mô hình ANN bị hiện tượng quá khớp (overfitting) nghiêm trọng khi $R^2$ sụt giảm từ $0.603$ (huấn luyện, $\text{RMSE} = 7.89$) xuống $0.397$ (kiểm tra, $\text{RMSE} = 10.56$)
+- Phân tích nguyên nhân chênh lệch hiệu suất giữa các cấu trúc mô hình
+  - Sai số kiểm tra RMSE của SVR ($2.96$) thấp hơn $2.4$ lần so với MLR ($7.23$) và thấp hơn $3.5$ lần so với ANN ($10.56$)
+  - Quy mô dữ liệu 189 mẫu thực nghiệm là tương đối nhỏ đối với mạng nơ-ron nhiều tham số, khiến thuật toán lan truyền ngược dễ rơi vào cực tiểu địa phương
+  - Mô hình SVR áp dụng nguyên lý giảm thiểu rủi ro cấu trúc (Structural Risk Minimization), giúp duy trì năng lực tổng quát hóa cao và ngăn chặn hiệu quả hiện tượng quá khớp
+  - Mô hình tuyến tính MLR không thể phản ánh các điểm uốn động học khi nồng độ chất độc vượt qua ngưỡng chịu đựng của vi sinh vật
+- Đánh giá tính ngẫu nhiên của sai số qua phân tích phần dư
+  - **Hình 8. Phân tích phần dư của mô hình SVR tối ưu trên tập kiểm tra**
+    - ![Hình 8. Phân tích phần dư SVR](assets/fig_09_p10.jpeg)
+    - Các điểm phần dư phân tán ngẫu nhiên và đồng đều quanh trục hoành tham chiếu $y = 0$
+    - Hoàn toàn triệt tiêu các mẫu hình có tính hệ thống như dạng hình nón hay xu hướng uốn cong
+    - Xác nhận mô hình SVR đã giải thích toàn bộ các quy luật biến thiên có hệ thống của dữ liệu
+    - Sai số dự đoán còn lại mang bản chất nhiễu ngẫu nhiên thuần túy của phép đo thực nghiệm
+- Kiểm định độ hội tụ đường tương quan phân tán Parity Plot
+  - **Hình 9. So sánh giá trị loại bỏ COD thực nghiệm và dự đoán giữa các mô hình**
+    - ![Hình 9. So sánh giá trị thực nghiệm và dự đoán](assets/fig_10_p11.jpeg)
+    - Dữ liệu kiểm tra độc lập (điểm đỏ) của SVR bám sát đường lý tưởng phân giác 1:1
+    - Hầu như toàn bộ các điểm dự đoán của SVR nằm gọn trong dải biên sai số giới hạn 20%
+    - Mô hình ANN thể hiện độ phân tán lớn với nhiều điểm văng ra ngoài dải sai số cho phép
+    - Khẳng định khả năng tổng quát hóa của hàm nhân phi tuyến RBF
+- Phân tích hiện tượng phương sai thay đổi qua đồ thị sai số phần trăm
+  - **Hình 10. Phân bố sai số phần trăm so với hiệu suất loại bỏ COD thực tế**
+    - ![Hình 10. Phân bố sai số phần trăm](assets/fig_11_p11.jpeg)
+    - Điểm sai số phần trăm của SVR dao động biên độ hẹp sát đường sai số không
+    - Mô hình ANN và MLR bộc lộ dải phân tán sai số rộng trên toàn dải hiệu suất COD
+    - Mô hình ANN xuất hiện hiện tượng phương sai thay đổi (heteroscedasticity) rõ rệt
+    - Minh chứng cấu trúc mạng nơ-ron đơn giản chưa thích ứng tốt với dữ liệu sốc tải kỵ khí
+- Đánh giá dải biên sai số tương đối và độ tin cậy dự báo
+  - Đường biên sai số $20\%$ đóng vai trò ngưỡng kiểm soát kỹ thuật cho các hệ thống điều khiển tự động
+  - Điểm kiểm tra của mô hình SVR có độ lệch tuyệt đối so với thực nghiệm phần lớn nằm trong khoảng dưới $5\%$
+  - Độ tin cậy dự báo ổn định ở cả dải hiệu suất thấp dưới tải sốc và dải hiệu suất cao ở điều kiện bình thường
+
+#### 3.3.1 Partial Dependence Plots (PDPs)
+
+- Cơ chế giải thích tương tác phi tuyến biên thông qua PDP
+  - Phương pháp PDP cô lập tác động biên của từng biến vận hành độc lập lên hiệu suất loại bỏ COD trong khi giữ cố định các biến còn lại
+  - Cung cấp cái nhìn trực quan sâu sắc về ngưỡng vận hành tới hạn và phản ứng phi tuyến của hệ thống sinh học
+- Tương tác hai chiều giữa độ kiềm pH và nồng độ chất ức chế phenolic
+  - **Hình 6. Đồ thị phụ thuộc một phần hai chiều (2D PDP) giữa pH và nồng độ 2,4-DCP**
+    - ![Hình 6. Đồ thị 2D PDP pH và 2,4-DCP](assets/fig_07_p9.jpeg)
+    - Hiệu suất loại bỏ COD đạt đỉnh 92-95% khi 2,4-DCP dưới 50 mg/L và pH trong dải 8-9
+    - Hiệu suất sụt giảm nghiêm trọng khi nồng độ 2,4-DCP vượt ngưỡng ức chế 150 mg/L
+    - Vùng pH acid làm gia tăng tỷ lệ 2,4-DCP không phân ly khuếch tán qua màng tế bào
+    - Kiểm soát chặt chẽ giá trị pH đóng vai trò như hệ đệm bảo vệ chống lại các xung độc tố
+- Đồ thị phụ thuộc một phần đơn biến cho sáu thông số vận hành then chốt
+  - **Hình 11. Đồ thị phụ thuộc một phần (PDP) cho 6 thông số đầu vào chính**
+    - ![Hình 11. Đồ thị PDP 6 thông số đầu vào](assets/fig_12_p12.png)
+    - Nồng độ 2,4-DCP duy trì hiệu suất ổn định ở dải 0-150 mg/L trước khi suy giảm dốc
+    - Đường cong pH đạt cực đại rõ rệt tại dải 8-9 và suy giảm khi chuyển sang vùng acid hoặc kiềm mạnh
+    - Các biến COD dòng vào và OLR thể hiện đáp ứng bằng phẳng dưới ngưỡng tải tới hạn
+    - Độ đục và TSS thể hiện độ dốc âm nhẹ do tốc độ thủy phân hạt chất rắn diễn ra chậm
+- Ngưỡng ức chế sinh học và động thái của các biến tải trọng hữu cơ
+  - Nồng độ 2,4-DCP bắt đầu gây ức chế rõ nét khi vượt quá $150\text{ mg/L}$, làm giảm hoạt tính của cổ khuẩn sinh methane
+  - Đường cong của $\text{COD}$ đầu vào và OLR gần như nằm ngang trong dải khảo sát, chứng minh bể phản ứng hoạt động an toàn dưới giới hạn quá tải hữu cơ
+  - Tác động âm nhẹ của $\text{TSS}$ và độ đục phù hợp với bản chất giới hạn tốc độ của quá trình thủy phân chất rắn hạt trong môi trường kỵ khí
+- Cơ chế bảo vệ enzyme tại dải pH tối ưu
+  - Vùng pH kiềm nhẹ từ 8 đến 9 tối đa hóa hoạt tính xúc tác của các hệ enzyme chuyển hóa methane kỵ khí
+  - Môi trường pH này hạn chế sự phân ly của các acid béo bay hơi (VFA) tích tụ, ngăn ngừa hiện tượng toan hóa bể phản ứng (acidification)
+  - Đồng thời ở pH kiềm nhẹ, hợp chất 2,4-DCP tồn tại phần lớn ở dạng anion phân ly, giảm thiểu tối đa khả năng xâm nhập qua màng lipid của vi khuẩn
+  - Khi pH hạ xuống dưới 7, tỷ lệ dạng phân tử không phân ly tăng vọt (pKa $\approx 7.9$), gây độc tính tế bào tức thời và làm sụp đổ hiệu suất xử lý COD
+
+#### 3.3.2 Sensitivity Analysis
+
+- Khung phân tích độ nhạy độc lập cấu trúc mô hình (Model-Agnostic)
+  - Phương pháp đo lường phản ứng của mô hình SVR bằng cách biến thiên từng biến đầu vào quanh giá trị trung bình nền
+  - Chỉ số độ nhạy được xác định bằng độ lệch tuyệt đối trung bình giữa giá trị dự đoán sau biến thiên và giá trị dự đoán nền
+- Lượng hóa thứ bậc tác động của các biến vận hành lên mô hình SVR
+  - **Hình 12. Biểu đồ phân tích độ nhạy của các biến vận hành trong mô hình SVR**
+    - ![Hình 12. Biểu đồ phân tích độ nhạy](assets/fig_13_p13.jpeg)
+    - Nồng độ 2,4-DCP đạt chỉ số độ nhạy cao nhất, khẳng định là biến chi phối áp đảo
+    - Chỉ số pH đứng vị trí thứ hai về mức độ ảnh hưởng đến dự đoán loại bỏ COD
+    - Các thông số tải hữu cơ tổng thể gồm COD dòng vào và OLR có mức độ nhạy cảm trung bình
+    - Tổng chất rắn lơ lửng TSS và độ đục ghi nhận điểm số độ nhạy thấp nhất trong mô hình
+- Luận giải cơ chế sinh học đằng sau thứ bậc độ nhạy
+  - Nồng độ 2,4-DCP là biến chi phối quan trọng nhất, khi biến thiên nồng độ có thể làm hiệu suất sụt giảm từ $90\%$ xuống dưới $70\%$
+  - Giá trị pH đứng thứ hai phản ánh tính nhạy cảm nghiêm ngặt của hệ vi sinh vật methanogen đối với cân bằng acid - base
+  - Các chỉ tiêu chất rắn lơ lửng có độ nhạy thấp nhất do quá trình lưu giữ màng đã tách biệt ảnh hưởng vật lý của hạt rắn khỏi động học sinh hóa hòa tan

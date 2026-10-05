@@ -1,0 +1,21 @@
+### 3.4 Process optimization
+
+- Bảng 4 so sánh kết quả tối ưu hóa đa mục tiêu giữa phương pháp chuẩn và các thuật toán sinh học
+  - Phương pháp chuẩn Tiến hóa vi phân ($\text{DE}$) thiết lập mốc tham chiếu kỹ thuật:
+    - Nồng độ các chất ô nhiễm sau xử lý được tối thiểu hóa: $\text{COD}$ đạt $5.59\text{ mg/L}$, $\text{TN}$ đạt $5.06\text{ mg/L}$ và $\text{TP}$ đạt $0.06\text{ mg/L}$.
+    - Thông số vận hành tối ưu: lưu lượng bùn tuần hoàn $\text{Sludge-R}$ đạt $139.67\text{ m}^3/\text{ngày}$ và nồng độ $\text{DO-R}$ đạt $0.20\text{ mg/L}$.
+  - Thuật toán Nấm nhầy ($\text{SMA}$) đạt các giá trị cận tối ưu:
+    - Nồng độ chất lượng nước đầu ra: $\text{COD}$ đạt $6.16\text{ mg/L}$, $\text{TN}$ đạt $5.35\text{ mg/L}$ và $\text{TP}$ đạt $0.05\text{ mg/L}$.
+    - Thông số vận hành tương ứng: $\text{Sludge-R}$ đạt $138.17\text{ m}^3/\text{ngày}$ và $\text{DO-R}$ đạt $0.20\text{ mg/L}$, rất sát với chuẩn $\text{DE}$.
+  - Thuật toán Thiêu thân ($\text{MOA}$) có độ lệch lớn hơn:
+    - Nồng độ nước đầu ra: $\text{COD}$ đạt $6.19\text{ mg/L}$, $\text{TN}$ đạt $5.55\text{ mg/L}$ và $\text{TP}$ đạt $0.05\text{ mg/L}$.
+    - Lưu lượng bùn tuần hoàn $\text{Sludge-R}$ chỉ đạt $119.88\text{ m}^3/\text{ngày}$, thấp hơn nhiều so với $\text{DE}$, làm giảm lưu lượng nitrat cung cấp cho khử nitrat.
+    - Chênh lệch nồng độ $\text{TN}$ khoảng $0.5\text{ mg/L}$ có ý nghĩa quyết định trong việc tuân thủ các quy chuẩn xả thải môi trường nghiêm ngặt.
+- Thuật toán Chim ưng Harris ($\text{HHO}$) đạt độ chính xác gần nhất với chuẩn DE
+  - Kết quả nồng độ nước sau xử lý của $\text{HHO}$: $\text{COD}$ đạt $5.96\text{ mg/L}$, $\text{TN}$ đạt $5.26\text{ mg/L}$ và $\text{TP}$ đạt $0.06\text{ mg/L}$.
+  - Thông số vận hành tối ưu xác định: $\text{Sludge-R}$ đạt $146.23\text{ m}^3/\text{ngày}$ và $\text{DO-R}$ đạt $0.20\text{ mg/L}$.
+  - $\text{HHO}$ duy trì khả năng điều tiết bùn tuần hoàn và oxy hòa tan cân bằng nhất, đảm bảo tính ổn định của toàn bộ chu trình xử lý sinh học.
+- Phân tích cơ chế toán học giúp HHO đạt hiệu năng hội tụ cao
+  - Biến năng lượng đào thoát $E$ của con mồi giảm dần theo từng chu kỳ lặp, tự động điều phối sự chuyển tiếp nhịp nhàng giữa pha tìm kiếm diện rộng và pha khai thác cục bộ.
+  - Vận dụng phối hợp nhiều chiến lược tấn công bao gồm vây hãm mềm, vây hãm cứng và các đợt bổ nhào nhanh thích ứng theo xác suất trốn thoát của con mồi.
+  - Tốc độ tính toán nhanh vượt bậc so với thuật toán tiến hóa cổ điển $\text{DE}$, khiến $\text{HHO}$ trở thành công cụ tối ưu hóa phù hợp nhất cho điều khiển vận hành tự động trạm $\text{MBR}$ trong thực tế.

@@ -1,0 +1,22 @@
+### 2.1 Membrane reactor equipment
+
+- Thiết lập hệ thống thực nghiệm mô phỏng điều kiện áp lực chuyển hóa do nồng độ muối cao trong MBR:
+  - Nước thải tổng hợp điều chế từ glucose ($C_6H_{12}O_6$), kali đihydro photphat ($KH_2PO_4$), amoni clorua ($NH_4Cl$) và natri clorua ($NaCl$).
+  - Bổ sung các nguyên tố vi lượng theo tỷ lệ chuẩn để đảm bảo dinh dưỡng nền cho vi sinh vật bùn hoạt tính.
+  - Vận hành $5$ mẻ phản ứng độc lập với thể tích làm việc hữu dụng mỗi bể là $10\ \text{L}$.
+  - Nồng độ độ mặn nuôi cấy vi sinh vật được thiết lập trải rộng từ $0\%$ đến $5\%$.
+  - Nhiệt độ bể phản ứng duy trì trong khoảng từ $5^\circ\text{C}$ đến $35^\circ\text{C}$ nhờ hệ thống ổn nhiệt cách thủy.
+  - Nồng độ chất rắn lơ lửng ($SS$) trong hỗn hợp bùn hoạt tính được kiểm soát trong khoảng từ $3$ đến $8\ \text{g/L}$.
+  - Chỉ số $pH$ của nước trong bể phản ứng duy trì ổn định trong phạm vi từ $7.0$ đến $8.5$.
+  - Bơm nhu động thực hiện cấp nước đầu vào và rút nước đầu ra liên tục theo chu trình định sẵn.
+  - Thời gian lưu nước thủy lực ($HRT$) được điều chỉnh linh hoạt trong khoảng từ $19$ đến $30\ \text{h}$.
+  - Nồng độ oxy hòa tan ($DO$) trong bể được sục khí duy trì trong phạm vi từ $0.1$ đến $3.5\ \text{mg/L}$.
+  - Tổng nitơ đầu vào ($TN_{in}$) cấu thành từ amoni ($NH_4^+\text{-N}_{in}$) với nồng độ biến thiên từ $20$ đến $90\ \text{mg/L}$.
+  - Nồng độ nguồn cacbon ban đầu tính theo đương lượng $COD$ dao động trong khoảng từ $180$ đến $300\ \text{mg/L}$.
+  - Quá trình phân hủy chất hữu cơ diễn ra thông qua phản ứng khử nitrat và quá trình bùn hoạt tính lơ lửng.
+- Nước thải sau xử lý sinh học được xả ra ngoài thông qua các mô-đun màng lọc sợi rỗng:
+  - **Hình 1. Sơ đồ hệ thống thiết bị thực nghiệm bể phản ứng sinh học màng (MBR) xử lý nước thải độ mặn cao**
+    - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+    - Minh họa sơ đồ cấu tạo hệ thống thực nghiệm MBR xử lý nước thải có độ mặn từ $0\%$ đến $5\%$.
+    - Sơ đồ thể hiện hệ thống sục khí khuấy trộn, bơm nhu động cấp dịch và thiết bị ổn nhiệt cách thủy.
+    - Cụm mô-đun màng sợi rỗng ngập nước được giám sát hiện tượng nghẹt màng bằng đồng hồ đo áp suất xuyên màng.

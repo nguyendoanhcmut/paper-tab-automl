@@ -1,0 +1,1463 @@
+<!-- Page 1 -->
+Knowledge-Based Feature Selection Substantially Enhances Data-
+Driven Wastewater Treatment Modeling
+Senyuan Gu, Shuting Wang, Ruihong Qiu, Kaili Li, Jaswinder Manjeet Singh, Jue Zhang, Bing-Jie Ni,
+T. David Waite, Liu Ye, and Haoran Duan*
+Cite This: Environ. Sci. Technol. 2026, 60, 19882−19894
+Read Online
+ACCESS
+Metrics & More
+Article Recommendations
+*
+sı
+Supporting Information
+ABSTRACT: Data-driven modeling in wastewater treatment is
+increasingly constrained by the reality of small, high-dimensional
+data, where the abundant monitoring parameters in small-sized data
+sets obscure fundamental mechanistic understandings. This study
+proposes a knowledge-driven feature selection framework that
+integrates mechanistic insights with statistical correlations to identify
+the most informative predictive features. Using nitrous oxide (N2O)
+emission prediction at a full-scale plant as a case study, we compared
+classic deep-learning feature selection algorithms using attention
+mechanisms against two new knowledge-based approaches: (i)
+expert-guided feature selection and (ii) large language model
+(LLM)-augmented feature selection. Expert-knowledge-guided
+feature selection substantially enhances predictive accuracy,
+achieving a mean R2 of 0.723 and an MAE of 0.033, compared to R2 = 0.712 and MAE = 0.033 for the best-performing
+attention-based architecture. More importantly, the proposed framework markedly improves model generalizability: under out-of-
+distribution high-flow conditions where the attention-based model fails to capture N2O emission patterns, the expert-selected model
+continues to reproduce the dominant temporal dynamics of N2O emissions. The LLM-assisted approach also delivers competitive
+accuracy (mean R2 = 0.596, MAE = 0.041) and similarly preserves generalizability under an input distributional shift. By introducing
+mechanistic understanding into the feature selection process, this framework offers a generalizable pathway for addressing complex
+wastewater treatment challenges while maintaining a computational efficiency.
+KEYWORDS: Feature selection, wastewater modeling, high-dimensionality data, expert knowledge, machine learning, data driven
+1. INTRODUCTION
+Wastewater treatment modeling has become increasingly
+crucial for operational optimization, regulatory compliance,
+and addressing environmental concerns. Traditional mecha-
+nistic models, however, face significant limitations due to
+incomplete understanding of complex reaction mechanisms
+and microbial interactions, particularly when characterizing
+emerging issues that attract growing public attention such as
+emerging contaminants and GHG emissions.1−4 In recent
+years, the role of wastewater treatment systems has expanded
+beyond pollution removal toward energy-neutral and carbon-
+negative infrastructure.5 Wastewater treatment plants
+(WWTPs) are increasingly recognized as resource recovery
+facilities capable of generating energy, recovering nutrients,
+and reducing net GHG emissions.6,7 This transition places
+higher demands on process monitoring and optimization,
+which in turn requires reliable predictive models capable of
+accurately capturing system dynamics under diverse opera-
+tional conditions.8
+While machine learning models demonstrate promise for
+modeling complex systems, they encounter the ″curse of
+dimensionality″ challenge, where an abundance of features
+leads to overfitting and reduced generalizability, ultimately
+compromising real-world performance.9,10 In wastewater
+treatment systems, this challenge is exacerbated by small-
+sized data sets which are generated from extensive monitoring
+and analytical techniques performed on a limited number of
+samples. Paradoxically, this wealth of data often obscures
+rather than illuminates the fundamental mechanistic relation-
+ships governing system performance.11−13
+Recent research has attempted to address high-dimension-
+ality challenges through sophisticated model architectures,
+including deep learning approaches with convolutional neural
+networks, graph-based representations, and attention mecha-
+nisms designed to capture complex spatiotemporal depend-
+Received:
+April 2, 2026
+Revised:
+June 22, 2026
+Accepted:
+June 24, 2026
+Published: July 12, 2026
+Article
+pubs.acs.org/est
+© 2026 The Authors. Published by
+American Chemical Society
+19882
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+This article is licensed under CC-BY 4.0
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 2 -->
+encies in wastewater treatment data.14,15 While these
+innovations theoretically enable more effective navigation of
+high-dimensionality spaces by automatically identifying
+relevant features without explicit selection, practical limitations
+remain. Most wastewater facilities typically generate temporally
+sparse data sets due to monitoring constraints. Consequently,
+despite their theoretical advantages, increased architectural
+complexity and additional input features often lead to
+deteriorating rather than improved predictive accuracy.16
+Some investigators have attempted to overcome these
+limitations by utilizing models that learn from mathematical
+equations and mechanistic descriptions of known principles to
+approach supervised learning tasks, offering potential advan-
+tages in data-sparse conditions.11,17
+It is recognized that feature selection can provide a more
+effective pathway to enhanced model performance than
+architectural sophistication alone.18,19 Through use of rigorous
+methodologies for identification of priority input parameters,
+models can achieve superior predictive performance while
+maintaining reasonable complexity and computational effi-
+ciency. However, traditional statistical feature selection
+methods, such as principal component analysis, lack domain
+context in wastewater modeling, potentially leading to the
+selection of features with high statistical significance but
+limited practical relevance.20 Therefore, in this study, we
+propose that knowledge-guided feature selection based on
+wastewater domain knowledge offers an effective approach for
+constraining the model hypothesis space, potentially improving
+both predictive accuracy and generalizability.
+Furthermore, large language models (LLMs) combined with
+retrieval-augmented generation (RAG) present new oppor-
+tunities for knowledge-based feature selection by enabling
+systematic synthesis of domain knowledge from scientific
+literature.21−23 These systems can identify feature relevance
+across a broad body of evidence, potentially capturing
+relationships that individual experts might overlook due to
+limited literature exposure.24 Integrating LLM-RAG-based
+knowledge extraction with traditional expert knowledge allows
+feature selection to benefit from both human intuition and
+machine-enabled literature synthesis.
+To address emerging wastewater treatment modeling
+challenges, we present in this study a novel knowledge-based
+feature selection framework. In this study, feature selection is
+treated as a key intermediate step in the modeling workflow,
+aimed at optimizing the input space and improving predictive
+performance and generalizability. The framework is demon-
+strated through a case study of nitrous oxide (N2O) emissions
+prediction at two full-scale wastewater treatment plants. N2O, a
+potent GHG, is generated in wastewater treatment simulta-
+neously from multiple highly dynamic biological processes
+governed, in different ways, by numerous environmental
+factors.25 It is precisely the high-dimensional challenge that
+confounds purely data-driven approaches and provides an ideal
+test case for this new methodology. We systematically compare
+architecture-based strategies, including attention-enhanced
+deep learning models, with two knowledge-based approaches:
+(1) knowledge-based feature selection integrating mechanistic
+understanding with statistical correlation analysis and (2)
+LLM-RAG-augmented feature selection leveraging scientific
+literature synthesis. Model performance is evaluated not only
+in terms of predictive accuracy but also with respect to
+overfitting risk and robustness under distributional shift,
+including temporal transfer across seasonal conditions and
+external generalizability across data sets from different
+treatment plants. Through this design, we assess whether
+improving feature quality, rather than increasing model
+complexity alone, provides a more effective pathway toward
+robust wastewater treatment modeling.
+2. MATERIALS AND METHODS
+2.1. Data Acquisition and Preprocessing
+2.1.1. Study Site Characteristics. Comprehensive monitoring
+was conducted at two full-scale wastewater treatment plants
+(WWTPs) located in Queensland, Australia, termed WWTP-A and
+WWTP-B.
+WWTP-A has a design treatment capacity of 20 ML day−1 and
+employs a biological nutrient removal configuration consisting of
+sequential anoxic and aerobic zones followed by secondary
+clarification. The plant operates with mechanical surface aerators in
+the aeration basins. The facility includes six parallel biological
+treatment basins, each consisting of an anoxic zone (tank 1) followed
+by an aerobic zone divided into two compartments (tanks 2 and 3)
+equipped with surface aerators. Monitoring campaigns primarily focus
+on one representative basin.
+WWTP-B has a design treatment capacity of 30 ML·d−1 and
+employs a five-stage Bardenpho process. It utilizes a multicompart-
+ment biological reactor consisting of 12 sequential tanks, including
+anaerobic, aerobic, postanoxic, and reaeration zones, arranged in
+parallel treatment trains. The reactor configuration allows staged
+biological nutrient removal through multiple redox environments.
+Monitoring campaigns focused on one representative treatment train.
+2.1.2. Data Sets and Pretreatments. Different data pretreat-
+ment methods were implemented for the data sets used in this study.
+Three data sets were employed to evaluate the proposed modeling
+framework, including two data sets from WWTP-A and one data set
+from WWTP-B (Table 1).
+Data set A1 was collected from WWTP-A during a monitoring
+campaign from 25 May 2024 to 16 August 2024. Data set A2 was
+obtained from the same treatment plant during a second monitoring
+campaign from 5 to 15 December 2024, representing a different
+seasonal period. Both data sets were acquired from the SCADA
+(supervisory control and data acquisition) system and included the
+same set of monitored variables (Table 1). The recorded parameters
+included dissolved N2O concentrations, return activated sludge
+(RAS) parameters (RAS_CDE and RAS_F), nitrogen indicators
+(ammonium and nitrate concentrations), operational metrics
+(aeration power2, WAS, inflow rate, DO, and aeration on/off status),
+and effluent quality indicators (effluent ammonia and effluent nitrate
+concentrations).
+Table 1. Summary of Data Sets and Monitored Raw Readings
+Data
+set
+WWTP
+Monitoring period
+Raw readings (SCADA variables)
+A1
+WWTP-A
+May 2024 −July 2024
+N2O concentration, RAS_CDE, RAS_F, Aeration Power2, WAS, InflowRate, DO, Aeration On/Off
+status, effluent ammonia, effluent nitrate
+9−16 August 2024
+A2
+WWTP-A
+5−15 December 2024
+B1
+WWTP-B
+October 2025 −November 2025
+Influent flow, WAS flow, RAS pump flows, internal recycle pump speeds, aeration airflow (cells 1−3
+and reaeration cell), DO (cells 1−3), reaeration DO, temperature, ammonia, nitrate, N2O
+concentration
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19883
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 3 -->
+Data set B1 was obtained from WWTP-B during a monitoring
+campaign from October to November 2025. The SCADA system
+recorded a range of operational and process variables, including
+influent and sludge flow rates, RAS pump flows, internal recycle pump
+speeds (A-cycle flow rates), aeration airflow rates in different aeration
+cells 1−3, dissolved oxygen concentrations in aeration tanks 1−3, pH
+in the reactor effluent, temperature in aeration tank 1, nitrogen
+indicators (ammonia and nitrate), and N2O concentrations measured
+by in situ probes.
+The original SCADA data were recorded at varying time intervals.
+To reduce computational complexity and better capture relevant
+process dynamics, the SCADA data from all data sets were resampled
+to 15 min intervals by calculating the mean value of each parameter
+within each 15 min time window.
+In addition, hourly precipitation data corresponding to the
+catchment areas of both wastewater treatment plants were obtained
+from the CHRS Data Portal (PERSIANN-CCS). Linear interpolation
+was applied to align the rainfall data with the 15 min timestamps of
+the aggregated SCADA data sets, enabling integrated analysis of
+precipitation effects on treatment performance and N2O emissions.
+2.1.3. Feature Engineering. To further investigate the
+intermediate reaction processes contributing to N2O emissions, we
+implemented an Activated Sludge Model - N2O (ASM-N2O) that was
+calibrated specifically for our system using the first 2 weeks of data.26
+To prevent data leakage in the downstream deep learning models
+(section 2.2), the calibration period was confined to data that falls
+within the training set, ensuring that no information from the
+validation or test sets was used during model calibration. This model
+incorporates the bioconversion pathways and kinetics described by
+Pocquet et al. for AOB-mediated N2O production via nitrifier
+nitrification (NN) and nitrifier denitrification (ND), integrated with
+the four-step heterotrophic denitrification model from Hiatt and
+Grady.27,28 The model was separately calibrated using operational
+data from WWTP-A and WWTP-B, with particular attention to
+dissolved oxygen concentration profiles and nitrogen species trans-
+formations. The calibrated model generated a comprehensive set of
+state variables describing the biological nitrogen transformation
+processes, including dissolved gas concentrations (N2 and N2O),
+dissolved nitrogen species (NH4
++, NH2OH, NO, NO2
+−, and NO3
+−),
+dissolved oxygen levels, readily biodegradable substrate concen-
+trations, and biomass concentrations (X_AOB, X_H, X_I, and
+X_NOB). The simulated temporal dynamics of these variables are
+presented in SI section 2.
+2.2. Deep Learning Model Development and
+Implementation
+For baseline performance assessment, we initially implemented a
+standard long short-term memory (LSTM) neural network
+architecture, which has demonstrated effectiveness in capturing
+temporal dependencies in environmental time series data.29 For
+baseline performance assessment, we implemented a two-layer LSTM
+architecture. The baseline model comprised two stacked LSTM layers
+(32 units each), with each layer followed by batch normalization and
+dropout regularization (rate = 0.2) and a final linear dense output
+layer.
+Building upon this foundation, we progressively increased the
+model architecture complexity through two primary mechanisms:
+1. Architectural Enhancement:
+Building upon the two-layer baseline, we conducted
+systematic hyperparameter optimization to search across
+architectures of varying depth and configuration. The number
+of LSTM layers, unit counts per layer, and regularization
+parameters was jointly optimized using the Optuna frame-
+work,30 allowing the search to identify the best-performing
+architecture without manual exploration.
+2. Attention−LSTM Model:
+To enhance model interpretability and performance, we
+evaluated an Attention−LSTM architecture designed to
+capture complex dependencies in the data. This model applies
+multihead self-attention across the feature dimension prior to
+temporal modeling via LSTM layers. By prioritizing
+informative features early in the processing pipeline, this
+architecture enhances model flexibility and robustness,
+particularly when dealing with high-dimensionality data sets.
+The attention mechanisms were implemented as multihead
+self-attention layers following the formulation
+QW
+KW
+VW
+head
+Attention(
+,
+,
+)
+i
+i
+Q
+i
+K
+i
+V
+=
+Q K V
+W
+MultiHead(
+,
+,
+)
+Concat(head , ..., head )
+O
+1
+h
+=
+where Q, K, and V represent the query, key, and value matrices
+derived from the input representations. The matrices Wi
+Q, Wi
+K,
+Wi
+V, and WO are learnable projection matrices that transform
+the input representations into query, key, value, and output
+spaces, respectively.31
+3. CNN−LSTM Model:
+In addition, a one-dimensional Convolutional Neural
+Network−LSTM (CNN-LSTM) hybrid architecture was
+evaluated. The CNN component applies temporal convolu-
+tional filters to extract local short-range patterns from the input
+sequence, after which the LSTM layers capture long-range
+dependencies from these condensed representations. This
+hierarchical feature extraction strategy has been shown to
+improve predictive performance in multivariate time series
+tasks.32
+To ensure rigorous and reproducible model development, all
+architectures underwent systematic hyperparameter optimization
+using the Optuna framework with Tree-structured Parzen Estimator
+(TPE) sampling and Hyperband pruning.30 For each architecture, 100
+optimization trials were conducted, with an initial random sampling
+phase of 15 trials to establish a diverse starting population before
+TPE-guided search commenced. Hyperparameter optimization was
+performed for each model architecture, including both architectural
+and training-related parameters. The complete hyperparameter search
+space and the optimal configurations identified for each model are
+summarized in Tables S4 and S5 in the Supporting Information. Each
+trial was evaluated using the validation mean absolute error (MAE)
+computed on inverse-transformed predictions to reflect true physical
+units. The optimal hyperparameter configuration identified for each
+architecture was subsequently used for the final model training.
+All models were implemented in TensorFlow using the Keras API
+and trained with the Huber loss and Adam optimization, together
+with adaptive learning rate reduction and early stopping to prevent
+overfitting. For Data Set A1, the 51-day in-distribution data set was
+split chronologically into 30 days for training, 10 days for validation,
+and 11 days for testing. For data set B1, the 39-day data set was split
+into 25 days for training, 5 days for validation, and 9 days for testing.
+In both cases, the chronological order was preserved to maintain
+temporal integrity. For robust comparison, each model configuration
+was trained 20 times with different random initializations, and
+performance metrics (MAE and R2) were averaged to account for the
+training stochasticity. The computational requirements of each
+component in the proposed framework are summarized in Table S6.
+2.3. Knowledge-Based Feature Selection Framework
+A knowledge-based feature selection framework was applied
+independently to optimize the input variable space before down-
+stream model development and hyperparameter optimization. This
+procedure followed a structured workflow to identify the most
+relevant variables for predicting N2O emissions while balancing
+mechanistic understanding with statistical correlation:
+1. Mechanistic Importance-Weighting
+We first categorized features based on their functional roles
+within the biokinetic equations. Subsequently, Mechanistic
+Importance scores (MI-scores) were assigned to each feature
+according to its theoretical relevance to established mecha-
+nistic pathways, including kinetic equations and mass balance
+considerations (detailed in SI Section 3). These scores range
+from near-zero (indicating minimal relevance) to 1.0
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19884
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 4 -->
+(indicating maximum relevance) and reflect the theoretical
+contribution of each variable to N2O production as informed
+by well-established biochemical reaction mechanisms.
+2. Process Group Categorization
+Features were grouped into functional categories corre-
+sponding to their biological roles in the nitrogen removal
+processes. The AOB pathway includes ammonia, hydroxyl-
+amine, nitrite, and relevant autotrophic biomass concentra-
+tions; the NOB pathway includes nitrite, nitrate, and NOB
+biomass concentrations; heterotrophic denitrification includes
+nitrogen oxides and heterotrophic biomass concentrations; and
+other parameters include operational controls, real-time
+sensors, and weather-related variables.
+3. Temporal Correlation Analysis
+A time-matching correlation analysis was conducted using
+the ccf (cross-correlation function) from the statsmodels.tsa.s-
+tattools python package, which computes Pearson correlation
+coefficients between two time series at multiple time lags. For
+each process variable (e.g., dissolved oxygen, influent ammonia
+concentrations), we calculated cross-correlations with N2O
+emissions over a ±4-h window using 15 min resolution data.
+This enabled identification of leading or lagging relationships,
+indicating whether changes in a feature tend to precede or
+follow N2O fluctuations. The maximum absolute correlation
+within this window was recorded as the Statistical Correlation
+score (SC-score), representing the temporal predictive
+strength of each variable.
+4. Redundancy Elimination
+A feature similarity matrix was constructed by calculating
+pairwise time-matching Pearson correlation coefficients
+between normalized feature time series. Features were also
+grouped by shared process roles (e.g., nitrogen transformation
+or aeration control), and intragroup pairs were assigned
+elevated similarity scores to account for functional redundancy.
+5. Final Feature Selection
+Features were ranked based on a weighted combination of
+their SC and MI scores. Prior to combination, both scores were
+linearly normalized to a common scale to ensure a
+comparability.
+Combined Score
+SC score
+MI score
+=
++
+Redundant features (similarity > 0.85) were removed
+iteratively, retaining the feature with the higher combined
+score. The threshold of 0.85 was selected as a conservative
+cutoff to capture strong interfeature redundancy and may be
+adjusted depending on data characteristics.
+For comparison, LASSO regularization and SHAP-based feature
+importance analyses were independently applied as benchmark feature
+selection methods. Detailed procedures and results are provided in
+section 7 of the Supporting Information.
+2.4. LLM-RAG Feature Selection Framework
+To support feature evaluation and selection for the data-driven
+modeling, a RAG framework was implemented to integrate domain
+knowledge from scientific literature with the operational data set. The
+framework was built using the PaperQA library,33−35 which enables
+large language models to retrieve and reason over indexed research
+documents. Three LLMs were used as the question-answering models
+in the RAG framework, representing different architectures, training
+methodologies, and knowledge cutoff dates, as summarized in Table
+2.
+A local corpus of wastewater treatment and N2O emission studies,
+including 520 N2O-related articles from leading journals, was
+compiled and indexed using vector embeddings generated with the
+OpenAI text-embedding-3-small model, enabling a semantic similarity
+search across the literature database. For reasoning and response
+generation, a multi-LLM framework incorporating GPT-5.2, Claude
+Sonnet 4.6, and Gemini 2.5 Flash models was employed to leverage
+complementary reasoning capabilities across different architectures.
+When the feature selection query (provided in the Supporting
+Information) together with the anonymized data set was submitted to
+the framework, the system first interpreted the data set through
+structured summaries, including feature descriptions, statistical
+characteristics, missing-value analysis, and correlations between
+process variables and the target variable (N2O concentration). Prior
+to submission, all plant-identifying information, site names, and
+operationally sensitive metadata were removed from the data set to
+ensure data confidentiality. Relevant passages were then retrieved
+from the indexed literature corpus to provide an additional domain
+knowledge.
+On the basis of the combined data set context and retrieved
+literature information, the framework generated the final feature
+selection results, which were subsequently used as inputs to the
+trained predictive model.
+3. RESULTS AND DISCUSSION
+3.1. Deeper and Attention-Based Models Improve
+Accuracy but Show Limited Generalizability
+To systematically evaluate modeling options under the “small-
+sample, high-dimensional” setting (sample-to-feature ratio ≈
+76:1), two widely adopted strategies were examined: (1)
+searching for deeper architectures capable of capturing
+temporal dynamics and (2) incorporating attention mecha-
+nisms.
+In the initial experiments, a two-layer LSTM was employed
+for prediction, but its performance was limited, achieving a
+mean test MAE of 0.0665 (σ = 0.0110) and a mean R2 of 0.119
+across 20 runs. A CNN−LSTM hybrid was also evaluated but
+yielded only marginal improvement (MAE = 0.0599, R2 =
+0.206) and was not pursued further. To assess whether deeper
+architecture could better capture temporal patterns, we
+conducted a systematic hyperparameter search over key
+architectural and training parameters, with regularization
+applied to mitigate overfitting under limited samples. The
+resulting five-layer LSTM achieved a mean test MAE of 0.0567
+(σ = 0.0065) and a mean R2 of 0.2263 (σ = 0.1843), a modest
+improvement over the two-layer baseline (0.0665). Incorporat-
+ing attention mechanisms led to further improvements. Two
+variants were examined: Attention-LSTM, which employs
+feature-wise attention to reweight input features before
+sequential processing, and LSTM-Attention, which applies
+temporal attention after LSTM-based temporal encoding.
+Attention-LSTM achieves a mean test MAE of 0.0326 (R2 =
+0.712), outperforming LSTM-Attention (MAE = 0.0478, R2 =
+0.465) by 31.8%.
+These results show that all evaluated model variants,
+including deeper LSTM, LSTM-attention, and attention-
+LSTM, improve predictive performance relative to the
+baseline. The performance gain observed in the five-layer
+LSTM may be attributed to its enhanced capacity to capture
+longer-range temporal dependencies, which has been reported
+in prior studies on recurrent architectures.36 In contrast, the
+two attention variants provide a controlled comparison that
+isolates the effect of the attention placement. The observed
+performance difference between Attention-LSTM and LSTM-
+Table 2. Summary of LLMs with Corresponding Developers
+and Knowledge Cutoffs
+Model
+Developer
+Knowledge Cutoff
+GPT-5.2
+OpenAI
+December 2025
+Gemini 2.5 Flash
+Google
+June 2025
+Claude 4.6 Sonnet
+Anthropic
+February 2026
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19885
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 5 -->
+Attention suggests that the stage at which attention is applied
+influences how feature information is extracted and used.
+Reweighting inputs prior to sequential processing appears
+more effective than applying attention to already encoded
+representations, indicating that the quality and relevance of
+input features may play a particularly important role in this
+setting. This is consistent with findings in high-dimensional
+time series modeling, where input feature quality has been
+shown to substantially affect model performance, and where
+early stage feature weighting has been found to improve
+information utilization under limited sample conditions.31,37
+Despite these improvements in test performance, their
+robustness remains uncertain. As shown in Figure 1b, all
+architectures exhibit overfitting to varying degrees, with
+validation-to-training MAE ratios ranging from 1.26x
+(LSTM-5-Layers) to 1.66x (Attention-LSTM), indicating
+that the gap between training and validation performance
+persists across all evaluated configurations. To further assess
+generalization under distributional shift, models were evaluated
+on an out-of-distribution data set collected during a high-flow
+period in August, one month after the training and validation
+period, when the influent flow rate (64.04 L/s) substantially
+exceeds the training mean (52.71 L/s). As shown in Figure 1d,
+all architectures fail markedly under these conditions, with R2
+values turning negative across all models (Baseline: −0.017,
+LSTM-5-Layers: −0.084, LSTM-Attention: −0.199, Attention-
+LSTM: −0.087) and MAE values substantially exceeding those
+observed in July. This collapse in performance indicates that
+the high-flow event introduces feature combinations that are
+underrepresented in the training data, forcing the model to
+extrapolate beyond the learned feature distribution and
+disrupting the learned input−output relationships. Similar
+behavior has been reported in data-driven hydrological
+modeling and sequence learning tasks under distributional
+shift.38,39 The strong in-distribution performance of Attention-
+LSTM may therefore partly reflect overfitting to the statistical
+characteristics of the July period rather than robust general-
+ization.40
+Taken together, these results indicate that while increasing
+model depth and incorporating attention mechanisms can
+Figure 1. Model performance comparison under small-sample, high-dimensional conditions. (a) Test MAE distributions show progressive
+improvement from the baseline LSTM to deeper and attention-based models, with Attention-LSTM achieving the lowest error and variance. (b)
+Training−validation comparison indicates reduced error but increased overfitting in higher-capacity models. (c) Under in-distribution conditions
+(July), Attention-LSTM best captures N2O dynamics. (d) Under distributional shift (August high-flow), all models degrade markedly, failing to
+reproduce observed variability.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19886
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 6 -->
+improve predictive accuracy, they also introduce challenges
+such as overfitting under limited data. A likely contributing
+factor is the high sample-to-feature ratio (≈76:1), under which
+it becomes difficult to reliably identify and prioritize
+informative features. As a result, the model may learn spurious
+patterns rather than stable relationships, leading to reduced
+robustness, particularly under distributional shift. These
+findings suggest that further gains are unlikely to be achieved
+through architectural modifications alone. Instead, improving
+the quality of the input space, by reducing feature redundancy
+and enhancing the signal-to-noise ratio, may be essential for
+achieving stable and generalizable performance across varying
+operating conditions.
+3.2. Expert-Guided Feature Selection Improves Accuracy
+and Generalizability
+To address the generalization limitations identified in section
+3.1, we developed a knowledge-based feature selection
+approach that simultaneously incorporates statistical correla-
+tion and mechanistic importance to reduce the input feature
+space (Figure 2a). As shown in Figure 2c, our analysis revealed
+several features with a high statistical correlation to Tank 3
+N2O emissions. The top statistically correlated features
+included NO-tank3 (1.0), N2-tank1 (0.983), and NO-tank2
+(0.982). These strong correlations can be partially explained by
+the fact that nitric oxide is a direct biochemical precursor of
+N2O in both nitrifier and heterotrophic denitrification
+pathways, while N2 levels often reflect the extent of
+denitrification and may covary with intermediate gases under
+transient conditions.
+However, statistical correlation primarily reflects direct
+linear relationships among observable variables and is often
+susceptible to data-collection noise and sample-distribution
+biases. Therefore, we incorporated the mechanistic importance
+as a complementary selection criterion. Mechanistic impor-
+tance, grounded in process knowledge, captures both causal
+and indirect relationships within the system. Interestingly,
+some features demonstrated high mechanistic importance,
+despite moderate statistical correlations. For instance, In-
+flowRate, N2O-Tank3 (simulated N2O concentration), and
+Aeration Power2 all received maximum mechanistic impor-
+tance scores (1.0), suggesting their significance in N2O
+production pathways according to the process understanding.
+The high mechanistic importance of InflowRate can be
+attributed to its direct influence on the hydraulic retention
+Figure 2. Knowledge-based feature selection framework for N2O emissions prediction: (a) Schematic overview of the proposed framework,
+integrating mechanistic importance and statistical correlation to reduce 52 candidate features to a final selected subset for input to the pretrained
+LSTM model; (b) Similarity matrix of monitored parameters showing correlation patterns. (c) Statistical correlation vs mechanistic importance
+scores for different parameter categories; dashed line indicates equal contribution from both.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19887
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 7 -->
+time and substrate availability, while Aeration Power2 controls
+dissolved oxygen levels that significantly impact nitrification
+and denitrification rates.
+To mitigate feature redundancy and avoid multicollinearity,
+parameter instability, and reduced generalizability, we
+performed a similarity analysis of the normalized feature time
+series (Figure 2b). Specifically, we observed that several
+features, such as NH4
++-Tank1 and NH4
++-Tank2, exhibited
+near-identical temporal patterns after normalization. This
+pattern similarity likely arises from their shared mechanistic
+roles in the nitrification process, where NH4
++ concentrations
+are governed by similar operational conditions (e.g., inflow
+ammonia concentration, aeration intensity). This type of
+redundancy, if left unaddressed, can introduce instability in
+model training and reduce generalization performance.41 We
+defined a similarity threshold of 0.85 using Pearson’s
+correlation. Features exceeding this threshold were considered
+redundant, and we retained the one with the higher combined
+statistical and mechanistic score. For example, NH4
++-Tank2
+was removed due to high similarity (0.906) with NH4
++-Tank1,
+and NO2
+−-Tank3 was excluded due to overlap with N2O-
+Tank3 (similarity score: 0.865).
+After evaluating multiple sample-to-feature ratios and testing
+feature subsets of varying sizes, we ultimately selected seven
+features: inflow rate, N2O-tank3, aeration power2, NH4
++-tank1,
+WAS flow, COD-tank2, and NO2-tank2. These features
+collectively represent the core operational controls, nitrogen
+transformation indicators, and organic loading conditions
+relevant to N2O dynamics. InflowRate, Aeration Power2, and
+WAS flow reflect key process operations; NH4
++-Tank1 and
+NO2
+−-Tank2 capture critical steps in nitrification and
+denitrification; COD-Tank2 serves as a proxy for organic
+carbon availability governing denitrification; and N2O-Tank3
+acts as a direct proxy for the target variable in prediction. This
+selection balances mechanistic relevance and statistical
+efficiency while reducing redundancy.
+To further evaluate the effectiveness of the proposed feature
+selection strategy, the reduced feature subset was first applied
+with the basic 2-layer LSTM model structure (FS-basic-
+LSTM) introduced in Section 3.1. The FS-basic-LSTM trained
+on the selected features achieves strong predictive performance
+under in-distribution conditions, with a mean test MAE of
+0.0367 (σ = 0.0032) and a mean R2 of 0.6919. This represents
+a significant improvement over the baseline model (p < 0.001),
+the five-layer LSTM model (p < 0.001), and the LSTM-
+Attention model (p < 0.001) (Table S7). The R2 is comparable
+to that of the Attention-LSTM, with no statistic difference. In
+the best-performing run, the model achieves an R2 of 0.77,
+exceeding the best result obtained by the Attention-LSTM.
+Using the same hyperparameter search strategy as in Section
+3.1, model architecture optimization was further conducted on
+the selected feature set. Notably, the optimal configuration
+corresponds to a relatively straightforward 1-layer architecture
+(FS-tuned-LSTM). After tuning, the model exhibits improved
+stability but only marginal gains in predictive accuracy (mean
+MAE = 0.0330, σ = 0.0015; mean R2 = 0.7225). Both feature-
+selected models, as shown in Figure 3a, more effectively
+capture the diurnal patterns of N2O emissions compared to
+their full-feature counterparts. This improvement can be
+attributed to the reduction of multicollinearity and noise in
+the input space.42 Besides, the selected feature subset retained
+stable predictive performance across LSTM architectures with
+Figure 3. Performance of feature-selected LSTM models for N2O prediction: (a) measured vs predicted time series under in-distribution
+conditions (July) for baseline and tuned models; (b) same comparison for the SHAP-selected tuned model; (c) MAE distribution across 20 runs as
+a function of model size; (d) overfitting analysis based on training and validation MAE and their ratio; (e) performance under out-of-distribution
+conditions (August high-flow). FS-basic-LSTM: 2-layer basic LSTM model with selected features as input; FS-tuned-LSTM: hyperparameter-tuned
+1-layer LSTM model with selected features as input.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19888
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 8 -->
+varying depths (Tables S8 and S9), indicating that the selected
+feature subset remained robust under different model
+configurations.
+To assess whether the performance gains arise from feature
+reduction alone or from the proposed framework, we first
+applied LASSO regularization to select features based on
+coefficient shrinkage and subsequently applied SHAP to select
+seven features from the tuned 5-layer LSTM for a controlled
+comparison. However, the resulting model still under-
+performed compared to the FS models (Figure 3b; Tables
+S11 and S13). In contrast, mechanistic feature selection retains
+the most informative predictors, enabling a simpler yet more
+informative feature space for stable and efficient learning of
+system dynamics.43 These results indicate that model perform-
+ance is primarily determined by feature quality rather than
+model architecture, leading to reduced sensitivity to hyper-
+parameter settings and improved stability in practice.44
+In addition to predictive accuracy, model overfitting was
+evaluated using the validation-to-training MAE ratio. As shown
+in Figure 3d, the FS-basic-LSTM model exhibits an overfitting
+ratio of approximately 1.46×, while FS-tuned-LSTM shows a
+slightly higher ratio of 1.53× (Figure 3d). Nevertheless, the
+overall magnitude of overfitting is reduced compared to the
+results obtained using the full feature set in Section 3.1.
+Robustness under distributional shift was further evaluated
+using the out-of-distribution August data set. After feature
+selection, both the FS-basic-LSTM and FS-tuned-LSTM
+achieve positive R2 values (0.2690 and 0.2964, respectively).
+Although this data set lies outside the range of the training
+data, both models are able to capture the majority of temporal
+fluctuations in N2O emissions, including the timing and
+general shape of peak events, suggesting that the selected
+features effectively preserve the dominant system dynamics
+(Figure 3e). Importantly, prediction accuracy remains high
+across most of the August period and only begins to
+deteriorate when inflow conditions increase far beyond the
+training range. Specifically, when the inflow rate reaches 82.62
+L/s (August 14−16), representing a 56.74% increase relative
+to the mean influent flow in the training data set, model
+performance shows a noticeable decline. This indicates that
+predictive performance may be limited when extrapolating
+beyond the training domain and suggests that future
+applications could benefit from incorporating additional data
+or adaptive retraining strategies.45
+Overall, these results indicate that the main improvement in
+model performance arises from the knowledge-guided
+reduction of the input space. By removing redundant and
+less informative variables, the selected feature set enables the
+model to learn more stable relationships from limited data,
+resulting in improved predictive accuracy and better retention
+of predictive skill under a distributional shift. Compared with
+the deeper and attention-based full-feature models, the feature-
+selected models more effectively preserve the dominant
+temporal dynamics of N2O emissions under the shifted
+conditions.This suggests that, in small-sample, high-dimen-
+sional wastewater treatment modeling, mechanistically in-
+formed feature selection may be more important than
+architectural complexity for achieving robust generalization.46
+3.3. LLM-Assisted Feature Selection Provides a Viable
+Alternative
+To evaluate whether LLM-RAG-based feature selection can
+serve as a viable alternative to expert knowledge, we
+constructed a RAG framework that synthesizes domain
+knowledge from scientific literature to guide feature selection
+without direct expert involvement. A total of 15 experimental
+runs were conducted, with each of the three LLMs evaluated
+five times, and seven features were selected in each run. Across
+all runs, 14 unique features were selected in total (Figure 4a).
+DO and InflowRate were consistently chosen (100%),
+followed by N2O-Tank3 (80%) and Aeration Power2 (67%),
+together accounting for 46% of all selections (Figure 4a). The
+repeated selection of these variables indicates that the
+Figure 4. LLM-assisted feature selection results and model performance: (a) feature selection matrix across 15 experimental rounds for three LLMs
+(Claude, GPT, and Gemini), showing selected and unselected features per round with total selection frequency indicated below; (b) time series
+comparison of predicted versus measured N2O concentrations under in-distribution conditions (July) using the LLM-assisted selected feature set;
+(c) time series comparison under out-of-distribution conditions (August high-flow period).
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19889
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 9 -->
+framework converges on a stable set of mechanistically relevant
+predictors rather than selecting features arbitrarily. In addition,
+a comparison across three LLMs revealed only minor
+differences in feature frequencies (Figure 4a). All models
+consistently selected DO and InflowRate in all rounds, with
+closely aligned frequencies for other core variables such as
+N2O-tank3. Minor variations in less frequently selected
+features did not affect the overall composition or the
+interpretability of the feature set. This suggests that output
+stability is driven by the RAG retrieval mechanism rather than
+model-specific preferences. The complete feature selection
+reports generated by each LLM across all five runs are
+provided in section 9 of the Supporting Information.
+Seven features including DO, InflowRate, N2O-Tank3,
+Aeration Power2, NH4
++-Tank1, NO2
+−-Tank3, and NO3
+−-
+Tank3 are selected. This exact set was recovered in 2 of 15
+rounds, and all seven features ranked among the eight most
+frequently selected across the 14 candidates. Those core
+features are directly linked to N2O production pathways: DO
+regulates AOB-mediated nitrification, inflow rate reflects
+hydraulic and substrate dynamics, N2O-Tank3 provides
+autoregressive temporal information, and aeration power2
+captures aeration control effects. Additional features include
+ammonium, nitrite, and nitrate concentrations, representing
+nitrogen transformation states that are relevant to N2O
+production.
+In comparison with the expert-based feature set, three core
+features (InflowRate, N2O-Tank3, and Aeration Power2) are
+consistently identified by LLM-RAG, while NH4
++-Tank1
+appears to be less frequent. In contrast, NO2−Tank2, WAS,
+and COD-Tank2 are not selected under the RAG approach,
+marking the main divergence. This may be because WAS and
+COD-Tank2 are operational variables that are less explicitly
+discussed in N2O modeling literature, limiting their visibility in
+RAG retrieval. This difference likely reflects a key limitation of
+the LLM-RAG approach. While it can synthesize general
+mechanistic knowledge from the literature, it does not fully
+capture the plant-specific operational context, process inter-
+actions, and local conditions that shape the feature relevance in
+a particular treatment system. As a result, variables that are
+important under the specific conditions of this plant may be
+underprioritized, even if they are mechanistically meaningful as
+reflected in data sets.
+The final LLM-selected features were used to train a single-
+layer LSTM model with optimized hyperparameters. The
+model achieved a mean test MAE of 0.0412 (σ = 0.0025) and a
+mean R2 of 0.596 across 20 runs, with the best run reaching an
+MAE of 0.0366 and an R2 of 0.666 (Figure 4b). This
+performance exceeds that of the five-layer LSTM and LSTM-
+Attention models and approaches that of the Attention-LSTM.
+Compared with the expert-guided feature selection models, the
+MAE from the LLM-feature model is higher (0.0302 vs 0.0412,
+36% higher) and R2 is lower by 0.096. The results indicate that
+the LLM-RAG framework realized a substantial portion of the
+performance gains from feature selection without direct expert
+input.
+Under the distributional shift during the August high-flow
+period, the model retained an R2 of 0.405 and a test MAE of
+0.051. The predictive accuracy remains reasonable during most
+of the August evaluation window but deteriorates notably
+during the extreme inflow event of August 14−16. The
+performance under out-of-distribution conditions confirms
+that the LLM-RAG-selected features preserve sufficient
+mechanistic signal to generalize partially beyond the training
+domain, a meaningful result, given that the feature set was
+constructed without explicit operational knowledge.
+Taken together, these findings suggest that LLM-RAG-based
+feature selection can provide a viable alternative to expert-
+guided approaches, particularly when direct domain expertise
+is unavailable. Its key limitation, however, is that it draws
+Figure 5. Generalizability assessment of the knowledge-based feature selection framework. (a) Cross-seasonal validation on Data set A2 (WWTP-
+A, summer period): time series comparison of predicted versus measured N2O concentrations using the expert-selected feature set trained on Data
+set A1. (b) Statistical performance metrics (R2, MAE) of LSTM models trained on expert-selected features for WWTP-B (Data set B1) across 20
+independent runs. (c) Time series comparison of predicted versus measured N2O concentrations for WWTP-B using the expert-selected feature
+set. (d) Overfitting analysis for WWTP-B showing the validation-to-training MAE ratio for full-feature and feature-selected LSTM models.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19890
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 10 -->
+primarily on general knowledge from the literature and,
+therefore, cannot fully account for the plant-specific operating
+context that shapes feature relevance in an individual treatment
+system. Consequently, variables that are important under the
+specific conditions of a given plant may be underprioritized
+even when they are mechanistically or operationally mean-
+ingful.
+3.4. Generalizability across Seasons and Treatment Plants
+To evaluate the broader applicability of the proposed
+knowledge-based feature selection framework, we conducted
+two complementary validation experiments. First, we assessed
+temporal generalizability using data set A2, which was collected
+from WWTP-A during a different operational period
+representing summer conditions (December 2024). In this
+test, the best-performing model configurations identified in
+sections 3.1 and 3.2 were directly applied without further
+retraining or fine-tuning. Second, we assessed cross-plant
+transferability of the framework using data set B1 from another
+full-scale WWTP (plant B) with a distinct process config-
+uration. In this case, the feature selection framework was
+reapplied to the new plant prior to model development.
+As shown in Figure 5a, all three models exhibited some
+degree of performance degradation when evaluated on data set
+A2, which was associated with a substantially higher influent
+flow rate (75 L/s) than the training data set. However, the
+extent of degradation differed markedly among the models.
+The FS-LSTM model showed a systematic scaling bias, with
+predictions consistently higher than the observed values.
+Nevertheless, after normalization (Figure S6), it remained
+able to capture the dominant temporal dynamic patterns of the
+N2O emissions. In contrast, both the LSTM-attention and
+attention-LSTM models failed to accurately reproduce these
+peak events, showing reduced sensitivity to transient
+fluctuations and a tendency to smooth extreme values. These
+results suggest that the expert-selected feature set retains
+predictive relevance under seasonal and hydraulic shifts, more
+consistent with the underlying biochemical mechanisms
+governing N2O dynamics rather than being overfitted to
+operational patterns specific to a single monitoring period.
+The validation using data set B1 was designed to test
+whether the same feature selection strategy remained effective
+when transferred to a different treatment system. Plant B
+consisted of 12 biological tanks and a substantially larger
+monitoring space, yielding 180 candidate input features when
+the process variables and sensor measurements were
+combined. Applying the knowledge-based feature selection
+framework reduced this set to 7 features including the Airflow
+Rates Tank 6−8, XH-Tank 5, InflowRate, XH-Tank 6, and
+COD-Tank2. Compared with the features from plant A, the
+selected variables in plant B were more strongly associated
+with denitrification-related processes. This difference highlights
+the influence of plant-specific configuration and operating
+conditions on N2O dynamics and suggests that feature
+selection should be re-evaluated when the framework is
+applied to a new wastewater treatment system.
+The plant B feature set was then used as an input to the FS-
+LSTM, Attention-LSTM, and LSTM-Attention models. Each
+model was trained 20 times, and the best performing run for
+each is shown in Figure 5b. Consistent with the results from
+plant A, the FS-LSTM model more effectively captured the
+temporal dynamics of N2O emissions, whereas both attention-
+based models showed a reduced ability to reproduce the
+dynamic fluctuation patterns. The FS-LSTM model also
+achieved the lowest MAE (0.00260), outperforming the
+attention-LSTM (0.00568) and LSTM-attention (0.00309)
+models. Although the overfitting ratios were broadly
+comparable across models, FS-LSTM exhibited more con-
+sistent performance across validation settings (Figure 5d).
+Such high-dimensional input in Plant B increases the difficulty
+for the model to learn the true underlying trends, as it may be
+distracted by noise and spurious correlations, ultimately
+leading to poorer predictive performance.38,47,48 These results
+collectively demonstrate that the proposed feature selection
+framework improves practical model generalizability in small-
+sample, high-dimensional wastewater treatment modeling by
+reducing irrelevant variation and preserving mechanistically
+informative inputs.
+3.5. Implications
+This study presents a knowledge-based feature selection
+framework that integrates mechanistic importance and
+statistical correlation, augmented by LLM-RAG literature
+synthesis, for predicting N2O emissions in wastewater
+treatment plants. By reducing 52 candidate variables to seven
+mechanistically and statistically significant inputs, the expert-
+guided model achieved a mean R2 of 0.723 under small-sample
+constraints while markedly improving generalizability under
+out-of-distribution conditions where all full-feature models
+failed. The results confirm that (i) knowledge-based feature
+selection addresses the generalization limitations of purely
+architectural approaches, (ii) feature quality rather than model
+complexity is the dominant factor controlling performance
+under small-sample, high-dimensional conditions, and (iii)
+LLM-RAG-based selection represents a viable alternative to
+expert-guided approaches, achieving competitive performance
+without direct expert involvement.
+Feature selection is pivotal across fields from genomic risk
+prediction in bioinformatics49,50 and sentiment/text classifica-
+tion in NLP51,52 to diagnostic imaging53 and credit-risk
+modeling in finance.54 This approach started with simple
+one-variable filters that tamed the “curse of dimensionality” in
+high-sensor data sets55,56 and evolved into wrapper-style
+searches that test many candidate subsets in the model
+loop.57,58 With deep learning, construction and selection
+blurred together: autoencoders, attention maps, and multi-
+modal schemes now sift through images, time-series, and lab
+results in real time.59,60 Despite these proven benefits, most
+machine learning studies in environmental engineering imple-
+ment feature selection unsystematically and are not fully aware
+of its critical role in achieving optimal model perform-
+ance.61−64 Across recent WWTP influent-forecasting and
+potable-water studies, targeted feature pruning cut input
+variables by two-thirds, lifted test-set R2 by roughly 10−20%,
+and slashed training time by half, underscoring feature
+selection’s decisive value in operational water-quality models
+for researchers and operators.65−67
+Our approach fuses mechanistic process insight with
+empirical correlation analysis to construct a feature selection
+framework that preserves statistical validity and enhances
+process-aware robustness. The methodology addresses the
+fundamental challenge in wastewater treatment modeling of
+how to extract meaningful predictive signals from high-
+dimensional, sparse data sets where traditional machine
+learning approaches systematically fail. Incorporating LLM-
+assisted knowledge extraction into our pipeline represents one
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19891
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 11 -->
+of the first applications of LLM-RAG-based feature selection in
+wastewater engineering. This breakthrough both expands the
+methodological toolkit and empirically validates our central
+claim that knowledge-guided selection consistently outper-
+forms purely statistical heuristics. Variables suggested by
+prompting the LLM with domain knowledge from environ-
+mental science and engineering literature delivered competitive
+predictive accuracy and demonstrated partial generalizability
+under distributional shift. Beyond N2O prediction, the same
+framework could be extended to other environmental
+modeling tasks characterized by sparse, high-dimensional,
+and mechanistically structured data.
+Several limitations also warrant future studies. First, the
+current feature selection process primarily considers the
+individual contribution of each feature to the target variable.
+However, in N2O production pathways, interactions among
+features and between feature relevance and model config-
+urations may be significant. Future work should therefore
+explore interaction-aware feature selection strategies that
+explicitly account for both feature−feature dependencies and
+feature−model configuration interactions. Second, the com-
+bined feature importance score was based on equal weighting
+of statistical correlation and mechanistic importance. This 1:1
+weighting provides a pragmatic balance for the present system
+as a proof of concept, but the optimal weighting may vary with
+data quality, system complexity, and confidence in the
+underlying mechanistic understanding. For example, in data-
+scarce scenarios, placing greater emphasis on mechanistic
+importance may be more appropriate, whereas statistical
+correlation may play a more dominant role when large, high-
+quality data sets are available. Therefore, the proposed
+framework is inherently flexible, and the weighting scheme
+can be adjusted in future applications to better reflect context-
+specific conditions. Lastly, due to the discrete nature of the
+available real-world data, the safe extrapolation bounds of the
+proposed method could not be systematically defined. Further
+validation under broader and systematically sampled operating
+conditions is required to establish these bounds and define the
+reliable application range of the model.
+■ASSOCIATED CONTENT
+Data Availability Statement
+The code of this work can be found at https://github.com/
+SenyuanGu/Water-Feature-Selection.
+*
+sı Supporting Information
+The Supporting Information is available free of charge at
+https://pubs.acs.org/doi/10.1021/acs.est.6c04963.
+Wastewater treatment plant process scheme and
+bioreactor configuration (Section 1: Figures S1−S2);
+key biochemical and kinetic parameters of the ASM1-
+N2O model (Section 2: Table S1); feature engineering
+including state variable classification and model
+simulation results (Section 2: Tables S2−S3 and Figures
+S3−S5); hyperparameter tuning search space and
+optimal configurations (Section 3: Tables S4−S5);
+computational performance summary (Section 3:
+Table S6); feature selection methodology including
+mechanistic sensitivity analysis and SC-score derivation
+(Section 4); LLM prompt design for RAG-based feature
+recommendation (Section 5); model performance
+comparisons of pure machine learning and attention-
+based LSTM models (Section 6: Table S7); LASSO and
+SHAP analysis results (Section 7: Tables S8−S11);
+LLM-RAG feature selection reports from GPT, Claude,
+and Gemini (Section 8); and generalizability analysis
+(Section 9: Figure S6) (PDF)
+■AUTHOR INFORMATION
+Corresponding Author
+Haoran Duan −UNSW Water Research Centre, School of
+Civil and Environmental Engineering, The University of New
+South Wales, Sydney, New South Wales 2052, Australia;
+Australian Centre for Water and Environmental
+Biotechnology (ACWEB, formerly AWMC) and School of
+Chemical Engineering, The University of Queensland,
+Brisbane, Queensland 4072, Australia; Department of Civil
+Engineering, The University of Hong Kong, Pokfulam, Hong
+Kong SAR 999077, China;
+orcid.org/0000-0001-6679-
+3240; Email: haoran.duan@hku.hk
+Authors
+Senyuan Gu −UNSW Water Research Centre, School of Civil
+and Environmental Engineering, The University of New
+South Wales, Sydney, New South Wales 2052, Australia;
+Australian Centre for Water and Environmental
+Biotechnology (ACWEB, formerly AWMC), The University
+of Queensland, Brisbane, Queensland 4072, Australia
+Shuting Wang −School of Chemical Engineering, The
+University of Queensland, Brisbane, Queensland 4072,
+Australia
+Ruihong Qiu −School of Information Technology and
+Electrical Engineering, The University of Queensland,
+Brisbane, Queensland 4072, Australia
+Kaili Li −School of Chemical Engineering, The University of
+Queensland, Brisbane, Queensland 4072, Australia;
+orcid.org/0000-0002-1676-1475
+Jaswinder Manjeet Singh −Gold Coast City Council,
+Southport, Queensland 4215, Australia
+Jue Zhang −College of Geo-informatics, Zhejiang University of
+Technology, Hangzhou, Zhejiang Province 310000, P. R.
+China
+Bing-Jie Ni −UNSW Water Research Centre, School of Civil
+and Environmental Engineering, The University of New
+South Wales, Sydney, New South Wales 2052, Australia
+T. David Waite −UNSW Water Research Centre, School of
+Civil and Environmental Engineering, The University of New
+South Wales, Sydney, New South Wales 2052, Australia;
+UNSW Centre for Transformational Environmental
+Technologies, Yixing, Jiangsu Province 214206, P. R. China;
+orcid.org/0000-0002-5411-3233
+Liu Ye −School of Chemical Engineering, The University of
+Queensland, Brisbane, Queensland 4072, Australia;
+orcid.org/0000-0001-5478-0864
+Complete contact information is available at:
+https://pubs.acs.org/10.1021/acs.est.6c04963
+Notes
+The authors declare no competing financial interest.
+■ACKNOWLEDGMENTS
+This study was funded by the Australian Research Council
+(ARC)
+through
+the
+Industry
+Fellowship
+project
+(IE230100422). Senyuan Gu thanks the China Scholarship
+Council for Scholarship Support. Shuting Wang acknowledges
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19892
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 12 -->
+the scholarship support from the Chinese Scholarship Council
+and the top-up scholarship from Research Project
+(RM2021001190) by Melbourne Water. Ruihong Qiu
+acknowledges support from the ARC DECRA Fellowship
+(DE250100919). Bing-Jie Ni and Haoran Duan acknowledge
+support from ARC Linkage Project LP240200633. Experi-
+ments were performed on the UNSW Compute Cluster
+Katana (DOI: 10.26190/669X-A286).
+■REFERENCES
+(1) Wang, Z.; DeWitt, J. C.; Higgins, C. P.; Cousins, I. T. A Never-
+Ending Story of Per- and Polyfluoroalkyl Substances (PFASs)?
+Environ. Sci. Technol. 2017, 51 (5), 2508−2518.
+(2) Lenka, S. P.; Kah, M.; Padhye, L. P. A Review of the Occurrence,
+Transformation, and Removal of Poly- and Perfluoroalkyl Substances
+(PFAS) in Wastewater Treatment Plants. Water Res. 2021, 199,
+No. 117187.
+(3) Gruber, W.; Villez, K.; Kipf, M.; Wunderlin, P.; Siegrist, H.;
+Vogt, L.; Joss, A. N2O Emission in Full-Scale Wastewater Treatment:
+Proposing a Refined Monitoring Strategy. Sci. Total Environ. 2020,
+699, No. 134157.
+(4) Daelman, M. R. J.; van Voorthuizen, E. M.; van Dongen, U. G. J.
+M.; Volcke, E. I. P.; van Loosdrecht, M. C. M. Seasonal and Diurnal
+Variability of N2O Emissions from a Full-Scale Municipal Wastewater
+Treatment Plant. Sci. Total Environ. 2015, 536, 1−11.
+(5) McCarty, P. L.; Bae, J.; Kim, J. Domestic Wastewater Treatment
+as a Net Energy Producer−Can This Be Achieved? Environ. Sci.
+Technol. 2011, 45 (17), 7100−7106.
+(6) Guest, J. S.; Skerlos, S. J.; Barnard, J. L.; Beck, M. B.; Daigger, G.
+T.; Hilger, H.; Jackson, S. J.; Karvazy, K.; Kelly, L.; Macpherson, L.;
+Mihelcic, J. R.; Pramanik, A.; Raskin, L.; Van Loosdrecht, M. C. M.;
+Yeh, D.; Love, N. G. A New Planning and Design Paradigm to
+Achieve Sustainable Resource Recovery from Wastewater. Environ.
+Sci. Technol. 2009, 43 (16), 6126−6130.
+(7) Mo, W.; Zhang, Q. Energy−Nutrients−Water Nexus: Integrated
+Resource Recovery in Municipal Wastewater Treatment Plants. J.
+Environ. Manage. 2013, 127, 255−267.
+(8) Glover, G. C.; Printemps, C.; Essemiani, K.; Meinhold, J.
+Modelling of Wastewater Treatment Plants −How Far Shall We Go
+with Sophisticated Modelling Tools? Water Sci. Technol. 2006, 53 (3),
+79−89.
+(9) Zhu, J.-J.; Yang, M.; Ren, Z. J. Machine Learning in
+Environmental Research: Common Pitfalls and Best Practices.
+Environ. Sci. Technol. 2023, 57 (46), 17671−17689.
+(10) Ma, Y.; Qiao, Y.; Chen, M.; Rui, D.; Zhang, X.; Liu, W.; Ye, L.
+How Small Is Big Enough? Big Data-Driven Machine Learning
+Predictions for a Full-Scale Wastewater Treatment Plant. Water Res.
+2025, 274, No. 123041.
+(11) Li, K.; Duan, H.; Liu, L.; Qiu, R.; van den Akker, B.; Ni, B.-J.;
+Chen, T.; Yin, H.; Yuan, Z.; Ye, L. An Integrated First Principal and
+Deep Learning Approach for Modeling Nitrous Oxide Emissions from
+Wastewater Treatment Plants. Environ. Sci. Technol. 2022, 56 (4),
+2816−2826.
+(12) Li, H.; Spelman, D.; Sansalone, J. Unit Operation and Process
+Modeling with Physics-Informed Machine Learning. J. Environ. Eng.
+2024, 150 (4), No. 04024002.
+(13) Quaghebeur, W.; Torfs, E.; De Baets, B.; Nopens, I. Hybrid
+Differential Equations: Integrating Mechanistic and Data-Driven
+Techniques for Modelling of Water Systems. Water Res. 2022, 213,
+No. 118166.
+(14) Zhang, Y.; Wang, J.; Li, C.; Duan, H.; Wang, W. Attention-
+Based Deep Learning Models for Predicting Anomalous Shock of
+Wastewater Treatment Plants. Water Res. 2025, 275, No. 123192.
+(15) Yin, W.-X.; Chen, K.-H.; Lv, J.-Q.; Chen, J.-J.; Liu, S.; Song, Y.-
+P.; Zhao, Y.-W.; Huang, F.; Bao, H.-X.; Wang, H.-C.; Wang, A.-J.;
+Ren, N.-Q. Deciphering and Mitigating of Dynamic Greenhouse Gas
+Emission in Urban Drainage Systems with Knowledge-Infused Graph
+Neural Network. Environ. Sci. Technol. 2025, 59 (7), 3592−3602.
+(16) Alvi, M.; Batstone, D.; Mbamba, C. K.; Keymer, P.; French, T.;
+Ward, A.; Dwyer, J.; Cardell-Oliver, R. Deep Learning in Wastewater
+Treatment: A Critical Review. Water Res. 2023, 245, No. 120518.
+(17) Koksal, E. S.; Asrav, T.; Esenboga, E. E.; Cosgun, A.; Kusoglu,
+G.; Aydin, E. Physics-Informed and Data-Driven Modeling of an
+Industrial Wastewater Treatment Plant with Actual Validation.
+Comput. Chem. Eng. 2024, 189, No. 108801.
+(18) Li, J.; Cheng, K.; Wang, S.; Morstatter, F.; Trevino, R. P.; Tang,
+J.; Liu, H. Feature Selection: A Data Perspective. ACM Comput. Surv.
+2018, 50 (6), 1−45.
+(19) Duan, H.; Li, J.; Yuan, Z. Making Waves: Knowledge and Data
+Fusion in Urban Water Modelling. Water Res. X 2024, 24, 100234.
+(20) Xu, B.; Zhuang, P.; Wang, Y.; He, W.; Wang, Z.; Liu, Z. Fault
+Diagnosis of Wastewater Treatment Processes Based on CPSO-
+DKPCA. Int. J. Comput. Intell. Syst. 2024, 17 (1), 19.
+(21) Lindsey, J.; Gurnee, W.; Ameisen, E.; Chen, B.; Pearce, A.;
+Turner, N. L.; Citro, C.; Abrahams, D.; Carter, S.; Hosmer, B.;
+Marcus, J.; Sklar, M.; Templeton, A.; Bricken, T.; McDougall, C.;
+Cunningham, H.; Henighan, T.; Jermyn, A.; Jones, A.; Persic, A.; Qi,
+Z.; Thompson, T. B.; Zimmerman, S.; Rivoire, K.; Conerly, T.; Olah,
+C.; Batson, J. On the Biology of a Large Language Model. Transform.
+Circuits Thread 2025, in press.
+(22) Radford, A.; Narasimhan, K.; Salimans, T.; Sutskever, I.
+Improving Language Understanding by Generative Pre-Training;
+OpenAI, 2018. https://cdn.openai.com/research-covers/language-
+unsupervised/language_understanding_paper.pdf.
+(23) Gemini Team Google Anil, R.; Borgeaud, S.; Alayrac, J.-B.; Yu,
+J.; Vinyals, O.et al. Gemini: A Family of Highly Capable Multimodal
+Models. arXiv. 2024, https://doi.org/10.48550/arXiv.2312.11805
+June 17 (accessed 2026−06−19).
+(24) Jeong, D. P.; Lipton, Z. C.; Ravikumar, P. K. LLM-Select:
+Feature Selection with Large Language Models. Trans. Mach. Learn.
+Res., 2025 https://openreview.net/forum?id=16f7ea1N3p.
+(25) Duan, H.; Zhao, Y.; Koch, K.; Wells, G. F.; Zheng, M.; Yuan,
+Z.; Ye, L. Insights into Nitrous Oxide Mitigation Strategies in
+Wastewater Treatment and Challenges for Wider Implementation.
+Environ. Sci. Technol. 2021, 55 (11), 7208−7224.
+(26) Wan, X.; Baeten, J. E.; Volcke, E. I. P. Effect of Operating
+Conditions on N2O Emissions from One-Stage Partial Nitritation-
+Anammox Reactors. Biochem. Eng. J. 2019, 143, 24−33.
+(27) Hiatt, W. C.; Grady, C. P. L. An Updated Process Model for
+Carbon Oxidation, Nitrification, and Denitrification. Water Environ.
+Res. 2008, 80 (11), 2145−2156.
+(28) Pocquet, M.; Wu, Z.; Queinnec, I.; Spérandio, M. A Two
+Pathway Model for N2O Emissions by Ammonium Oxidizing
+Bacteria Supported by the NO/N2O Variation. Water Res. 2016,
+88, 948−959.
+(29) Hochreiter, S.; Schmidhuber, J. Long Short-Term Memory.
+Neural Comput. 1997, 9 (8), 1735−1780.
+(30) Akiba, T.; Sano, S.; Yanase, T.; Ohta, T.; Koyama, M. Optuna:
+A Next-Generation Hyperparameter Optimization Framework. arXiv.
+2019, https://doi.org/10.48550/arXiv.1907.10902 July 25 (accessed
+2026−06−19).
+(31) Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones, L.;
+Gomez, A. N.; Kaiser, Ł.; Polosukhin, I. Attention Is All You Need. In
+Advances in Neural Information Processing Systems; Curran Associates,
+Inc., 2017; Vol. 30.
+(32) Wu, Y.; Tan, H. Short-Term Traffic Flow Forecasting with
+Spatial-Temporal Correlation in a Hybrid Deep Learning Framework.
+arXiv. 2016, https://doi.org/10.48550/arXiv.1612.01022 December 3
+(accessed 2026−06−19).
+(33) Narayanan, S.; Braza, J. D.; Griffiths, R.-R.; Ponnapati, M.; Bou,
+A.; Laurent, J.; Kabeli, O.; Wellawatte, G.; Cox, S.; Rodriques, S. G.;
+White, A. D. Aviary: Training Language Agents on Challenging
+Scientific Tasks. arXiv. 2024, https://doi.org/10.48550/arXiv.2412.
+21154 December 30 (accessed 2026−06−19).
+(34) Skarlinski, M. D.; Cox, S.; Laurent, J. M.; Braza, J. D.; Hinks,
+M.; Hammerling, M. J.; Ponnapati, M.; Rodriques, S. G.; White, A. D.
+Language Agents Achieve Superhuman Synthesis of Scientific
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19893
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026
+
+
+<!-- Page 13 -->
+Knowledge. arXiv. 2024, https://doi.org/10.48550/arXiv.2409.13740
+September 26 (accessed 2026−06−19).
+(35) Lála, J.; O’Donoghue, O.; Shtedritski, A.; Cox, S.; Rodriques, S.
+G.; White, A. D. PaperQA: Retrieval-Augmented Generative Agent
+for Scientific Research. arXiv. 2023, https://doi.org/10.48550/arXiv.
+2312.07559 December 14 (accessed 2026−06−19).
+(36) Reimers, N.; Gurevych, I. Optimal Hyperparameters for Deep
+LSTM-Networks for Sequence Labeling Tasks. arXiv. 2017, https://
+doi.org/10.48550/arXiv.1707.06799 August 16 (accessed 2026−06−
+19).
+(37) Wen, X.; Li, W. Time Series Prediction Based on LSTM-
+Attention-LSTM Model. IEEE Access 2023, 11, 48322−48331.
+(38) Song, J.; Xu, Z.; Zhong, Y. Out-of-Distribution Generalization
+via Composition: A Lens through Induction Heads in Transformers.
+Proc. Natl. Acad. Sci. U. S. A. 2025, 122 (6), No. e2417182122.
+(39) Cai, J.; Luo, J.; Wang, S.; Yang, S. Feature Selection in Machine
+Learning: A New Perspective. Neurocomputing 2018, 300, 70−79.
+(40) LeCun, Y.; Bengio, Y.; Hinton, G. Deep Learning. Nature 2015,
+521 (7553), 436−444.
+(41) Dormann, C. F.; Elith, J.; Bacher, S.; Buchmann, C.; Carl, G.;
+Carré, G.; Marquéz, J. R. G.; Gruber, B.; Lafourcade, B.; Leitão, P. J.;
+Münkemüller, T.; McClean, C.; Osborne, P. E.; Reineking, B.;
+Schröder, B.; Skidmore, A. K.; Zurell, D.; Lautenbach, S. Collinearity:
+A Review of Methods to Deal with It and a Simulation Study
+Evaluating Their Performance. Ecography 2013, 36 (1), 27−46.
+(42) Bolón-Canedo, V.; Sánchez-Maroño, N.; Alonso-Betanzos, A.
+Feature Selection for High-Dimensional Data. Prog. Artif. Intell. 2016,
+5 (2), 65−75.
+(43) Hastie, T.; Tibshirani, R.; Friedman, J. H.; Friedman, J. H.. The
+Elements of Statistical Learning: Data Mining, Inference, and Prediction;
+Springer, 2009; Vol. 2.
+(44) Zhang, C.; Bengio, S.; Hardt, M.; Recht, B.; Vinyals, O.
+Understanding Deep Learning Requires Rethinking Generalization. In
+Proceedings of the 5th International Conference on Learning
+Representations (ICLR 2017); Toulon, France, 2017 https://
+openreview.net/pdf?id=Sy8gdB9xx.
+(45) Zanotti, M. On the Retraining Frequency of Global Models in
+Retail Demand Forecasting. Mach. Learn. Appl. 2025, 22, No. 100769.
+(46) Domingos, P. A Few Useful Things to Know about Machine
+Learning. Commun. ACM 2012, 55 (10), 78−87.
+(47) Yao, H.; Li, Q.; Li, X. Trajectory Prediction Dimensionality
+Reduction for Low-Cost Connected Automated Vehicle Systems.
+Transp. Res. Part Transp. Environ. 2022, 111, No. 103439.
+(48) Lim, B.; Arık, S. Ö.; Loeff, N.; Pfister, T. Temporal Fusion
+Transformers for Interpretable Multi-Horizon Time Series Forecast-
+ing. Int. J. Forecast. 2021, 37 (4), 1748−1764.
+(49) Wang, H.; Jing, X.; Niu, B. A Discrete Bacterial Algorithm for
+Feature Selection in Classification of Microarray Gene Expression
+Cancer Data. Knowl.-Based Syst. 2017, 126, 8−19.
+(50) Jain, I.; Jain, V. K.; Jain, R. Correlation Feature Selection Based
+Improved-Binary Particle Swarm Optimization for Gene Selection and
+Cancer Classification. Appl. Soft Comput. 2018, 62, 203−215.
+(51) Tang, X.; Dai, Y.; Xiang, Y. Feature Selection Based on Feature
+Interactions with Application to Text Categorization. Expert Syst.
+Appl. 2019, 120, 207−216.
+(52) Kushwaha, N.; Pant, M. Link Based BPSO for Feature Selection
+in Big Data Text Clustering. Future Gener. Comput. Syst. 2018, 82,
+190−199.
+(53) Sharma, V.; Juglan, K. C. Automated Classification of Fatty and
+Normal Liver Ultrasound Images Based on Mutual Information
+Feature Selection. IRBM 2018, 39 (5), 313−323.
+(54) Arora, N.; Kaur, P. D. A Bolasso Based Consistent Feature
+Selection Enabled Random Forest Classification Algorithm: An
+Application to Credit Risk Assessment. Appl. Soft Comput. 2020,
+86, No. 105936.
+(55) Guyon, I.; Elisseeff, A. An Introduction to Variable and Feature
+Selection. J. Mach. Learn. Res. 2003, 3 (Mar), 1157−1182.
+(56) Battiti, R. Using Mutual Information for Selecting Features in
+Supervised Neural Net Learning. IEEE Trans. Neural Netw. 1994, 5
+(4), 537−550.
+(57) Yang, J.; Honavar, V. Feature Subset Selection Using a Genetic
+Algorithm. IEEE Intell. Syst. Their Appl. 1998, 13 (2), 44−49.
+(58) Zini, L.; Noceti, N.; Fusco, G.; Odone, F. Structured Multi-
+Class Feature Selection with an Application to Face Recognition.
+Pattern Recognit. Lett. 2015, 55, 35−41.
+(59) Gui, N.; Ge, D.; Hu, Z. AFS: An Attention-Based Mechanism
+for Supervised Feature Selection. Proc. AAAI Conf. Artif. Intell. 2019,
+33 (01), 3705−3713.
+(60) Qin, R.; Zhang, Z.; Huang, J.; Su, Y.; Wen, G.; He, W.; Chen,
+X. Deformable Convolutional Autoencoder-Based Feature Selection
+and Recognition for Acoustic Emission Monitoring in Laser Shock
+Peening. Weld. World 2025, 69 (5), 1241−1254.
+(61) DeLuca, N. M.; Mullikin, A.; Brumm, P.; Rappold, A. G.;
+Cohen Hubal, E. Using Geospatial Data and Random Forest To
+Predict PFAS Contamination in Fish Tissue in the Columbia River
+Basin, United States. Environ. Sci. Technol. 2023, 57 (37), 14024−
+14035.
+(62) Zhu, Y.; Wang, Y.; Zhu, E.; Ma, Z.; Wang, H.; Chen, C.; Guan,
+J.; Waite, T. D. Predicting Membrane Fouling of Submerged
+Membrane Bioreactor Wastewater Treatment Plants Using Machine
+Learning. Environ. Sci. Technol. 2025, 59 (20), 10010−10021.
+(63) Wang, Y.; Dong, J.; Zhou, Y.; Cheng, Y.; Zhao, X.; Peijnenburg,
+W. J. G. M.; Vijver, M. G.; Leung, K. M. Y.; Fan, W.; Wu, F.
+Addressing the Data Scarcity Problem in Ecotoxicology via Small
+Data Machine Learning Methods. Environ. Sci. Technol. 2025, 59 (12),
+5867−5871.
+(64) Song, M. J.; Choi, S.; Bae, W. B.; Lee, J.; Han, H.; Kim, D. D.;
+Kwon, M.; Myung, J.; Kim, Y. M.; Yoon, S. Identification of Primary
+Effecters of N2O Emissions from Full-Scale Biological Nitrogen
+Removal Systems Using Random Forest Approach. Water Res. 2020,
+184, No. 116144.
+(65) Chen, Y.; Zhang, H.; You, Y.; Zhang, J.; Tang, L. A Hybrid
+Deep Learning Model Based on Signal Decomposition and Dynamic
+Feature Selection for Forecasting the Influent Parameters of
+Wastewater Treatment Plants. Environ. Res. 2025, 266, No. 120615.
+(66) Inbar, O.; Avisar, D. Enhancing Wastewater Treatment through
+Artificial Intelligence: A Comprehensive Study on Nutrient Removal
+and Effluent Quality Prediction. J. Water Process Eng. 2024, 61,
+No. 105212.
+(67) Zhou, P.; Li, Z.; Snowling, S.; Goel, R.; Zhang, Q. Multi-Step
+Ahead Prediction of Hourly Influent Characteristics for Wastewater
+Treatment Plants: A Case Study from North America. Environ. Monit.
+Assess. 2022, 194 (5), 389.
+Environmental Science & Technology
+pubs.acs.org/est
+Article
+https://doi.org/10.1021/acs.est.6c04963
+Environ. Sci. Technol. 2026, 60, 19882−19894
+19894
+Downloaded from pubs.​acs.​org/​esthag/​article-pdf/​60/​28/​19882/​65884346/​acs.​est.​6c04963.​pdf by guest on 05 October 2026

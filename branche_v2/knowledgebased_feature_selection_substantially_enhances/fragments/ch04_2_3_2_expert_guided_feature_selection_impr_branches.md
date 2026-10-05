@@ -1,0 +1,44 @@
+### 3.2 Expert-Guided Feature Selection Improves Accuracy and Efficiency
+
+- Cơ sở khoa học của phương pháp lựa chọn đặc trưng dựa trên tri thức (KBFS):
+  - Khắc phục triệt để hiện tượng suy giảm khả năng tổng quát hóa ở mô hình học sâu phức tạp bằng cách tối ưu hóa không gian đầu vào.
+  - Kết hợp đồng thời tương quan thống kê chuỗi thời gian và tầm quan trọng cơ chế sinh học để sàng lọc 52 biến ứng viên ban đầu.
+- Phân tích tương quan thống kê và đóng góp cơ chế sinh hóa:
+  - Các đặc trưng có tương quan thống kê cao nhất với nồng độ phát thải $N_2O$ tại Bể 3:
+    - $\text{NO-tank3}$ (hệ số $1.0$), $N_2\text{-tank1}$ ($0.983$) và $\text{NO-tank2}$ ($0.982$).
+    - Nitric oxide ($NO$) là tiền chất hóa sinh trực tiếp sinh ra $N_2O$ trong cả con đường nitrat hóa của AOB và khử nitrat dị dưỡng; nồng độ $N_2$ phản ánh mức độ hoàn tất của quá trình khử nitrat.
+  - Vai trò bù đắp của điểm số cơ chế (Mechanistic Importance - MI):
+    - Tương quan thống kê thuần túy dễ bị méo mó bởi nhiễu thiết bị đo và sai lệch phân phối mẫu.
+    - Một số thông số vận hành cốt lõi nhận điểm $\text{MI-score} = 1.0$ dù tương quan thống kê ở mức trung bình: lưu lượng vào $\text{InflowRate}$ (chi phối thời gian lưu thủy lực và tải lượng cơ chất), công suất sục khí $\text{Aeration Power2}$ (quyết định nồng độ oxy hòa tan $\text{DO}$ điều khiển tốc độ nitrat hóa) và $N_2O\text{-Tank3}$ mô phỏng.
+- Phân tích tương đồng chuỗi thời gian và triệt tiêu đa cộng tuyến:
+  - Nhiều thông số có dạng sóng dao động gần như trùng khớp sau khi chuẩn hóa do chia sẻ cùng vai trò sinh học trong hệ thống BNR (ví dụ $NH_4^+\text{-Tank1}$ và $NH_4^+\text{-Tank2}$).
+  - Thiết lập ngưỡng tương đồng Pearson bảo thủ ở mức $0.85$ để loại bỏ biến trùng lặp, giữ lại biến có điểm tổng hợp cao hơn:
+    - Loại bỏ $NH_4^+\text{-Tank2}$ do độ tương đồng đạt $0.906$ với $NH_4^+\text{-Tank1}$.
+    - Loại bỏ $NO_2^-\text{-Tank3}$ do trùng lặp với $N_2O\text{-Tank3}$ (độ tương đồng $0.865$).
+- Tích hợp tầm quan trọng cơ chế và phân tích tương quan thống kê giúp sàng lọc 52 đặc trưng ban đầu thành tập 7 biến cốt lõi:
+  - Tập 7 đặc trưng được lựa chọn đại diện đầy đủ cho điều khiển vận hành, động học nitơ và tải lượng hữu cơ:
+    - Nhóm thông số vận hành chính: $\text{InflowRate}$, $\text{Aeration Power2}$ và lưu lượng bùn thải $\text{WAS flow}$.
+    - Nhóm chỉ thị chuyển hóa nitơ then chốt: $NH_4^+\text{-tank1}$ và $NO_2^-\text{-tank2}$.
+    - Nhóm cacbon hữu cơ sẵn có: $\text{COD-tank2}$ (nguồn cacbon thúc đẩy phản ứng khử nitrat).
+    - Biến trạng thái mục tiêu: $N_2O\text{-tank3}$ (mô phỏng từ ASM-$N_2O$).
+  - **Hình 2.** Khung lựa chọn đặc trưng định hướng tri thức cho dự đoán phát thải N2O
+    - ![Hình 2](assets/fig_02_p6_vector.png)
+    - Cơ chế & Bằng chứng: Tích hợp điểm số cơ chế (MI-score) và tương quan thống kê (SC-score) để rút gọn 52 biến ứng viên xuống 7 đặc trưng. Ma trận tương đồng Pearson xác định và loại bỏ các biến dư thừa (như loại bỏ $NH_4^+\text{-Tank2}$ do tương đồng $0.906$ với $NH_4^+\text{-Tank1}$, loại bỏ $NO_2^-\text{-Tank3}$ do trùng lặp $0.865$).
+- Đánh giá hiệu năng nổi bật của mô hình học sâu sử dụng 7 đặc trưng chọn lọc:
+  - Mô hình cơ sở hai lớp với 7 đặc trưng (FS-basic-LSTM):
+    - Đạt $\text{MAE} = 0.0367$ ($\sigma = 0.0032$) và $R^2 = 0.6919$ trong điều kiện nội miền.
+    - Cải thiện có ý nghĩa thống kê so với baseline đầy đủ biến ($p < 0.001$), mô hình 5 lớp ($p < 0.001$) và LSTM-Attention ($p < 0.001$).
+    - Lượt chạy tốt nhất đạt $R^2 = 0.77$, vượt qua kết quả cao nhất của mô hình Attention-LSTM.
+  - Tối ưu hóa kiến trúc mạng trên tập đặc trưng chọn lọc (FS-tuned-LSTM):
+    - Cấu hình tối ưu chỉ là một mạng LSTM đơn lớp (1-layer LSTM) gọn nhẹ.
+    - Đạt sai số $\text{MAE} = 0.0330$ ($\sigma = 0.0015$) và $R^2 = 0.7225$, tái tạo chính xác dao động ngày đêm (diurnal pattern) của phát thải $N_2O$.
+- So sánh đối chứng với các phương pháp lựa chọn đặc trưng truyền thống:
+  - Sàng lọc bằng điều chuẩn LASSO và phương pháp SHAP từ mô hình LSTM 5 lớp đều cho kết quả kém hơn rõ rệt so với tiếp cận dựa trên tri thức.
+  - Khẳng định chất lượng không gian đặc trưng quyết định hiệu năng của mô hình hơn là dung lượng tính toán mạng nơ-ron.
+- Mô hình LSTM huấn luyện trên 7 đặc trưng chọn lọc đạt độ chính xác cao và duy trì hệ số R2 dương trong điều kiện dòng chảy cao ngoài phân phối:
+  - Tỷ lệ quá khớp $\text{MAE}$ kiểm định/huấn luyện giảm xuống $1.46\times$ ở FS-basic-LSTM và $1.53\times$ ở FS-tuned-LSTM.
+  - Khi đối mặt với đợt lưu lượng cao ngoài phân phối tháng 8, cả hai mô hình FS duy trì hệ số $R^2$ dương vững chắc: FS-basic-LSTM đạt $0.2690$ và FS-tuned-LSTM đạt $0.2964$.
+  - Mô hình chỉ suy giảm cục bộ khi lưu lượng dòng vào đạt đỉnh $82.62\text{ L/s}$ (ngày 14–16/08, tăng $56.74\%$ so với trung bình huấn luyện).
+  - **Hình 3.** Hiệu năng của các mô hình LSTM lựa chọn đặc trưng trong dự đoán N2O
+    - ![Hình 3](assets/fig_03_p7.png)
+    - Cơ chế & Bằng chứng: Chuỗi thời gian tháng 7 cho thấy FS-basic-LSTM và FS-tuned-LSTM ($R^2 = 0.7225$, $\text{MAE} = 0.0330$) bám sát động học thực tế hơn mô hình chọn bằng SHAP. Trong điều kiện dòng chảy cao tháng 8, cả hai mô hình FS duy trì $R^2$ dương ($0.2690$ và $0.2964$), nắm bắt các đỉnh phát thải $N_2O$ thay vì bị sụp đổ như mô hình full-feature.

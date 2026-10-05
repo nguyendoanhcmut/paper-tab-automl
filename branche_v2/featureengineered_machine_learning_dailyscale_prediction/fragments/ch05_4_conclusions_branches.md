@@ -1,0 +1,21 @@
+## 4 CONCLUSIONS
+
+- Khung học máy kỹ nghệ đặc trưng và có khả năng giải thích chứng minh tính khả thi trên hệ thống DAF quy mô thực:
+  - Tích hợp thành công chuỗi dữ liệu vận hành dài hạn 3 năm, kỹ nghệ đặc trưng dựa trên tri thức cơ chế và các thuật toán học máy có khả năng giải thích vào quản lý quy trình xử lý nước thải thực tế.
+  - Cung cấp công cụ hỗ trợ ra quyết định thực tiễn cho trạm xử lý nước thải đô thị công suất $410{,}000\ \text{m}^3/\text{ngày}$ trong điều kiện thiếu cảm biến trực tuyến.
+- Đánh giá năng lực dự báo chính xác và độ tin cậy của mô hình Random Forest:
+  - Đạt hệ số xác định trên tập kiểm tra độc lập $R^2 = 0.82$ và sai số căn phương trung bình $\text{RMSE} = 0.032\ \text{mg/L}$.
+  - Sai số dự báo được kiểm soát chặt chẽ trong phạm vi dưới $20\%$ so với quy chuẩn xả thải nghiêm ngặt ($0.2\ \text{mg/L}$).
+  - Nhận diện kịp thời các nguy cơ rủi ro vượt chuẩn photpho trên chu kỳ ra quyết định vận hành theo ngày.
+- Cơ chế vận hành sáng tỏ qua phương pháp phân tích giải thích SHAP:
+  - Xác nhận nồng độ $T\text{-}P$ đầu vào và liều lượng châm phèn sắt $Fe_2(SO_4)_3$ là hai động lực vật lý - hóa học chi phối hàng đầu.
+  - Các đặc trưng sai phân ngắn hạn (1–3 ngày) và chỉ số mùa đóng vai trò điều biến phản ứng động học dưới biến động tải lượng thực tế.
+  - Tính nhất quán của thứ hạng đóng góp đặc trưng qua các mùa củng cố độ tin cậy và tính minh bạch cho người vận hành trạm.
+- Hiệu quả kinh tế và kỹ thuật của chiến lược tối ưu hóa liều lượng châm phèn sắt theo độ nhạy:
+  - Cắt giảm tiêu thụ phèn sắt từ $32\%$ đến $51\%$ xuyên suốt các mùa trong năm.
+  - Tiết kiệm chi phí mua hóa chất ước tính đạt khoảng $1.53$ tỷ KRW mỗi năm.
+  - Thu hẹp biên độ phân tán nồng độ $T\text{-}P$ đầu ra, loại bỏ triệt để các đột biến nồng độ cao và ổn định nước sau xử lý trong dải tiêu chuẩn.
+- Định hướng phát triển ứng dụng công nghệ trong tương lai:
+  - Mở rộng xác thực thực địa trên các dây chuyền xử lý nước thải liên tục.
+  - Tích hợp mô hình dự báo với các phản ứng tương tác giữa công đoạn sinh học phía trước và lọc màng phía sau.
+  - Nâng cấp khung thuật toán thành hệ thống bản sao số (digital twin) và điều khiển tối ưu hóa tự động bằng học tăng cường (reinforcement learning).

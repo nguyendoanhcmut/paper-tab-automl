@@ -1,0 +1,41 @@
+#### 3.3.1 SHAP analysis
+
+- Thứ hạng tương tác SHAP định lượng mức độ đóng góp của các thông số vận hành lên chất lượng nước đầu ra
+  - Phân tích đóng góp lên mục tiêu tổng nitơ ($\text{TN}$):
+    - Nhiệt độ vùng thiếu khí ($\text{Tem-Ax}$) là nhân tố nhạy cảm hàng đầu ảnh hưởng đến quá trình nitrat hóa và khử nitơ.
+    - Nhiệt độ thấp trong mùa đông gây đóng góp âm rõ rệt với giá trị SHAP dao động trong khoảng từ $-0.23$ đến $1.05$.
+    - Vận hành bể swing-basin mở rộng vùng hiếu khí cung cấp đủ $\text{DO}$ và thời gian lưu cho vi khuẩn oxy hóa amoni và nitrit.
+    - Hai thông số $\text{DO-R}$ và $\text{Sludge-R}$ kiểm soát trực tiếp hiệu quả khử nitrat; khi $\text{DO-R}$ đạt giá trị cao, đóng góp SHAP tiệm cận 0.
+    - Bể $\text{DO-R}$ khử sạch oxy hòa tan trong bùn tuần hoàn trước khi đưa về ngăn anoxic, đảm bảo quá trình chuyển tiếp redox thuận lợi.
+  - Phân tích đóng góp lên mục tiêu tổng photpho ($\text{TP}$):
+    - Thế oxy hóa khử trong bể swing ($\text{ORP-Ax}$) chi phối mạnh mẽ hiệu quả xử lý photpho.
+    - Giá trị $\text{ORP}$ thấp ứng với đóng góp SHAP âm, trong khi giá trị $\text{ORP}$ cao tương ứng với đóng góp dương kích thích vi khuẩn $\text{PAO}$ hấp thu photpho.
+    - Tỷ lệ bùn tuần hoàn ($\text{Sludge-R}$) thấp đóng góp tích cực cho khử photpho, trong khi tuần hoàn bùn quá mức làm SHAP chuyển dịch về vùng âm.
+  - Phân tích đóng góp lên nhu cầu oxy hóa học ($\text{COD}$):
+    - Lưu lượng bùn $\text{Sludge-R}$ có tác động chi phối mạnh hơn so với $\text{DO-R}$.
+    - Tăng $\text{Sludge-R}$ làm giá trị SHAP dịch chuyển từ âm sang dương do tuần hoàn các hợp chất hữu cơ chưa phân hủy và sản phẩm vi sinh hòa tan.
+    - Nồng độ $\text{DO-R}$ cao làm giá trị SHAP chuyển dịch về vùng âm, phản ánh sự oxy hóa hiếu khí tăng cường trong bể $\text{DO-R}$.
+    - **Hình 7.** Biểu đồ xếp hạng tương tác SHAP giữa các đặc trưng và ba chỉ tiêu mục tiêu
+      - <img src="assets/fig_07_p11.jpeg" alt="Hình 7" />
+      - **Hình này chứng minh điều gì**
+        - Thứ hạng đóng góp của các biến vận hành lên nồng độ $\text{TN}$ (a), $\text{TP}$ (b) và $\text{COD}$ (c).
+      - **Từ đâu mà thấy được**
+        - Độ phân tán của giá trị SHAP đối với nhiệt độ anoxic, thế redox và lưu lượng bùn tuần hoàn.
+- Biểu đồ tương tác SHAP làm sáng tỏ tác động kết hợp của bể chuyển đổi và bể giảm oxy hòa tan
+  - Cơ chế tương tác đối với động học khử nitơ ($\text{TN}$):
+    - Khử nitơ thể hiện độ nhạy cao nhất với tương tác giữa $\text{DO-R}$, $\text{Sludge-R}$ và giá trị $\text{ORP}$ của các bể kỵ khí, thiếu khí.
+    - Tại mức $\text{ORP-Ax}$ thấp, bể $\text{DO-R}$ hạn chế truyền oxy, duy trì môi trường khử triệt để cần thiết cho phản ứng khử nitrat hoàn toàn.
+    - Khi $\text{ORP-Ax}$ tăng, bể swing-basin cân bằng hệ thống bằng cách luân phiên chu kỳ hiếu khí và thiếu khí để phục hồi hiệu quả khử nitrat.
+  - Cơ chế tương tác đối với quá trình xử lý photpho ($\text{TP}$):
+    - Ở giá trị $\text{ORP-Ax}$ thấp, điều kiện khử hỗ trợ vi sinh vật giải phóng photpho; khi $\text{ORP-Ax}$ tăng dưới lượng oxy kiểm soát từ bể $\text{DO-R}$, hoạt tính hấp thu photpho được kích hoạt.
+    - Tương tác giữa nồng độ bùn kỵ khí ($\text{MLSS-An}$) với $\text{DO-R}$ và $\text{Sludge-R}$ cho thấy sinh khối cao tạo các bông bùn đậm đặc, hạn chế oxy khuếch tán vào lõi sinh khối và giảm bớt nhu cầu tuần hoàn bùn lớn.
+  - Cơ chế tương tác đối với chuyển hóa hợp chất hữu cơ ($\text{COD}$):
+    - Tương tác giữa $\text{pH-An}$, $\text{DO-R}$ và $\text{Sludge-R}$ chỉ ra rằng rò rỉ oxy từ bùn tuần hoàn phá vỡ điều kiện anoxic và làm suy giảm quá trình khử nitrat.
+    - Bể $\text{DO-R}$ triệt tiêu oxy hồi lưu giúp ổn định hiệu suất phân hủy $\text{COD}$.
+    - Trong mùa lạnh, việc kéo dài thời gian phản ứng tại bể swing cho phép sử dụng nồng độ $\text{MLSS}$ cao hiệu quả hơn để duy trì tốc độ xử lý $\text{COD}$.
+    - **Hình 8.** Biểu đồ tương tác SHAP thể hiện mối liên hệ giữa các thông số quan trọng và mục tiêu
+      - <img src="assets/fig_08_p12.jpeg" alt="Hình 8" />
+      - **Hình này chứng minh điều gì**
+        - Sự phối hợp giữa $\text{DO-R}$ và $\text{Sludge-R}$ điều tiết động học $\text{TN}$ (a–d), $\text{TP}$ (e–h) và $\text{COD}$ (i–l).
+      - **Từ đâu mà thấy được**
+        - Các đám mây điểm tương tác giữa nồng độ bùn, thế oxy hóa khử và mức oxy hòa tan.

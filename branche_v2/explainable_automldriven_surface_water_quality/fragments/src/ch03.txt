@@ -1,0 +1,179 @@
+2.1. Study area and water quality dataset
+
+Datasets of surface water quality were collected from the CNEMC, 
+covering nine major river basins, including Continental, Hai, Huai, 
+Pearl, Song-Liao, Southeast, Southwest, Yangtze, and Yellow rivers. The 
+data were collected from approximately 1900 monitoring sites from 
+January 2021 to June 2024, with a time step of 4 h (Fig. 1a). The na­
+tional online monitoring system of CNEMC focuses on a core set of 11 
+feasible indicators for real-time tracking. However, after assessing data 
+quality, two of these indicators [chlorophyll-a (Chl-a, mg/L) and algal 
+density (cells/L)] were excluded from our study due to severe data 
+missingness (>70 %, Table S3). The final analysis was therefore con­
+ducted on the remaining nine robustly-monitored indicators: water 
+temperature (WT, ◦C), pH, dissolved oxygen (DO, mg/L), electrical 
+conductivity (EC, μS/cm), chemical oxygen demand (CODMn, mg/L), 
+ammonia nitrogen (NH3-N, mg/L), total phosphorus (TP, mg/L), total 
+nitrogen (TN, mg/L), and turbidity (NTU).
+According to the Environmental Quality Standards for Surface Water 
+(MEEPRC, 2002), water quality was classified into six classes from best 
+to worst (I-WV). This classification serves as the target variable for our 
+supervised learning models. The classification for each data record was 
+pre-determined by the CNEMC based on the “single-factor evaluation 
+method”, where the final class is assigned based on the poorest- 
+performing individual indicator relative to the standard limits as 
+shown in Table S1. Our objective is therefore to predict this official 
+classification using the nine selected water quality indicators as input 
+features.
+To ensure computational feasibility for the extensive automated 
+model search and subsequent SHAP analysis, a subset of 50,000 samples 
+was extracted from the cleaned dataset (n = 10,159,876) using stratified 
+random sampling. This sampling approach was chosen to prioritize 
+model stability, as our analysis showed that training on the full dataset 
+produced unstable, high-variance results and required computationally 
+prohibitive runtimes (Fig. S1). To rigorously evaluate the stability and 
+robustness of our findings against sampling variability, this entire 
+sampling process was repeated five times using different random seeds 
+(42, 123, 777, 1024, and 2048).
+This sampling methodology not only preserved the proportional 
+distribution of the water quality classes (Fig. 1b) but also maintained a 
+broadly consistent distribution across the major river basins. As detailed 
+in Table S2, the proportional representation of each basin in the sampled 
+subsets shows strong alignment with the full dataset, exhibiting only 
+minor deviations, thereby confirming that the sampling process did not 
+introduce significant regional bias. For the regional analysis, the same 
+stratified sampling approach was applied to each major basin separately. 
+Spearman correlation analysis was performed on the stratified dataset, 
+and indicated no significant relationships among the selected water 
+quality indicators (Fig. 1c), thus eliminating the need for removal of 
+multicollinearity features.
+2.2. Model development and validation strategies
+
+For model inputs, all nine water quality indicators (WT, pH, DO, EC, 
+CODMn, NH3-N, TP, TN, and NTU) were used as input features, with 
+water quality classes (I-WV) as the output target. To rigorously evaluate 
+model performance and stability, three distinct validation schemes were 
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+2 
+
+
+<!-- Page 3 -->
+employed. 
+i. Stratified random split: This was the baseline validation method. 
+For each of the five runs, the 50,000-sample subset was randomly 
+partitioned into a training set (80 %, n = 40,000) and a test set 
+(20 %, n = 10,000) while maintaining class proportions.
+ii. Temporal hold-out validation: To assess the models’ ability to 
+perform on future, unseen data, the entire clean dataset (n =
+10,159,876) was divided based on a timestamp of “2024–01-01 
+Fig. 1. Study area and dataset: (a) distribution of water quality monitoring sites in the study area; (b) distribution of water quality classes before and after stratified 
+sampling, a process repeated five times with unique random seeds; (c) Spearman correlation heatmap of water quality indicators.
+Fig. 2. Comparison of ML pipelines: (a) traditional ML pipeline requiring manual intervention at multiple stages; (b) AutoML pipeline utilizing Auto-sklearn 
+framework, which automates the model development process through meta-learning, Bayesian optimization, and ensemble construction.
+W. Qin et al.                                                                                                                                                                                                                                     
+Journal of Hydrology 665 (2026) 134634 
+3 
+
+
+<!-- Page 4 -->
+00:00:00”. The training set (n = 40,000) was then sampled 
+exclusively from data recorded before this timestamp, while the 
+test set (n = 10,000) was sampled from data recorded after this 
+point. This process was also repeated five times using different 
+random seeds.
+iii. Spatial hold-out validation: Finally, to evaluate geographic 
+generalizability, a leave-one-basin-out validation was conducted. 
+This process consisted of nine iterations where each major river 
+basin was sequentially designated as the hold-out basin. For each 
+iteration, a training set (n = 40,000) was sampled from the 
+remaining eight basins, and a test set (n = 10,000) was sampled 
+from the single hold-out basin.
+Consequently, all quantitative performance metrics reported in this 
+study are presented as the mean ± Standard Deviation (SD) across the 
+respective runs or hold-out basins to ensure the robustness of our 
+conclusions.
+2.3. Traditional and automated machine learning
+
+Traditional ML pipelines require substantial human intervention 
+across multiple stages, including data preprocessing, feature engineer­
+ing, model selection, and hyperparameter tuning (Fig. 2a). For tradi­
+tional ML models, each input feature was standardized using Z-score 
+normalization (μ = 0, σ = 1) to ensure all variables had comparable 
+scales, as illustrated in Fig. S2. And Gaussian process-based Bayesian 
+optimization was employed for hyperparameter tuning in traditional ML 
+approaches (Snoek et al., 2012).
+In contrast, for AutoML implementation, raw data was used without 
+any preprocessing, allowing the algorithm to automatically determine 
+the optimal preprocessing methods (Fig. 2b). The Auto-sklearn (version 
+0.15.0) framework combines Bayesian optimization, meta-learning, and 
+ensemble construction for AutoML pipeline selection (Feurer et al., 
+2015). This framework incorporates comprehensive ML tools, including 
+classification algorithms, feature preprocessing methods, and data pre­
+processing techniques. No manual adjustments were made to the model 
+selection process, with Auto-sklearn automatically defining the search 
+space for hyperparameter optimization. For the accurate assessment of 
+model performance, due to the highly imbalanced distribution of water 
+quality classes in the dataset, both traditional ML and AutoML utilized 5- 
+fold stratified cross-validation during model training (Fig. S3).
+For comprehensive evaluation, Auto-sklearn was compared with 
+both conventional ML models implemented through scikit-learn [Lo­
+gistic Regression (LR), k-Nearest Neighbors (KNN), Decision Tree (DT), 
+Random Forest (RF)] and state-of-the-art ensemble learning models 
+[CatBoost (CatB), LightGBM (LGBM), XGBoost (XGB)]. All imple­
+mentations were conducted using Python 3.8.13. Detailed information 
+about traditional ML methods is provided in the Supplementary Mate­
+rials (Text S1).
+2.4. Model evaluation metrics
+
+The predictive performance of the models was assessed through a 
+comprehensive suite of multi-dimensional evaluation metrics. These 
+metrics, including their mathematical formulas and detailed statistical 
+interpretations, are summarized in Table S4. For this multi-class clas­
+sification task, we employed key metrics such as Precision, Recall, and 
+the Weighted F1, which effectively accounts for class imbalance. Addi­
+tionally, confusion matrices were used for a visual breakdown of clas­
+sification performance across all classes, while Receiver Operating 
+Characteristic (ROC) curves and the corresponding Area Under the 
+Curve (AUC) values were used to evaluate the overall discriminative 
+ability of the models.
+2.5. Explanation of Auto-sklearn
+
+To interpret the ensemble model generated by Auto-sklearn, we 
+employed the SHapley Additive exPlanations (SHAP) method, which 
+calculates feature importance through game theory principles (Kuhn, 
+2020). In ML context, Shapley values measure the individual impact of 
+each feature in the model, collectively contributing to the prediction. 
+Various versions of SHAP have been developed by Lundberg and Lee, 
+including DeepSHAP, Kernel SHAP, LinearSHAP, and TreeSHAP, each 
+designed to approximate SHAP values for different types of ML models. 
+A critical prerequisite for a meaningful SHAP analysis is the high pre­
+dictive accuracy of the model being explained. The SHAP interpretation 
+was therefore performed only after the high predictive performance of 
+the Auto-sklearn ensemble had been established.
+Auto-sklearn can produce heterogeneous ensembles of different al­
+gorithm types. Therefore, the model-agnostic Kernel SHAP was selected 
+for interpretation, as it is well-suited for such ensembles and requires no 
+model-specific adjustments. It approximates SHAP values through a 
+weighted local regression that bridges Model-agnostic Explanations 
+(LIME) methods with Shapley values from cooperative game theory 
+(Lundberg and Lee, 2017b). The SHAP value ∅i for feature i is calculated 
+as follows: 
+ϕi =
+∑
+S⊆F{i}
+|S|!(M −|S|! −1 )!
+M!
+[fx(S ∪{i} ) −fx(S) ]
+(1) 
+where fx (S) is defined as: 
+fx(S) = E[f(x)|xs ]
+(2) 
+where S represents the subset of features excluding feature i, F is the set 
+of all features, M is the total number of features, and fx (S) represents the 
+expected model prediction when only features in subset S are known. 
+Kernel SHAP approximates these values by sampling feature coalitions 
+and computing model predictions, making it particularly suitable for 
+ensemble models where direct interpretation of model internals is 
+challenging (Moradi and Samwald, 2021).
+3. Results

@@ -1,0 +1,26 @@
+## 1 INTRODUCTION
+
+- Phú dưỡng hóa nguồn nước tiếp nhận và quy chuẩn xả thải photpho tổng ($T\text{-}P$) tại Hàn Quốc:
+  - Xả thải photpho dư thừa từ các trạm xử lý nước thải đô thị (WWTP) là nguyên nhân hàng đầu gây phú dưỡng hóa thủy vực tiếp nhận.
+  - Hàn Quốc đưa chỉ tiêu photpho tổng ($T\text{-}P$) vào quy chuẩn nước thải quốc gia từ năm 1996.
+  - Quy chuẩn vùng tiếp tục siết chặt giới hạn nồng độ $T\text{-}P$ xả thải xuống $0.2\text{--}0.5\ \text{mg/L}$ từ năm 2012 trở đi.
+  - Áp lực pháp lý gia tăng buộc các trạm xử lý nước thải phải bảo đảm tuân thủ quy chuẩn xả thải ổn định và liên tục.
+- Ứng dụng công nghệ tuyển nổi khí hòa tan DAF (Dissolved Air Flotation) trong xử lý bậc ba:
+  - Quá trình loại bỏ photpho bằng sinh học dinh dưỡng đơn thuần không thể đáp ứng tiêu chuẩn nghiêm ngặt dưới các biến động tải trọng lớn.
+  - DAF được ứng dụng rộng rãi làm công đoạn xử lý bậc ba (tertiary treatment) nhờ hiệu suất làm trong cao, diện tích xây dựng nhỏ gọn và khả năng cải tạo các trạm hạn chế diện tích.
+  - Các nghiên cứu quy mô thử nghiệm (pilot) và quy mô thực tế (full-scale) xác nhận DAF duy trì nồng độ $T\text{-}P$ đầu ra thấp khi duy trì các điều kiện keo tụ và tuyển nổi phù hợp.
+- Thách thức tối ưu hóa liều lượng châm chất keo tụ trong vận hành DAF:
+  - Hiệu quả vận hành DAF rất nhạy cảm với biến động chất lượng nước đầu vào và liều lượng hóa chất keo tụ phèn sắt $Fe_2(SO_4)_3$.
+  - Thiếu hụt liều lượng keo tụ dẫn đến nồng độ $T\text{-}P$ đầu ra vượt ngưỡng quy chuẩn xả thải.
+  - Dư thừa liều lượng keo tụ làm tăng lượng hóa chất tiêu thụ không cần thiết và gia tăng thể tích bùn thải hóa lý phát sinh.
+  - Phần lớn các nhà máy xử lý vẫn vận hành dựa trên kinh nghiệm như châm theo tỷ lệ cố định hoặc tỷ lệ theo lưu lượng, dẫn đến sai lệch khi nồng độ photpho, độ đục và tải trọng thủy lực biến động nhanh.
+- Rào cản kỹ thuật của hệ thống kiểm soát thời gian thực và tính khả thi của mô hình thang ngày:
+  - Triển khai hệ thống kiểm soát tự động theo phút hoặc giờ gặp trở ngại lớn do cảm biến đo photpho trực tuyến (online sensors) thường xuyên lỗi, chi phí bảo trì cao và khó tích hợp vào hạ tầng điều khiển hiện hữu.
+  - Các trạm xử lý nước thải quy mô thực tế chủ yếu dựa trên số liệu phân tích phòng thí nghiệm theo ngày và nhật ký vận hành thường nhật.
+  - Quyết định điều chỉnh liều lượng châm hóa chất thường được đưa ra theo thang thời gian ngày hoặc theo ca vận hành.
+  - Mô hình dự đoán thang ngày (daily-scale prediction) là giải pháp thực tế và có giá trị vận hành cao đối với các trạm chưa có cảm biến trực tuyến.
+- Hạn chế của các mô hình hộp đen và mục tiêu phát triển khung học máy có thể giải thích:
+  - Nhiều mô hình dự đoán thang ngày hiện hành hoạt động theo cơ chế hộp đen (black-box), thiếu tính minh bạch nên khó áp dụng vào quy trình ra quyết định vận hành thực tế.
+  - Nghiên cứu phát triển khung học máy có khả năng giải thích (interpretable ML) dự đoán nồng độ $T\text{-}P$ đầu ra của DAF theo ngày.
+  - Khung mô hình tích hợp dữ liệu chất lượng nước, thông số vận hành DAF, dữ liệu khí tượng kết hợp kỹ nghệ đặc trưng nắm bắt động học ngắn hạn (1–3 ngày) và xu hướng mùa.
+  - Ứng dụng giá trị SHAP để phân tích đóng góp của từng đặc trưng và chạy mô phỏng độ nhạy nhằm cắt giảm liều lượng chất keo tụ mà vẫn đảm bảo nồng độ $T\text{-}P$ nằm trong giới hạn an toàn.

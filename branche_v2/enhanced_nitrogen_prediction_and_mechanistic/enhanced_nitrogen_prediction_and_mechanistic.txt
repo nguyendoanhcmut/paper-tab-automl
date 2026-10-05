@@ -1,0 +1,993 @@
+<!-- Page 1 -->
+Enhanced nitrogen prediction and mechanistic process analysis in 
+high-salinity wastewater treatment using interpretable machine 
+learning approach
+Qing Wei a,b,c, Zuxin Xu a,b,c,*, Hailong Yin a,b,c
+a College of Environmental Science and Engineering, Tongji University, Shanghai 200092, China
+b State Key Laboratory of Pollution Control and Resource Reuse, Tongji University, Shanghai 200092, China
+c Shanghai Institute of Pollution Control and Ecological Security, Shanghai 200092, China
+H I G H L I G H T S
+G R A P H I C A L A B S T R A C T
+• CatBoost outperformed other models in 
+nitrogen removal prediction.
+• Salinity affects nitrifying enzyme reac­
+tion and carbon metabolism.
+• Dissolved oxygen and COD efficiency 
+were key nitrogen regulators.
+• Temperature and C/N ratio affected 
+total nitrogen via microbial activity.
+A R T I C L E I N F O
+Keywords:
+Effluent nitrogen
+Predictive modelling
+Shapley additive explanations
+Carbon metabolism
+Indicative factors
+A B S T R A C T
+This study introduces an interpretable machine learning framework to predict nitrogen removal in membrane 
+bioreactor (MBR) treating high-salinity wastewater. By integrating Shapley additive explanations (SHAP) with 
+Categorical Boosting (CatBoost), we address the critical gap in linking predictive accuracy to operational 
+decision-making for saline systems. CatBoost achieved the best performance, with an coefficient of determination 
+(R2) of 0.88 and root mean square error (RMSE) of 4.27 for the effluent ammonia nitrogen (NH4
++-Nout), and an R2 
+of 0.91 and RMSE of 4.35 for the effluent total nitrogen (TNout). SHAP analysis uniquely revealed salinity’s dual 
+role in inhibiting nitrifying enzymes and disrupting carbon metabolism, with dissolved oxygen, pH and chemical 
+oxygen demand removal efficiency as key regulators. Temperature and carbon-to-nitrogen ratio further modu­
+lated total nitrogen dynamics through electron donor availability and microbial activity. The proposed SHAP- 
+CatBoost model in high salinity MBR combines predictive modelling with mechanical process control.
+* Corresponding author.
+E-mail address: zuxinxu@yeah.net (Z. Xu). 
+Contents lists available at ScienceDirect
+Bioresource Technology
+journal homepage: www.elsevier.com/locate/biortech
+https://doi.org/10.1016/j.biortech.2025.132393
+Received 1 January 2025; Received in revised form 4 March 2025; Accepted 10 March 2025  
+Bioresource Technology 426 (2025) 132393 
+Available online 11 March 2025 
+0960-8524/© 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+1. Introduction
+With the rapid advancement of urbanization and industrialization, 
+water scarcity and pollution issues have intensified (Bao and Fang, 
+2012). Chemical manufacturing, food processing, pharmaceuticals, and 
+seawater desalination commonly produce high-salinity wastewater (Guo 
+et al., 2023). Elevated salt concentrations pose severe environmental 
+threats, including soil permeability degradation and aquatic life toxicity 
+(Linari´c et al., 2013). Membrane bioreactors (MBRs) combine mem­
+brane separation with biological treatment, making them an ideal 
+technology for treating high-salinity wastewater (Neoh et al., 2016).
+In MBR operations, wastewater treatment plants (WWTPs) face sig­
+nificant salinity-driven challenges. High NaCl (>1%) suppresses 
+ammonia-oxidizing bacteria (AOB) activity, necessitating costly chem­
+ical supplementation to maintain nitrogen compliance (Zhang and Liu, 
+2023). Salinity-stressed microbes prioritize osmoprotectant synthesis 
+over denitrification, but existing models fail to quantify these carbon 
+flux trade-offs (Jeon et al., 2022). Additionally, traditional sensors 
+cannot detect salinity-induced microbial shifts in real time, leading to 
+delayed aeration adjustments and excessive energy consumption (Waki 
+et al., 2018). These issues inflate operational costs by 18–25 % in 
+WWTPs, highlighting the need for interpretable models linking pre­
+dictions to actionable process controls (Borzooei et al., 2019).
+Traditional MBR approaches like mechanistic models, empirical re­
+gressions, and hybrid frameworks have succeeded in low-salinity 
+wastewater scenarios. For example, Park et al. (2015) developed a 
+transmembrane pressure-driven flux model predicting fouling rates, 
+while Waki et al. (2018) optimized aeration cycles using activated 
+sludge models (ASM), reducing energy consumption by 18 %. However, 
+these models struggle with high-salinity wastewater. Mechanistic 
+models suffer from kinetic parameter drift when applied to saline con­
+ditions (Huang et al., 2020), and hybrid models like ASM coupled with 
+computational fluid dynamics (ASM-CFD) coupling overpredict nitrifi­
+cation rates at elevated salinity (Xu et al., 2024). Empirical models fail to 
+generalize across varying salinity gradients, as osmotic stress disrupts 
+carbon-to-nitrogen (C/N) metabolic pathways (Zhang et al., 2015).
+Recent advances in machine learning (ML) have enhanced predictive 
+capabilities in wastewater treatment. Neural networks, such as artificial 
+neural networks (ANN), have been used to predict total nitrogen (TN) 
+removal (Jeon et al., 2022), while long short-term memory (LSTM) 
+models handle dynamic water quality data (Yaqub et al., 2020). Tree- 
+based models like XGBoost optimize chemical oxygen demand (COD) 
+removal (Yaqub and Lee, 2022), and random forests (RF) identify heavy 
+metal toxicity thresholds (Gaur et al., 2024). Hybrid models, such as 
+ASM-ANN coupling, demonstrate the potential of machine learning in 
+wastewater treatment (Xu et al., 2024).
+Research on high-salinity and heavy metal wastewater has pre­
+dominantly focused on membrane fouling, with limited attention on 
+microbial metabolic processes (Borzooei et al., 2019). Studies on heavy 
+metal wastewater have emphasized feature selection (e.g., pH, ion 
+strength) yet often overlook process control integration (Ar´evalo et al., 
+2013). Notably, no study has employed SHAP’s force plots or partial 
+dependence plots (PDPs) to explore the salinity-induced trade-offs be­
+tween nitrification enzyme activities and carbon allocation in MBRs. 
+This gap limits the practical application of ML models in hypersaline 
+environments, where threshold-driven control strategies are crucial for 
+optimal performance.
+This study bridges these gaps by developing an interpretable ML 
+framework that quantifies and prioritizes salinity-impacted control 
+variables in MBRs. The objectives are: 1) to establish an interpretable 
+machine learning framework that decodes salinity-driven nitrogen 
+removal bottlenecks; 2) to quantify multiscale interactions between 
+operational parameters and microbial nitrification–denitrification 
+functions under high-salt stress; and 3) to develop decision-centric vi­
+sual tools that translate model predictions into actionable control stra­
+tegies for WWTPs. This approach advances beyond conventional ML 
+applications by embedding biological mechanism transparency, offering 
+a paradigm shift toward intelligent, cost-effective MBR optimization.
+2. Materials and methods
+2.1. Membrane reactor equipment
+This study aims to simulate real-world conditions in MBRs treating 
+high-salinity wastewater, focusing on salinity-induced metabolic stress 
+and its impact on nitrogen removal efficiency. The experimental con­
+ditions were selected to reflect typical operational challenges in high- 
+salt environments. The synthetic wastewater was prepared using 
+glucose (C6H12O6), potassium dihydrogen phosphate (KH2PO4), 
+ammonium chloride (NH4Cl), sodium chloride (NaCl), and trace ele­
+ments based on previous studies (Khan et al., 2011; Zhong et al., 2022). 
+Five batches of reactors, each with an adequate volume of 10 L, were 
+cultivated at salinity levels ranging from 0 to 5 %. Regulate the tem­
+perature between 5 and 35 ◦C using a water bath heating system, 
+maintaining suspended solids (SS) concentrations between 3 and 8 g/L 
+and pH values ranging from 7.0 to 8.5. The peristaltic pump achieves 
+continuous water inlet and outlet, the hydraulic retention time (HRT) is 
+between 19 and 30 h, and the dissolved oxygen (DO) level is between 0.1 
+and 3.5 mg/L. The influent total nitrogen (TNin) consisted of ammonia 
+nitrogen (NH4
++-Nin), ranging from 20 to 90 mg/L. While the initial car­
+bon source concentration of chemical oxygen demand (COD) equivalent 
+varied between 180 and 300 mg/L. Hollow fibre membrane components 
+were employed, and membrane fouling was monitored using trans­
+membrane pressure gauges. The treatment procedure in each reactor 
+module, whereby wastewater was introduced into the MBR using a 
+peristaltic pump, agitated by a stirring and aeration system. Organic 
+matter was biodegraded by denitrification and activated sludge process. 
+Discharge the treated effluent via the membrane modules (Fig. 1).
+2.2. Data collection and processing
+Evaluate the quality of the treated water following standard pro­
+cedures for measuring various nitrogen compounds and organic content. 
+Monitor key parameters such as DO and pH using a portable meter 
+designed for field use (HI98191, Hanna®, Italy). Adjustments to HRT 
+were made by controlling the peristaltic pumping device’s flow rate. 
+Systematically organized and analyzed the collected monitoring data 
+resulted in 15 key feature parameters, including salinity, oxygen levels, 
+retention time, acidity, temperature, and input and output concentra­
+tions of key contaminants. Specifically, the output two parameters were 
+the effluent of ammonia nitrogen (NH4
++-Nout) and total nitrogen (TNout), 
+while the remaining 13 parameters served as input variables: salinity, 
+DO, HRT, pH, temperature (Temp), chemical oxygen demand in the 
+influent (CODin), chemical oxygen demand in the effluent (CODout), 
+ammonia nitrogen in the influent (NH4
++-Nin), nitrite nitrogen in the 
+effluent (NO2
+−-Nout), nitrate nitrogen in the effluent (NO3
+−-Nout), carbon- 
+to-nitrogen (C/N) ratio, chemical oxygen demand removal efficiency 
+(CODeff) and total nitrogen removal efficiency (TNeff) in the effluent of 
+MBR.
+The pre-processing steps include removing duplicate samples and 
+refining the data set to ensure the accuracy of the model and prevent 
+data leakage. Input features were optimized using standardization 
+techniques provided by the Scikit-learn library. The Z-score method 
+detects outliers and removes extreme values above the threshold of 3. 
+Additionally, winsorization was applied to cap values outside the 1st 
+and 99th percentiles, preserving the data’s overall distribution. The 
+dataset was then randomly split, with 80 % allocated for training and 20 
+% reserved for testing. The final processed dataset consisted of 570 
+samples (see supplementary materials). Fig. 2a shows a box plot of all 
+the data, giving the mean and standard deviation. All machine learning 
+models were validated using this testing set, allowing for a compre­
+hensive accuracy evaluation. 10-fold cross-validation was applied in the 
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+2 
+
+
+<!-- Page 3 -->
+training phase to ensure the robustness of the model evaluation. This 
+method divides the data into 10 subsets, iterating through 10 rounds. 
+Train with nine subsets, validate with the remaining subsets, and train 
+and test with each data point. This approach helps minimize overfitting 
+and provides a more reliable estimate of model performance. Correla­
+tion coefficients ranged from −0.05 to 0.22 for NH4
++-Nout and from 
+−0.52 to 0.26 for TNout (Fig. 2b). Pearson correlational analysis revealed 
+weak associations between nitrogen-related outputs and other variables, 
+indicating their lower influence on the overall model performance.
+2.3. Model construction and optimization
+2.3.1. Machine learning algorithms
+This study applies six machine learning models to simulate effluent 
+water quality. Gradient boosting decision trees (GBDT) is an ensemble 
+learning method that sequentially builds multiple weak decision trees, 
+with each tree correcting the errors of the previous one (Niu et al., 
+2023). Light gradient boosting machine (LightGBM) is a variant of 
+GBDT, using a histogram-based approach to speed up training and 
+improve efficiency (Chang et al., 2022). Random forest (RF) is an inte­
+grated approach to building multiple decision trees, each trained on a 
+random subset of data and features (Lai et al., 2025). XGBoost is another 
+gradient-boosting algorithm that optimizes performance and computa­
+tional efficiency using techniques like regularization and parallelization 
+(Yaqub and Lee, 2022). Adaptive boosting (AdaBoost) is an ensemble 
+method that combines weak classifiers in a weighted manner to form a 
+strong classifier, giving more weight to incorrectly classified instances in 
+subsequent rounds (Zhuang et al., 2021). Categorical boosting (Cat­
+Boost) is a gradient-boosting algorithm that efficiently handles cate­
+gorical features by converting them into numerical representations 
+during training (Ibrar et al., 2022). These models were applied using 13 
+experimental input variables to predict effluent NH4
++-Nout and TNout in 
+the MBR.
+2.3.2. Bayesian optimization
+Fine-tuning the hyperparameters of each model using Bayesian 
+optimization improves performance while reducing computational 
+costs. It builds a probabilistic model, typically a Gaussian process, to 
+predict the performance of different hyperparameter configurations, 
+guiding the selection of optimal values through a balance of exploration 
+and exploitation (Shi et al., 2021; Yin and Li, 2022). The search space for 
+hyperparameters, such as learning rate, tree depth, and iteration num­
+ber, was defined based on prior knowledge and preliminary results. 
+Compared to grid and random search, Bayesian optimization explores 
+the parameter space more efficiently, achieving better results with fewer 
+evaluations. Comparative experiments with stochastic and grid search 
+confirmed that Bayesian optimization outperformed these traditional 
+methods in terms of both accuracy and computational efficiency, mak­
+ing it the most suitable choice for our specific application.
+In the context of Bayesian inference, we aim to estimate the posterior 
+distribution of a function f given observed data D. The observed data D is 
+a set of input–output pairs, and the relationship between the input and 
+output can be modeled as: 
+D = {(x1, y1), (x2, y2), ⋯, (xn, yn) }
+(1) 
+yi = f(xi) + ∊i
+(2) 
+where xi denotes the decision vectors, yi represents the corresponding 
+outputs, and ∊i represents the observation error.
+By applying Bayes’ theorem, the posterior probability distribution 
+p(f|D) of the unknown target function f(x) can be expressed as: 
+p(f|D) = p(D|f) • p(f)
+p(D)
+(3) 
+where p(D|f) is the likelihood distribution of observed data D, p(f) is the 
+prior probability distribution of f(x), p(D) is the marginal likelihood of 
+f(x) to optimize hyperparameters.
+2.3.3. K-fold cross-validation
+For model validation, K-fold cross-validation was employed to 
+reduce bias and ensure stability across the datasets. This approach splits 
+the data into k (k = 10) equally sized portions. Designate one portion as 
+the test set for each iteration while using the remaining portions for 
+training. This procedure is repeated k times, ensuring each subset is 
+precisely set once as the test (Fushiki, 2011; Zhang and Liu, 2023). The 
+average performance across all folds provides a robust measure of the 
+model’s generalization ability, reducing overfitting and variance in our 
+results.
+2.3.4. Implementation of machine learning models
+The models were implemented using Python 3.11.4 and scikit-learn 
+libraries. The datasets were preprocessed to ensure compatibility with 
+each algorithm, including scaling and encoding as necessary. Each 
+model was trained using optimized hyperparameters obtained from 
+Bayesian optimization, and cross-validated results were used to ensure 
+consistency in model performance evaluation.
+Fig. 1. Schematic diagram of membrane bioreactor experimental apparatus.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+3 
+
+
+<!-- Page 4 -->
+2.4. Model performance evaluation
+The performance of each machine learning model was evaluated 
+using coefficient of determination (R2) and root mean square error 
+(RMSE). The equations are as follows: 
+R2 = 1 −
+∑n
+i=1(̂yi −yi)2
+∑n
+i=1(y −yi)2
+(4) 
+Fig. 2. (a) Range of values for each feature; (b) Heatmaps for different parameters; 10-fold cross-validation results for six machine learning algorithms: (c) R2 and (d) 
+RMSE for the NH4
++-Nout modeling; (e) R2 and (f) RMSE for the TNout modeling.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+4 
+
+
+<!-- Page 5 -->
+RMSE =̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+1
+n
+∑
+n
+i=1
+(̂yi −yi)2
+√
+(5) 
+where n represents the sample amount; yi and ̂y i are the simulated and 
+measured values; y is the average of the measured values. They were 
+computed for all models using the test dataset after applying cross- 
+validation to ensure robust and unbiased results.
+2.5. Model interpretation
+Shapley additive explanations (SHAP) analysis was employed to 
+enhance the interpretability of all machine learning models. SHAP 
+values offer a game-theoretic method for explaining model outputs, 
+highlighting the contribution of each feature to the predictions. These 
+values are derived from Shapley values, where the contribution of each 
+feature is determined by considering all possible feature combinations. 
+The SHAP value for each factor i is calculated using the expression: 
+g(zʹ) = ∅0 +
+∑
+M
+i=1
+∅izʹ
+i
+(6) 
+where g(zʹ) is the explanation model; M is the total number of features; 
+∅i is the Shapley value of feature i; zʹ
+i ∈{0, 1} represents whether a 
+feature is included or excluded in the Shapley value calculation.
+SHAP summary plot displays the overall importance of features 
+across all predictions. It ranks features based on their contribution to the 
+model’s output, providing a global view of the most influential param­
+eters. Force plot visual explains individual predictions by showing the 
+force each feature exerts on the prediction, pushing it higher or lower 
+than the average prediction (He et al., 2023). The waterfall plot visu­
+alizes how each feature contributes to a specific prediction by showing a 
+cumulative breakdown of SHAP values. It allows us to understand the 
+direction and magnitude of feature influence on a particular instance. 
+The PDPs help illustrate the relationship between one or two features 
+and the target variable. It shows how the expected prediction changes as 
+a feature varies, holding other features constant, and provides deeper 
+insights into feature behaviour (Kovacs et al., 2022; Niu et al., 2024). By 
+combining these visual tools, global and local insights were gained into 
+the machine learning models, improving the overall interpretability of 
+the predictions.
+3. Results and discussions
+3.1. Model training and optimization
+3.1.1. Hyperparameter optimization
+Bayesian optimization with Gaussian processes was applied to tune 
+hyperparameters across six models, utilizing a search space defined by 
+prior experimental knowledge and pilot trials. For each algorithm, key 
+parameters were bounded within physiochemical and computational 
+constraints: learning rates (0.01–0.30) to balance convergence speed 
+and stability, tree depths (3–20) to prevent overfitting, and regulariza­
+tion terms (L2: 1–10) to control model complexity. The optimization 
+process iteratively evaluated different parameter combinations per 
+model via a lower confidence bound (LCB) acquisition function, maxi­
+mizing the expected improvement in 10-fold cross-validation RMSE. 
+CatBoost’s depth (4–10) and L2 regularization (1–10) were optimized to 
+mitigate overfitting under high-salinity noise, converging at depth = 8 
+and L2 = 3. LightGBM’s leaf count (20–50) and RF’s tree depth (5–20) 
+addressed feature interaction capture in nonlinear salinity-response 
+systems. XGBoost’s subsampling (0.50–1.00) enhanced robustness 
+against ionic strength-induced data sparsity (see supplementary mate­
+rials). The algorithm-specific ranges ensured physiochemical relevance 
+with known microbial metabolic hierarchies. Optimal configurations 
+reduced validation RMSE by 12–18 % compared to default settings, 
+confirming Bayesian optimization’s efficacy in hypersaline wastewater 
+prediction tasks.
+3.1.2. Model performance comparison
+Evaluate the results of the 10-fold cross-validation for the six ma­
+chine learning algorithms applied to model NH4
++-Nout and TNout con­
+centrations. The performance metrics, including R2 and RMSE, for NH4
++- 
+Nout and TNout modelling were summarized in Table 1. CatBoost out­
+performed all other models, achieving an R2 of 0.88 and an RMSE of 
+4.27 for NH4
++-Nout, as well as an R2 of 0.91 and an RMSE of 4.35 for 
+TNout. LightGBM, the second-best model, delivered an R2 of 0.81 and an 
+RMSE of 4.97 for NH4
++-Nout, and an R2 of 0.82 and an RMSE of 5.17 for 
+TNout. The other models, including GBDT, RF, XGBoost, and AdaBoost, 
+demonstrated lower performance metrics. Compared with LightGBM, 
+the CatBoost improved the model’s performance, increasing R2 by 9 % 
+for NH4
++-Nout and 10 % for TNout, while reducing RMSE by 14 % and 16 
+%, respectively.
+Fig. 2c and 2d illustrate the R2 and RMSE results for NH4
++-Nout 
+modelling, while Fig. 2e and 2f display the corresponding results for 
+TNout modelling. These visualizations further emphasize CatBoost’s su­
+perior performance in predicting both nitrogen species. These plots 
+reveal that CatBoost’s predictions closely align with actual measure­
+ments, indicating its effectiveness in modelling nitrogen concentrations. 
+Overall, the results justify the selection of CatBoost as the optimal model 
+for predicting effluent nitrogen.
+3.2. Feature importance ranking
+The SHAP summary plot elucidates the relative contributions of 
+input variables to the predictions of NH4
++-Nout and TNout, revealing 
+distinct mechanistic drivers for each output parameter (Fig. 3). The se­
+lection of the top six predictors for NH4
++-Nout and TNout was based on the 
+synergy between SHAP rankings and mechanistic interpretability, 
+prioritizing parameters with both high model influence and actionable 
+process relevance.
+For NH4
++-Nout predictions, salinity is identified as the most influential 
+factor, with a SHAP value nearly twice that of the second-ranked vari­
+able, NO2
+−-Nout, indicating its substantial impact. The other key pre­
+dictors include NO2
+−-Nout, CODeff, pH, NH4
++-Nin, and DO. While DO, 
+CODin, and C/N ratio have similar SHAP values, DO was prioritized due 
+to its direct role in regulating nitrification and denitrification, making it 
+more practical for process control (Fig. 3a and Fig. 3b). Salinity exerts 
+primary control over ammonium accumulation by directly suppressing 
+nitrifying bacteria activity. Elevated salt concentrations disrupt trans­
+membrane proton gradients in AOB, inhibiting ammonia mono­
+oxygenase (AMO) and hydroxylamine oxidoreductase (HAO) enzymes 
+critical for NH4
++ oxidation (Yan et al., 2018). NO2
+−-Nout accumulation 
+exacerbates nitrification stagnation through feedback inhibition, as ni­
+trite binds to AMO active sites competitively. CODeff further modulates 
+NH4
++-Nout by reflecting carbon source competition: high COD removal 
+efficiency implies heterotrophic dominance, depriving nitrifiers of 
+essential carbon substrates for energy metabolism (Bai et al., 2023). pH 
+fluctuations (optimal range: 7.5–8.5) destabilize proton pump equilib­
+rium in nitrifying consortia, particularly under salinity-induced ionic 
+Table 1 
+Error analysis of different machine learning models.
+NH4
++-Nout
+TNout
+Models
+R2
+RMSE (mg/L)
+Models
+R2
+RMSE (mg/L)
+CatBoost
+0.88
+4.27
+CatBoost
+0.91
+4.35
+LightGBM
+0.81
+4.97
+LightGBM
+0.82
+5.17
+RF
+0.79
+5.48
+RF
+0.80
+5.25
+XGBoost
+0.71
+5.85
+XGBoost
+0.76
+5.20
+GBDT
+0.68
+6.10
+GBDT
+0.71
+5.71
+AdaBoost
+0.54
+7.66
+AdaBoost
+0.63
+6.50
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+5 
+
+
+<!-- Page 6 -->
+strength variations. NH4
++-Nin directly governs reactor ammonium 
+loading; concentrations exceeding nitrification capacity lead to pro­
+portional increases in effluent NH4
++-Nout. DO demonstrate nonlinear 
+effects—nitrification requires > 2 mg/L dissolved oxygen, but salinity- 
+driven reductions in oxygen solubility or accelerated microbial respi­
+ration may create localized hypoxia, constraining ammonia oxidation 
+(Huang et al., 2023). In contrast, TNeff, temperature, and NO3
+−-Nout 
+exhibit minimal influence on NH4
++-Nout predictions. TNeff predominantly 
+reflects denitrification efficiency, which decoupled from nitrification- 
+dominated NH4
++ accumulation. Temperature impacts are marginal 
+within the tested range (15–30 ◦C), likely masked by salinity stress. 
+NO3
+−-Nout shows weak correlations due to nitrification arrest at the ni­
+trite phase under high salinity (Luo et al., 2019).
+For TNout, TNeff has the highest SHAP contribution, as expected due 
+to its strong correlation with TNout, followed by salinity, which has a 
+SHAP value about two-thirds of TNeff. The remaining four dominant 
+predictors include temperature, CODeff, DO, and the C/N ratio. Although 
+CODin and NO2
+−-Nout have SHAP values close to the C/N ratio, the se­
+lection of these six predictors was not solely based on SHAP rankings but 
+also on their practical implications in MBR operation. Specifically, DO 
+and the C/N ratio were prioritized over CODin and NO2
+−-Nout due to their 
+critical roles in regulating microbial activity and nitrogen trans­
+formation pathways (Fig. 3c and Fig. 3d). TNeff emerges as the strongest 
+predictor, directly quantifying systemic nitrogen removal performance. 
+Salinity exerts dual inhibition: it disrupts both nitrification (limiting 
+NH4
++→NO3
+−
+conversion) and denitrification by suppressing nitrate 
+reductase (Nar) and nitrite reductase (Nir) activities (Qiang et al., 2023). 
+Salt-stressed microbes prioritize compatible solute synthesis (e.g., 
+glycine betaine) over metabolic functions, diverting carbon resources 
+from denitrification electron donors. Temperature sensitivity in TNout 
+predictions aligns with the thermophilic nature of denitrifiers (optimal 
+range: 20–40 ◦C). Low temperatures (<15 ◦C) inactivate Nar enzymes, 
+stalling NO3
+−
+reduction. CODeff and C/N ratio jointly regulate carbon 
+availability—high COD removal efficiency or low C/N ratios (<5) starve 
+denitrifiers of organic electron donors, leaving residual NO3
+−/NO2
+−un­
+resolved (Zhang et al., 2015). DO exhibits threshold-dependent effects: 
+elevated DO (>0.5 mg/L) in anoxic zones inhibits Nar activity, with 
+salinity-induced aeration heterogeneity exacerbating oxygen intrusion. 
+Notably, CODout, pH, and NH4
++-Nin show limited relevance. CODout 
+primarily reflects terminal COD degradation, offering no incremental 
+insight beyond CODeff. Denitrifiers tolerate broader pH ranges (6.5–8.5), 
+and salinity’s ionic effects may buffer pH fluctuations. NH4
++-Nin’s 
+diminished role for TNout depends on post-nitrification intermediates 
+(NO3
+−/NO2
+−) and their subsequent denitrification (Li et al., 2022).
+3.3. Local feature contributions
+The SHAP force plot visually demonstrated how individual input 
+Fig. 3. Interpretable analysis of NH4
++-Nout (a-b) and TNout (c-d) for CatBoost model.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+6 
+
+
+<!-- Page 7 -->
+factors impact the model’s prediction, showing the cumulative effect 
+leading to the final prediction outcome. For NH4
++-Nout prediction, C/N 
+ratio, NH4
++-Nin, NO3
+−-Nout, salinity, HRT and TNeff are among the most 
+influential parameters, with CODeff, CODout and temperature showing 
+substantial contributions. Each feature either pushes the prediction 
+higher, illustrating their role in the nitrification process (Fig. 4a). For 
+TNout prediction, similar patterns were observed. The force plot high­
+lights salinity, TNeff, temperature, CODeff, NO2
+−-Nout, and C/N ratio as 
+key factors contributing to the model’s prediction. DO and pH slightly 
+increase the predicted value of TN, while salinity and TNeff have a more 
+pronounced influence. The relatively significant contributions of the C/ 
+N ratio and NO2
+−-Nout further emphasize the sensitivity of TN removal to 
+these factors (Fig. 4b).
+The SHAP waterfall plot provides a more granular breakdown of the 
+individual feature contributions to a specific prediction. For NH4
++-Nout, 
+the key parameters contributing to the final prediction include C/N 
+ratio, NH4
++-Nin NO3
+−-Nout, and salinity. These features cumulatively in­
+crease the predicted NH4
++-Nout, suggesting that higher influent ammonia 
+concentrations, nitrate levels, and salinity directly correlate with higher 
+effluent ammonia levels. Operational parameters such as HRT, TNeff and 
+CODeff also contribute positively but to a lesser extent, indicating their 
+role in nitrogen removal efficiency under the given conditions (Fig. 4c). 
+For TNout, the waterfall plot shows that salinity, TNeff, and temperature 
+are the dominant factors increasing the predicted value. CODeff, NO2
+−- 
+Nout, and C/N ratio also contribute positively, though to a lesser degree. 
+The impact of salinity on TNout highlights the inhibitory effects on ni­
+trogen removal processes, where high salinity can limit denitrifying 
+microbial activity (Fig. 4d).
+3.4. Partial dependence analysis
+Employ PDPs to visualize how changes in individual features influ­
+ence the predictions of NH4
++-Nout and TNout. PDPs allow us to explore the 
+direction and magnitude of the impact of key factors like salinity, 
+CODeff, and pH on the predicted values of NH4
++-Nout and TNout. The non- 
+linear relationships between features and output variables are revealed 
+through these plots, providing deeper insights into parameter behav­
+iour. Colour coding represents the interaction effects of other variables, 
+with red representing higher feature values and blue indicating lower 
+values. This method helps to visually distinguish the effects of different 
+feature levels on model prediction.
+For NH4
++-Nout, we focus on the top six features identified in the 
+summary plot. The partial dependence of salinity on NH4
++-Nout exhibits a 
+downward trend followed by a sharp increase. When salinity is below 2 
+%, the NH4
++-Nout decreases with increasing salinity, and NH4
++-Nout 
+gradually increases when salinity is above 2 % (Fig. 5a). This suggests 
+that low salinity levels are conducive to better ammonia removal. 
+However, as salinity increases beyond this point, the SHAP values of 
+NH4
++-Nout increase due to the inhibitory effect of high salinity on mi­
+crobial nitrification processes. The effect of NO2
+−-Nout on the model’s 
+predictions shows a consistent upward trend (Fig. 5b), suggesting that 
+higher nitrite concentrations lead to increased NH4
++-Nout. This phe­
+nomenon indicates that nitrite accumulation in sewage indicates that 
+denitrification is incomplete or that the nitrification process is inter­
+rupted. The influence of CODeff on NH4
++-Nout is minimal when CODeff is 
+below 70 %. However, once CODeff exceeds this threshold, the concen­
+tration of NH4
++-Nout rises significantly (Fig. 5c). This relationship em­
+phasizes the importance of maintaining lower organic load levels to 
+optimize ammonia removal efficiency.
+Fig. 4. Interpretation analysis using CatBoost and SHAP: (a) NH4
++-Nout force plot; (b) TNout force plot; (c) NH4
++-Nout waterfall plot; (d) TNout waterfall plot.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+7 
+
+
+<!-- Page 8 -->
+The pH’s impact on NH4
++-Nout increases rapidly as the pH approaches 
+7.0 and begins to decrease once the pH exceeds 7.5 (Fig. 5d). The SHAP 
+value becomes negative beyond this point, reducing the model’s pre­
+dicted probability of NH4
++-Nout occurrence. The interaction effect with 
+salinity becomes most pronounced at pH values greater than 8.0. When 
+the NH4
++-Nin is below 55 mg/L, SHAP values remain positive, suggesting 
+a direct relationship with NH4
++-Nout reduction. However, when NH4
++-Nin 
+exceeds 60 mg/L, the concentration of NH4
++-Nout begins to rise again 
+(Fig. 5e). This indicates that excessively high influent ammonia con­
+centrations can hinder the removal efficiency. When DO concentrations 
+are between 0–2 mg/L, SHAP values decrease rapidly, meaning low DO 
+levels reduce the NH4
++-Nout. However, the SHAP value rose when DO 
+increased to 2–6 mg/L. When DO exceeded 6 mg/L, the SHAP value 
+gradually decreased, indicating that insufficient DO may lead to inad­
+equate nitrogen removal reaction, and higher DO is more conducive to 
+ammonia nitrogen removal (Fig. 5f).
+The PDPs provide insights into the influence of key parameters on 
+the prediction of TNout. The analysis reveals distinct patterns for six 
+critical features. TNeff generally correlates negatively with TNout con­
+centration, particularly when TNeff exceeds 40 %. As the nitrogen 
+removal efficiency increases, the total nitrogen concentration signifi­
+cantly decreases (Fig. 5g). Furthermore, the interaction between TNeff 
+and HRT becomes most pronounced when TNeff ranges from 20 % to 60 
+%. A clear non-linear negative correlation is observed between salinity 
+and TNout. Specifically, when salinity is between 0 and 2 %, an increase 
+in salinity leads to a notable reduction in TNout (Fig. 5h). However, when 
+salinity surpasses 2 %, the SHAP values stabilize, indicating a dimin­
+ishing effect on nitrogen removal beyond a certain threshold. This 
+behaviour aligns with the sensitivity of nitrifying and denitrifying bac­
+teria to changes in salinity. The influence of temperature on TNout 
+removal is minimal when temperatures range from 0 ◦C to 20 ◦C, as the 
+SHAP values remain relatively stable. However, as the temperature rises 
+from 20 ◦C to 25 ◦C, the SHAP values gradually decrease, and a sharp 
+increase is seen beyond 30 ◦C. This phenomenon suggests that a tem­
+perature range of 25–30 ◦C is optimal for the metabolic activity of ni­
+trifying bacteria (Fig. 5i). Additionally, the interaction between 
+temperature and CODeff is particularly significant within the 15–30 ◦C 
+range, indicating that the organic load influences the impact of tem­
+perature on TNout removal.
+When CODeff is below 70 %, a linear negative correlation is observed 
+Fig. 5. The partial dependence plots of first six feature based on CatBoost model for NH4
++-Nout (a-f) and TNout (g-l). Note: (a) salinity; (b) NO2
+–-Nout; (c) CODeff; (d) pH; 
+(e) NO2
+–-Nout; (f) DO; (g) TNeff; (h) salinity; (i) temperature; (j) CODeff; (k) DO; (l) C/N.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+8 
+
+
+<!-- Page 9 -->
+between CODeff and TNout, indicating that as the COD removal efficiency 
+increases, the TNout concentration gradually decreases. However, when 
+CODeff exceeds 70 %, the SHAP values begin to increase, suggesting that 
+a reduction in the carbon source may diminish the metabolic activity of 
+nitrifying and denitrifying bacteria (Fig. 5j). Regarding DO, when it is 
+between 0 and 2 mg/L, a significant increase in SHAP values is observed 
+as DO rises, indicating that higher DO concentrations enhance the TNout 
+levels. However, beyond 2 mg/L, the SHAP values tend to stabilize, 
+implying that further increases in DO have diminishing effects. The 
+interaction between NO2
+−-Nout and DO is most pronounced when DO is 
+between 0 and 4 mg/L (Fig. 5k). Elevated levels of DO are detrimental to 
+the anaerobic ammonia oxidation process, suggesting that maintaining a 
+lower DO concentration is more favourable for TNout removal. A positive 
+correlation between the C/N ratio and TNout is observed, where higher 
+C/N ratios inhibit denitrification, indicating that the ratio should be kept 
+at a lower level for optimal nitrogen removal (Fig. 5l). The interaction 
+between the C/N ratio and NO2
+−-Nout is most significant when the C/N 
+ratio is between 3 and 8 mg/L, suggesting that this range is most 
+conducive to nitrification activity.
+3.5. Underlying mechanisms and processes
+In high-salinity environments, NH4
++-Nout removal is primarily hin­
+dered by the inhibition of nitrification. The activity of ammonia- 
+oxidizing bacteria (AOB) and nitrite-oxidizing bacteria (NOB) is sensi­
+tive to changes in osmotic pressure caused by salt (Shen et al., 2014). 
+This osmotic stress disrupts cellular functions, including the proton 
+gradient required for the activity of AMO and HAO, enzymes critical for 
+NH4
++ oxidation to NO2
+−/NO3
+−. Consequently, the nitrification process is 
+slowed, leading to higher NH4
++ concentrations in effluent. Additionally, 
+high salt levels may favour the growth of halophilic bacteria (e.g., 
+Halomonas), which lack efficient nitrifying capabilities, further 
+reducing nitrogen removal efficiency. The competition for carbon 
+sources under saline stress leads to synthesizing compatible solutes like 
+glycine betaine, diverting carbon away from nitrogen removal functions, 
+thus promoting ammonia accumulation (Vyrides and Stuckey, 2017). 
+Interactions between salt, pH, DO, and other parameters, such as the C/ 
+N ratio and HRT, exacerbate the inefficiency of ammonium removal. 
+Specifically, a higher C/N ratio can disrupt the balance between nitri­
+fying and denitrifying bacteria. Reduced DO in high salinity can create 
+hypoxic zones, inhibiting aerobic nitrification (Huang et al., 2024).
+For TNout, salinity inhibits the activity of key enzymes involved in 
+denitrification, such as Nar and Nir activity. It alters the structure of 
+cytochrome c in the electron transport chain, reducing electron transfer 
+efficiency (Luo et al., 2021). As a result, NO3
+−/NO2
+−
+reduction is hin­
+dered, and TN removal is impaired. Additionally, high salt concentra­
+tions increase the competition for carbon sources, creating an imbalance 
+in the C/N ratio (Ruan et al., 2020). This issue disrupts the availability of 
+electron donors for denitrification, leaving nitrogen oxides (NOx
+−) in the 
+effluent. The accumulation of NO2
+−
+due to inhibited nitrification can 
+feedback to suppress AOB activity, creating a vicious cycle of reduced 
+nitrogen removal. Interactions with other parameters, such as DO, pH 
+and temperature, further amplify these effects. Specifically, lower DO 
+can hinder aerobic processes, while an optimal pH and temperature are 
+crucial for maintaining effective nitrogen removal (Mishra et al., 2022).
+3.6. Implications and outlook
+This study used interpretable machine learning to predict nitrogen 
+removal in MBR systems treating high-salinity wastewater. CatBoost 
+model showed significant improvements in R2 (9 %) and RMSE (14 %) 
+for NH4
++-Nout, and similar gains for TNout. SHAP analysis highlighted 
+salinity as a key factor, disrupting nitrification and denitrification, while 
+CODeff, DO and C/N ratio influenced microbial activity. Prior studies 
+have consistently demonstrated the inhibitory effect of high salinity on 
+ammonia oxidation by ammonia-oxidizing bacteria (AOB) (Shi et al., 
+2021; Xu et al., 2024). The SHAP analysis corroborates this but adds 
+depth by revealing how salinity interacts with other key parameters, 
+such as COD removal efficiency. Specifically, we found that high COD 
+removal exacerbates carbon competition and starving nitrifiers of 
+essential substrates, a nuanced finding not emphasized in prior work. 
+Research on denitrification under saline conditions has shown that 
+salinity impairs Nar activity (Li et al., 2022; Zhang et al., 2015). Salinity 
+inhibits Nar and alters the microbial community structure, further 
+impairing carbon transfer to anoxic zones. Previous studies have 
+explored this interplay less, often focusing on single stressors.
+The temperature-related findings also align with previous research 
+but provide more operationally relevant insights. Luo et al. (2019) 
+examined temperature effects on nitrification in non-saline systems but 
+did not account for the complex interactions with salinity. The SHAP 
+waterfall plots indicate that below 20 ◦C, Nar activity decays signifi­
+cantly due to Arrhenius-type behaviour, but this effect diminishes above 
+25 ◦C due to thermal inertia. This insight provides more specific guid­
+ance for operational strategies in saline wastewater treatment. 
+Furthermore, while studies on aeration optimization have focused on 
+improving DO for nitrogen removal (Zhang et al., 2019), this research 
+highlights specific DO thresholds (0.5–1.2 mg/L) for optimal perfor­
+mance under salinity stress. This result contrasts with prior work that 
+provided general aeration guidelines, offering a more precise opera­
+tional range.
+This study’s model has some limitations for direct application in real- 
+world environments. Extensive calibration is required when applying 
+the model to wastewater with different compositions and for potential 
+variations in plant-specific operational conditions (e.g., fluctuations in 
+salinity levels). Continuous monitoring of environmental parameters is 
+also necessary to ensure reliable model predictions. Additionally, the 
+study focuses solely on high-salinity wastewater, and further adapta­
+tions may be needed for other types of influent. Future research could 
+explore the combined effects of salinity with other stressors like heavy 
+metals (Ar´evalo et al., 2013) or organic pollutants (Holloway et al., 
+2014), as these could compound the challenges of nitrogen removal. 
+Factors such as adsorbents and membrane fouling could be incorporated 
+into future models to refine operational strategies (Xu et al., 2024). 
+Further validation under real-world conditions and incorporation of 
+additional variables will strengthen model applicability and robustness.
+4. Conclusion
+This study leveraged interpretable machine learning to predict ni­
+trogen removal in a MBR treating high-salinity wastewater. CatBoost 
+achieved the best performance with R2of 0.88–0.91 and RMSE of 
+4.27–4.35 for NH4
++-Nout and TNout. Compared to the second-best model, 
+it improved R2 by 9 %-10 % and reducing RMSE by 14 %-16 %, 
+respectively. SHAP analysis identified salinity as the dominant factor, 
+disrupting nitrification via enzyme inhibition and denitrification 
+through carbon metabolic competition. CODeff and DO governed mi­
+crobial activity, while temperature modulated denitrifier enzyme ki­
+netics. PDPs further revealed nonlinear thresholds in salinity and C/N 
+ratio effects. These findings demonstrate how multi-faceted explain­
+ability tools can decode complex interactions in biological systems. 
+Targeted operational adjustments, such as salinity control and carbon 
+supplementation, can also be guided to optimize nitrogen removal. 
+Interpretable machine learning bridges predictive modelling and 
+mechanistic understanding, offering actionable strategies for enhancing 
+MBR performance in high-salinity wastewater treatment.
+CRediT authorship contribution statement
+Qing Wei: Writing – original draft, Methodology. Zuxin Xu: Su­
+pervision, Funding acquisition. Hailong Yin: Writing – review & edit­
+ing, Formal analysis.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+9 
+
+
+<!-- Page 10 -->
+Declaration of competing interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgements
+This study was supported by National Natural Science Foundation of 
+China (Grant No.52170103), and the National Key R&D Program of 
+China (Grant No. 2021YFC3200703).
+Appendix A. Supplementary data
+Supplementary data to this article can be found online at https://doi. 
+org/10.1016/j.biortech.2025.132393.
+References
+Ar´evalo, J., Ruiz, L.M., P´erez, J., Moreno, B., G´omez, M.´A., 2013. Removal performance 
+of heavy metals in MBR systems and their influence in water reuse. Water Sci. 
+Technol., 67, 894–900.
+Bai, W., Samineni, L., Chirontoni, P., Krupa, I., Kasak, P., Popelka, A., Saleh, N.B., 
+Kumar, M., 2023. Quantifying and reducing concentration polarization in reverse 
+osmosis systems. Desalination 554, 116480.
+Bao, C., Fang, C., 2012. Water resources flows related to urbanization in China: 
+challenges and perspectives for water management and urban development. Water 
+Resour. Manage., 26, 531–552.
+Borzooei, S., Amerlinck, Y., Abolfathi, S., Panepinto, D., Nopens, I., Lorenzi, E., 
+Meucci, L., Zanetti, M.C., 2019. Data scarcity in modelling and simulation of a large- 
+scale WWTP: stop sign or a challenge. J. Water Process Eng., 28, 10–20.
+Chang, H., Xu, Y., Chen, S., He, Z., 2022. Enhanced understanding of osmotic membrane 
+bioreactors through machine learning modeling of water flux and salinity. Sci. Total 
+Environ., 838, 156009.
+Fushiki, T., 2011. Estimation of prediction error by using K-fold cross-validation. Stat. 
+Comput., 21, 137–146.
+Gaur, V.K., Gautam, K., Vishvakarma, R., Sharma, P., Pandey, U., Srivastava, J.K., 
+Varjani, S., Chang, J.S., Ngo, H.H., Wong, J.W.C., 2024. Integrating advanced 
+techniques and machine learning for landfill leachate treatment: addressing 
+limitations and environmental concerns. Environ. Pollut., 124134.
+Guo, L., Xie, Y., Sun, W., Xu, Y., Sun, Y., 2023. Research progress of high-salinity 
+wastewater treatment technology. Water 15, 684.
+He, Z., Yang, Y., Fang, R., Zhou, S., Zhao, W., Bai, Y., Li, J., Wang, B., 2023. Integration 
+of shapley additive explanations with random forest model for quantitative 
+precipitation estimation of mesoscale convective systems. Front. Environ. Sci., 10, 
+1057081.
+Holloway, R.W., Regnery, J., Nghiem, L.D., Cath, T.Y., 2014. Removal of trace organic 
+chemicals and performance of a novel hybrid ultrafiltration-osmotic membrane 
+bioreactor. Environ. Sci. Technol., 48, 10859–10868.
+Huang, S., Pooi, C.K., Shi, X., Varjani, S., Ng, H.Y., 2020. Performance and process 
+simulation of membrane bioreactor (MBR) treating petrochemical wastewater. Sci. 
+Total Environ., 747, 141311.
+Huang, X., Mi, W., Chan, Y.H., Singh, S., Zhuang, H., Leu, S.-Y., Li, X.-Z., Li, X., Lee, P.-H., 
+2023. CNS synergy in a pilot-scale mainstream anammox fluidized-bed membrane 
+bioreactor for treating chemically enhanced primary treatment saline sewage. Water 
+Res., 229, 119475.
+Huang, Z., Yi, G., Wang, Q., Wang, S., Xu, Q., Huan, C., Wang, Y., Zhang, W., Wang, A., 
+Liu, W., 2024. Improving microbial activity in high-salt wastewater: a review of 
+innovative approaches. Sci. Total Environ., 176278.
+Ibrar, I., Yadav, S., Braytee, A., Altaee, A., HosseinZadeh, A., Samal, A.K., Zhou, J.L., 
+Khan, J.A., Bartocci, P., Fantozzi, F., 2022. Evaluation of machine learning 
+algorithms to predict internal concentration polarization in forward osmosis. 
+J. Membr. Sci., 646, 120257.
+Jeon, J., Cho, K., Kang, J., Park, S., Ada, U.E., Park, J., Song, M., Viet Ly, Q., Bae, H., 
+2022. Combined machine learning and biomolecular analysis for stability assessment 
+of anaerobic ammonium oxidation under salt stress. Bioresour. Technol., 355, 
+127206.
+Khan, S.J., Ilyas, S., Javid, S., Visvanathan, C., Jegatheesan, V., 2011. Performance of 
+suspended and attached growth MBR systems in treating high strength synthetic 
+wastewater. Bioresour. Technol., 102, 5331–5336.
+Kovacs, D.J., Li, Z., Baetz, B.W., Hong, Y., Donnaz, S., Zhao, X., Zhou, P., Ding, H., 
+Dong, Q., 2022. Membrane fouling prediction and uncertainty analysis using 
+machine learning: a wastewater treatment plant case study. J. Membr. Sci., 660, 
+120817.
+Lai, Y., Xiao, K., He, Y., Liu, X., Tan, J., Xue, W., Zhang, A., Huang, X., 2025. Machine 
+learning for membrane bioreactor research: principles, methods, applications, and a 
+tutorial. Front. Environ. Sci. Eng., 19, 34.
+Li, H., Li, Z., Song, B., Gu, Z., 2022. Microbial community response of the full-scale MBR 
+system for mixed leachates treatment. Water Environ. Res., 94, e1677.
+Linari´c, M., Marki´c, M., Sipos, L., 2013. High salinity wastewater treatment. Water Sci. 
+Technol., 68, 1400–1405.
+Luo, G., Wang, Z., Li, Y., Li, J., Li, A.-M., 2019. Salinity stresses make a difference in the 
+start-up of membrane bioreactor: performance, microbial community and membrane 
+fouling. Bioprocess. Biosyst. Eng., 42, 445–454.
+Luo, L., Zhou, W., Yuan, Y., Zhong, H., Zhong, C., 2021. Effects of salinity shock on 
+simultaneous nitrification and denitrification by a membrane bioreactor: 
+performance, sludge activity, and functional microflora. Sci. Total Environ., 801, 
+149748.
+Mishra, S., Singh, V., Cheng, L., Hussain, A., Ormeci, B., 2022. Nitrogen removal from 
+wastewater: a comprehensive review of biological nitrogen removal processes, 
+critical operation parameters and bioreactor design. J. Environ. Chem. Eng., 10, 
+107387.
+Neoh, C.H., Noor, Z.Z., Mutamim, N.S.A., Lim, C.K., 2016. Green technology in 
+wastewater treatment technologies: Integration of membrane bioreactor with 
+various wastewater treatment systems. Chem. Eng. J., 283, 582–594.
+Niu, C., Li, B., Wang, Z., 2023. Using artificial intelligence-based algorithms to identify 
+critical fouling factors and predict fouling behavior in anaerobic membrane 
+bioreactors. J. Membr. Sci., 687, 122076.
+Niu, C., Zhang, Z., Cai, T., Pan, Y., Lu, X., Zhen, G., 2024. Sludge bound-EPS 
+solubilization enhance CH4 bioconversion and membrane fouling mitigation in 
+electrochemical anaerobic membrane bioreactor: insights from continuous operation 
+and interpretable machine learning algorithms. Water Res., 264, 122243.
+Park, S.H., Park, B., Shon, H.K., Kim, S., 2015. Modeling full-scale osmotic membrane 
+bioreactor systems with high sludge retention and low salt concentration factor for 
+wastewater reclamation. Bioresour. Technol., 190, 508–515.
+Qiang, L., Yunlong, W., Chisheng, Y., Ancheng, L., Zhiwei, L., 2023. New insights into 
+differential salinity tolerance between autotrophic and heterotrophic partial 
+nitrification. J. Environ. Chem. Eng., 11, 109681.
+Ruan, X., Yin, J., Cui, X., Li, N., Shen, D., 2020. Bioaugmentation and quorum sensing 
+disruption as solutions to increase nitrate removal in sequencing batch reactors 
+treating nitrate-rich wastewater. J. Environ. Sci., 98, 179–185.
+Shen, L., Yao, Y., Meng, F., 2014. Reactor performance and microbial ecology of a 
+nitritation membrane bioreactor. J. Membr. Sci., 462, 139–146.
+Shi, R., Xu, X., Li, J., Li, Y., 2021. Prediction and analysis of train arrival delay based on 
+XGBoost and Bayesian optimization. Appl. Soft Comput., 109, 107538.
+Vyrides, I., Stuckey, D.C., 2017. Compatible solute addition to biological systems treating 
+waste/wastewater to counteract osmotic and other environmental stresses: a review. 
+Crit. Rev. Biotechnol., 37, 865–879.
+Waki, M., Yasuda, T., Fukumoto, Y., B´eline, F., Magrí, A., 2018. Treatment of swine 
+wastewater in continuous activated sludge systems under different dissolved oxygen 
+conditions: reactor operation and evaluation using modelling. Bioresour. Technol., 
+250, 574–582.
+Xu, B., Pooi, C.K., Yeap, T.S., Leong, K.Y., Soh, X.Y., Huang, S., Shi, X., Mannina, G., 
+Ng, H.Y., 2024. Hybrid model composed of machine learning and ASM3 predicts 
+performance of industrial wastewater treatment. J. Water Process Eng., 65, 105888.
+Yan, T., Ye, Y., Ma, H., Zhang, Y., Guo, W., Du, B., Wei, Q., Wei, D., Ngo, H.H., 2018. 
+A critical review on membrane hybrid system for nutrient recovery from wastewater. 
+Chem. Eng. J., 348, 143–156.
+Yaqub, M., Asif, H., Kim, S., Lee, W., 2020. Modeling of a full-scale sewage treatment 
+plant to predict the nutrient removal efficiency using a long short-term memory 
+(LSTM) neural network. J. Water Process Eng., 37, 101388.
+Yaqub, M., Lee, W., 2022. Modeling nutrient removal by membrane bioreactor at a 
+sewage treatment plant using machine learning models. J. Water Process Eng., 46, 
+102521.
+Yin, J., Li, N., 2022. Ensemble learning models with a Bayesian optimization algorithm 
+for mineral prospectivity mapping. Ore Geol. Rev., 145, 104916.
+Zhang, D., Su, H., Antwi, P., Xiao, L., Liu, Z., Li, J., 2019. High-rate partial-nitritation and 
+efficient nitrifying bacteria enrichment/out-selection via pH-DO controls: efficiency, 
+kinetics, and microbial community dynamics. Sci. Total Environ., 692, 741–755.
+Zhang, X., Liu, C., 2023. Model averaging prediction by K-fold cross-validation. 
+J. Econom., 235, 280–301.
+Zhang, X., Zhang, H., Ye, C., Wei, M., Du, J., 2015. Effect of COD/N ratio on nitrogen 
+removal and microbial communities of CANON process in membrane bioreactors. 
+Bioresour. Technol., 189, 302–308.
+Zhong, H., Yuan, Y., Luo, L., Ye, J., Chen, M., Zhong, C., 2022. Water quality prediction 
+of MBR based on machine learning: a novel dataset contribution analysis method. 
+J. Water Process Eng., 50, 103296.
+Zhuang, L., Tang, B., Bin, L., Li, P., Huang, S., Fu, F., 2021. Performance prediction of an 
+internal-circulation membrane bioreactor based on models comparison and data 
+features analysis. Biochem. Eng. J., 166, 107850.
+Q. Wei et al.                                                                                                                                                                                                                                     
+Bioresource Technology 426 (2025) 132393 
+10 

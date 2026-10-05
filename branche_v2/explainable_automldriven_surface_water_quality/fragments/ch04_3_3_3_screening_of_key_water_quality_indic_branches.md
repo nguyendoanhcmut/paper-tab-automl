@@ -1,0 +1,44 @@
+### 3.3 Screening of key water quality indicators based on SHAP importance
+
+- **Quy trình tự động hóa AutoML hỗ trợ giải thích đặc trưng**:
+  - Khung làm việc AutoML tự động hóa các bước tiền xử lý, lựa chọn thuật toán và tối ưu hóa siêu tham số để tạo ra mô hình nền tảng có độ chính xác cao trước khi phân tích SHAP.
+  - **Hình 2.** So sánh quy trình học máy truyền thống và AutoML
+    - <img src="assets/fig_02_p3.png" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - AutoML chuyển đổi chuỗi thao tác thủ công phân mảnh thành một quy trình tích hợp khép kín với tối ưu hóa Bayesian và meta-learning.
+    - **Từ đâu mà thấy được**
+      - Sơ đồ (a) thể hiện sự can thiệp thủ công ở nhiều bước; sơ đồ (b) mô tả luồng tự động khép kín của Auto-sklearn.
+- **Phương pháp luận phân tích giải thích bằng Kernel SHAP**:
+  - Lựa chọn lượt chạy đại diện có điểm Weighted $\text{F1}$ gần nhất với giá trị trung bình $5$ lượt để bóc tách đóng góp của từng chỉ tiêu.
+  - Giá trị Shapley định lượng mức độ tác động biên của từng thông số hóa lý lên xác suất phân loại của từng cấp chất lượng nước.
+- **Phân tích đóng góp đặc trưng đa lớp qua giá trị Shapley**:
+  - Phân tích SHAP bóc tách cơ chế quyết định của mô hình Auto-sklearn đối với từng cấp chất lượng nước từ Cấp I đến Cấp WV.
+  - **Hình 6.** Biểu đồ tầm quan trọng SHAP phân bổ theo 6 cấp chất lượng nước
+    - <img src="assets/fig_06_p7.png" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - $\text{pH}$ chi phối Cấp I, $\text{TP}$ chi phối Cấp II, trong khi $\text{COD}_{\text{Mn}}$ cùng $\text{DO}$ và $\text{TP}$ đóng vai trò nhân tố quyết định các cấp nước ô nhiễm (Cấp V và WV).
+    - **Từ đâu mà thấy được**
+      - Tọa độ các điểm trên $6$ biểu đồ (a đến f) biểu thị độ lớn giá trị Shapley; dải màu từ xanh đến đỏ thể hiện nồng độ chỉ tiêu từ thấp đến cao.
+- **Đóng góp chi tiết của từng chỉ tiêu theo từng cấp nước**:
+  - Đối với Cấp I, $\text{pH}$ thể hiện tầm quan trọng cao nhất, theo sau bởi $\text{DO}$ và $\text{TP}$; giá trị $\text{pH}$ cao đóng góp tích cực vào việc nhận diện nguồn nước sạch.
+  - Đối với Cấp II, $\text{TP}$ trở thành chỉ số chiếm ưu thế nhất, với $\text{COD}_{\text{Mn}}$ và $\text{NH}_3\text{-N}$ đóng vai trò thứ yếu.
+  - Đối với các cấp trung gian (Cấp III và IV), $\text{COD}_{\text{Mn}}$ chi phối mạnh mẽ nhất; nồng độ cao của chất ô nhiễm hữu cơ dẫn đến giá trị SHAP âm rõ rệt.
+  - Đối với Cấp V và Cấp kém V ($\text{WV}$), quyết định phân loại được dẫn dắt bởi $\text{COD}_{\text{Mn}}$, $\text{DO}$ và $\text{TP}$; các giá trị cực đoan của nhóm chỉ số này phản ánh tình trạng suy thoái nghiêm trọng của nguồn nước.
+  - Các chỉ tiêu như nhiệt độ nước ($\text{WT}$), độ đục ($\text{NTU}$) và độ dẫn điện ($\text{EC}$) chỉ đóng góp thứ yếu trên toàn bộ các lớp phân loại.
+  - Thứ hạng SHAP giải thích định lượng chỉ tiêu nào thường xuyên đóng vai trò là nhân tố giới hạn (limiting factor) trong quy tắc đánh giá đơn nhân tố quốc gia.
+  - Biểu đồ tầm quan trọng tích lũy theo từng lớp (Fig. S6) chứng minh $\text{COD}_{\text{Mn}}$ và $\text{TP}$ chiếm phần lớn tỷ trọng giải thích tổng thể.
+- **Xếp hạng tầm quan trọng tổng thể của 9 chỉ số**:
+  - Tính toán giá trị SHAP tuyệt đối trung bình cho từng chỉ tiêu qua $5$ lượt chạy độc lập, sau đó chuẩn hóa tổng trọng số bằng $1$.
+  - Phân tích phương sai một chiều ANOVA kết hợp kiểm định Tukey HSD ($p < 0.05$) xác định $\text{COD}_{\text{Mn}}$ và $\text{TP}$ là hai chỉ số có ảnh hưởng lớn nhất; tầm quan trọng của chúng không khác biệt nhau nhưng cao hơn rõ rệt so với tất cả chỉ số còn lại.
+  - Chỉ số $\text{DO}$ xếp thứ ba, tạo thành bậc ý nghĩa thống kê độc lập tiếp theo.
+- **Xác định ngưỡng bão hòa hiệu năng với bộ ba chỉ số then chốt**:
+  - Mô hình Auto-sklearn đạt Weighted $\text{F1} = 0.9205 \pm 0.0097$ khi chỉ sử dụng $3$ chỉ số hàng đầu ($\text{COD}_{\text{Mn}}$, $\text{TP}$, $\text{DO}$), trong khi việc bổ sung chỉ số thứ tư ($\text{NH}_3\text{-N}$) không mang lại cải thiện có ý nghĩa thống kê ($p > 0.05$).
+  - **Hình 7.** Xếp hạng tầm quan trọng và diễn biến hiệu năng khi tích lũy chỉ số
+    - <img src="assets/fig_07_p8.png" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Bộ $3$ chỉ số ($\text{COD}_{\text{Mn}}$, $\text{TP}$, $\text{DO}$) nắm giữ phần lớn năng lực phân loại, khẳng định tính khả thi của việc tinh giản mạng lưới quan trắc.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ cột (a) thể hiện điểm SHAP chuẩn hóa với phân nhóm chữ cái Tukey; đồ thị (b) minh họa mức tăng F1 nhảy vọt ở chỉ số thứ hai ($0.1851$) và thứ ba ($0.1305$).
+- **Quy luật gia tăng hiệu năng cận biên khi bổ sung biến**:
+  - Mức tăng điểm F1 trung bình đạt giá trị lớn nhất khi bổ sung chỉ số thứ hai ($0.1851$) và chỉ số thứ ba ($0.1305$).
+  - Việc bổ sung thêm các chỉ số từ thứ tư trở đi cho mức tăng biên không đáng kể, chứng minh bộ ba chỉ số cốt lõi đã đủ khả năng thay thế bộ chỉ số mở rộng trên quy mô toàn quốc.

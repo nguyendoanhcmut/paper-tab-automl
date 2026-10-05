@@ -1,0 +1,33 @@
+### 3.1 SAnMBR Experimental Performance
+
+- Động thái chuỗi thời gian 189 ngày của hiệu suất loại bỏ COD và biến thiên OLR
+  - **Hình 4. Chuỗi thời gian nồng độ COD và hiệu suất loại bỏ xuyên suốt các giai đoạn vận hành**
+    - ![Hình 4. Chuỗi thời gian COD và OLR](assets/fig_05_p7.jpeg)
+    - Hiệu suất xử lý COD tăng từ mức $\approx 43\%$ lên $85 - 90\%$ trong 50 ngày thích nghi đầu tiên
+    - Duy trì độ ổn định cao trong dải $80 - 95\%$ khi OLR tăng từng bậc từ $125$ lên xấp xỉ $800\text{ g COD/m}^3\cdot\text{day}$
+    - Ghi nhận sự sụt giảm ngắn hạn $5 - 8\%$ sau mỗi bước tăng OLR trước khi phục hồi nhanh chóng
+    - Tách biệt SRT và HRT tạo điều kiện tích lũy sinh khối vi sinh vật kỵ khí sinh methane sinh trưởng chậm
+- Cơ chế kiểm soát và ổn định động học phân hủy sinh học
+  - Màng siêu lọc giữ lại toàn bộ sinh khối giúp tách rời hoàn toàn thời gian lưu bùn (SRT) khỏi thời gian lưu thủy lực (HRT)
+  - Điều kiện nhiệt độ ổn định $36 \pm 1^\circ\text{C}$ kích hoạt các phản ứng enzyme thủy phân và methane hóa, giảm thiểu độ nhạy với dao động tải
+  - Nồng độ bùn hoạt tính kỵ khí cao trong bể phản ứng duy trì tốc độ tiêu thụ cơ chất ổn định, triệt tiêu giới hạn động học khi OLR tăng
+  - Biện pháp sục khí sinh học định kỳ (biogas sparging) và rửa ngược kiểm soát hiệu quả lớp bánh bùn trên bề mặt màng
+- Động lực thích ứng của quần thể vi sinh vật kỵ khí
+  - Áp lực chọn lọc từ nồng độ cơ chất khó phân hủy thúc đẩy sự gia tăng tỷ lệ vi khuẩn chuyển hóa hợp chất vòng thơm
+  - Các chi vi khuẩn cộng sinh chủ chốt gồm *Syntrophus* và *Syntrophorhabdus* tham gia bẻ gãy cấu trúc vòng phenolic ban đầu
+  - Cổ khuẩn sinh methane *Methanosaeta* và *Methanosarcina* đảm nhiệm chuyển hóa hoàn tất các sản phẩm trung gian thành khí $\text{CH}_4$
+- Biến thiên thời gian của nồng độ và hiệu suất loại bỏ các chất ô nhiễm chính
+  - **Hình 5. Biến thiên theo thời gian của nồng độ 2,4-DCP và các thông số vận hành**
+    - ![Hình 5. Biến thiên 2,4-DCP và các thông số](assets/fig_06_p8.jpeg)
+    - Hiệu suất phân hủy 2,4-DCP tăng từ mức dưới $20 - 30\%$ ban đầu lên trạng thái ổn định $80 - 95\%$
+    - Hiệu suất loại bỏ tổng chất rắn lơ lửng TSS duy trì ổn định tuyệt đối trên $90 - 95\%$ nhờ màng lọc
+    - Hiệu suất khử độ đục tăng tiến từ $60 - 65\%$ lên mức $75 - 80\%$ phản ánh sự hình thành bông bùn tốt
+    - Hiện tượng tích tụ tạm thời EPS và SMP trên bề mặt màng xuất hiện trong các giai đoạn sốc tải
+- Động thái suy giảm thoáng qua và tích lũy chất polyme ngoại bào (EPS/SMP)
+  - Mỗi bước nhảy OLR tạo ra mức giảm hiệu suất tạm thời $5 - 8\%$ do vi sinh vật tiết ra các chất ngoại bào để tự bảo vệ
+  - Sự tích tụ của polyme ngoại bào (EPS) và sản phẩm vi sinh hòa tan (SMP) làm gia tăng trở lực lọc và cản trở khuếch tán cơ chất
+  - Hệ vi sinh vật thích nghi và tái lập trạng thái cân bằng trong vòng vài ngày vận hành
+- Động học phân hủy 2,4-dichlorophenol và cơ chế giới hạn tốc độ
+  - Hiệu suất phân hủy 2,4-DCP ban đầu thấp ($< 20 - 30\%$) do quá trình khử clo (dechlorination) và mở vòng thơm đòi hỏi thời gian thích nghi
+  - Sau pha thích nghi, hiệu suất phân hủy đạt mức cao ổn định từ $80\%$ đến $95\%$
+  - So sánh với y văn (Zhu et al. 2020), hệ thống đạt độ ổn định tương đương các công nghệ màng kỵ khí tiên tiến với hiệu suất khử phenolic đạt trên $90\%$

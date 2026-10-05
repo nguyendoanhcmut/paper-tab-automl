@@ -1,0 +1,25 @@
+## Abstract
+
+- Mục tiêu nghiên cứu và bối cảnh kỹ thuật
+  - Nước thải chứa hợp chất phenolic (đặc biệt là 2,4-dichlorophenol, 2,4-DCP) gây ức chế vi sinh vật và làm mất ổn định các quá trình xử lý sinh học truyền thống
+  - Nghiên cứu khảo sát hiệu suất của hệ thống bể phản ứng sinh học màng kỵ khí ngập nước (SAnMBR) quy mô pilot vận hành liên tục trong 189 ngày dưới các mức tải sốc 2,4-DCP tăng dần
+  - Phát triển khung mô hình học máy (machine learning framework) dựa trên dữ liệu thực nghiệm để dự đoán hiệu suất loại bỏ nhu cầu oxy hóa học (COD removal efficiency)
+- Cấu trúc tập dữ liệu và các thuật toán học máy đối sánh
+  - Tập dữ liệu bao gồm 189 điểm quan sát thực nghiệm theo chuỗi thời gian liên tục
+  - Sáu thông số vận hành đầu vào then chốt: COD đầu vào ($\text{COD}_{\text{in}}$), tải trọng hữu cơ (OLR), độ đục đầu vào ($\text{Turbidity}_{\text{in}}$), tổng chất rắn lơ lửng đầu vào ($\text{TSS}_{\text{in}}$), $\text{pH}_{\text{in}}$, và nồng độ $\text{2,4-DCP}_{\text{in}}$
+  - Ba thuật toán học máy được huấn luyện và đối sánh: Hồi quy tuyến tính bội (MLR), Mạng nơ-ron nhân tạo (ANN), và Hồi quy vector hỗ trợ (SVR)
+- Hiệu suất mô hình dự đoán tối ưu
+  - Mô hình SVR đạt độ chính xác dự đoán cao nhất trên tập kiểm tra độc lập với hệ số xác định $R^2 = 0.952$
+  - Sai số căn bậc hai trung bình (RMSE) của mô hình SVR trên tập kiểm tra đạt $2.96\%$
+  - Mô hình SVR thể hiện khả năng tổng quát hóa cao và nắm bắt chính xác các mối quan hệ phi tuyến phức tạp giữa tải sốc ức chế và hiệu suất xử lý
+- Cửa sổ vận hành tối ưu và ngưỡng ức chế sinh học
+  - Hiệu suất loại bỏ COD tối đa diễn ra trong khoảng $\text{pH}$ hẹp từ 8 đến 9
+  - Vùng tải sốc phenolic an toàn được xác định ở nồng độ 2,4-DCP thấp ($< 50\text{ mg/L}$)
+  - Hiệu suất xử lý COD suy giảm nghiêm trọng khi nồng độ 2,4-DCP vượt ngưỡng ức chế ($> 150\text{ mg/L}$)
+- Hiệu suất xử lý tổng thể của hệ thống SAnMBR
+  - Hiệu suất loại bỏ tổng chất rắn lơ lửng (TSS) đạt trên $90\%$ nhờ màng lọc giữ lại sinh khối
+  - Hiệu suất loại bỏ 2,4-DCP đạt trên $80\%$ qua cơ chế phân hủy kỵ khí kết hợp lưu giữ màng
+  - Hiệu suất làm giảm độ đục (Turbidity) đạt trên $75\%$
+- Đóng góp kỹ thuật và ứng dụng thực tiễn
+  - Tích hợp dữ liệu vận hành dài hạn với các mô hình học máy có khả năng giải thích (interpretable ML)
+  - Cung cấp cơ sở khoa học để thiết lập chiến lược kiểm soát thời gian thực và ngăn ngừa sự cố ức chế tải độc trong xử lý nước thải công nghiệp

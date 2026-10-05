@@ -1,0 +1,23 @@
+### 2.1 Data acquisition
+
+- Quy mô và cấu hình công nghệ của trạm xử lý nước thải đô thị mục tiêu:
+  - Công suất thiết kế của trạm đạt $410{,}000\ \text{m}^3/\text{ngày}$ với 2 dây chuyền xử lý song song.
+  - Dây chuyền xử lý sinh học chính vận hành theo quy trình Modified Ludzack–Ettinger (MLE) loại bỏ chất hữu cơ và nitơ.
+  - Nước sau bể lắng thứ cấp được phân lưu sang hai công đoạn xử lý bậc ba vận hành song song gồm hệ thống lọc đĩa vi lọc (MDF) và hệ thống tuyển nổi khí hòa tan (DAF).
+- Cơ chế phân tách pha và loại bỏ photpho trong hệ thống DAF quy mô thực:
+  - DAF thực hiện phân tách pha rắn - lỏng dựa trên nguyên lý hòa tan không khí vào nước dưới áp suất cao và giải áp đột ngột để tạo bọt khí siêu mịn (microbubbles) tuân theo định luật Henry.
+  - Chất keo tụ sử dụng là muối sắt ferric sulfate $Fe_2(SO_4)_3$ giúp làm mất ổn định các hạt keo và tạo bông cặn photpho không tan.
+  - Các bọt khí siêu mịn gắn bám vào bông cặn keo tụ tạo thành phức hợp bọt-bông có khối lượng riêng nhỏ hơn nước, nổi lên bề mặt để thanh cào bùn thu gom và loại bỏ.
+- Khung phương pháp nghiên cứu 3 giai đoạn kết nối dữ liệu quan trắc và tối ưu hóa vận hành:
+  - **Hình 2.** Quy trình nghiên cứu gồm tiền xử lý dữ liệu, phát triển mô hình và giải thích
+    - <img src="assets/fig_02_p4.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Khung phương pháp chuẩn hóa tuần tự từ dữ liệu đa nguồn đến mô phỏng tự hồi quy
+      - Tích hợp kỹ nghệ đặc trưng và tối ưu hóa siêu tham số Bayes cho 4 mô hình học máy
+    - **Từ đâu mà thấy được**
+      - Sơ đồ từ trên xuống: Tiền xử lý (3-sigma, MICE) đến Huấn luyện (chia tập 2022-2024, Bayes)
+      - Khối cuối cùng biểu diễn phân tích SHAP và mô phỏng tối ưu hóa liều lượng châm phèn sắt
+- Ba nguồn dữ liệu độc lập thu thập trong giai đoạn 3 năm từ tháng 01/2022 đến tháng 12/2024 ($N = 1{,}096\ \text{ngày}$):
+  - Dữ liệu khí tượng: Thu nhận từ Hệ thống quan trắc bề mặt tự động ASOS của Cục Khí tượng Hàn Quốc (KMA) gồm nhiệt độ không khí, lượng mưa, độ ẩm và tốc độ gió.
+  - Dữ liệu chất lượng nước: Phân tích mẫu định kỳ hàng ngày tại phòng thí nghiệm gồm $T\text{-}P$ đầu vào, $T\text{-}P$ đầu ra, chất rắn lơ lửng ($\text{SS}$), $\text{pH}$ và lưu lượng tuần hoàn nội bộ (IRFR).
+  - Dữ liệu vận hành DAF: Trích xuất từ hệ thống giám sát SCADA nhà máy gồm lưu lượng nước vào DAF, liều lượng châm chất keo tụ $Fe_2(SO_4)_3$, cường độ khuấy trộn, tỷ lệ dòng tuần hoàn và tỷ lệ khí trên chất rắn (A/S).

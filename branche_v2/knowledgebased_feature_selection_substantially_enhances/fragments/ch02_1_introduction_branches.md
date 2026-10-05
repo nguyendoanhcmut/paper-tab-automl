@@ -1,0 +1,31 @@
+## 1 INTRODUCTION
+
+- Vai trò của mô hình hóa xử lý nước thải đang chuyển dịch mạnh mẽ theo định hướng hạ tầng xanh:
+  - Tối ưu hóa vận hành, bảo đảm tuân thủ quy chuẩn pháp lý và kiểm soát phát thải khí nhà kính (GHG emissions).
+  - Nhà máy xử lý nước thải (WWTPs) chuyển từ vai trò loại bỏ chất ô nhiễm sang cơ sở thu hồi tài nguyên (resource recovery facilities) và hạ tầng trung hòa năng lượng.
+- Các mô hình cơ chế truyền thống bộc lộ nhiều giới hạn nội tại:
+  - Thiếu hiểu biết đầy đủ về các cơ chế phản ứng phức tạp và tương tác vi sinh vật trong hệ thống.
+  - Gặp khó khăn khi mô tả các chất ô nhiễm mới nổi và động học phát thải khí nhà kính như nitrous oxide ($N_2O$).
+- Mô hình học máy đối mặt với thách thức "lời nguyền số chiều" (curse of dimensionality) trong điều kiện dữ liệu mẫu nhỏ:
+  - Số lượng đặc trưng quá lớn dẫn đến hiện tượng quá khớp (overfitting) và làm giảm khả năng tổng quát hóa (generalizability).
+  - Trong ngành nước thải, dữ liệu thường có kích thước mẫu hạn chế nhưng số lượng thông số quan trắc lại rất lớn từ hệ thống SCADA.
+  - Nghịch lý dữ liệu: Dữ liệu đa chiều làm mờ đi các mối quan hệ cơ chế sinh học chi phối hệ thống thay vì làm sáng tỏ chúng.
+- Tăng độ phức tạp của kiến trúc học sâu không giải quyết triệt để vấn đề dữ liệu thưa thời gian:
+  - Các kiến trúc học sâu như mạng nơ-ron tích chập (CNN), biểu diễn đồ thị (graph-based) và cơ chế chú ý (attention mechanisms) được thiết kế để tự động học phụ thuộc không-thời gian.
+  - Do hạn chế quan trắc thực tế, dữ liệu phần lớn thưa thớt theo thời gian (temporally sparse data sets).
+  - Việc tăng độ phức tạp mạng và bổ sung đầu vào khi thiếu dữ liệu lớn thường làm suy giảm độ chính xác dự đoán thay vì cải thiện.
+- Lựa chọn đặc trưng (feature selection) là lộ trình hiệu quả hơn việc chỉ tập trung mở rộng kiến trúc:
+  - Xác định các thông số ưu tiên giúp mô hình đạt hiệu năng dự đoán cao trong khi duy trì độ phức tạp hợp lý và tiết kiệm chi phí tính toán.
+  - Phương pháp thống kê truyền thống như phân tích thành phần chính (PCA) thiếu ngữ cảnh chuyên ngành, dễ chọn các biến có tương quan toán học nhưng phi lý về cơ chế sinh học.
+  - Lựa chọn đặc trưng định hướng tri thức (knowledge-guided feature selection) giúp thu hẹp không gian giả thuyết của mô hình (hypothesis space) dựa trên nguyên lý xử lý nước thải.
+- Cơ hội từ mô hình ngôn ngữ lớn kết hợp truy xuất tri thức tăng cường (LLM-RAG):
+  - Khả năng tổng hợp có hệ thống tri thức chuyên ngành từ lượng lớn y văn và tài liệu khoa học.
+  - Bổ khuyết cho các chuyên gia cá nhân bằng cách bao quát những mối liên hệ bị bỏ sót do giới hạn tiếp cận tài liệu.
+  - Kết hợp trực giác chuyên gia con người với năng lực tổng hợp tự động của trí tuệ nhân tạo.
+- Thiết kế nghiên cứu và đối tượng thực nghiệm:
+  - Dự đoán phát thải khí nhà kính $N_2O$ tại hai trạm xử lý nước thải quy mô thực tế tại Queensland, Australia.
+  - Khí $N_2O$ sinh ra đồng thời từ nhiều con đường sinh học động học cao và chịu tác động của nhiều yếu tố môi trường đan xen.
+  - Thiết lập so sánh đối chứng giữa mô hình học sâu chú ý (Attention-LSTM) với hai giải pháp dựa trên tri thức:
+    - Tiếp cận 1: Khung sàng lọc đặc trưng dựa trên tri thức chuyên gia (KBFS) tích hợp cơ chế sinh hóa và tương quan thống kê.
+    - Tiếp cận 2: Khung sàng lọc đặc trưng tăng cường bằng mô hình ngôn ngữ lớn (LLM-RAG).
+  - Đánh giá đồng bộ trên ba tiêu chí: độ chính xác dự đoán, mức độ quá khớp và độ bền vững dưới sự dịch chuyển phân phối dữ liệu (distributional shift giữa các mùa và giữa các trạm xử lý khác nhau).

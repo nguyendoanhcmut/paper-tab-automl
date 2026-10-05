@@ -1,0 +1,31 @@
+### 2.3 Knowledge-Based Feature Selection Framework
+
+- Quy trình sàng lọc đặc trưng dựa trên tri thức gồm năm bước có cấu trúc:
+  - Tối ưu hóa không gian biến đầu vào trước khi tiến hành xây dựng mô hình và tối ưu hóa siêu tham số.
+  - Cân bằng giữa mức độ hiểu biết cơ chế sinh học và tương quan thống kê chuỗi thời gian.
+- Bước 1: Gán trọng số tầm quan trọng cơ chế (Mechanistic Importance-Weighting):
+  - Phân loại đặc trưng theo vai trò chức năng trong các phương trình động học sinh học và phương trình cân bằng khối lượng.
+  - Gán điểm số $\text{MI-score}$ (Mechanistic Importance score) trong khoảng từ gần $0$ (ảnh hưởng không đáng kể) đến $1.0$ (ảnh hưởng cốt lõi lớn nhất).
+  - Điểm số phản ánh mức độ đóng góp lý thuyết vào quá trình hình thành khí $N_2O$ dựa trên cơ chế phản ứng sinh hóa đã được xác lập.
+- Bước 2: Phân nhóm theo quy trình sinh học (Process Group Categorization):
+  - Phân loại các đặc trưng vào 4 nhóm chức năng theo chu trình nitơ:
+    - Nhóm con đường AOB (ammonia-oxidizing bacteria): nồng độ amoni ($NH_4^+$), hydroxylamine ($NH_2OH$), nitrit ($NO_2^-$) và sinh khối tự dưỡng $X_{AOB}$.
+    - Nhóm con đường NOB (nitrite-oxidizing bacteria): nồng độ nitrit ($NO_2^-$), nitrat ($NO_3^-$) và sinh khối $X_{NOB}$.
+    - Nhóm khử nitrat dị dưỡng (heterotrophic denitrification): các oxit nitơ và nồng độ sinh khối vi khuẩn dị dưỡng $X_H$.
+    - Nhóm thông số vận hành và ngoại cảnh: biến điều khiển sục khí, cảm biến trực tuyến và dữ liệu khí tượng mưa.
+- Bước 3: Phân tích tương quan động học chuỗi thời gian (Temporal Correlation Analysis):
+  - Ứng dụng hàm tương quan chéo (`ccf` - cross-correlation function) từ thư viện `statsmodels.tsa.stattools` để tính toán hệ số tương quan Pearson tại các bước trễ thời gian khác nhau.
+  - Thiết lập cửa sổ trễ thời gian $\pm 4\text{ giờ}$ với độ phân giải dữ liệu $15\text{ phút}$ giữa từng biến quá trình với nồng độ phát thải $N_2O$.
+  - Xác định bản chất quan hệ dẫn trước hoặc trễ sau (leading or lagging relationships) của từng thông số so với biến động phát thải $N_2O$.
+  - Điểm tương quan thống kê $\text{SC-score}$ (Statistical Correlation score) lấy theo giá trị tương quan tuyệt đối cực đại trong cửa sổ $\pm 4\text{ giờ}$.
+- Bước 4: Khử bỏ đặc trưng dư thừa (Redundancy Elimination):
+  - Xây dựng ma trận tương đồng đặc trưng (similarity matrix) thông qua tương quan cặp Pearson giữa các chuỗi thời gian đã chuẩn hóa.
+  - Gán trọng số tương đồng nâng cao cho các cặp đặc trưng thuộc cùng nhóm chức năng sinh học nhằm phản ánh sự dư thừa chức năng xử lý.
+- Bước 5: Sàng lọc và xếp hạng đặc trưng cuối cùng (Final Feature Selection):
+  - Chuẩn hóa tuyến tính điểm $\text{SC-score}$ và $\text{MI-score}$ về cùng thang đo đơn vị.
+  - Tính điểm tổng hợp theo công thức kết hợp:
+    $$\text{Combined Score} = \text{SC-score} + \text{MI-score}$$
+  - Loại bỏ các đặc trưng dư thừa có độ tương đồng vượt ngưỡng $\text{similarity} > 0.85$, ưu tiên giữ lại đặc trưng có điểm $\text{Combined Score}$ cao nhất.
+  - Ngưỡng tương đồng $0.85$ là mức giới hạn bảo thủ nhằm triệt tiêu đa cộng tuyến mạnh nhưng không làm mất thông tin động học then chốt.
+- Thiết lập phương pháp đối chứng benchmark:
+  - So sánh độc lập với kỹ thuật điều chuẩn LASSO (L1 regularization) và phân tích độ quan trọng đặc trưng dựa trên giá trị SHAP (SHapley Additive exPlanations).

@@ -1,0 +1,25 @@
+### 3.1 Model training and testing
+
+- Cơ chế theo dõi và tối ưu hóa ba thành phần hàm mất mát trong quá trình huấn luyện.
+  - Mất mát hộp bao (box loss) theo dõi mức độ hồi quy của khung phát hiện và sai số định vị so với khung chuẩn.
+  - Mất mát phân loại (cls loss) đánh giá độ chính xác gán nhãn các đối tượng bùn hạt theo từng lớp chu kỳ sống.
+  - Mất mát học đặc trưng phân phối (dfl loss) kiểm soát tương quan không gian giữa các vùng đặc trưng và phân phối xác suất của tập dữ liệu.
+  - Cả ba thành phần mất mát trên tập huấn luyện suy giảm liên tục khi số vòng lặp tăng và hội tụ về một đường tiệm cận duy nhất.
+  - Quyết định tắt kỹ thuật tăng cường Mosaic trong 10 epoch cuối giúp các hàm mất mát giảm thêm một bước rõ rệt, chứng minh độ chính xác định vị được cải thiện.
+  - Đường cong mất mát trên tập kiểm tra phản ánh mức độ thích ứng ổn định của mô hình và không xuất hiện hiện tượng quá khớp.
+- Đường cong huấn luyện và các chỉ số đánh giá hội tụ ổn định sau 100 vòng lặp lặp lại.
+  - **Hình 3.** Kết quả các hàm mất mát và chỉ số đánh giá qua 100 vòng lặp huấn luyện
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Sự suy giảm của 3 hàm mất mát và sự tăng trưởng vượt bậc của độ chính xác mô hình.
+    - **Từ đâu mà thấy được**
+      - Mười đồ thị con hiển thị biến thiên qua 100 epoch:
+      - (a-c) Box loss, cls loss, dfl loss trên tập huấn luyện giảm sâu;
+      - (d-f) Các hàm mất mát trên tập kiểm tra hội tụ mượt mà;
+      - (g-j) Precision, recall, $mAP_{50}$ đạt 0.985 và $mAP_{50-95}$ đạt 0.837.
+- Hiệu năng định lượng của bộ dò đối tượng qua các chỉ số độ chính xác trung bình.
+  - Tỷ lệ giao cắt trên diện tích hợp ($IoU$) đo lường độ chính xác giữa khung dự đoán và khung gán nhãn thực nghiệm.
+  - Chỉ số $mAP_{50}$ tính trung bình giá trị AP của toàn bộ các lớp đối tượng tại ngưỡng cố định $IoU = 0.5$.
+  - Chỉ số $mAP_{50-95}$ tính trung bình mAP trên dải ngưỡng $IoU$ từ $0.50$ đến $0.95$ với bước nhảy rời rạc $0.05$.
+  - Mô hình đạt giá trị $mAP_{50}$ là $0.985$ và $mAP_{50-95}$ đạt $0.837$ trên tập kiểm tra sau 100 vòng lặp.
+  - Kết quả $mAP_{50} = 0.985$ vượt qua mức $0.937$ trong nghiên cứu của Kong & Shen (2023) khi áp dụng YOLO nhận dạng vi sinh vật bùn hoạt tính.

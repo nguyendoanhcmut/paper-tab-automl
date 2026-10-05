@@ -1,0 +1,23 @@
+#### 3.3.2 PDP analysis
+
+- Phân tích biểu đồ phụ thuộc một phần PDP xác định vùng thông số vận hành tối ưu cho từng quá trình sinh học
+  - Động học nitơ ($\text{TN}$) thể hiện độ nhạy cao nhất với các tương tác vận hành (Hình 9a–c):
+    - Hoạt tính sinh khối vùng hiếu khí được phản ánh qua đáp ứng của $\text{MLVSS-Ae}$; vùng hiệu suất cao (màu vàng) bị giới hạn khi nồng độ sinh khối quá cao do hạn chế truyền khối và thiếu hụt oxy cục bộ.
+    - Hiệu quả khử nitrat và loại bỏ $\text{TN}$ tổng thể được điều tiết chính bởi lưu lượng bùn $\text{Sludge-R}$ và oxy hòa tan $\text{DO-R}$.
+    - Hiệu suất tối ưu đạt được khi duy trì $\text{Sludge-R}$ ở mức cao kết hợp $\text{DO-R}$ từ trung bình đến cao; dòng bùn tuần hoàn cung cấp sinh khối hoạt tính và bùn giàu nitrat cho vùng thiếu khí.
+    - Bể swing-basin hỗ trợ chuyển tiếp redox linh hoạt, ngăn chặn sự tích lũy nitrit ($\text{NO}_2^-$) và giải phóng khí nitơ ($\text{N}_2$).
+  - Động học photpho ($\text{TP}$) thể hiện mức độ nhạy cảm thứ cấp (Hình 9d–f):
+    - Vùng hiệu suất cao xuất hiện khi lưu lượng bùn tuần hoàn $\text{Sludge-R}$ cao kết hợp với kiểm soát chặt chẽ $\text{ORP-Ax}$ và $\text{pH-Ae}$.
+    - Giá trị $\text{pH}$ hiếu khí cao thúc đẩy quá trình kết tủa hóa học với các cation hóa trị hai, trong khi tuần hoàn bùn hợp lý hỗ trợ vận chuyển photpho về vùng xử lý.
+    - Chu kỳ redox luân phiên của bể swing-basin tạo môi trường tối ưu cho vi khuẩn $\text{PAO}$ hấp thu photpho hiệu quả.
+  - Động học chất hữu cơ ($\text{COD}$) phụ thuộc vào điều kiện kỵ khí và cân bằng redox (Hình 9g–i):
+    - Nhiệt độ kỵ khí $\text{Tem-An}$ thấp và nồng độ $\text{MLSS-An}$ ở mức vừa phải tạo thuận lợi cho phân hủy $\text{COD}$.
+    - Nồng độ $\text{MLSS}$ quá cao làm gia tăng lượng cặn trơ vô cơ và cản trở truyền khối, làm giảm tỷ lệ sinh khối hoạt tính.
+    - Giá trị $\text{pH}$ kỵ khí cao thúc đẩy quá trình thủy phân và lên men các hợp chất hữu cơ phức tạp, bổ sung nguồn cacbon cho khử nitrat.
+    - Cặp thông số $\text{Sludge-R}$ và $\text{DO-R}$ chỉ hỗ trợ xử lý $\text{COD}$ trong một khoảng hẹp; nếu vượt ngưỡng sẽ gây xáo trộn cân bằng oxy hóa khử.
+    - **Hình 9.** Phân tích biểu đồ phụ thuộc một phần PDP cho các chỉ tiêu chất lượng nước
+      - <img src="assets/fig_09_p13.jpeg" alt="Hình 9" />
+      - **Hình này chứng minh điều gì**
+        - Biên độ tối ưu của các biến vận hành đối với $\text{TN}$ (a–c), $\text{TP}$ (d–f) và $\text{COD}$ (g–i).
+      - **Từ đâu mà thấy được**
+        - Vùng đáp ứng màu vàng biểu thị hiệu suất xử lý cao nhất trên bề mặt phản ứng hai biến.

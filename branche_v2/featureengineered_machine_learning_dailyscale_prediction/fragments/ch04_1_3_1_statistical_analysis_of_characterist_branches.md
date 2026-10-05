@@ -1,0 +1,42 @@
+### 3.1 Statistical analysis of characteristics of the target DAF system
+
+- Sơ đồ cấu tạo công nghệ DAF và các điểm thu thập dữ liệu quan trắc chất lượng nước:
+  - **Hình 3.** Sơ đồ chi tiết công nghệ DAF và các vị trí lấy mẫu quan trắc
+    - <img src="assets/fig_03_p5.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Hệ thống DAF kết hợp keo tụ tạo bông với tuyển nổi bọt khí hòa tan và cột lọc
+      - Điểm châm phèn sắt $Fe_2(SO_4)_3$ trước bể trộn nhanh quyết định hiệu quả khử photpho
+    - **Từ đâu mà thấy được**
+      - Dòng chảy từ bể lắng thứ cấp qua ngăn châm phèn $Fe_2(SO_4)_3$ vào buồng tuyển nổi DAF
+      - Dòng khí hòa tan tuần hoàn tạo bọt mịn đưa bông cặn lên bề mặt cho gạt bùn thu hồi
+- Hiệu quả sàng lọc ngoại lai bằng quy tắc ba độ lệch chuẩn ($3\sigma$):
+  - Phân tích thống kê áp dụng trên toàn bộ các chuỗi số liệu thủy lực và chất lượng nước (DAF inflow, influent pH, influent $\text{SS}$, influent $T\text{-}P$ và effluent $T\text{-}P$).
+  - Dữ liệu sau xử lý giảm thiểu các giá trị cực đoan dị biệt và làm mượt hàm mật độ xác suất mà không làm méo mó cấu trúc dữ liệu nguyên bản.
+  - Phân phối lưu lượng DAF inflow biến đổi không đáng kể sau làm sạch, bảo toàn biến thiên thủy lực tự nhiên của trạm xử lý.
+  - Các biến nồng độ có đuôi dài (influent $\text{SS}$, influent $T\text{-}P$ và effluent $T\text{-}P$) chuyển biến đối xứng và tập trung hơn quanh giá trị trung tâm.
+- Phân phối xác suất của các thông số vận hành và chất lượng nước sau lọc ngoại lai $3\sigma$:
+  - **Hình 4.** Phân phối violin và histogram các thông số chính trước và sau lọc $3\sigma$
+    - <img src="assets/fig_04_p9.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Quy tắc $3\sigma$ loại bỏ các gai nhọn bất thường mà không làm méo mó phân phối gốc
+      - Đuôi phân phối nồng độ $\text{SS}$, $T\text{-}P$ đầu vào và $T\text{-}P$ đầu ra trở nên thu gọn hơn
+    - **Từ đâu mà thấy được**
+      - Cột violin màu xanh lam (Original) chuyển sang xanh lục (Cleaned) giảm các điểm cực đoan
+      - Biểu đồ histogram cho thấy tần suất phân bố dữ liệu mượt mà và tập trung quanh trung vị
+- Thống kê tỷ lệ khuyết thiếu và dữ liệu ngoại lai bị loại bỏ theo Bảng 3:
+  - Tỷ lệ ngoại lai nhìn chung rất thấp trên toàn bộ các biến (dưới $0.82\%$), cho thấy các giá trị cực đoan xuất hiện hiếm hoi.
+  - Dữ liệu khuyết thiếu tập trung chủ yếu ở biến pH đầu vào ($43.70\%$, 479 mẫu khuyết) do cảm biến đo gặp sự cố kỹ thuật định kỳ.
+  - Lưu lượng DAF chỉ khuyết 4 mẫu ($0.36\%$) và loại 2 mẫu ngoại lai ($0.18\%$).
+  - Lưu lượng tuần hoàn nội bộ IRFR khuyết 6 mẫu ($0.55\%$) và loại 4 mẫu ngoại lai ($0.36\%$).
+  - Chất rắn lơ lửng đầu vào ($\text{SS}$) khuyết 68 mẫu ($6.20\%$) và loại 6 mẫu ngoại lai ($0.55\%$).
+  - $T\text{-}P$ đầu vào khuyết 59 mẫu ($5.38\%$) và loại 6 mẫu ngoại lai ($0.55\%$).
+  - $T\text{-}P$ đầu ra khuyết 74 mẫu ($6.75\%$) và loại 9 mẫu ngoại lai ($0.82\%$).
+  - Liều lượng châm phèn sắt không có mẫu khuyết ($0.00\%$) và chỉ có 1 mẫu ngoại lai ($0.09\%$).
+- Thống kê mô tả các nhóm biến đầu vào sau tiền xử lý theo Bảng 4:
+  - Nhóm tải lượng thủy lực: Lưu lượng nước vào DAF có giá trị trung bình $240{,}671\ \text{m}^3/\text{ngày}$ ($\text{std} = 23{,}394\ \text{m}^3/\text{ngày}$, phạm vi $131{,}176\text{--}313{,}936\ \text{m}^3/\text{ngày}$).
+  - Tỷ lệ tuần hoàn nội bộ IRFR có giá trị trung bình $36.09\%$ ($\text{std} = 4.86\%$, trung vị $35.63\%$) duy trì áp suất bão hòa khí ổn định.
+  - Nhóm chất lượng nước đầu vào: $\text{SS}$ đầu vào có giá trị trung bình $5.26\ \text{mg/L}$ ($\text{std} = 1.74\ \text{mg/L}$), $T\text{-}P$ đầu vào trung bình $0.32\ \text{mg/L}$ ($\text{std} = 0.15\ \text{mg/L}$).
+  - Loại trừ biến pH đầu vào: Mặc dù phân bố trong dải hẹp $6.34\text{--}7.14$ (trung bình $6.73$), nhưng tỷ lệ khuyết thiếu quá cao ($> 43\%$) và phương sai nhỏ nên bị loại để tránh gây nhiễu mô hình.
+  - Chất lượng nước sau DAF: Nồng độ $T\text{-}P$ đầu ra trung bình $0.10\ \text{mg/L}$ ($\text{std} = 0.07\ \text{mg/L}$, trung vị $0.08\ \text{mg/L}$), $75\%$ mẫu dưới $0.14\ \text{mg/L}$, giá trị cực đại đạt $0.36\ \text{mg/L}$.
+  - Nhóm thông số vận hành: Tỷ lệ khí trên nước $\text{DAF A/F}$ giữ ổn định ở mức $0.01$, liều lượng châm phèn sắt $Fe_2(SO_4)_3$ đạt trung bình $6{,}267\ \text{kg/ngày}$ ($\text{IQR} = 4{,}760\text{--}7{,}680\ \text{kg/ngày}$).
+  - Nhóm khí tượng: Lượng mưa đạt cực đại $122.5\ \text{mm/ngày}$, nhiệt độ không khí biến động từ $-14.7\ ^\circ\text{C}$ đến $31.8\ ^\circ\text{C}$ phản ánh rõ nét biến đổi theo mùa.

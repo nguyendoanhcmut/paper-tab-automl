@@ -1,0 +1,26 @@
+### 3.3 Analysis of the model evaluation parameter
+
+- Phân tích tương quan đánh đổi giữa độ chính xác và độ thu hồi xác định ngưỡng vận hành tối ưu.
+  - **Hình 5.** Đường cong Precision, Recall và F1-score theo ngưỡng tin cậy
+    - <img src="assets/fig_05_p7.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - Điểm cân bằng tối ưu đạt F1-score bằng 0.95 tại ngưỡng tin cậy 0.671.
+    - **Từ đâu mà thấy được**
+      - Ba đồ thị phụ thể hiện biến thiên theo ngưỡng tin cậy:
+      - (a) Precision đạt cực đại 1 tại ngưỡng 0.942 cho mọi lớp;
+      - (b) Recall của hạt lớn (MS, CS) duy trì cao hơn hạt nhỏ (IS) ở ngưỡng cao;
+      - (c) Đỉnh đường cong F1-score đạt cực đại tại hoành độ 0.671.
+- Quy luật biến thiên của đường cong Precision theo các dải ngưỡng tin cậy.
+  - Khi ngưỡng tin cậy của IS và MS nằm trong khoảng $0.4\text{--}0.6$, độ chính xác tăng nhanh và tiệm cận giá trị $1$.
+  - Đối với GS và CS, độ chính xác đạt tiệm cận $1$ ở dải ngưỡng tin cậy cao hơn từ $0.8\text{--}1.0$.
+  - Tốc độ tăng trưởng Precision của lớp IS nhanh nhất, phản ánh tỷ lệ phát hiện dương tính giả rất thấp nhờ đặc trưng kích thước tiền hạt tách biệt.
+  - Khi thiết lập ngưỡng tin cậy nghiêm ngặt tại $0.942$, tất cả các lớp phân loại đều đồng loạt đạt độ chính xác cực đại bằng $1.0$.
+- Phân tích động học đường cong Recall và ảnh hưởng của kích thước hạt bùn.
+  - Độ thu hồi tỷ lệ nghịch với ngưỡng tin cậy; khi ngưỡng bằng $0$, Recall trung bình của tất cả các lớp đạt giá trị cao nhất.
+  - Ở dải ngưỡng tin cậy cao $0.8\text{--}1.0$, các lớp MS và CS duy trì độ thu hồi cao hơn hẳn so với IS và GS.
+  - Hạt bùn ở pha trưởng thành và phân cắt có kích thước lớn và ranh giới sắc nét nên chống chịu tốt trước nhiễu nền và che khuất cục bộ.
+  - Độ thu hồi của lớp IS sụt giảm mạnh ở ngưỡng tin cậy cao do các hạt nhỏ dễ bị lẫn vào nền quang học nếu áp dụng tiêu chí chấp nhận quá khắt khe.
+- Xác lập ngưỡng tin cậy tối ưu hóa bằng chỉ số F1-score cho ứng dụng thực tế.
+  - Ngưỡng tin cậy vận hành tối ưu được xác lập ở mức $0.671$ (tương ứng độ tin cậy $67.1\%$).
+  - Giá trị $F1\text{-score}$ trung bình đạt mức đỉnh $0.95$, bảo đảm sự cân bằng hài hòa giữa việc giảm thiểu sai số bỏ sót và sai số nhận nhầm.
+  - Ngưỡng $0.671$ được đề xuất làm tham số chuẩn khi nạp ảnh hiển vi mới vào mô hình phục vụ giám sát tự động trong bioreactor.

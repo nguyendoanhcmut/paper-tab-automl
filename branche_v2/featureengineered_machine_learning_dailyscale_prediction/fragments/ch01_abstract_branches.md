@@ -1,0 +1,22 @@
+## Abstract
+
+- Kiểm soát nồng độ photpho tổng ($T\text{-}P$) trong hệ thống tuyển nổi khí hòa tan (DAF) là điều kiện bắt buộc để tuân thủ quy chuẩn xả thải tại trạm xử lý nước thải đô thị ($410{,}000\ \text{m}^3/\text{ngày}$):
+  - Quyết định vận hành thực tế thường bị giới hạn theo chu kỳ ngày do thiếu hụt hệ thống cảm biến đo trực tuyến liên tục.
+  - Nghiên cứu đề xuất khung học máy kỹ nghệ đặc trưng có khả năng giải thích để dự đoán nồng độ $T\text{-}P$ đầu ra theo thang ngày và tối ưu hóa liều lượng châm chất keo tụ phèn sắt $Fe_2(SO_4)_3$.
+- Bộ dữ liệu quan trắc dài hạn $1{,}096\ \text{ngày}$ bao gồm các thông số vận hành thủy lực, chất lượng nước và khí tượng:
+  - Dữ liệu ngoại lai được xử lý bằng quy tắc ba độ lệch chuẩn ($3\sigma$).
+  - Dữ liệu khuyết thiếu được làm đầy bằng thuật toán hồi quy chuỗi đa biến MICE (Multivariate Imputation by Chained Equations).
+- Kỹ nghệ đặc trưng tích hợp tri thức cơ chế thủy lực và động học hóa học:
+  - Đặc trưng tải lượng đầu vào kết hợp lưu lượng và nồng độ chất ô nhiễm.
+  - Đặc trưng biến động ngắn hạn nắm bắt quán tính hệ thống qua sai phân nồng độ $T\text{-}P$ đầu ra từ 1 đến 3 ngày trước.
+  - Biến theo mùa tích hợp để thích ứng với biến động nhiệt độ và thời tiết.
+- Mô hình Random Forest (RF) đạt hiệu năng dự đoán cao nhất trong số các thuật toán được thử nghiệm:
+  - Hệ số xác định trên tập kiểm tra đạt $R^2 = 0.818$ ($0.8175$).
+  - Sai số căn phương trung bình $\text{RMSE} = 0.032\ \text{mg/L}$.
+  - Sai số dự báo nằm trong phạm vi $20\%$ so với ngưỡng giới hạn xả thải tiêu chuẩn ($0.2\ \text{mg/L}$).
+- Phân tích giải thích SHAP (SHapley Additive exPlanations) làm rõ các nhân tố chi phối chính:
+  - Nồng độ $T\text{-}P$ đầu vào, liều lượng châm chất keo tụ $Fe_2(SO_4)_3$ và biến động ngắn hạn là ba yếu tố ảnh hưởng mạnh nhất xuyên suốt các mùa.
+- Tối ưu hóa liều lượng châm phèn sắt dựa trên mô phỏng độ nhạy tự hồi quy:
+  - Giảm lượng hóa chất keo tụ tiêu thụ từ $32\%$ đến $51\%$.
+  - Tiết kiệm chi phí vận hành ước tính khoảng $1.53$ tỷ KRW mỗi năm.
+  - Duy trì nồng độ $T\text{-}P$ nước sau xử lý luôn ổn định dưới ngưỡng tiêu chuẩn xả thải.

@@ -1,0 +1,27 @@
+### 3.1 Feature analysis of different operational parameters
+
+- Thang đo các thông số vận hành phân tán rộng và ma trận tương quan Pearson phản ánh các tương tác phi tuyến phức tạp
+  - Các biến vận hành có biên độ biến thiên rất lớn đòi hỏi bắt buộc phải chuẩn hóa thang đo:
+    - Oxy hòa tan vùng thiếu khí ($\text{DO-Ax}$): $0.1$ đến $0.5\text{ mg/L}$.
+    - Thế oxy hóa khử vùng thiếu khí ($\text{ORP-Ax}$): $-400$ đến $400\text{ mV}$.
+    - Nhiệt độ vùng kỵ khí ($\text{Tem-An}$): $10$ đến $24^\circ\text{C}$.
+    - Oxy hòa tan bể giảm oxy ($\text{DO-R}$): $0.05$ đến $0.48\text{ mg/L}$.
+    - Lưu lượng bùn tuần hoàn ($\text{Sludge-R}$): $19$ đến $905\text{ m}^3/\text{ngày}$.
+    - Nồng độ bùn bay hơi vùng hiếu khí ($\text{MLVSS-Ae}$): $2000$ đến $8000\text{ mg/L}$.
+    - **Hình 3.** Phân bố khoảng giá trị đặc trưng và ma trận hệ số tương quan Pearson
+      - <img src="assets/fig_03_p7.jpeg" alt="Hình 3" />
+      - **Hình này chứng minh điều gì**
+        - Sự khác biệt về thang đo dữ liệu (a) và mối quan hệ tuyến tính giữa các biến (b).
+      - **Từ đâu mà thấy được**
+        - Biểu đồ hộp thể hiện độ phân tán của 18 đặc trưng và bản đồ nhiệt ma trận tương quan.
+- Tương quan tuyến tính Pearson đối với quá trình khử tổng nitơ ($\text{TN}$)
+  - Hệ số tương quan dương vừa phải giữa $\text{TN}$ và $\text{ORP-Ax}$ ($r = 0.31$) cho thấy kiểm soát ổn định thế redox là điều kiện then chốt của quá trình chuyển hóa nitơ.
+  - Bể swing-basin hỗ trợ duy trì cân bằng redox bằng cách luân chuyển linh hoạt trạng thái hiếu khí và thiếu khí để bảo vệ quá trình nitrat hóa trong mùa lạnh.
+  - Oxy hòa tan $\text{DO-R}$ ($r = -0.04$) và lưu lượng bùn $\text{Sludge-R}$ ($r = -0.04$) thể hiện tương quan âm yếu, phản ánh vai trò phi tuyến trong việc ngăn chặn oxy xâm lấn và phân bổ sinh khối.
+- Tương quan đối với hiệu quả loại bỏ nhu cầu oxy hóa học ($\text{COD}$)
+  - Nhiệt độ vùng thiếu khí $\text{Tem-Ax}$ có tương quan dương ($r = 0.30$) với hiệu quả xử lý $\text{COD}$, do hoạt tính vi sinh vật phân hủy chất hữu cơ gia tăng theo nhiệt độ.
+  - Lưu lượng bùn $\text{Sludge-R}$ có tương quan dương yếu ($r = 0.07$), phản ánh bùn tuần hoàn được điều hòa trong môi trường $\text{DO}$ thấp giúp tăng cường hoạt tính dị dưỡng phân hủy chất hữu cơ ở các ngăn tiếp theo.
+- Tương quan đối với hiệu quả loại bỏ tổng photpho ($\text{TP}$)
+  - Nồng độ $\text{DO-R}$ thể hiện tương quan âm yếu ($r = -0.16$) với quá trình xử lý photpho.
+  - Nồng độ bùn vùng thiếu khí $\text{MLSS-Ax}$ có tương quan âm vừa phải ($r = -0.37$) với hiệu suất khử $\text{TP}$.
+  - Nồng độ sinh khối quá cao trong ngăn anoxic kèm theo oxy dư thừa cản trở chu trình giải phóng và hấp thu photpho của vi khuẩn $\text{PAO}$, đòi hỏi sự điều hòa redox từ bể swing-basin.

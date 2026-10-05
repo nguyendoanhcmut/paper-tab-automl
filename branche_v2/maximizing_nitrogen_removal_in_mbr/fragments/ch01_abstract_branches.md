@@ -1,0 +1,22 @@
+## Abstract
+
+- Hệ thống màng sinh học (MBR) truyền thống gặp hai rào cản lớn trong việc xử lý tổng nitơ ($\text{TN}$)
+  - Quá trình nitrat hóa suy giảm mạnh trong mùa đông do nhiệt độ thấp ức chế vi khuẩn nitrat hóa tự dưỡng.
+  - Quá trình khử nitrat bị cản trở do dòng bùn tuần hoàn mang lượng oxy hòa tan ($\text{DO}$) dư thừa cao vào vùng thiếu khí (anoxic).
+  - Tồn tại sự cạnh tranh gay gắt về nguồn cơ chất cacbon giữa vi khuẩn khử nitrat và sinh vật tích lũy photpho ($\text{PAO}$).
+- Cấu hình đề xuất tích hợp đồng thời hai giải pháp kỹ thuật bổ trợ
+  - Bể chuyển đổi (swing-basin) tăng cường nitrat hóa bằng cách chuyển đổi linh hoạt giữa chế độ hiếu khí (aerobic) và thiếu khí (anoxic) trong thời kỳ nhiệt độ thấp.
+  - Bể giảm oxy hòa tan ($\text{DO-R}$) hạ thấp nồng độ $\text{DO}$ của dòng bùn hồi lưu trước khi đưa vào vùng thiếu khí, triệt tiêu sự ức chế oxy đối với vi khuẩn khử nitrat.
+- Cơ sở dữ liệu vận hành quy mô thực tế được thu thập liên tục trong thời gian hơn 1 năm
+  - Vị trí thu thập dữ liệu tại Trạm xử lý nước thải công cộng "D" ở Hàn Quốc với công suất thiết kế $25.000\text{ m}^3/\text{ngày}$.
+  - Tập dữ liệu bao gồm các chỉ số chất lượng nước đầu vào, thông số vận hành các ngăn bể và nồng độ chất ô nhiễm đầu ra ($\text{COD}$, $\text{TN}$, $\text{TP}$).
+- Đánh giá và so sánh hiệu năng của hai mô hình học máy
+  - Mô hình Rừng ngẫu nhiên ($\text{RF}$) đạt độ chính xác cao hơn mô hình mạng nơ-ron sâu ($\text{DNN}$).
+  - Chỉ số sai số căn bậc hai trung bình ($\text{RMSE}$) trong dự đoán nồng độ $\text{TN}$ của $\text{RF}$ đạt $1.73$, vượt hơn mức $2.81$ của $\text{DNN}$.
+- Phân tích cơ chế giải thích mô hình bằng Shapley Additive exPlanations ($\text{SHAP}$)
+  - Bể swing-basin mở rộng thể tích hiếu khí hiệu dụng và kéo dài thời gian lưu nước ($\text{HRT}$) trong mùa đông, duy trì động học chuyển hóa amoni ($\text{NH}_4^+$) thành nitrat ($\text{NO}_3^-$).
+  - Bể $\text{DO-R}$ triệt tiêu oxy tự do nhờ quá trình hô hấp nội bào, loại bỏ sự cạnh tranh giữa oxy và nitrat đối với vi khuẩn khử nitrat dị dưỡng.
+- Tối ưu hóa điều kiện vận hành bằng thuật toán tiến hóa sinh học Harris Hawks ($\text{HHO}$)
+  - Thuật toán $\text{HHO}$ đạt mức độ hội tụ gần nhất với phương pháp chuẩn Tiến hóa vi phân ($\text{DE}$).
+  - Lưu lượng bùn tuần hoàn tối ưu qua bể $\text{DO-R}$ được xác định ở mức $146.23\text{ m}^3/\text{ngày}$.
+  - Nồng độ chất ô nhiễm trong nước sau xử lý giảm xuống mức tối thiểu: $\text{COD}$ đạt $5.96\text{ mg/L}$, $\text{TN}$ đạt $5.26\text{ mg/L}$, và $\text{TP}$ đạt $0.06\text{ mg/L}$.

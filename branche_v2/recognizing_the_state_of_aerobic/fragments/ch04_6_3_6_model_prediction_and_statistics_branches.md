@@ -1,0 +1,43 @@
+### 3.6 Model prediction and statistics
+
+- Ảnh hiển vi mới được nạp vào mô hình để phát hiện và gán nhãn kích thước hạt thực tế.
+  - **Hình 8.** Dự đoán đối tượng bùn hạt kích thước lớn và kích thước nhỏ
+    - <img src="assets/fig_08_p10.jpeg" alt="Hình 8" />
+    - **Hình này chứng minh điều gì**
+      - Hạt lớn (MS, CS) được nhận diện trọn vẹn; hạt nhỏ (IS, GS) chịu ảnh hưởng mật độ cụm.
+    - **Từ đâu mà thấy được**
+      - 6 khung hình suy luận thực tế:
+      - (a-c) Phát hiện chuẩn xác các hạt kích thước lớn có đường biên rõ rệt;
+      - (d-f) Phát hiện các cụm hạt nhỏ và hỗn hợp kích thước với khe hở hẹp.
+- Quy trình kiểm chứng thực nghiệm bằng tập ảnh theo dõi liên tục trong một tuần.
+  - Các mẫu bùn được thu thập hàng ngày từ bể AGS-MBR trong phòng thí nghiệm suốt một tuần vận hành thực tế.
+  - Hệ thống chụp ảnh hiển vi được cố định cùng thiết bị và điều kiện chiếu sáng để duy trì tính nhất quán quang học.
+  - Ảnh thô chụp từ kính hiển vi được truyền thẳng vào mô hình để kiểm tra năng lực phát hiện trên dữ liệu chưa qua chọn lọc.
+- Đặc tính phát hiện và độ trễ tính toán thời gian thực của thuật toán.
+  - Hạt bùn kích thước lớn như pha trưởng thành (MS) và phân cắt (CS) có tỷ lệ phát hiện cao và rất hiếm khi bị bỏ sót.
+  - Các hạt kích thước bé như pha khởi tạo (IS) và sinh trưởng (GS) dễ bị bỏ sót nếu khoảng cách giữa các hạt quá hẹp hoặc chồng lấp.
+  - Khi giữa các hạt duy trì khoảng cách vật lý rõ ràng, độ chính xác định vị và phân loại đạt mức cao nhất.
+  - Nền ảnh hiển vi sạch sẽ và tương phản cao giúp tăng độ nhạy nhận dạng mục tiêu.
+  - Thời gian tiền xử lý ảnh đạt $2.6\text{--}3.4\text{ ms}$, thời gian suy luận nơ-ron đạt $10.0\text{--}10.4\text{ ms}$, và hậu xử lý thống kê đạt $1.6\text{--}1.8\text{ ms}$.
+  - Tổng thời gian xử lý toàn trình mỗi ảnh chỉ mất $14.2\text{--}15.6\text{ ms}$, đáp ứng đầy đủ yêu cầu giám sát tốc độ cao thời gian thực.
+- Mô-đun đếm tự động phản ánh số lượng và tỷ lệ thể tích hạt qua 7 lô thực nghiệm.
+  - **Hình 9.** Thống kê số lượng hạt bùn theo từng giai đoạn và tổng tích lũy
+    - <img src="assets/fig_09_p11.jpeg" alt="Hình 9" />
+    - **Hình này chứng minh điều gì**
+      - Giai đoạn IS chiếm số lượng lớn nhất (> 700), trong khi CS chiếm ưu thế thể tích.
+    - **Từ đâu mà thấy được**
+      - Biểu đồ cột phân bố 4 giai đoạn sinh trưởng qua 7 mẻ đo liên tiếp:
+      - Cột màu xanh thể hiện số lượng áp đảo của IS do hạt CS phân rã;
+      - Tổng tích lũy 7 mẻ chỉ rõ sự cần thiết phải kiểm soát lực cắt để nuôi dưỡng MS.
+- Cơ chế thống kê tích lũy thông qua cấu trúc biến toàn cục.
+  - Mô hình tích hợp các biến toàn cục để tự động ghi nhận số lượng từng phân loại xuất hiện trong mỗi khung hình.
+  - Thuật toán thống kê gom nhóm dữ liệu theo từng lô đo hàng ngày và tính tổng lũy kế trên toàn bộ 7 lô kiểm chứng.
+  - Khả năng xử lý tự động này thay thế hoàn toàn phương pháp đếm hạt thủ công vốn tốn nhiều nhân công và thời gian.
+- Phân tích động thái sinh học quần thể hạt bùn trong bể MBR thực nghiệm.
+  - Số lượng hạt ở giai đoạn IS cao nhất trong tất cả các lô đo với tổng số tích lũy vượt mốc 700 cá thể, tiếp sau là GS.
+  - Số lượng cá thể ở giai đoạn MS và CS ghi nhận mức thấp hơn, phản ánh hệ thống đang trong chu kỳ phân mảnh và tái sinh hạt bùn.
+  - Tuy số lượng cá thể IS áp đảo, thể tích chiếm chỗ thực tế của CS lại chiếm ưu thế do kích thước hạt CS lớn hơn nhiều lần.
+  - Các hạt CS nứt vỡ giải phóng nhiều mảnh vụn tiền hạt, làm gia tăng nhanh chóng số lượng hạt IS mới.
+  - Tỷ lệ hạt trưởng thành (MS) hiện tại còn khiêm tốn, chỉ ra sự cần thiết phải can thiệp kỹ thuật điều khiển sinh học.
+  - Khuyến nghị vận hành: người quản lý cần tăng tải trọng hữu cơ và kiểm soát lực cắt thủy lực để kích thích tạo hạt bùn trưởng thành bền vững.
+  - Dữ liệu định lượng thời gian thực từ mô hình cung cấp cơ sở tin cậy giúp tối ưu hóa chế độ cấp khí và chu kỳ rửa ngược màng lọc.

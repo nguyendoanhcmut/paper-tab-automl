@@ -1,0 +1,35 @@
+### 3.5 Sensitivity-based optimization of coagulant dosing determination
+
+- Phân tích tương tác đặc trưng phi tuyến theo mùa giữa tải lượng đầu vào và liều lượng châm phèn sắt:
+  - **Hình 9.** Phân tích tương tác đặc trưng phi tuyến theo mùa bằng giá trị tương tác SHAP
+    - <img src="assets/fig_09_p17.jpeg" alt="Hình 9" />
+    - **Hình này chứng minh điều gì**
+      - Độ nhạy của nồng độ photpho đầu vào gia tăng rõ rệt vào các tháng mùa đông nhiệt độ thấp
+      - Tác động khử photpho của việc tăng liều lượng phèn sắt phát huy mạnh nhất vào mùa ấm
+    - **Từ đâu mà thấy được**
+      - Đồ thị (a) thể hiện giá trị tương tác SHAP của Inflow T-P phân bố dương cao trong mùa lạnh
+      - Đồ thị (b) cho thấy tương tác âm của Dosage tập trung mạnh ở các tháng giữa năm (5 đến 9)
+- Hiệu quả cắt giảm lượng phèn sắt $Fe_2(SO_4)_3$ theo các mùa trong năm theo Bảng 7:
+  - Mùa xuân: Giảm nhu cầu hóa chất $32\%$ (từ $254{,}355\ \text{kg/mùa}$ xuống $173{,}331\ \text{kg/mùa}$).
+  - Mùa hè: Giảm nhu cầu hóa chất $49\%$ (từ $206{,}827\ \text{kg/mùa}$ xuống $105{,}859\ \text{kg/mùa}$).
+  - Mùa thu: Giảm nhu cầu hóa chất $51\%$ (từ $233{,}273\ \text{kg/mùa}$ xuống $113{,}628\ \text{kg/mùa}$).
+  - Mùa đông: Giảm nhu cầu hóa chất $44\%$ (từ $222{,}780\ \text{kg/mùa}$ xuống $123{,}716\ \text{kg/mùa}$).
+- Lợi ích kinh tế trực tiếp từ việc tối ưu hóa liều lượng châm hóa chất:
+  - Tổng lượng hóa chất tiết kiệm quy đổi tương đương cắt giảm khoảng $1.53$ tỷ KRW chi phí mua phèn sắt mỗi năm.
+  - Đơn giá tính toán dựa trên hợp đồng mua sắm thực tế của nhà máy: $24{,}840\ \text{KRW}$ cho bao $20\ \text{kg}$ (tương đương $1{,}242\ \text{KRW/kg}$).
+  - Mức tiết kiệm này chưa bao gồm các lợi ích kinh tế gián tiếp như giảm chi phí xử lý bùn hóa lý và giảm hao mòn thiết bị.
+- So sánh phân phối nồng độ photpho tổng đầu ra theo mùa giữa chế độ vận hành gốc và tối ưu hóa:
+  - **Hình 10.** So sánh nồng độ $T\text{-}P$ đầu ra theo mùa giữa chế độ vận hành gốc và tối ưu
+    - <img src="assets/fig_10_p18.jpeg" alt="Hình 10" />
+    - **Hình này chứng minh điều gì**
+      - Chiến lược tối ưu hóa thu hẹp đáng kể độ phân tán của nồng độ $T\text{-}P$ đầu ra theo mùa
+      - Loại bỏ hoàn toàn các giá trị vượt ngưỡng cực đoan và đưa chất lượng nước về vùng an toàn
+    - **Từ đâu mà thấy được**
+      - Trục hoành 4 mùa: hộp màu xanh (TP_optimized) có chiều cao hẹp hơn nhiều hộp xám (TP_original)
+      - Râu trên của hộp xanh không vượt quá $0.20\ \text{mg/L}$, kiểm soát ổn định dưới hạn mức xả thải
+- Cải thiện tính ổn định chất lượng nước sau tuyển nổi DAF và tuân thủ giới hạn quy chuẩn:
+  - Chiến lược tối ưu nén hẹp dải phân bố nồng độ $T\text{-}P$ đầu ra trong toàn bộ 4 mùa so với chế độ vận hành ban đầu.
+  - Triệt tiêu hoàn toàn hiện tượng phân tán đuôi dài và các điểm dị biệt vượt chuẩn thường gặp trong vận hành theo kinh nghiệm.
+  - Các giá trị dự đoán hội tụ ổn định trong dải nồng độ mục tiêu $0.10\text{--}0.20\ \text{mg/L}$, ngăn ngừa nguy cơ vi phạm pháp lý.
+  - Hiệu quả kiểm soát thể hiện rõ nhất vào mùa hè khi tải lượng hữu cơ và cặn lơ lửng ở mức cao nhất trong năm.
+  - Vào mùa đông, mặc dù nhiệt độ nước thấp làm suy giảm hiệu suất keo tụ, thuật toán vẫn duy trì dải nồng độ hẹp và kiểm soát rủi ro vượt ngưỡng.

@@ -1,0 +1,21 @@
+## Abstract
+
+- Thách thức cốt lõi của mô hình hóa xử lý nước thải là tình trạng dữ liệu mẫu nhỏ nhưng số chiều cao (small, high-dimensional data).
+  - Số lượng lớn các thông số quan trắc trong tập dữ liệu quy mô nhỏ làm lu mờ hiểu biết cơ chế sinh học nền tảng.
+- Khung lựa chọn đặc trưng định hướng tri thức (knowledge-driven feature selection) được đề xuất nhằm tích hợp hiểu biết cơ chế với tương quan thống kê.
+  - Mục tiêu là xác định tập đặc trưng dự đoán tối ưu cho bài toán phát thải khí nitrous oxide ($N_2O$) tại trạm xử lý sinh học quy mô thực tế (full-scale BNR plant).
+- So sánh hiệu năng giữa thuật toán học sâu dựa trên cơ chế chú ý (attention mechanism) với hai phương pháp tiếp cận tri thức mới:
+  - Phương pháp 1: Lựa chọn đặc trưng dựa trên tri thức chuyên gia (expert-guided feature selection).
+  - Phương pháp 2: Lựa chọn đặc trưng tăng cường bằng mô hình ngôn ngữ lớn (LLM-augmented feature selection).
+- Phương pháp lựa chọn đặc trưng dựa trên tri thức chuyên gia cải thiện độ chính xác dự đoán:
+  - Đạt hệ số xác định trung bình $R^2 = 0.723$ và sai số tuyệt đối trung bình $\text{MAE} = 0.033$.
+  - Hiệu năng tốt hơn kiến trúc dựa trên attention tốt nhất ($R^2 = 0.712$, $\text{MAE} = 0.033$).
+- Khung phương pháp cải thiện rõ rệt khả năng tổng quát hóa ngoại suy (generalizability):
+  - Trong điều kiện lưu lượng cao lệch phân phối (out-of-distribution high-flow), mô hình dựa trên attention thất bại trong việc nắm bắt quy luật phát thải $N_2O$.
+  - Mô hình dựa trên đặc trưng chuyên gia tiếp tục tái tạo chính xác động học thời gian chủ đạo của phát thải $N_2O$.
+- Phương pháp lựa chọn đặc trưng qua LLM mang lại hiệu năng cạnh tranh và tính ổn định cao:
+  - Đạt $R^2$ trung bình $= 0.596$ và $\text{MAE} = 0.041$.
+  - Bảo tồn khả năng tổng quát hóa dưới sự dịch chuyển phân phối đầu vào (distributional shift).
+  - Cung cấp hướng tiếp cận khả thi, duy trì hiệu quả tính toán cho các hệ thống xử lý nước thải phức tạp.
+- Từ khóa định danh nghiên cứu (keywords):
+  - Lựa chọn đặc trưng (feature selection), mô hình hóa nước thải (wastewater modeling), dữ liệu số chiều cao (high-dimensionality data), tri thức chuyên gia (expert knowledge), học máy (machine learning), hướng dữ liệu (data driven).

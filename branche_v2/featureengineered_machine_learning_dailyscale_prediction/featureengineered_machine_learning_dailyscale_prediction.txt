@@ -1,0 +1,1102 @@
+<!-- Page 1 -->
+Feature-engineered machine learning for daily-scale prediction of effluent total 
+phosphorus and coagulant dosing optimization in full-scale DAF systems
+Haekeum Park 
+a, Gyumin Jeong 
+b, Yoojin Oh 
+a, Taehyeon Kim 
+c, Mincheol Kim 
+b and Jayong Koo 
+a,*
+a School of Environmental Engineering, University of Seoul, Dongdaemun-gu, Seoul 02504, Republic of Korea
+b Water Recycling Research Center, Seoul Water Recycling Corporation, Gangnam-gu, Seoul 06333, Republic of Korea
+c Department of Hydro Science & Engineering Research, Korea Institute of Civil Engineering and Building Technology (KICT), Ilsanseo-gu, Goyang, 10223, 
+Republic of Korea
+*Corresponding author. E-mail: jykoo@uos.ac.kr
+HP, 0000-0003-4018-0862; GJ, 0009-0009-5834-5005; YO, 0000-0001-8130-7925; TK, 0000-0003-1169-3968; MK, 0009-0001-0506-3604;  
+JK, 0000-0001-8313-3033
+ABSTRACT
+Effective phosphorus control in dissolved air flotation (DAF) systems is essential for regulatory compliance in full-scale wastewater treat­
+ment plants, yet operational decisions are often constrained to daily time scales due to limited online sensing. This study proposes an 
+interpretable, feature-engineered machine-learning framework for daily prediction of effluent total phosphorus (T-P) and sensitivity- 
+based optimization of coagulant dosing in a full-scale municipal DAF system (410,000 m3/day). Long-term operational, water-quality, and 
+meteorological data (1,096 days) were preprocessed using three-sigma outlier screening and multivariate imputation by chained equations 
+(MICE). Mechanistically informed features capturing influent loading, operational conditions, short-term variability of effluent T-P (1–3 day 
+difference-based features), and seasonal effects were incorporated. Among the evaluated models, Random Forest achieved the best per­
+formance (Test R2 = 0.818; RMSE = 0.032 mg/L), corresponding to a prediction error within 20% of the discharge limit (0.2 mg/L). SHAP 
+analysis identified influent T-P, coagulant dosage, and short-term variation as dominant drivers across seasons. A sensitivity-based auto­
+regressive simulation indicated that optimized dosing could reduce coagulant consumption by 32–51%, yielding an estimated annual 
+cost saving of 1.53 billion KRW while improving effluent stability. The proposed framework demonstrates the practical value of daily- 
+scale, interpretable machine learning for data-driven DAF operation.
+Key words: coagulant optimization, DAF effluent total phosphorus prediction, data-driven tertiary treatment management, feature- 
+engineered machine learning, SHAP-based model interpretability
+HIGHLIGHTS  
+• Developed a feature-engineered ML framework for daily DAF effluent T-P prediction using long-term hydraulic, water-quality, and meteor­
+ological data.
+• Random Forest showed the highest accuracy (Test R2 = 0.8175).
+• SHAP identified influent T-P, coagulant dosage, and short-term variation as key drivers.
+• Sensitivity-based dosing optimization cut chemical use by 32–51% and stabilized effluent T-P.
+This is an Open Access article distributed under the terms of the Creative Commons Attribution Licence (CC BY-NC 4.0), which permits copying, adaptation 
+and redistribution for non-commercial purposes, provided the original work is properly cited (http://creativecommons.org/licenses/by-nc/4.0/).
+© 2026 The Authors                                                       
+Water Science & Technology Vol 93 No 7, 1003 doi: 10.2166/wst.2026.256
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 2 -->
+GRAPHICAL ABSTRACT
+1. INTRODUCTION
+Excessive phosphorus discharge from wastewater treatment plants (WWTPs) is widely recognized as a major contributor to 
+eutrophication in receiving water bodies. To mitigate this environmental risk, South Korea incorporated total phosphorus 
+(T-P) into national effluent standards in 1996 and subsequently strengthened region-specific discharge limits to 0.2–0.5 mg/L 
+from 2012 onward (Kim et al. 1996; Seo et al. 2011; Kim & Chung 2022). These regulatory changes have substantially 
+increased the operational pressure on municipal WWTPs, making stable compliance with effluent standards a fundamental 
+operational requirement.
+To meet tightened T-P discharge limits, physico-chemical phosphorus removal processes have been increasingly adopted 
+to complement biological nutrient removal, which alone is often insufficient under stringent regulatory conditions (Hu et al. 
+2012; Bunce et al. 2018; Abdoli et al. 2024; Alatabe 2024). Among these technologies, dissolved air flotation (DAF) has been 
+widely applied as an advanced or tertiary treatment due to its high clarification efficiency, compact footprint, and suitability 
+for retrofitting in space-limited facilities (Edzwald 2010; Kwak & Lee 2015; Lee et al. 2016). Both pilot- and full-scale studies 
+have demonstrated that, when appropriate coagulation and flotation conditions are maintained, DAF can achieve consist­
+ently low effluent T-P concentrations, confirming its effectiveness for phosphorus control in municipal WWTPs (Maeng et al. 
+2017; Väänänen et al. 2023). In addition, pilot-scale studies integrating DAF with complementary physico-chemical or bio­
+logical processes, such as algal photo-bioreactors, have demonstrated effective removal of chemical oxygen demand (COD), 
+nutrients, and suspended solids, highlighting the flexibility of DAF as part of hybrid advanced treatment systems (Badawi 
+et al. 2022).
+Despite its proven performance, DAF operation is highly sensitive to influent water quality variability and coagulant 
+dosing conditions. Insufficient coagulant dosing frequently results in effluent T-P exceedances, whereas excessive dosing 
+leads to unnecessary chemical consumption and increased sludge production (Di Bella et al. 2014; Khettaf et al. 2021; 
+Narges et al. 2021; Wang et al. 2021a). Consequently, determining an optimal coagulant dosage represents a critical oper­
+ational challenge from both economic and regulatory perspectives. Nevertheless, many WWTPs still rely on empirical 
+strategies such as fixed-ratio or flow-proportional dosing, which often deviate from optimal process conditions when influent 
+phosphorus concentration, turbidity, and hydraulic loading fluctuate rapidly (Álvarez Díez et al. 2024).
+To address these limitations, recent studies have explored data-driven and intelligent approaches for coagulation process 
+optimization (Liu et al. 2024; Lu et al. 2024; Sheik et al. 2024). In particular, machine-learning models have been success­
+fully applied to large-scale, long-term operational datasets from full-scale WWTPs to predict effluent total phosphorus, 
+Water Science & Technology Vol 93 No 7, 1004
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 3 -->
+demonstrating the feasibility of data-driven water-quality forecasting under highly variable influent and process conditions 
+(Ly et al. 2022). Machine-learning-based models have been proposed to predict optimal coagulant dosage using historical 
+and operational data, demonstrating improved robustness and efficiency compared with conventional empirical control 
+strategies (Wang et al. 2021b; Fang et al. 2022; Tochio et al. 2023; Kim et al. 2024a, b).
+Despite these advances, the practical deployment of real-time control strategies operating at minute- or hourly-scale 
+remains limited in full-scale municipal WWTPs. This is mainly due to sensor reliability issues, maintenance demands, and 
+the difficulty of integrating advanced control systems with existing operational infrastructures (Pilz et al. 2024; Li et al. 
+2025). As a result, most municipal WWTPs are not operated under continuous real-time control but rather rely on daily lab­
+oratory-based effluent measurements and routine operational records for process management (Alsulaili & Refaie 2021; 
+Afan et al. 2024). Under such realistic operating conditions, operational decisions related to chemical dosing are typically 
+made at a daily or shift-based time scale.
+From this perspective, daily-scale prediction models represent a pragmatic and operationally relevant alternative to 
+minute- or hourly-scale real-time optimization strategies, particularly in facilities where online phosphorus sensors or 
+fully automated dosing systems are not yet implemented (Guo et al. 2020; Cechinel et al. 2024; Lai 2025). However, 
+many existing daily-scale prediction studies rely on black-box models with limited interpretability, which restricts their appli­
+cability to practical decision-making in WWTP operation.
+The primary objective of this study is to develop an interpretable machine-learning framework for daily prediction of DAF 
+effluent T-P concentrations in full-scale municipal wastewater treatment plants. The proposed framework integrates water- 
+quality factors, DAF operational factors, and meteorological factors with engineered features that capture short-term phos­
+phorus variability and seasonal patterns, thereby reflecting process dynamics under real operating conditions. Rather than 
+focusing solely on predictive accuracy, this study emphasizes model interpretability to identify key operational drivers and to 
+support informed decision-making in coagulant dosing management. In addition, the predictive framework is used to exam­
+ine the sensitivity of effluent T-P concentrations to changes in coagulant dosage, illustrating its potential to reduce chemical 
+consumption while maintaining stable regulatory compliance. By combining daily-scale prediction, interpretability, and 
+operational relevance, this study aims to advance the practical application of machine learning in physicochemical waste­
+water treatment and sustainable utility management.
+2. METHODS
+This study developed a daily-scale prediction and scenario-based optimization framework for effluent T-P in a full-scale DAF 
+process. The overall methodological workflow is organized into three sequential stages, as illustrated in Figure 1.
+The first stage focuses on data preprocessing, including multi-source data acquisition, outlier screening, missing-value 
+imputation, and feature engineering to represent process mechanisms, short-term variability, and seasonal effects in daily 
+DAF operation. The second stage involves model development and evaluation, in which machine-learning models are 
+trained using the engineered feature set, optimized through Bayesian hyperparameter tuning, and assessed using standard 
+regression performance metrics. The third stage integrates model interpretation and operational optimization, where SHap­
+ley Additive exPlanations (SHAP) are applied to quantify feature contributions and interactions, and a scenario-based 
+autoregressive simulation framework is used to evaluate the sensitivity of effluent T-P to coagulant dosing. Together, 
+these stages provide an interpretable and actionable decision-support framework for full-scale DAF operation.
+2.1. Data acquisition
+The target municipal WWTP has a design capacity of 410,000 m3/day and operates with two parallel treatment lines. The 
+main biological treatment process follows the Modified Ludzack–Ettinger (MLE) configuration, after which the secondary 
+effluent is conveyed to tertiary treatment units comprising a micro disk filter (MDF) and a DAF system operated in parallel.
+Among these tertiary treatment processes, the present study focuses on the full-scale DAF system, which serves as the pri­
+mary physicochemical unit for T-P removal. DAF is a physicochemical solid–liquid separation process in which air is 
+dissolved into water under high pressure and subsequently released to generate fine microbubbles through rapid depressur­
+ization. In accordance with Henry’s law, increased pressure enhances air solubility, allowing the treated water to become air- 
+saturated in the pressurization unit. The generated microbubbles attach to chemically destabilized colloidal particles and 
+coagulated flocs formed by ferric sulfate dosing, imparting buoyancy to the aggregates. These bubble–floc complexes rise 
+Water Science & Technology Vol 93 No 7, 1005
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 4 -->
+to the water surface and are removed by surface skimming, thereby achieving effective solid–liquid separation and phos­
+phorus removal.
+The DAF process is continuously operated at full scale and employs ferric sulfate (Fe2(SO4)3) as the coagulant, with daily 
+operational decisions typically based on laboratory-scale water-quality analyses rather than real-time sensor feedback. 
+Table 1 provides a consolidated overview of the key design, operational, and monitoring characteristics of the target 
+WWTP and the associated DAF system, thereby summarizing the study context in terms of treatment configuration, oper­
+ational scale, control strategy, and data coverage.
+The dataset used in this study was compiled from three independent data sources collected at the target WWTP over the 
+period from January 2022 to December 2024 (N = 1,096 days). Meteorological data were obtained from the Automated Synop­
+tic Observing System (ASOS) operated by the Korea Meteorological Administration. Water-quality data, including influent and 
+effluent T-P, suspended solids (SS), pH, and internal recycle flow rate (IRFR), were obtained through routine daily laboratory 
+analyses. In addition, DAF operational variables – such as influent flow rate, coagulant dosage, mixing conditions, recycle ratio, 
+and air-to-solids ratio – were extracted from the plant’s Supervisory Control and Data Acquisition (SCADA) system.
+Figure 2 presents a schematic overview of the DAF process and the corresponding data collection points, illustrating the 
+coagulation–flocculation–flotation sequence and the interactions among influent characteristics, operational conditions, 
+and effluent quality responses under full-scale operating conditions.
+Figure 1 | Schematic diagram of research.
+Water Science & Technology Vol 93 No 7, 1006
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 5 -->
+2.2. Data preprocessing
+Prior to model development, outlier detection was conducted using a three-sigma rule applied to all major operational and 
+water-quality parameters. Records exceeding ±3σ from the mean were considered abnormal events caused by sensor errors, 
+equipment malfunction, or extreme operational disturbances, and were removed to ensure stable model training.
+Missing values were imputed using the Multivariate Imputation by Chained Equations (MICE) algorithm, in which each 
+variable with missing entries Xj is modeled conditionally on all other variables X  j using a regression-based conditional dis­
+tribution:
+Xmis
+j
+≏fj(X  j; uj):
+These conditional models are iteratively updated following a chained-equation scheme:
+^X(t) ¼ F(^X
+(t  1)), 
+where ^X(t)denotes the imputed dataset at iteration t.
+This iterative process continues until convergence, producing a completed dataset that preserves the multivariate corre­
+lation structure among meteorological, operational, and water-quality variables.
+Table 1 | Key design and operational characteristics of the full-scale DAF system used as the tertiary phosphorus removal unit in the target 
+WWTP
+Category
+Description
+Location
+Municipal WWTP in South Korea
+Design capacity
+410,000 m3/day
+Biological process
+Modified Ludzack–Ettinger (MLE)
+Tertiary treatment
+DAF (parallel operation)
+Role of DAF
+Primary physicochemical phosphorus removal
+Coagulant type
+Ferric sulfate (Fe2(SO4)3)
+Operation scale
+Full-scale, continuously operated
+Control strategy
+Daily operational decision based on laboratory analysis
+Data period
+2022.01.01.–2024.12.31. (N  =  1,096 days)
+Figure 2 | Schematic diagram of the DAF process and the corresponding data collection.
+Water Science & Technology Vol 93 No 7, 1007
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 6 -->
+To develop a daily-scale prediction model capable of capturing the complex behaviour of effluent T-P in the DAF process, 
+an extensive feature-engineering strategy was implemented to incorporate both mechanistic process knowledge and the stat­
+istical characteristics of real plant operation. In full-scale systems, effluent T-P exhibits pronounced variability arising from 
+multiple interacting factors, including fluctuations in coagulant dosing here, ferric sulfate (Fe2(SO4)3) used as the primary 
+coagulant rainfall-driven changes in influent dilution and particulate loading, seasonal variations in temperature that 
+modify coagulation and flotation reaction kinetics, operational conditions related to mixing intensity, micro-bubble avail­
+ability, and solids loading, as well as event-driven disturbances in influent quality.
+To represent these nonlinear and multiscale dynamics more effectively than with simple lag inputs alone, the feature- 
+engineering process incorporated short-term variation metrics based on one-, two-, and three-day differences in effluent 
+T-P. These difference-based features capture the direction and magnitude of rapid fluctuations that commonly arise from dis­
+turbance-driven conditions such as rainfall-induced influent changes, temporary under-dosing of coagulants, or shifts in 
+particulate characteristics. By summarizing immediate transitions and short-horizon trends, these descriptors allow the 
+model to better detect localized instability and deviation from typical operating patterns.
+Importantly, all short-term variation features were computed exclusively using information available up to the prediction 
+timestamp, ensuring that no future observations were used in feature construction and thereby avoiding information leakage 
+in the daily operational setting. As illustrated in the feature-engineering schematic, the final input set therefore consisted of 
+short-term T-P variation features (ΔT-P at 1–3 day lags), which capture rapid disturbance-driven dynamics, together with a 
+seasonal indicator (month) to represent longer-term cyclic effects in DAF operation. This design is consistent with variable 
+delay-time and sensitivity analyses reported in related water and groundwater modelling studies, where explicitly screening 
+lagged and differenced inputs has been shown to improve predictive robustness while preserving operational realism 
+(Sharghi et al. 2025). As a result, they enhance the model’s sensitivity to abrupt changes and improve its ability to distinguish 
+stable periods from disturbance-prone intervals in daily DAF operation.
+In addition, process-mechanistic operational indicators including the air-to-inflow ratio (DAF_A/F), ferric-sulfate dosing 
+rate, influent flow, and the IRFR were incorporated to reflect structural relationships among operational conditions, bubble 
+saturation, mixing performance, and phosphorus separation efficiency.
+External environmental drivers such as air temperature, rainfall intensity, and a monthly seasonal index were also 
+included to capture climate-dependent variations in hydraulic loading and coagulation–flotation behaviour. Finally, raw- 
+water quality indicators such as influent T-P and influent SS were integrated to account for upstream water-quality con­
+ditions that directly influence coagulant demand and flotation efficiency. Collectively, this feature-engineering framework 
+provides a unified representation of process mechanisms, short-term dynamics, seasonality, and disturbance signals, effec­
+tively addressing the inherent non-stationarity and high variability of daily DAF operation and thereby improving the 
+robustness, predictive performance, and interpretability of the machine-learning models developed in this study.
+2.3. Development of ML-based models for DAF effluent T-P prediction model
+To construct a reliable daily-scale prediction model for DAF effluent T-P, four representative machine-learning algorithms 
+Decision Tree, Random Forest, XGBoost and LightGBM were developed and evaluated. These models were selected to com­
+pare different tree-based learning paradigms, including a single interpretable tree structure (Decision Tree), a bootstrap 
+aggregation ensemble (Random Forest), a gradient-boosting framework with regularization (XGBoost), and a histogram- 
+based gradient-boosting algorithm optimized for large-scale tabular environmental data (LightGBM).
+Hyperparameter tuning was performed using a Bayesian optimization framework to efficiently explore the parameter 
+space while minimizing computational cost. The search space for each model followed the ranges summarized in 
+Table 2. For all models, the objective was to minimize the mean squared error (MSE) between observed and predicted efflu­
+ent T-P concentrations.
+2.4. Model’s performance evaluation
+To evaluate the predictive accuracy of the developed machine-learning models, three widely used regression metrics R2, 
+RMSE, and MAE were employed. R2 measures the proportion of variance in observed T-P concentrations that is explained 
+by the model, with higher values indicating stronger explanatory power. RMSE quantifies the overall magnitude of predic­
+tion errors and is particularly sensitive to large deviations, thereby reflecting the model’s ability to avoid substantial under- or 
+over-prediction. MAE represents the average absolute difference between observed and predicted values and provides a 
+Water Science & Technology Vol 93 No 7, 1008
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 7 -->
+more robust measure against outliers compared with RMSE. Collectively, these metrics provide a comprehensive assessment 
+of both the accuracy and stability of the effluent T-P prediction models.
+The evaluation metrics were computed as follows:
+R2 ¼ 1  P
+n
+i¼1
+(yi   ^yi)2
+P
+n
+i¼1
+(yi   y )
+2 , 
+RMSE ¼
+ffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffiffi
+1
+n
+X
+n
+i¼1
+(yi   ^yi)2
+v
+u
+u
+t
+, 
+MAE ¼ 1
+n
+X
+n
+i¼1
+jyi   ^yij, 
+where, 
+yi = observed effluent T-P concentration,
+^yi = model-predicted effluent T-P concentration,
+y = mean of observed values,
+n = number of samples.
+2.5. Feature contribution and interaction analysis using SHAP
+To interpret the trained DAF effluent T-P prediction model, SHapley Additive exPlanations (SHAP) was applied. SHAP 
+quantifies the contribution of each input feature to a model prediction by computing Shapley values, which represent the 
+marginal effect of adding a feature to all possible feature subsets. The Shapley value for feature i is defined as:
+fi ¼
+X
+S#Fn{i}
+jSj!(jFj   jSj   1)!
+jFj!
+[f(S < {i})   f(S)] 
+where, 
+F = full set of features,
+S = any subset of F excluding feature i,
+f(  ) = model prediction for a given feature set.
+Table 2 | Hyper-parameter range of ML models
+Division
+Decision Tree
+Random Forest
+XGBoost
+Light GBM
+Max depth
+2 ∼ 10 (Integer)
+Min samples split
+2 ∼ 20 (Integer)
+–
+Min samples leaf
+1 ∼ 50 (Integer)
+–
+N_estimators
+100 ∼ 2,000 (Integer)
+Learning rate
+–
+–
+0.001 ∼ 0.1 (float)
+Min child weight
+–
+–
+5.0 ∼ 15.0 (float)
+–
+Min child samples
+–
+–
+50 ∼ 250 (Integer)
+Gamma
+–
+–
+0.0 ∼ 3.0 (float)
+–
+Subsample
+–
+–
+0.6 ∼ 1.0 (float)
+Colsample_bytree
+–
+–
+0.6 ∼ 1.0 (float)
+Number leaves
+–
+–
+5 ∼ 30 (Integer)
+Loss function
+MSE minimize
+Water Science & Technology Vol 93 No 7, 1009
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 8 -->
+For the optimal model, two SHAP outputs were analysed: (1) Global feature contribution, based on mean absolute Shap­
+ley value, to identify key drivers affecting effluent T-P; (2) Feature interaction patterns, using pairwise SHAP interaction 
+values, to examine nonlinear dependencies between major operational factors. This SHAP-based analysis enabled a trans­
+parent interpretation of how individual features and their interactions influence T-P predictions, providing mechanistic 
+insight into the DAF process.
+2.6. Sensitivity-based optimization of coagulant dosing
+In this study, a sensitivity-based optimization framework was implemented to evaluate how changes in coagulant dosage 
+influence effluent T-P concentrations and to identify the minimum dosing level required to satisfy the target effluent stan­
+dard. Using the machine-learning-based DAF effluent T-P prediction model, dynamic simulations were conducted to 
+quantify the system’s response to incremental adjustments in coagulant dosing intensity.
+To simulate the effect of dosing modifications, a multiplier m was applied to the baseline coagulant dosage at each time 
+step t, generating a series of hypothetical operational scenarios. The autoregressive structure was then employed to propa­
+gate the impact of dosage adjustments over time. Specifically, short-term variation features were recalculated at each 
+prediction step using the model’s preceding predicted values rather than observed measurements. This recursive updating 
+scheme enables the simulation to capture cumulative process responses and nonlinear feedback effects that arise when 
+dosing levels deviate from the baseline operational condition.
+Through this autoregressive, multiplier-based simulation approach, the sensitivity of effluent T-P to different dosing inten­
+sities was quantified, enabling the determination of optimal and suboptimal dosing ranges that balance regulatory 
+compliance and chemical usage.
+3. RESULTS AND DISCUSSION
+3.1. Statistical analysis of characteristics of the target DAF system
+Figure 3 presents the violin plots and histograms of major hydraulic and water-quality parameters including DAF inflow, 
+influent pH, influent SS, influent T-P, and effluent T-P before and after outlier removal based on the three-sigma rule. Over­
+all, the cleaned distributions exhibit reduced extreme values and smoother probability densities, indicating that abnormal 
+spikes caused by operational noise, laboratory errors, or temporary disturbances were effectively removed. Importantly, 
+the overall shapes of the histograms demonstrate that the outlier filtering procedure did not distort the original data struc­
+ture; instead, it selectively removed anomalous points while preserving the inherent distributional characteristics of the 
+dataset.
+Consistent with this, the DAF inflow distribution shows only minimal changes after cleaning, reflecting the inherent stab­
+ility of hydraulic loading data and confirming that outlier removal did not alter the natural variability of flow patterns. In 
+contrast, more noticeable improvements were observed in influent SS, influent T-P, and effluent T-P, where long-tailed 
+and skewed distributions became more compact and symmetric after removing extreme observations. These refinements 
+indicate that the applied filtering effectively removed unrepresentative spikes without modifying the central tendency or typi­
+cal operating ranges.
+Taken together, the results demonstrate that the three-sigma–based outlier removal method successfully eliminated irregu­
+lar measurement spikes while maintaining the essential statistical characteristics of the original dataset, ensuring reliable and 
+unbiased input for downstream machine-learning modelling.
+Table 3 summarizes the extent of missing data and the number of observations removed as outliers for each candidate 
+variable. Overall, the proportion of outliers identified by the three-sigma rule was low across all variables, indicating that 
+extreme values were rare and limited to a small number of observations. Missing data was mainly concentrated in influent 
+pH, reflecting intermittent sensor downtime, whereas most hydraulic, operational, and meteorological variables exhibited 
+negligible missingness. These results indicate that the applied outlier removal procedure was limited in scope and did not 
+substantially alter the overall data distribution.
+Table 4 summarizes the descriptive statistics of the candidate input variables after outlier removal using the three-sigma 
+rule. Overall, the cleaned dataset exhibits stable central tendencies and realistic operational ranges, confirming that the 
+remaining values are representative of typical DAF process behaviour and are suitable for use as input features in model 
+development.
+Water Science & Technology Vol 93 No 7, 1010
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 9 -->
+For the hydraulic loading group, the DAF inflow shows a mean of 240,671 m3/d with moderate variability (std =  
+23,394 m3/d), reflecting regular fluctuations in plant-scale daily flow while excluding extreme peaks removed during the pre­
+processing stage. The IRFR exhibits a mean of 36.09% and a narrow interquartile range, consistent with its function of 
+maintaining dissolved-air saturation levels within operational norms.
+Among the influent water-quality variables, influent SS and influent T-P retained sufficient variability and complete 
+records to serve as meaningful predictors for downstream phosphorus behaviour. In contrast, influent pH, although 
+stable within a narrow range (approximately 6.7–7.1), exhibited more than 30% missing observations due to intermittent 
+sensor downtime. Given its low temporal variability and high missing-value rate, influent pH was excluded from the candi­
+date feature set used for model development.
+Figure 3 | Violin plots and histograms of influent flow rate and key water-quality features after 3-sigma–based outlier removal.
+Water Science & Technology Vol 93 No 7, 1011
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 10 -->
+In effluent quality, the stability of the DAF process is reflected in the relatively narrow variability of effluent T-P, 
+which shows a mean concentration of 0.10 mg/L with most values clustered below 0.14 mg/L. The maximum value of 
+0.36 mg/L suggests that episodic performance variations remain captured without retaining unrealistic outlying values.
+For operation-related indicators, the DAF A/F ratio remains around 0.01 across all quartiles, aligning with typical satur­
+ation conditions observed in full-scale dissolved air flotation. Coagulant dosage also shows a stable and well-bounded 
+distribution (mean = 6,267 kg/d, IQR = 4,760–7,680 kg/d), indicating that the dosing data are sufficiently reliable to be 
+used as an operational control variable in the machine-learning model.
+Lastly, meteorological variables exhibit naturally large variability, particularly rainfall (0–122.5 mm/d), which is important 
+for modelling storm-induced influent dilution and loading changes. Air temperature ranges from –14.7 to 31.8 °C, capturing 
+seasonal dynamics that influence coagulation and flotation behaviour.
+Collectively, the variables summarized in Table 1 demonstrate well-structured distributions after outlier filtering, ensuring 
+that the selected features retain operational meaning while eliminating noise. These characteristics support their suitability 
+as candidate inputs for developing robust daily-scale DAF effluent T-P prediction models.
+3.2. MICE-based interpolation of input and target features
+Following outlier removal, missing values in both input and target variables were imputed using the MICE algorithm to pre­
+serve the multivariate relationships among hydraulic, water-quality, operational, and meteorological parameters. MICE 
+Table 3 | Missing data and outlier statistics after three-sigma filtering
+Group
+Factors
+Unit
+Missing data
+Outlier data
+Count
+Rate
+Count
+Rate
+Flow
+DAF Inflow
+m3/d
+4
+0.36%
+2
+0.18%
+IRFRa
+%
+6
+0.55%
+4
+0.36%
+Water quality
+Inflow pH
+–
+479
+43.70%
+1
+0.09%
+Inflow SS
+mg/L
+68
+6.20%
+6
+0.55%
+Inflow T-P
+mg/L
+59
+5.38%
+6
+0.55%
+Effluent T-P
+mg/L
+74
+6.75%
+9
+0.82%
+Operation
+DAF A/Fb
+–
+4
+0.36%
+4
+0.36%
+Coagulant dosagec
+kg/d
+0
+0.00%
+1
+0.09%
+Meteorological
+Rainfall
+mm
+0
+0.00%
+0
+0.00%
+Air temp.
+°C
+0
+0.00%
+0
+0.00%
+aDAF Internal Recycle Flow Rate: A process parameter that returns a portion of the treated effluent to the DAF saturator to increase dissolved air concentration and improve flotation 
+performance.
+bDAF A/F: An operational indicator expressing the ratio of dissolved air to influent flow, where bubble diameter and flotation velocity are proportional to the amount of dissolved air; 
+commonly used to assess the saturation ratio in DAF systems.
+cCoagulant dosage: A key operational factor in tertiary phosphorus removal processes, representing the dosing relative to influent hydraulic and pollutant loading, which directly 
+influences the efficiency of total phosphorus precipitation and removal.
+Table 4 | Statistical description of features after outlier removal
+Group
+Factors
+Unit
+mean
+std
+min
+25%
+50%
+75%
+max
+Flow
+DAF Inflow
+m3/d
+240,671
+23,394
+131,176
+225,232
+240,000
+256,992
+313,936
+IRFR
+%
+36.09
+4.86
+25.14
+32.52
+35.63
+38.83
+62.14
+Water quality
+Inflow pH
+–
+6.73
+0.12
+6.34
+6.66
+6.73
+6.79
+7.14
+Inflow SS
+mg/L
+5.26
+1.74
+1.00
+4.10
+5.00
+6.30
+11.10
+Inflow T-P
+mg/L
+0.32
+0.15
+0.06
+0.20
+0.28
+0.42
+0.87
+Effluent T-P
+mg/L
+0.10
+0.07
+0.00
+0.05
+0.08
+0.14
+0.36
+Operation
+DAF A/F
+–
+0.01
+0.00
+0.01
+0.01
+0.01
+0.01
+0.02
+Coagulant dosage
+kg/d
+6,267
+1,899
+720
+4,760
+5,980
+7,680
+11,750
+Meteorological
+Rainfall
+mm
+1.44
+7.42
+0.00
+0.00
+0.00
+0.00
+122.50
+Air temp.
+°C
+14.09
+10.70
+− 14.70
+4.80
+15.70
+23.50
+31.80
+Water Science & Technology Vol 93 No 7, 1012
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 11 -->
+sequentially estimate missing values through iterative regression models, allowing each variable with missing entries to be 
+predicted from all other available variables. This approach is particularly suitable for environmental process data, where 
+interactions between influent loading, operational conditions, and effluent responses exhibit nonlinear and interdependent 
+patterns.
+Figure 4 illustrates the imputation results for key variables, including DAF inflow, influent SS, influent T-P, and 
+effluent T-P.
+The red markers represent originally missing observations, while the continuous black lines indicate the reconstructed 
+values obtained through MICE. Across all variables, imputed values align smoothly with surrounding temporal trends, with­
+out introducing abrupt discontinuities or irregular fluctuations, indicating that the underlying temporal structure was 
+reasonably preserved. For instance, missing points in influent SS and influent T-P, which frequently occur during peak load­
+ing periods or laboratory analysis gaps, were reconstructed in a manner consistent with the observed variability of adjacent 
+data. Similarly, missing effluent T-P values were imputed along realistic daily and seasonal fluctuations, ensuring continuity 
+in the target variable for model training.
+In addition, the use of multivariate imputation approaches such as MICE is supported by previous studies on environ­
+mental and water-quality datasets, which have shown that multivariate methods generally outperform simple 
+interpolation-based techniques when handling mixed-type and process-driven missing data (Dixneuf et al. 2021). Similar 
+findings have also been reported in water-quality monitoring studies, indicating that multivariate approaches, including 
+MICE and tree-based methods, are more suitable for reconstructing longer-term or structurally missing segments than 
+simple interpolation methods (Wang et al. 2024). Overall, the MICE-based imputation procedure maintained the general 
+statistical characteristics and temporal coherence of the dataset, providing a complete and consistent input dataset for sub­
+sequent machine-learning model development.
+3.3. Development of the optimal DAF effluent T-P prediction model
+Figure 5 presents the Pearson correlation coefficients between effluent T-P and the candidate input features considered for 
+model development. Overall, the correlations reveal meaningful linear associations that reflect the mechanistic behaviour of 
+the DAF system.
+Among the variables, influent T-P exhibited the strongest positive correlation with effluent T-P, indicating that higher 
+upstream phosphorus loading tends to increase the residual phosphorus concentration after flotation. Influent SS also 
+showed a moderate positive correlation, consistent with the role of particulate matter as a carrier of phosphorus species 
+that affects coagulation and flotation performance.
+In contrast, coagulant dosage demonstrated a clear negative correlation with effluent T-P. This relationship reflects the 
+expected chemical-removal mechanism wherein higher doses of ferric coagulant enhance phosphorus precipitation and 
+reduce the remaining phosphorus in the effluent. The strength of this negative correlation underscores the operational 
+importance of appropriate dosing control.
+Hydraulic indicators such as DAF inflow and IRFR showed only weak correlations with the target variable, implying that 
+flow fluctuations or dissolved-air recirculation ratios have limited direct linear influence on effluent T-P under normal oper­
+ational conditions. Similarly, DAF_A/F exhibited little linear association, which is reasonable given its narrow operational 
+range in full-scale practice.
+Meteorological variables including air temperature and rainfall showed weak but directionally consistent correlations. Air 
+temperature displayed a slightly positive association, possibly reflecting seasonal variations in reaction kinetics or influent 
+loading patterns. Rainfall exhibited a weak positive correlation as well, aligning with dilution and wash-off effects during 
+wet-weather events.
+The month variable showed only minimal correlation with the target, indicating that seasonality alone does not strongly 
+determine effluent T-P levels unless coupled with other factors such as dosing or influent variability.
+Table 5 shows that nonlinear machine-learning models clearly outperform the linear ridge regression model in predicting 
+daily effluent T-P concentrations. Ridge regression exhibited limited explanatory power (Test R2 = 0.5599), demonstrating 
+that linear approaches are not suitable for wastewater treatment processes characterized by strong nonlinearities and com­
+plex interactions among hydraulic, operational, and water-quality variables. In contrast, tree-based ensemble models 
+substantially improved predictive accuracy by effectively capturing these nonlinear behaviours. Among them, Random 
+Forest achieved the best overall performance, recording the highest test R2 (0.8175) and the lowest RMSE (0.0324 mg/L) 
+Water Science & Technology Vol 93 No 7, 1013
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 12 -->
+and MAE (0.0235 mg/L). This superior generalization ability reflects the strengths of bootstrap aggregation and random fea­
+ture sampling, which reduce overfitting and enhance model robustness.
+From a regulatory and operational perspective, the achieved prediction accuracy should be interpreted relative to the efflu­
+ent T-P discharge standard of 0.2 mg/L applied to the study site. Under this constraint, the Random Forest model’s RMSE 
+(0.0324 mg/L) and MAE (0.0235 mg/L) correspond to approximately 16 and 12% of the discharge limit, respectively, 
+Figure 4 | MICE-based missing data interpolation results for influent flow and key water-quality variables.
+Water Science & Technology Vol 93 No 7, 1014
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 13 -->
+implying that more than 80% of the allowable concentration range is resolved without prediction error. In practical terms, 
+this indicates that the model achieves an effective accuracy exceeding 80% when evaluated against the regulatory criterion, 
+providing sufficient resolution to support compliance-oriented operation and timely identification of potential exceedance 
+risks.
+Although the test R2 values of LightGBM (0.7960) and XGBoost (0.7924) are numerically close to that of Random Forest, 
+the consistently lower RMSE and MAE achieved by Random Forest reduce absolute uncertainty near the regulatory 
+threshold. When effluent T-P concentrations approach 0.2 mg/L, even small differences on the order of 0.01–0.02 mg/L 
+may influence whether preventive coagulant dosing is initiated or delayed. Therefore, the observed performance advantage, 
+while modest in aggregate metrics, becomes practically significant for compliance-oriented decision-making and conserva­
+tive chemical dosing strategies, where minimizing the risk of underestimating peak concentrations is critical.
+The exceptional performance of Random Forest is consistent with previous findings in the literature. Sun et al. (2024)
+reported that Random Forest Regression achieved very high R2 values across multiple effluent parameters and was 
+among the most reliable models for WWTP prediction. Additional studies applying ensemble bagging methods for 
+WWTP performance evaluation have also shown that bagging-based models perform as well as, or better than other com­
+monly used machine-learning models, owing to their ability to reduce variance and effectively capture the complex, 
+nonlinear structures inherent in wastewater treatment processes.
+Collectively, the present results and supporting evidence from prior studies indicate that Random Forest is the most 
+reliable, accurate, and robust model for full-scale DAF effluent T-P prediction, making it a suitable choice for data-driven 
+operational decision-making.
+Figure 6 illustrates the prediction performance of the optimal Random Forest model through (a) full-period time-series 
+comparisons and (b), (c) actual–predicted scatter plots for the training and test datasets. The time-series plot shows that 
+Figure 5 | Bar plots of Pearson correlation coefficients illustrating the linear associations between each input feature and the target 
+variable.
+Table 5 | Comparative performance evaluation of Ridge regression and ML models
+Division
+Ridge regression
+Decision Tree
+Random Forest
+XGBoost
+Light GBM
+Train
+Test
+Train
+Test
+Train
+Test
+Train
+Test
+Train
+Test
+R2
+0.6706
+0.5599
+0.9048
+0.7578
+0.8678
+0.8175
+0.8339
+0.7924
+0.8374
+0.7960
+RMSE
+0.0436
+0.0504
+0.0234
+0.0374
+0.0276
+0.0324
+0.0310
+0.0346
+0.0306
+0.0343
+MAE
+0.0352
+0.0380
+0.0172
+0.0276
+0.0209
+0.0235
+0.0238
+0.0259
+0.0232
+0.0256
+Water Science & Technology Vol 93 No 7, 1015
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 14 -->
+the model successfully tracks both the baseline trends and short-term fluctuations of effluent T-P concentrations across the 
+entire monitoring period, without exhibiting noticeable lag or systematic bias. Peak values and intermittent shock-type vari­
+ations typically challenging to predict in daily-scale DAF operation – are also reasonably captured, demonstrating the 
+model’s capability to reflect nonlinear and disturbance-driven.
+The scatter plots further confirm the strong predictive agreement between observed and estimated values. In the training 
+dataset, predictions are densely aligned along the 1:1 reference line, indicating that the Random Forest model effectively 
+learned the nonlinear mapping between input features and effluent T-P. In the independent test dataset, the predicted 
+values also cluster tightly around the 1:1 line, with no apparent overestimation or underestimation trends, confirming the 
+model’s strong generalization capability and robustness against noise.
+To further examine whether prediction errors deteriorate under high-loading conditions relevant to chemical dosing sup­
+port, a regime-based performance evaluation was conducted by stratifying the dataset into effluent T-P concentration 
+quartiles. The low- and high-concentration regimes, defined by the first and third quartiles, comprised 281 and 275 samples, 
+respectively. In the low-concentration regime, the model achieved an RMSE of 0.0214 mg/L and an MAE of 0.0167 mg/L. 
+In contrast, the RMSE and MAE increased to 0.0424 and 0.0328 mg/L, respectively, in the high-concentration regime.
+Although RMSE and MAE in the upper quartile were approximately twice those observed in the lower quartile, this 
+increase reflects the inherently higher variability and disturbance intensity associated with high-loading operational 
+Figure 6 | Prediction performance of the optimal DAF effluent T-P model, including time-series predictions and actual–predicted scatter 
+plots for the train and test datasets.
+Water Science & Technology Vol 93 No 7, 1016
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 15 -->
+conditions. Importantly, the absolute error magnitudes remain small relative to the observed effluent T-P range, and no evi­
+dence of disproportionate error amplification is observed at the upper tail of the concentration distribution. Consistent with 
+the time-series and scatter plot patterns shown in Figure 6, these results indicate that the Random Forest model maintains 
+stable predictive performance even during high-concentration periods where compliance risk is typically concentrated.
+From an operational perspective, this regime-based robustness is critical for chemical dosing support, as accurate predic­
+tion under high-loading conditions directly influences dosing adjustment and risk mitigation. The combined visual and 
+quantitative evidence therefore confirms that the proposed model is dependable not only under average operating con­
+ditions but also during high-variability and high-risk scenarios encountered in full-scale DAF systems.
+Overall, these results validate that the Random Forest model provides accurate and stable predictions of daily effluent T-P 
+concentrations, making it suitable for supporting data-driven process monitoring and operational decision-making in full- 
+scale DAF systems.
+To quantitatively substantiate the absence of noticeable lag or systematic bias suggested by the time-series and scatter plot 
+analyses, a residual-based diagnostic evaluation was conducted using the independent test dataset, and the results are sum­
+marized in Table 6. The regression analysis between predicted and observed effluent T-P concentrations yielded a slope of 
+0.835, indicating a strong linear relationship between model predictions and observations across the test range. The associ­
+ated confidence interval confirms that this relationship is statistically stable and does not exhibit substantial deviation from 
+linearity.
+The regression intercept was estimated as 0.0175 mg/L, suggesting only a minor offset at low concentration levels. In 
+addition, the mean signed error was calculated as 0.0002 mg/L, demonstrating that the overall prediction bias of the 
+Random Forest model is practically negligible. Together, these residual-based diagnostics indicate that the model does 
+not exhibit systematic overestimation or underestimation tendencies.
+3.4. Interpretation of the developed model using explainability methods
+Figure 7 presents the SHAP-based feature importance analysis for the optimal Random Forest model, providing quantitative 
+insight into how each input variable contributes to effluent T-P prediction. As shown in Figure 7(a) and 7(b), influent T-P 
+emerged as the most influential factor, exhibiting the highest mean absolute SHAP value (0.009–0.010 mg/L), which is sub­
+stantially larger than that of any other variable.
+Overall, influent T-P emerged as the most influential factor, exhibiting the highest mean absolute SHAP value. This indi­
+cates that upstream phosphorus loading acts as the primary driver of daily effluent T-P variability in the DAF process. 
+Coagulant dosage ranked second, with a mean absolute SHAP value of approximately 0.005–0.006 mg/L, confirming that 
+chemical dosing intensity directly governs phosphorus precipitation efficiency and thereby strongly affects the predicted 
+effluent concentration (Wang et al. 2021b).
+Seasonality, represented by the month variable, showed a moderate but consistent contribution (mean |SHAP| ≈ 0.0015– 
+0.002 mg/L), placing it as the third most influential predictor. This reflects the influence of temperature-driven reaction kin­
+etics and seasonal variations in influent water quality. Operational indicators such as DAF inflow, air temperature, influent 
+SS, and the air-to-flow ratio (DAF_A/F) exhibited lower yet non-negligible contributions (mean |SHAP| generally below 
+0.001 mg/L), suggesting that hydraulic load, climate conditions, and particulate characteristics interact with chemical 
+dosing and influent T-P to shape overall DAF performance. In contrast, IRFR and rainfall showed comparatively minor influ­
+ence, indicating that their effects on daily effluent T-P are relatively weak or indirect within the studied operating range.
+To evaluate the robustness of feature importance across seasons, Figure 7(c) summarizes the seasonal ranking stability of 
+key predictors. Influent T-P consistently ranked as the most important variable in all seasons, while coagulant dosage and 
+month also maintained stable high rankings throughout the year. This seasonal consistency indicates that the dominance of 
+Table 6 | Residual-based diagnostic results for the Random Forest model using the independent test dataset
+Division
+Value
+Regression slope (95% Confidence Interval)a
+0.835 (0.789–0.882)
+Intercept (95% Confidence Interval)a
+0.0175 (0.0115–0.0235)
+Mean signed error (bias)
+0.0002 mg/L
+aConfidence intervals were calculated at the 95% level using the independent test dataset.
+Water Science & Technology Vol 93 No 7, 1017
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 16 -->
+influent loading and chemical dosing persists under varying operating conditions rather than being confined to a specific 
+season.
+Seasonal and operational indicators are therefore interpreted as reflecting underlying process conditions rather than 
+acting as direct causal drivers. For example, the month and air temperature variables reflect temperature-dependent coagu­
+lation kinetics and flotation efficiency, while DAF inflow and DAF_A/F capture hydraulic loading and gas–liquid contact 
+conditions that modulate removal performance.
+The SHAP summary plot additionally reveals the directionality of feature effects: higher influent T-P and lower coagulant 
+dosage consistently increase predicted effluent T-P concentrations, while seasonal and operational variables exert more com­
+plex, nonlinear influences. These directional patterns are consistent with established understanding of DAF phosphorus 
+removal behaviour, indicating that the learned relationships are physically plausible within the operating conditions 
+considered.
+Figure 8 presents the SHAP interaction analysis focusing on the three most influential variables identified in the feature- 
+importance results – influent T-P, coagulant dosage, and month. The interaction patterns demonstrate how seasonal effects 
+modulate the contributions of the two dominant predictors, providing deeper insight into the nonlinear behaviour of effluent 
+T-P in the DAF process.
+Interaction with influent T-P (a) shows that higher influent phosphorus concentrations consistently lead to positive SHAP 
+contributions across all months, confirming its role as the most critical driver of effluent T-P variability. While this positive 
+Figure 7 | SHAP-based feature importance analysis results for the optimal DAF effluent T-P prediction model.
+Water Science & Technology Vol 93 No 7, 1018
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 17 -->
+relationship is observed throughout the year, the magnitude of the contribution varies modestly by season, with slightly 
+stronger sensitivity under colder conditions.
+In contrast, the interaction between coagulant dosage and month (b) displays a predominantly negative SHAP contri­
+bution for higher dosage values, indicating enhanced T-P removal performance as chemical dosing increases. This 
+negative contribution is more pronounced during warmer seasons (May–September), reflecting more favourable coagulation 
+and flotation conditions rather than a direct seasonal effect.
+Overall, the interaction analysis confirms that the most important predictors – influent T-P, dosage, and seasonality – do 
+not operate independently but instead exhibit season-dependent nonlinear interactions. These results indicate that seasonal 
+variability modulates, rather than overrides, the dominant effects of influent loading and chemical dosing on DAF phos­
+phorus removal performance.
+3.5. Sensitivity-based optimization of coagulant dosing determination
+The proposed sensitivity-based optimization framework resulted in substantial reductions in coagulant usage throughout the 
+test period. Based on predictive simulations using the trained model, as summarized in Table 7, the optimized strategy 
+decreased the average daily dosing requirements across all seasons by 32% in spring, 49% in summer, 51% in autumn, 
+and 44% in winter. When extrapolated to an annual scale, these simulation-based reductions correspond to an estimated 
+chemical cost savings of approximately 1.53 billion KRW per year, calculated using the actual coagulant purchasing price 
+applied at the study site (24,840 KRW per 20 kg, equivalent to 1,242 KRW/kg), underscoring the strong economic benefits 
+of data-driven dosing control.
+The reported cost savings reflect chemical purchasing costs only and do not include secondary operational expenses such 
+as sludge handling, polymer consumption, or downstream treatment impacts. It should be noted that these optimized dosing 
+levels represent recommended operating targets derived from model-based scenario simulations, rather than guaranteed out­
+comes from field implementation. These results suggest that the conventional operation relied on excessive or inconsistent 
+chemical addition, whereas the optimized algorithm identified a conditionally optimal dosage range under the assumed 
+model accuracy that is sufficient to sustain treatment performance.
+Following this reduction in chemical demand, the seasonal behaviour of effluent T-P concentrations was examined to 
+determine whether treatment stability was preserved or enhanced. As illustrated in Figure 9, optimized dosing produced 
+Figure 8 | SHAP-based feature interaction analysis results for the optimal model.
+Table 7 | Seasonal comparison of original and optimized coagulant dosing amounts
+Division
+Original Dosage (kg/d)
+Optimized Dosage (kg/d)
+Spring
+254,355
+173,331
+Summer
+206,827
+105,859
+Autumn
+233,273
+113,628
+Winter
+222,780
+123,716
+Water Science & Technology Vol 93 No 7, 1019
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 18 -->
+markedly narrower seasonal distributions of effluent T-P compared with the original operation, indicating improved process 
+consistency. Across all seasons, the long-tail behaviour and high-end outliers frequently observed under baseline dosing dis­
+appeared, and the optimized predictions converged toward the regulatory target range (0.10–0.20 mg/L). The improvement 
+was particularly notable in summer, where high organic and solids loading caused the greatest dispersion under convention­
+al operation; the optimized strategy effectively compressed the distribution and prevented performance deterioration. 
+Likewise, in winter, despite reduced coagulation efficiency caused by low water temperatures the optimized approach main­
+tained a stable and narrow concentration band.
+Overall, the sensitivity-based coagulant optimization procedure substantially reduced effluent T-P variability across all sea­
+sons while consistently shifting median values toward the target discharge range. This demonstrates that the proposed 
+framework overcomes key limitations of traditional SCADA-based, experience-driven dosing approaches, which often fail 
+to accommodate seasonal loading fluctuations and tend to induce unnecessary over- or under-dosing. The results highlight 
+the strong practical applicability of the proposed method as a robust operational strategy and position it as a core component 
+for developing a data-driven, real-time digital decision-support framework for coagulant dosing optimization.
+4. CONCLUSIONS
+This study presented an interpretable, feature-engineered machine-learning framework for daily-scale prediction and oper­
+ational optimization of effluent T-P in a full-scale DAF system. Overall, the results demonstrate that the proposed 
+framework effectively integrates long-term operational data, process-informed feature engineering, and explainable machine 
+learning to provide both reliable prediction and actionable operational insight under realistic wastewater treatment plant 
+conditions.
+From a predictive perspective, the Random Forest model exhibited robust and reliable performance, achieving a test R2 
+of 0.82 and an RMSE of 0.032 mg/L, corresponding to a prediction error within 20% of the regulatory discharge limit 
+(0.2 mg/L). This level of performance indicates that the model can sufficiently distinguish normal operating conditions 
+from potential compliance-risk scenarios on a daily decision-making horizon, where laboratory-based measurements and 
+routine operational adjustments dominate.
+Interpretability analysis using SHAP further revealed that influent T-P concentration and coagulant dosage are the domi­
+nant drivers of effluent T-P variability, while short-term variation features and seasonal indicators modulate system response 
+under dynamic loading and environmental conditions. The consistency of these feature contributions across seasons 
+suggests that the learned relationships are physically consistent with established DAF process mechanisms, thereby enhan­
+cing model transparency and supporting operator confidence.
+Figure 9 | Seasonal comparison of effluent T-P concentrations under original and optimized coagulant dosing.
+Water Science & Technology Vol 93 No 7, 1020
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 19 -->
+Building on these predictive and interpretative results, a sensitivity-based, autoregressive simulation framework was 
+applied to evaluate coagulant dosing strategies. The simulation results indicate that conditionally optimized dosing levels 
+could reduce coagulant consumption by 32–51% across seasons while simultaneously narrowing the effluent T-P distri­
+bution toward the target compliance range. The corresponding annual coagulant cost saving was estimated at 
+approximately 1.53 billion KRW, based solely on coagulant purchasing costs. These optimized dosing levels represent 
+model-based recommendations derived from scenario simulations rather than guaranteed outcomes from field implemen­
+tation, highlighting the role of the framework as a decision-support tool rather than a prescriptive control system.
+Taken together, the results indicate that combining daily-scale prediction, explainable machine learning, and sensitivity- 
+based optimization provides a practical and scalable alternative to traditional experience-driven or fixed-ratio dosing strat­
+egies. The proposed framework is particularly suited to full-scale facilities where online T-P sensors or fully automated 
+control systems are limited, yet stable regulatory compliance and chemical efficiency are required. Future work will focus 
+on field validation, integration with upstream–downstream process interactions, and extension toward digital-twin and 
+reinforcement-learning–based operational control.
+ACKNOWLEDGEMENTS
+This work was supported by the 2025 Research Fund of the University of Seoul.
+DATA AVAILABILITY STATEMENT
+Data cannot be made publicly available; readers should contact the corresponding author for details.
+CONFLICT OF INTEREST
+The authors declare there is no conflict.
+REFERENCES
+Abdoli, S., Asgari Lajayer, B., Dehghanian, Z., Bagheri, N., Vafaei, A. H., Chamani, M., Rani, S., Lin, Z., Shu, W. & Price, G. W. (2024) A 
+review of the efficiency of phosphorus removal and recovery from wastewater by physicochemical and biological processes: challenges 
+and opportunities, Water, 16 (17), 2507. https://doi.org/10.3390/w16172507.
+Afan, H. A., Mohtar, W. H. M. W., Khaleel, F., Kamel, A. H., Mansoor, S. S., Alsultani, R., Ahmed, A. N., Sherif, M. & El-Shafie, A. (2024) 
+Data-driven water quality prediction for wastewater treatment plants, Heliyon, 10 (18), e36940. https://doi.org/10.1016/j.heliyon. 
+2024.e36940.
+Alatabe, M. J. A. (2024) Photocatalytic degradation of oxamyl pesticide by adsorption using bentonite/titanium dioxide nanocomposite 
+doped with nickel, Desalination and Water Treatment, 317, 100050. https://doi.org/10.1016/j.dwt.2024.100050.
+Alsulaili, A. & Refaie, A. (2021) Artificial neural network modeling approach for the prediction of five-day biological oxygen demand and 
+wastewater treatment plant performance, Water Supply, 21 (5), 1861–1877. https://doi.org/10.2166/ws.2020.199.
+Álvarez Díez, A., Pena Rois, R., Mocanu, I., Orzan, C., Brebenel, C., Stere, J., Muíños Landín, S. & Fernández Montenegro, J. M. (2024) 
+Reinforcement learning-based DSS for coagulant and disinfectant dosage selection on drinking water treatment plants, Water Supply, 
+24 (1), 86–102. https://doi.org/10.2166/ws.2023.328.
+Badawi, A. K., Ismail, B., Baaloudj, O. & Abdalla, K. Z. (2022) Advanced wastewater treatment process using algal photo-bioreactor 
+associated with dissolved-air flotation system: a pilot-scale demonstration, Journal of Water Process Engineering, 46, 102565. https:// 
+doi.org/10.1016/j.jwpe.2022.102565.
+Bunce, J. T., Ndam, E., Ofiteru, I. D., Moore, A. & Graham, D. W. (2018) A review of phosphorus removal technologies and their 
+applicability to small-scale domestic wastewater treatment systems, Frontiers in Environmental Science, 6, 8. https://doi.org/10.3389/ 
+fenvs.2018.00008.
+Cechinel, M. A. P., Neves, J., Fuck, J. V. R., de Andrade, R. C., Spogis, N., Riella, H. G., Padoin, N. & Soares, C. (2024) Enhancing 
+wastewater treatment efficiency through machine learning-driven effluent quality prediction: a plant-level analysis, Journal of Water 
+Process Engineering, 58, 104758. https://doi.org/10.1016/j.jwpe.2023.104758.
+Di Bella, G., Giustra, M. G. & Freni, G. (2014) Optimisation of coagulation/flocculation for pre-treatment of high strength and saline 
+wastewater: performance analysis with different coagulant doses, Chemical Engineering Journal, 254, 283–292. https://doi.org/10. 
+1016/j.cej.2014.05.115.
+Dixneuf, P., Errico, F. & Glaus, M. (2021) A computational study on imputation methods for missing environmental data, 
+arXiv:2108.09500. https://doi.org/10.48550/arXiv.2108.09500.
+Edzwald, J. K. (2010) Dissolved air flotation and me, Water Research, 44 (7), 2077–2106. https://doi.org/10.1016/j.watres.2009.12.040.
+Water Science & Technology Vol 93 No 7, 1021
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 20 -->
+Fang, X., Zhai, Z., Xiong, R., Zhang, L. & Gao, B. (2022). ’LSTM-based modelling for coagulant dosage prediction in wastewater treatment 
+plant’, Proceedings of the 2022 3rd International Conference on Artificial Intelligence in Electronics Engineering (AIEE ’22). 
+New York. Association for Computing Machinery, pp. 23–27. https://doi.org/10.1145/3512826.3512847.
+Guo, Z., Du, B., Wang, J., Shen, Y., Li, Q., Feng, D., Gao, X. & Wang, H. (2020) Data-driven prediction and control of wastewater 
+treatment process through the combination of convolutional neural network and recurrent neural network, RSC Advances, 10 (23), 
+13410–13419. https://doi.org/10.1039/D0RA00736F.
+Hu, Z., Houweling, D. & Dold, P. (2012) Biological nutrient removal in municipal wastewater treatment: new directions in sustainability, 
+Journal of Environmental Engineering, 138 (3), 307–317. https://doi.org/10.1061/(ASCE)EE.1943-7870.0000462.
+Khettaf, S., Khouni, I., Louhichi, G., Ghrabi, A., Bousselmi, L., Bouhidel, K. E. & Bouhelassa, M. (2021) Optimization of coagulation– 
+flocculation process in the treatment of surface water for a maximum dissolved organic matter removal using RSM approach, Water 
+Supply, 21 (6), 3042–3056. https://doi.org/10.2166/ws.2021.070.
+Kim, S. & Chung, S. (2022) Causal impact analysis of enhanced phosphorus effluent standard on river water quality, Journal of 
+Environmental Management, 320, 115931. https://doi.org/10.1016/j.jenvman.2022.115931.
+Kim, I. S., Ryu, J. Y. & Lee, J. J. (1996) Status of construction and operation of large wastewater treatment plants in South Korea, Water 
+Science and Technology, 33 (12), 11–18. https://doi.org/10.1016/0273-1223(96)00452-0.
+Kim, J., Hua, C., Kim, K., Lin, S., Oh, G., Park, M. H. & Kang, S. (2024a) Optimizing coagulant dosage using deep learning models with 
+large-scale data, Chemosphere, 350, 140989. https://doi.org/10.1016/j.chemosphere.2023.140989.
+Kim, J., Hua, C., Lin, S., Kang, S., Kang, J. H. & Park, M. H. (2024b) Deep learning-based coagulant dosage prediction for extreme events 
+leveraging large-scale data, Journal of Water Process Engineering, 66, 105934. https://doi.org/10.1016/j.jwpe.2024.105934.
+Kwak, D. H. & Lee, K. C. (2015) Enhanced phosphorus removal in the DAF process by flotation scum recycling for advanced treatment of 
+municipal wastewater, Water Science and Technology, 72 (4), 600–607. https://doi.org/10.2166/wst.2015.243.
+Lai, J. (2025) Research on prediction algorithm of effluent quality and development of integrated control system for waste-water treatment, 
+Scientific Reports, 15 (1), 19257. https://doi.org/10.1038/s41598-025-03612-5.
+Lee, E. J., Kim, H. S. & Jang, A. (2016) Application of dissolved air flotation (DAF) with coagulation process for treatment of phosphorus 
+within permeate of membrane bioreactor (MBR), Desalination and Water Treatment, 57 (19), 9043–9050. https://doi.org/10.1080/ 
+19443994.2015.1057034.
+Li, H., Xu, J., Zhao, Y. & Lian, J. (2025) Challenges of precise aeration implementation in conventional wastewater treatment processes: a 
+review, Journal of Water Process Engineering, 78, 108737. https://doi.org/10.1016/j.jwpe.2025.108737.
+Liu, J., Long, Y., Zhu, G. & Hursthouse, A. S. (2024) Application of artificial intelligence in the management of coagulation treatment 
+engineering system, Processes, 12 (9), 1824. https://doi.org/10.3390/pr12091824.
+Lu, X., Huang, S., Liu, H., Yang, F., Zhang, T. & Wan, X. (2024) Research on intelligent chemical dosing system for phosphorus removal in 
+wastewater treatment plants, Water, 16 (11), 1623. https://doi.org/10.3390/w16111623.
+Ly, Q. V., Truong, V. H., Ji, B., Nguyen, X. C., Cho, K. H., Ngo, H. H. & Zhang, Z. (2022) Exploring potential machine learning application 
+based on big data for prediction of wastewater quality from different full-scale wastewater treatment plants, Science of the Total 
+Environment, 832, 154930. https://doi.org/10.1016/j.scitotenv.2022.154930.
+Maeng, M. S., Kim, H. S., Lee, K. S. & Dockko, S. (2017) Effect of DAF configuration on the removal of phosphorus and organic matter by a 
+pilot plant treating combined sewer overflows, International Biodeterioration & Biodegradation, 124, 17–25. https://doi.org/10.1016/ 
+j.ibiod.2017.07.017.
+Narges, S., Ghorban, A., Hassan, K. & Mohammad, K. (2021) Prediction of the optimal dosage of coagulants in water treatment plants 
+through developing models based on artificial neural network fuzzy inference system (ANFIS), Journal of Environmental Health 
+Science and Engineering, 19 (2), 1543–1553. https://doi.org/10.1007/s40201-021-00710-0.
+Pilz, F., Svardal, K., Kreuzinger, N. & Krampe, J. (2024) Model-based dynamic simulation study to boost the WWTP performance in winter 
+tourism regions, Journal of Water Process Engineering, 61, 105266. https://doi.org/10.1016/j.jwpe.2024.105266.
+Seo, D., Lee, E. & Reckhow, K. (2011) Development of the CAP water quality model and its application to the Geum River, Korea, 
+Environmental Engineering Research, 16 (3), 121–129. https://doi.org/10.4491/eer.2011.16.3.121.
+Sharghi, A., Komasi, M. & Ahmadi, M. (2025) Variable sensitivity analysis in groundwater level projections under climate change adopting a 
+hybrid machine learning algorithm, Environmental Modelling & Software, 183, 106264. https://doi.org/10.1016/j.envsoft.2024.106264.
+Sheik, A. G., Krishna, S. B. N., Patnaik, R., Ambati, S. R., Bux, F. & Kumari, S. (2024) Digitalization of phosphorous removal process in 
+biological wastewater treatment systems: challenges, and way forward, Environmental Research, 252 (Part 4), 119133. https://doi.org/ 
+10.1016/j.envres.2024.119133.
+Sun, J., Guan, X., Sun, X., Cao, X., Tan, Y. & Liao, J. (2024) Water quality prediction and carbon reduction mechanisms in wastewater 
+treatment in Northwest cities using Random Forest Regression model, Scientific Reports, 14 (1), 31525. https://doi.org/10.1038/ 
+s41598-024-83277-8.
+Tochio, E. L. L., do Nascimento, B. C. & Lautenschlager, S. R. (2023) Coagulant dosage prediction in the water treatment process, Water 
+Supply, 23 (9), 3515–3531. https://doi.org/10.2166/ws.2023.219.
+Väänänen, J., Tuohimetsä, M., Savolainen, K., Sorsamäki, V., Pyykkönen, S., Tuominen, P. & Pellicer-Nacher, C. (2023) Operational 
+optimization at the Nenäinniemi wastewater treatment plant’s tertiary disc filter phosphorus removal installation to reduce chemical 
+consumption, Water Science and Technology, 87 (3), 555–570. https://doi.org/10.2166/wst.2023.018.
+Water Science & Technology Vol 93 No 7, 1022
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest
+
+
+<!-- Page 21 -->
+Wang, K. J., Wang, P. S. & Nguyen, H. P. (2021a) A data-driven optimization model for coagulant dosage decision in industrial wastewater 
+treatment, Computers & Chemical Engineering, 152, 107383. https://doi.org/10.1016/j.compchemeng.2021.107383.
+Wang, X., Xu, H., Jiao, R., Ma, G. & Wang, D. (2021b) Coagulation removal of phosphorus from a southern China reservoir in different 
+stages of algal blooms: performance evaluation and Al–P matching principle analysis, Science of The Total Environment, 782, 146849. 
+https://doi.org/10.1016/j.scitotenv.2021.146849.
+Wang, F., Cui, X., Gui, Y. & Qiao, Y. (2024) Two stage iterative approach for addressing missing values in small-scale water quality data, 
+Marine Development, 2 (1), 27. https://doi.org/10.1007/s44312-024-00040-3.
+First received 7 December 2025; accepted in revised form 2 February 2026. Available online 8 April 2026
+Water Science & Technology Vol 93 No 7, 1023
+Downloaded from iwaponline.​com/​wst/​article-pdf/​93/​7/​1003/​1614948/​wst2026256.​pdf
+by guest

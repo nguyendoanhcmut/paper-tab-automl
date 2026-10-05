@@ -1,0 +1,31 @@
+### 3.3 LLM-Assisted Feature Selection Provides a Viable Alternative
+
+- Đánh giá khả năng thay thế tri thức chuyên gia bằng khung LLM-RAG tự động:
+  - Thiết lập 15 lượt thử nghiệm độc lập (mỗi mô hình trong số ba LLMs thực hiện 5 lượt), mỗi lượt lựa chọn 7 đặc trưng.
+  - Tổng cộng 14 đặc trưng duy nhất được xác định trên toàn bộ các lượt thử nghiệm (Hình 4a).
+  - Tần suất lựa chọn cho thấy sự hội tụ cao về mặt cơ chế sinh học:
+    - Oxy hòa tan $\text{DO}$ và lưu lượng vào $\text{InflowRate}$ được chọn nhất quán tuyệt đối ($100\%$).
+    - $N_2O\text{-Tank3}$ mô phỏng đạt tần suất $80\%$ và công suất sục khí $\text{Aeration Power2}$ đạt $67\%$.
+    - Bốn biến cốt lõi này chiếm tới $46\%$ tổng số lượt lựa chọn của các mô hình ngôn ngữ lớn.
+- Khung LLM-RAG thể hiện tính hội tụ cao qua 15 lượt thực nghiệm và mô hình duy trì khả năng dự đoán ổn định dưới điều kiện lưu lượng cao ngoài phân phối:
+  - Ba mô hình GPT-5.2, Claude Sonnet 4.6 và Gemini 2.5 Flash cho kết quả đồng thuận cao với độ lệch biến rất nhỏ.
+  - Tính ổn định xuất phát từ cơ chế truy xuất ngữ nghĩa của hệ thống RAG trên 520 bài báo y văn, không phụ thuộc vào thiên kiến riêng của từng mô hình ngôn ngữ.
+  - Tập 7 đặc trưng được chọn đồng thuận cao nhất: $\text{DO}$, $\text{InflowRate}$, $N_2O\text{-Tank3}$, $\text{Aeration Power2}$, $NH_4^+\text{-Tank1}$, $NO_2^-\text{-Tank3}$ và $NO_3^-\text{-Tank3}$.
+  - **Hình 4.** Kết quả lựa chọn đặc trưng có sự hỗ trợ của LLM và hiệu năng mô hình
+    - ![Hình 4](assets/fig_04_p8.png)
+    - Cơ chế & Bằng chứng: Ma trận lựa chọn qua 15 lượt cho thấy $\text{DO}$ và $\text{InflowRate}$ đạt tần suất tuyệt đối ($100\%$), tiếp theo là $N_2O\text{-Tank3}$ ($80\%$) và $\text{Aeration Power2}$ ($67\%$). Mô hình LSTM đơn lớp đạt $R^2 = 0.596$ trong điều kiện tháng 7 và duy trì $R^2 = 0.405$ ($\text{MAE} = 0.051$) khi gặp đợt dòng chảy cao ngoài phân phối tháng 8.
+- So sánh đối chiếu giữa LLM-RAG và tri thức chuyên gia trực tiếp:
+  - Sự tương đồng: Cả hai phương pháp đều nhận diện chính xác các biến động lực học quan trọng gồm $\text{InflowRate}$, $N_2O\text{-Tank3}$, $\text{Aeration Power2}$ và $NH_4^+\text{-Tank1}$.
+  - Sự phân kỳ then chốt: LLM-RAG bỏ sót các biến $NO_2^-\text{-Tank2}$, lưu lượng bùn thải $\text{WAS}$ và $\text{COD-Tank2}$.
+  - Nguyên nhân phân kỳ: Các thông số $\text{WAS}$ và $\text{COD}$ là biến vận hành đặc thù ít được nhấn mạnh trong các bài báo lý thuyết về phát thải $N_2O$, dẫn đến tần suất truy xuất y văn thấp.
+  - Hạn chế cố hữu của LLM-RAG: Tổng hợp tốt tri thức lý thuyết chung từ tài liệu khoa học nhưng thiếu hiểu biết về bối cảnh vận hành cục bộ và tương tác công nghệ thực tế tại từng nhà máy cụ thể.
+- Hiệu năng thực nghiệm của mô hình LSTM sử dụng đặc trưng do LLM lựa chọn:
+  - Điều kiện nội miền tháng 7:
+    - Mô hình LSTM đơn lớp đạt sai số trung bình $\text{MAE} = 0.0412$ ($\sigma = 0.0025$) và $R^2 = 0.596$ qua 20 lượt chạy độc lập.
+    - Lượt chạy tối ưu đạt $\text{MAE} = 0.0366$ và $R^2 = 0.666$.
+    - Hiệu năng cao hơn LSTM 5 lớp và LSTM-Attention, tiệm cận Attention-LSTM.
+    - Kém hơn mô hình do chuyên gia tinh chỉnh ($R^2$ thấp hơn $0.096$, $\text{MAE}$ cao hơn $36\%$).
+  - Khả năng bền vững dưới sự dịch chuyển phân phối tháng 8:
+    - Duy trì hệ số $R^2 = 0.405$ và sai số kiểm tra $\text{MAE} = 0.051$.
+    - Bám sát xu hướng biến thiên thực tế, chỉ suy giảm trong giai đoạn cực đoan ngày 14–16/08.
+    - Khẳng định tính khả thi của giải pháp LLM-RAG khi thiếu vắng chuyên gia chuyên ngành trực tiếp.

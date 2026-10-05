@@ -1,0 +1,24 @@
+### 3.1 Runtime optimization and ensemble configuration of Auto-sklearn
+
+- **Tối ưu hóa thời gian chạy thực nghiệm của Auto-sklearn**:
+  - Khảo sát các khoảng thời gian huấn luyện từ $0.5\text{ h}$ đến $12\text{ h}$ với tỷ lệ phân chia cố định $80\%$ tập huấn luyện ($n = 40,000$) và $20\%$ tập kiểm thử ($n = 10,000$).
+  - Lựa chọn Weighted $\text{F1}$ làm chỉ số đánh giá trọng tâm vì kết hợp hài hòa giữa Precision và Recall trên tập dữ liệu mất cân bằng.
+  - Nền tảng hiệu năng ban đầu đã ở mức cao nhờ mối liên hệ trực tiếp giữa $9$ chỉ tiêu đầu vào và các cấp chất lượng nước theo tiêu chuẩn quốc gia.
+- **Quy luật suy giảm hiệu suất cận biên và điểm tối ưu hóa 4 giờ**:
+  - Thời gian huấn luyện $4\text{ h}$ đạt Weighted $\text{F1} = 0.9627 \pm 0.0002$, tăng có ý nghĩa thống kê so với $0.5\text{ h}$ ($0.9537 \pm 0.0002$).
+  - **Hình 3.** Diễn biến chỉ số Weighted F1 theo thời gian huấn luyện Auto-sklearn
+    - <img src="assets/fig_03_p5.png" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Hiệu năng phân loại tăng nhanh trong $4\text{ h}$ đầu và đạt trạng thái bão hòa sau $8\text{ h}$ với mức tăng cận biên chỉ đạt $0.0004$.
+    - **Từ đâu mà thấy được**
+      - Đường màu đỏ biểu diễn Weighted $\text{F1}$; các cột màu xanh thể hiện mức gia tăng trung bình so với mốc thời gian liền trước với ký hiệu kiểm định Tukey.
+- **Phân tích phương sai thống kê một chiều (One-way ANOVA)**:
+  - Kiểm định Tukey HSD ($p < 0.05$) khẳng định sự khác biệt có ý nghĩa thống kê giữa các mốc $0.5\text{ h}$, $1\text{ h}$, $2\text{ h}$ và $4\text{ h}$.
+  - Mức tăng Weighted $\text{F1}$ trung bình giảm dần từ $0.0040$ ($1\text{--}2\text{ h}$) xuống $0.0029$ ($2\text{--}4\text{ h}$) và chỉ còn $0.0004$ ($4\text{--}8\text{ h}$).
+  - Mốc $8\text{ h}$ đạt Weighted $\text{F1} = 0.9631 \pm 0.0002$ nhưng không khác biệt có ý nghĩa thống kê so với $4\text{ h}$ ($p > 0.05$).
+  - Mốc $4\text{ h}$ được chọn làm tham số tối ưu cân bằng giữa chi phí điện toán và độ chính xác phân loại.
+- **Cấu hình mô hình tổ hợp (Ensemble Configuration)**:
+  - Auto-sklearn tự động tìm kiếm và hợp nhất thành cụm mô hình gồm $7$ đường ống học máy (pipelines).
+  - Thuật toán Rừng ngẫu nhiên ($\text{RF}$) được hệ thống tự động lựa chọn làm bộ phân loại tối ưu trên cả $7$ pipeline.
+  - Hệ thống tích hợp các kỹ thuật tiền xử lý dữ liệu và cân bằng phân phối lớp khác nhau cho từng nhánh trong ensemble.
+  - Sự ưu tiên tuyệt đối cho $\text{RF}$ chứng minh các mô hình học cây quyết định có độ phức tạp vừa phải rất phù hợp với bài toán phân loại nước mặt.

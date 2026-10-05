@@ -1,0 +1,23 @@
+### 3.3 Local feature contributions
+
+- Phân tích đóng góp cục bộ của từng biến đặc trưng cho từng trường hợp dự đoán cụ thể:
+  - Sử dụng biểu đồ lực ($force\ plot$) và biểu đồ thác nước ($waterfall\ plot$) để làm rõ hướng tác động và độ lớn của từng biến.
+- Đóng góp cục bộ đối với dự đoán nồng độ amoni đầu ra ($NH_4^+\text{-N}_{out}$):
+  - Biểu đồ lực thể hiện tác động lũy tích của các yếu tố kéo giá trị dự đoán về kết quả cuối cùng.
+  - Tỷ lệ $C/N$, nồng độ $NH_4^+\text{-N}_{in}$, $NO_3^-\text{-N}_{out}$, độ mặn, $HRT$ và $TN_{eff}$ là những thông số có ảnh hưởng mạnh nhất.
+  - Các biến $COD_{eff}$, $COD_{out}$ và nhiệt độ đóng góp đáng kể vào việc đẩy giá trị dự đoán amoni lên cao.
+  - Biểu đồ thác nước phân rã chi tiết đóng góp từng biến: tỷ lệ $C/N$, $NH_4^+\text{-N}_{in}$, $NO_3^-\text{-N}_{out}$ và độ mặn cùng đóng góp dương.
+  - Nồng độ amoni đầu vào cao kết hợp nồng độ muối lớn tạo tương quan trực tiếp làm tăng nồng độ amoni tồn dư trong nước sau xử lý.
+  - Các thông số vận hành như $HRT$, $TN_{eff}$ và $COD_{eff}$ đóng góp giá trị dương ở mức độ thấp hơn, phản ánh hiệu suất phản ứng nitrat hóa.
+- Đóng góp cục bộ đối với dự đoán nồng độ tổng nitơ đầu ra ($TN_{out}$):
+  - Biểu đồ lực xác định độ mặn, $TN_{eff}$, nhiệt độ, $COD_{eff}$, $NO_2^-\text{-N}_{out}$ và tỷ lệ $C/N$ là các nhân tố điều khiển chính.
+  - Chỉ số $DO$ và $pH$ làm tăng nhẹ giá trị dự đoán $TN$, trong khi độ mặn và $TN_{eff}$ thể hiện tác động mạnh mẽ hơn rõ rệt.
+  - Đóng góp đáng kể của tỷ lệ $C/N$ và $NO_2^-\text{-N}_{out}$ nhấn mạnh độ nhạy cảm của quá trình khử nitrat trước nồng độ cơ chất.
+  - Biểu đồ thác nước chỉ ra rằng độ mặn, $TN_{eff}$ và nhiệt độ là các nhân tố chủ đạo làm gia tăng giá trị dự đoán tổng nitơ.
+  - Tác động chi phối của độ mặn làm nổi bật cơ chế ức chế sinh học: nồng độ muối cao hạn chế nghiêm ngặt hoạt tính của vi khuẩn khử nitrat.
+- Phân tích diễn giải cục bộ bằng biểu đồ lực và biểu đồ thác nước SHAP làm rõ sự hội tụ và phân rã đóng góp của từng biến:
+  - **Hình 4. Phân tích diễn giải cục bộ bằng SHAP cho mô hình CatBoost: Force plots (a-b) và Waterfall plots (c-d) đối với NH4+-N và TN**
+    - <img src="assets/fig_04_p7.jpeg" alt="Hình 4" />
+    - Biểu đồ lực SHAP force plots (a, b) mô tả các véc-tơ lực đẩy giá trị dự đoán lệch khỏi mốc cơ sở cho $NH_4^+\text{-N}_{out}$ và $TN_{out}$.
+    - Biểu đồ thác nước SHAP waterfall plots (c, d) phân rã định lượng từng bước đóng góp của các biến đối với một quan trắc thực tế.
+    - Nồng độ muối cao và dòng vào gia tăng tích tụ đóng góp dương đẩy nồng độ nitơ đầu ra tăng cao.

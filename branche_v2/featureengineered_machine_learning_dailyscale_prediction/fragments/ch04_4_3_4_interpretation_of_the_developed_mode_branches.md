@@ -1,0 +1,36 @@
+### 3.4 Interpretation of the developed model using explainability methods
+
+- Hiệu năng dự báo chuỗi thời gian và đồ thị phân tán thực tế - dự đoán của mô hình Random Forest:
+  - **Hình 7.** Đánh giá hiệu năng dự báo của mô hình Random Forest tối ưu
+    - <img src="assets/fig_07_p14.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Mô hình Random Forest bám sát các biến động ngắn hạn thực tế qua chuỗi 1,096 ngày
+      - Sai số phân bố đều và các điểm dữ liệu tập trung chặt chẽ quanh đường chuẩn phân giác 1:1
+    - **Từ đâu mà thấy được**
+      - Đồ thị (a) chuỗi thời gian cho thấy đường dự đoán xanh dương khớp đường thực nghiệm xám
+      - Đồ thị (b) tập huấn luyện và (c) tập kiểm tra thể hiện các điểm gom chặt quanh đường 1:1
+- Định lượng tầm quan trọng toàn cục và tính ổn định thứ hạng của các đặc trưng bằng SHAP:
+  - **Hình 8.** Phân tích tầm quan trọng và tính ổn định thứ hạng đặc trưng bằng SHAP
+    - <img src="assets/fig_08_p16.jpeg" alt="Hình 8" />
+    - **Hình này chứng minh điều gì**
+      - $T\text{-}P$ đầu vào và liều lượng châm phèn sắt $Fe_2(SO_4)_3$ là hai yếu tố chi phối mạnh nhất
+      - Thứ hạng đóng góp của các đặc trưng chính giữ vững tính ổn định xuyên suốt 4 mùa
+    - **Từ đâu mà thấy được**
+      - Biểu đồ (b) ghi nhận $|\text{SHAP}|$ của Inflow_T-P đạt cao nhất, theo sau là Dosage và month
+      - Bản đồ nhiệt (c) thể hiện Inflow_T-P và Dosage giữ vị trí xếp hạng 1 và 2 quanh năm
+- Phân tích chi tiết mức độ đóng góp toàn cục của từng đặc trưng đầu vào:
+  - Nồng độ $T\text{-}P$ đầu vào là nhân tố quan trọng nhất với giá trị tuyệt đối SHAP trung bình lớn nhất ($\text{mean } |\text{SHAP}| = 0.009\text{--}0.010\ \text{mg/L}$), khẳng định tải lượng photpho ban đầu là nguồn phát sinh biến động chính.
+  - Liều lượng châm chất keo tụ phèn sắt $Fe_2(SO_4)_3$ xếp vị trí thứ hai với $\text{mean } |\text{SHAP}| \approx 0.005\text{--}0.006\ \text{mg/L}$, chứng minh vai trò điều khiển quyết định của hóa chất đối với hiệu suất tạo bông kết tủa photpho.
+  - Yếu tố chu kỳ mùa (Month) giữ vị trí thứ ba với $\text{mean } |\text{SHAP}| \approx 0.0015\text{--}0.002\ \text{mg/L}$, đại diện cho ảnh hưởng của nhiệt độ môi trường đến động học keo tụ và hòa tan khí.
+  - Các chỉ số vận hành và khí tượng phụ trợ (lưu lượng DAF, nhiệt độ không khí, $\text{SS}$ đầu vào, tỷ lệ $\text{DAF\_A/F}$) có đóng góp nhỏ hơn ($\text{mean } |\text{SHAP}| < 0.001\ \text{mg/L}$).
+  - Tỷ lệ tuần hoàn IRFR và lượng mưa có ảnh hưởng gián tiếp và đóng góp biên thấp nhất trong phạm vi dữ liệu vận hành.
+- Chiều hướng tác động của các biến giải thích và tính hợp lý về cơ chế hóa lý:
+  - Nồng độ $T\text{-}P$ đầu vào cao làm tăng giá trị dự đoán $T\text{-}P$ đầu ra; ngược lại, tăng liều lượng châm phèn sắt liên tục kéo giảm nồng độ photpho dư sau lắng.
+  - Thứ hạng tầm quan trọng của các biến ổn định xuyên suốt 4 mùa trong năm, không phụ thuộc vào trạng thái thời tiết ngắn hạn.
+  - Các biến tháng và nhiệt độ không khí phản ánh động học keo tụ và hiệu suất tuyển nổi phụ thuộc vào nhiệt độ môi trường thực tế.
+  - Lưu lượng DAF và tỷ lệ khí nước $\text{DAF\_A/F}$ nắm bắt tải trọng thủy lực và điều kiện tiếp xúc khí-lỏng điều biến hiệu quả xử lý tổng thể.
+- Khám phá các mối tương tác cặp đôi giữa các biến chủ chốt:
+  - Tương tác giữa $T\text{-}P$ đầu vào và tháng trong năm cho thấy đóng góp SHAP luôn dương quanh năm, nhưng độ nhạy tăng cao rõ rệt vào mùa lạnh do nhiệt độ thấp cản trở tốc độ tạo bông.
+  - Tương tác giữa liều lượng châm phèn sắt và tháng trong năm thể hiện đóng góp SHAP âm mạnh mẽ vào mùa hè và thu (tháng 5–tháng 9), thời điểm nhiệt độ nước ấm tạo điều kiện tối ưu cho phản ứng keo tụ và tạo bọt mịn.
+  - Biến đổi khí hậu theo mùa đóng vai trò điều biến (modulate) phản ứng hóa lý chứ không làm đảo ngược tác động cốt lõi của tải lượng photpho và liều lượng hóa chất.
+  - Mẫu hình tương tác định hướng phù hợp với cơ chế loại bỏ photpho trong hệ thống DAF, củng cố tính thực tế của các mối quan hệ được mô hình học máy tiếp thu.

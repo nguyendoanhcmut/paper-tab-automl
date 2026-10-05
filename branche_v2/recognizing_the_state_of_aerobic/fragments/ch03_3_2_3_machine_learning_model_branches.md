@@ -1,0 +1,27 @@
+### 2.3 Machine learning model
+
+- Khung làm việc YOLOv8 xử lý ảnh qua ba bước chuẩn hóa, tích chập và lọc kết quả.
+  - **Hình 2.** Khung làm việc nhận dạng mục tiêu bằng thuật toán YOLO
+    - <img src="assets/fig_02_p4.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Quy trình xử lý ba bước từ ảnh hiển vi đầu vào đến hộp bao định danh giai đoạn bùn.
+    - **Từ đâu mà thấy được**
+      - Luồng sơ đồ khối đọc từ trái sang phải:
+      - (1) Chuẩn hóa kích thước ảnh về $640 \times 640$, (2) Mạng nơ-ron tích chập trích xuất đặc trưng, (3) Lọc kết quả bằng ngưỡng tin cậy.
+- Kiến trúc mạng nơ-ron trích xuất đặc trưng và cơ chế tách rời đầu phát hiện.
+  - Xương sống (backbone) dựa trên Darknet-53 kết hợp các khối dư (residual block) và kết nối nhảy (skip connections) để thu nhận đặc trưng đa tỉ lệ.
+  - Cổ mạng (neck) tích hợp mạng đường dẫn hai chiều (PANet) giúp truyền thông tin chi tiết từ tầng thấp lên tầng cao.
+  - Đầu phát hiện (head) áp dụng cấu trúc decoupled head để tách biệt hoàn toàn nhánh phân loại lớp và nhánh dự đoán vị trí hộp bao.
+  - Thuật toán dự đoán trực tiếp tọa độ tâm hạt bùn theo cơ chế không cần khung neo (anchor-free).
+  - Tích hợp mô-đun chú ý SimAM (Simple Attention Mechanism) để tính trọng số chú ý 3D mà không làm phát sinh tham số mạng.
+- Chiến lược huấn luyện mô hình và tối ưu hóa siêu tham số.
+  - Toàn bộ ảnh được chuẩn hóa về độ phân giải $640 \times 640$ pixel trước khi đưa vào mạng.
+  - Huấn luyện khởi tạo từ đầu (training from scratch) với 100 epoch và kích thước batch gồm 16 ảnh.
+  - Tốc độ học ban đầu thiết lập ở mức $0.01$ và suy giảm dần theo thuật toán lan truyền ngược.
+  - Áp dụng chiến lược dừng sớm (early stopping) để ngăn chặn hiện tượng quá khớp (overfitting).
+  - Tắt kỹ thuật tăng cường dữ liệu Mosaic trong 10 epoch cuối cùng để nâng cao độ chính xác định vị.
+  - Sử dụng thuật toán triệt tiêu phi cực đại mềm (Soft-NMS) để lọc các hộp bao trùng lặp tại giai đoạn dự đoán.
+- Nền tảng phần cứng và môi trường tính toán thực nghiệm.
+  - Hệ thống GPU đám mây Featurize trang bị card đồ họa NVIDIA RTX 3060 với bộ nhớ 12 GB VRAM.
+  - Bộ vi xử lý gồm 6 nhân Intel Xeon E5-2680 v4, bộ nhớ trong 28 GB RAM và dung lượng ổ cứng 50 GB.
+  - Môi trường phần mềm xây dựng trên nền Python v3.10.12 và thư viện học sâu PyTorch v2.0.1.

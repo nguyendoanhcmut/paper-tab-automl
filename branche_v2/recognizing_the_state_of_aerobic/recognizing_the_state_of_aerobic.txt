@@ -1,0 +1,1088 @@
+<!-- Page 1 -->
+Research article
+Recognizing the state of aerobic granular sludge over its life-cycle in a 
+continuous-flow membrane bioreactor with an artificial 
+intelligence approach
+Yu Zeng 1, Chenguang Zhao 1, Danling Ma , Liying Bin , Weirui Chen , Ping Li , Bing Tang *,2
+School of Environmental Science and Engineering, Guangdong University of Technology, Guangzhou, 510006, PR China
+A R T I C L E I N F O
+Keywords:
+Artificial intelligence
+Machine learning
+Aerobic granular sludge
+Life-cycle
+Object detection
+Membrane bioreactor
+A B S T R A C T
+The continuous-flow aerobic granular sludge-membrane bioreactor (AGS-MBR) system represents an efficient 
+and sustainable technology for wastewater treatment. AGS, a spherical or ellipsoidal granular sludge formed 
+through microbial self-aggregation under aerobic conditions, progresses through four distinct life-cycle stages in 
+the AGS-MBR system: initial, growth, mature, and cleaved. Accurate identification and classification of these 
+stages are crucial for optimizing AGS-MBR operations and maintaining system stability; however, traditional 
+monitoring methods are labor-intensive and error-prone. This study utilized Artificial Intelligence (AI) to develop 
+a machine learning model based on the You Only Look Once (YOLOv8) algorithm for automated AGS monitoring 
+and classification. Trained on 862 annotated images, the model achieved average precision of 0.985 at an 
+Intersection over Union (IoU) threshold of 0.5 (mAP50), and the mAP50-95 of 0.837, demonstrating high ac­
+curacy in AGS classification. The t-distributed Stochastic Neighbor Embedding (t-SNE) revealed distinct clusters 
+of AGS features across life-cycle stages, while SHapley Additive exPlanations (SHAP) demonstrated that the 
+model focused on global features of small-grained images and edge features of large-grained images, both 
+confirming the robustness of classification. The model’s statistical functionality, supported by global variables, 
+enabled real-time AGS monitoring in MBR system. This study provides a powerful tool for detecting and clas­
+sifying the AGS life-cycle, offering guidance for the operation and maintenance of AGS-MBR system and 
+demonstrating the potential applications of AI in wastewater treatment.
+1. Introduction
+Aerobic granular sludge (AGS), characterized by its unique structure 
+and high biomass density, offers significant advantages in the simulta­
+neous removal of nutrients and organic pollutants within a single 
+bioreactor, potentially surpassing the conventional activated sludge 
+(CAS) process in terms of efficiency and cost-effectiveness (Bengtsson 
+et al., 2019; Hu et al., 2024). The long-term stability of AGS is pivotal to 
+sustaining these benefits, while the sequencing batch reactor (SBR) in 
+batch mode has been the most successful method for AGS cultivation 
+(Han et al., 2024), there is a burgeoning interest in continuous mode 
+cultivation, especially when AGS is integrated with membrane bio­
+reactors (MBRs). MBRs, which combine CAS with membrane filtration, 
+are known for producing high-quality effluent and reducing wasted 
+activated sludge (WAS) (Rahman et al., 2023). However, conventional 
+MBRs often face issues with membrane fouling due to the deposition of 
+flocculated activated sludge particles on the membrane surface (Morales 
+et al., 2024). In contrast, AGS, with its aggregate form, has demonstrated 
+an effective mitigation of membrane fouling, which is crucial for 
+enhancing the practicality of MBR applications (Campo et al., 2021). 
+Therefore, the AGS-MBR system stands out as an efficient, economical, 
+and sustainable wastewater treatment technology that not only mini­
+mizes membrane fouling but also ensures superior effluent quality and 
+reduced WAS production.
+In AGS-MBR system, the stability of AGS is paramount, with 
+morphological integrity and structure being key to operational effi­
+ciency. The AGS life-cycle, encompassing initial, growth, mature, and 
+cleaved stages, significantly influences bioreactor performance (Yang 
+* Corresponding author.
+E-mail addresses: tang@gdut.edu.cn, renytang@163.com (B. Tang). 
+1 The first two authors equally contributed.
+2 Permanent address: No. 100, Waihuan Xi Road, Guangzhou Higher Education Mega Center, Guangzhou, 510,006, P.R. China.
+Contents lists available at ScienceDirect
+Journal of Environmental Management
+journal homepage: www.elsevier.com/locate/jenvman
+https://doi.org/10.1016/j.jenvman.2025.125527
+Received 15 February 2025; Received in revised form 15 April 2025; Accepted 21 April 2025  
+Journal of Environmental Management 384 (2025) 125527 
+Available online 1 May 2025 
+0301-4797/© 2025 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+et al., 2023). Monitoring AGS attributes, such as morphology, structure, 
+and size distribution, is essential for effective process control (de Sousa 
+Rollemberg et al., 2018). Then, operational parameters like influent 
+composition and temperature can induce variability in AGS, potentially 
+leading to a transition from granular to flocculated sludge and system 
+instability (Iorhemen and Liu, 2021). The self-cultivation of AGS in 
+continuous flow MBR system has gained interest due to operational 
+convenience and enhanced performance. However, the heterogeneity of 
+AGS, with varying physicochemical, microbiological, and morpholog­
+ical properties, remains a challenge (Yang et al., 2023). In the initial 
+stage, the sludge particles are small; in the growth stage, the sludge 
+particles have rough edges; in the mature stage, the sludge particles have 
+a stable structure and smooth surface; in the cleaved stage, the sludge 
+particles age, with a decrease in large particles and an increase in small 
+ones. The characteristics of each stage are interrelated, reflecting the 
+dynamic changes of AGS from formation to aging. Understanding the 
+differences and features of these life-cycles is of great significance for 
+optimizing the operation and management of AGS-MBR system, which 
+can help us better control and adjust operational conditions to maintain 
+the stability of AGS and improve the efficiency of wastewater treatment. 
+In addition, this information also provides an important reference for 
+the design of new bioreactors or the improvement of existing 
+technologies.
+Accurate state identification of AGS is crucial, yet methods like 
+frozen section analysis, dissolved oxygen (DO) micro-electrodes, and 
+CLSM have limitations. Invasive techniques can disrupt the internal 
+micro-environment, while CLSM requires laborious sample preparation. 
+These approaches may also be sensitive to AGS properties, leading to 
+inaccuracies and a lack of reproducibility (Kirkland et al., 2020; Li et al., 
+2014; Ranzinger et al., 2020). This underscores the uniqueness of AGS in 
+MBR operations and the necessity for advanced diagnostic tools for its 
+state assessment, which is vital for optimizing the performance of 
+AGS-MBR system. The development of intelligent, non-invasive methods 
+to analyze AGS states in real-time is therefore imperative, ensuring the 
+long-term stability and efficiency of these system.
+Artificial intelligence (AI) has demonstrated its prowess in waste­
+water treatment modeling by offering enhanced learning capabilities, 
+automation, and adaptability beyond traditional methods (Alvi et al., 
+2023; Narayanan et al., 2024). AI-driven models can reveal complex 
+data relationships and adapt to new data, enhancing understanding of 
+wastewater treatment processes and aiding in prediction and control 
+(Ignacz et al., 2025; P´erez-Beltr´an et al., 2024). Within the context of 
+AGS system, artificial neural networks (ANNs) have been effectively 
+utilized to predict critical process outcomes (Zhong et al., 2021), such as 
+the removal rates of chemical oxygen demand, ammonia nitrogen, total 
+nitrogen, and total phosphorus (Zaghloul and Achari, 2022). They have 
+also been employed to predict sludge properties and water quality based 
+on historical reactor data, enhancing the predictive accuracy and control 
+of AGS processes (Mahmod and Wahab, 2017; Zaghloul et al., 2021). 
+Despite these advancements, there is a significant gap in the application 
+of AI for the image recognition and classification of aerobic granular 
+sludge (AGS). You Only Look Once (YOLO) is a highly influential AI 
+technology that, based on a deep learning framework, can efficiently 
+identify the positions and categories of objects in images, demonstrating 
+strong real-time performance and accuracy (Redmon et al., 2016). The 
+YOLO algorithm has not only been widely applied in multiple fields such 
+as agricultural disease monitoring (Gao et al., 2024), medical image 
+diagnosis (Xu et al., 2025), infrastructure inspection (Santos and Car­
+valho, 2025), and autonomous driving (Ul Islam et al., 2025), but also 
+provides strong support for machine learning in target recognition tasks 
+in complex scenarios due to its efficiency and adaptability. It is an 
+indispensable excellent tool in the field of image recognition. Perhaps 
+the YOLO algorithm could be a new approach to achieving the image 
+recognition and classification of AGS.
+Based on the aforementioned background, this study aimed to 
+develop a machine learning approach for accurately identifying the 
+states of AGS in a continuous-flow MBR over its entire life-cycle using 
+the YOLOv8 object detection model. The model was trained following 
+dataset screening, classification, and labeling, and then underwent 
+hyperparameter tuning after pre-processing. Various evaluation metrics 
+were calculated on the test set to quantify the model’s predictive 
+effectiveness, guiding the optimization of model parameters based on 
+key indices. Additionally, dimensionality reduction techniques were 
+applied to the semantic features of all AGS images in the test set, pro­
+jecting them into two-dimensional visualizations. Feature clustering 
+analysis was conducted across different categories, and interpretability 
+analysis was performed to identify key features within images, eluci­
+dating differences and connections among them. Lastly, to facilitate real- 
+world applications and enhance detection efficiency, a batch counting 
+function was developed for each AGS stage, aiming to provide intelligent 
+methods for obtaining timely statistical data to aid in the management 
+and optimization of AGS-MBR processes.
+2. Materials and methods
+2.1. Description of the used AGS-MBR system
+The study employed a previously reported MBR system with internal 
+circulation as the physical model (Dai et al., 2020), in which, a 
+multi-habitat environment was created through accumulated biomass, 
+facilitated by the hydrodynamic conditions of internal circulation. The 
+activated sludge used for inoculation was obtained from the secondary 
+sedimentation tank of a local municipal wastewater treatment plant 
+located in Haizhu District, Guangzhou, China (Biological Island Sewage 
+Treatment Plant). The initial concentration of mixed liquor suspended 
+solids (MLSS) was maintained at approximately 3000 mg/L. Throughout 
+the experiment, the hydraulic retention time (HRT) ranged between 8.0 
+and 10.0 h, while the aeration rate varied from 4.8 to 7.2 m3/h to ensure 
+sufficient DO supply. The AGS-MBR system used simulated wastewater 
+as influent and consists of: CH3COONa (769.20 mg/L), NH4Cl (152.67 
+mg/L), KH2PO4 (26.36 mg/L), CaCl2 (35.00 mg/L), FeSO4 (0.85–0.95 
+mg/L), MgSO4 (20.25 mg/L), NaHCO3 (267.00 mg/L), corresponding 
+COD, NH4
++-N and TP concentrations of 600 mg/L, 40 mg/L and 6 mg/L. 
+All other aspects related to system configuration and operational con­
+ditions remained consistent with the previously reported work (Dai 
+et al., 2020).
+2.2. Data collection and feature classification
+In the 100-day operation process, the system transitioned from 
+startup to stable operation. Sludge samples were collected daily at fixed 
+locations and fixed times throughout this period. These samples were 
+examined using bright field microscopy (Leica DM500, Wetzlar, Ger­
+many) at 40 × magnification. Timely images were taken with an 
+attached digital camera, and some images were adjusted for depth of 
+field to ensure clarity. To enhance model generalization ability and 
+robustness, a total of 862 images were combined from this study and a 
+previous work (Dai et al., 2020). For data acquisition, conforming data 
+corresponding to each stage’s characteristics in the experiment under­
+went initial pre-processing and classification into four distinct stages 
+based on the morphological features and size variation of AGS, namely: 
+initial stage (IS), growth stage (GS), maturity stage (MS), and cleavage 
+stage (CS) (Yang et al., 2023). Specific classification rules and demon­
+strations were presented in Table 1 and Fig. 1.
+In this study, the target detection annotation tool (Labelimg v1.8.6) 
+was used to annotate the AGS image dataset across its life-cycle. The 
+annotation included the location and centroid information of the targets, 
+and the results were stored in TXT files. The dataset was divided into a 
+training set (690 images) and a testing set (172 images) at a ratio of 80% 
+and 20%. A random seed was set to ensure the reproducibility of the 
+results.
+The annotation process was as follows: First, a portion of the 
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+2 
+
+
+<!-- Page 3 -->
+microscopic images from the sample set was selected for the training and 
+testing sets. The images were imported into Labelimg, and the target 
+regions were selected using the mouse. The corresponding “YOLO” label 
+categories were then chosen. When a single image contained multiple 
+sludge particles, each particle was annotated according to its respective 
+life-cycle stage. After the annotation was completed, the results were 
+exported as TXT files. The images and their corresponding TXT files for 
+the training and testing sets were then imported into their respective 
+folders to complete the data preparation. Throughout the annotation 
+process, manual annotation was strictly performed in accordance with 
+the rules outlined in Table 1 to ensure annotation accuracy.
+2.3. Machine learning model
+In this study, YOLOv8 was utilized to extract supervised information 
+from each image, including the precise location and category parame­
+ters of the detected objects. After all datasets were classified based on 
+these criteria, an object detection dataset annotation tool (Labelimg 
+v1.8.6) was employed to set the center position, height, width, and class 
+of each identified object to annotate the object position in each image. 
+These results were then normalized, with the entire process illustrated in 
+Fig. 2.
+The Darknet-53 network is based on the use of residual and skip 
+connections to effectively capture features at various scales and levels 
+(Redmon and Farhadi, 2018), whose core idea can be described as the 
+combination of a fundamental feature extraction framework and a re­
+sidual module (Kaiming and Jian, 2014; Kaiming et al., 2015). In this 
+study, it served as the foundation for extracting features from the input 
+images (Redmon and Farhadi, 2017), where the network backbone 
+employed a comprehensive gradient flow structure, with different 
+channel numbers adjusted for diverse scale models. The neck section 
+incorporated a bidirectional path network to introduce a bottom-up path 
+that facilitated the transmission of low-level information to the top of 
+the upper layers, while, in the head section, a contemporary decoupled 
+head structure was adopted to distinguish between classification and 
+detection heads. This approach enables direct prediction of the object 
+centers instead of calculating offsets from predefined anchor frames. 
+Additionally, for enhancing model precision and efficiency, this work 
+integrated the Simple Attention Mechanism (SimAM) into the utilized 
+network, enabling inference of three-dimensional attention weights 
+within network layers without introducing additional parameters (Yang 
+et al., 2021).
+The image sizes were normalized in this study, followed by initiali­
+zation of the model weights for training from scratch. Comprehensively 
+considering both the results of model training and computational effi­
+ciency, the number of training iterations was set to 100 with a batch size 
+of 16 images. The initial learning rate was set to 0.01 and gradually 
+adjusted to achieve the minimum prediction error. To prevent over­
+fitting, an early stop strategy was adopted (Hanwen et al., 2019), which 
+Table 1 
+Classification of AGS whole life-cycle images.
+Labels
+Equivalent Size 
+(μm)
+Shape
+Roughness
+Color
+IS
+200–800
+Irregular 
+shape
+Rough
+Yellow, brown
+GS
+800–1600
+Rough Circles
+Rough
+Yellow, brown, dark 
+brown
+MS
+800–3000
+Circles and 
+ovals
+Smooth
+Dark brown, black
+CS
+1600–3000
+Cracked 
+shape
+Rough
+Dark brown, black
+Fig. 1. Image of AGS over its whole life-cycle: (a) Initial stage; (b) Growth stage; (c) Maturity stage; (d) Cleavage stage.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+3 
+
+
+<!-- Page 4 -->
+terminated the training process if no improvement was observed during 
+iteration. Additionally, in order to enhance prediction accuracy effec­
+tively, the Mosaic enhancement was turned off during the last 10 rounds 
+of iteration in the data augmentation part of training (Alexey et al., 
+2020). During the forward propagation stage, the input samples were 
+sequentially processed through each layer of the neural network until 
+generating the predicted results. Once the neural network predictions 
+were obtained, they were compared with the actual labels using a loss 
+function to quantify their differences. By applying the chain rule, the 
+gradients of the loss function were back-propagated from the output 
+layer to input layer and further propagated back to the weights and 
+biases at each layer. Once the back-propagation completed and the 
+gradients for each parameter obtained, the network parameters could be 
+updated using the gradient descent algorithm for the forward-backward 
+propagation process in subsequent training iterations. Through contin­
+uous parameter adjustment and loss function minimization, the neural 
+networks can gradually improve performance and accuracy. During the 
+prediction stage, the Soft non-maximum suppression (soft-NMS) algo­
+rithm was employed to smoothly suppress the detection box results that 
+exhibited higher overlap with the local maximum values (Navaneeth 
+et al., 2017).
+In order to enhance the efficiency of the experiment and practical 
+application capabilities, this study utilized a cloud-based graphics pro­
+cessing unit (GPU) platform called Featurize. The hardware configura­
+tion included an RTX3060 graphics card with 12 GB of graphics memory 
+and a Central Processing Unit (CPU) consisting of 6 × E5 2680 v4, along 
+with 28 GB of RAM and a 50 GB disk stora ge capacity. The runtime 
+environment employed Python v3.10.12 and the PyTorch v2.0.1 ma­
+chine learning library.
+2.4. Model evaluation
+For a more comprehensive understanding of the model’s perfor­
+mance, it is crucial to load the test set in order to evaluate the effec­
+tiveness of the trained model. Hence, this study employed various 
+evaluation indexes, including the confusion matrix, F1-score, precision 
+and recall curve for analysis, in which, the confusion matrix, consisting 
+of a 5 × 5 grid that included a background class, visually represented the 
+relationship between actual and predicted values across different cate­
+gories, together with the instances of mis-classification and false posi­
+tives. Precision refers to the predictive accuracy in identifying the 
+positive samples correctly, whereas recall measures how well positive 
+samples are identified from the original dataset. The F1-score, ranging 
+from 0 to 1, serves as a balanced measure by combining both precision 
+and recall into one metric, with the optimal performance indicated by 1, 
+and the least effective by 0.
+The procedures were implemented using selected dependencies from 
+the scikit-learn library embedded in Python 3.10.12. Cross Entropy Loss 
+(CE Loss), a key loss function in deep learning for classification tasks, 
+quantified the discrepancy between the model’s predicted probability 
+distribution and the actual probability distribution of the label. In a 
+multi-classification problem with C classes, the model predicted an input 
+P = {p1, p2, …, pC}, while the actual probability distribution was typi­
+cally represented by a vector Y = {y1, y2, …, yC}. When the model’s 
+predicted probability pj for class j approached 1, the loss would be close 
+to 0. Conversely, as pj approached zero, the loss increased significantly 
+according to Eq. (1) (Chicco et al., 2021). 
+CE Loss = −
+∑
+C
+i=1
+yi log(pi)
+(1) 
+where, C represents the total number of categories, while pi symbolizes 
+the predicted probability for class i, while yi = 1, if the true label cor­
+responds to class i and 0 otherwise.
+The Mean Squared Error (MSE) method is commonly employed to 
+calculate the discrepancy between the predicted bounding boxes, 
+characterized by coordinates (x, y) and dimensions (w, h), and the actual 
+bounding box (Chicco et al., 2021). This loss component evaluates the 
+confidence error for each predicted bounding box with the aim of 
+minimizing the mean square variance between the predicted and actual 
+values (Eq. (2)). 
+MSE = 1
+N
+∑
+N
+i=1
+(yi −̂ yi)2
+(2) 
+where, yi represents the value of the ith sample for the target variable, y 
+hat denotes the predicted value, and y bar signifies the mean of the 
+aggregated samples.
+2.5. Model interpretability
+In order to provide a more comprehensive explanation of the model 
+features, it is necessary to utilize interpretability analysis tools. The t- 
+distributed Stochastic Neighbor Embedding (t-SNE) is a well-established 
+technique in machine learning for reducing dimensionality, which can 
+effectively transform data from a high-dimensional space to a lower- 
+dimensional one while preserving the inherent information and 
+Fig. 2. The YOLO detection framework operates by: (1) adjusting the input image to a 640 × 640 resolution; (2) applying a convolutional network to the resized 
+image; (3) filtering the detected results based on the confidence levels determined by the model.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+4 
+
+
+<!-- Page 5 -->
+precise distribution characteristics during transmission, then further­
+more, preserving the local characteristics of the dataset (Husnain et al., 
+2019). To achieve this, an appropriate amount of low-dimensional data 
+was randomly generated, and the loss function measuring the difference 
+between probability distributions was calculated. The gradient descent 
+method was then employed to update the data until obtaining 
+low-dimensional representations that meet specific requirements.
+The similarity between each pair of data points in a high-dimensional 
+space was initially computed using a Gaussian distribution, while the 
+similarity between data points in a lower-dimensional space was 
+calculated using a t-distribution. Kullback-Leibler divergence (KLD) 
+serves as a loss function for minimizing the dissimilarity between the 
+similarity distributions in high- and low-dimensional spaces, typically 
+achieved through gradient descent optimization. For two points xi and xj 
+within a high-dimensional dataset, Eq. (3) presents its definition. 
+pj|i =
+exp
+(
+−⃦⃦
+xi −xj⃦⃦
+2/
+2σ2
+i
+)
+∑
+k∕=i exp
+(
+−‖xi −xk‖2/
+2σ2
+i
+)
+(3) 
+where, pj|i represents the probability that xj is adjacent to xj, with higher 
+values indicating closer they are. σi denotes the variance of the N nearest 
+points to xi, where N is a hyperparameter defined as perplexity. For two 
+points yi and yj in a low-dimensional dataset, two definitions are pro­
+vided as shown in (Eqs. (4)-(5)). 
+qj|i =
+exp
+(
+−⃦⃦⃦
+yi −yj⃦⃦⃦
+2)
+∑
+k∕=i exp( −‖yi −yk‖2)
+(4) 
+C =
+∑
+i
+∑
+j
+pj|i log pj|i
+qj|i
+(5) 
+where, the meaning of qj|i is equivalent to that of pj|i. The low- 
+dimensional data are randomly generated at the beginning, followed 
+by the definition of a loss function based on pj|i and qj|i. C represents the 
+Kullback-Leibler Divergence (KLD), which serves as the loss function 
+minimized by t-SNE.
+After importing the training model, the output results of the middle 
+layer were extracted as the semantic features, then, loaded the test set 
+image classification results and calculated the semantic features for each 
+image, set the dimension and maximum number of iterations, and 
+applied t-SNE to reduce the dimensionality to two dimensions. This 
+approach effectively visualized clustering patterns throughout the AGS 
+life-cycle and quantified the impact of each test set data feature on the 
+overall dataset diversity. Additionally, for better interpretability of 
+statistical data, the clustering results were visualized and further 
+analyzed the internal feature correlations using the sklearn manifold 
+library embedded in Python 3.10.12.
+The SHapley Additive exPlanations (SHAP) method belongs to a 
+category of additive feature attribution methods that is grounded in the 
+amalgamation of game theory with local interpretation (Scott and Su-In, 
+2017), and its fundamental principle is the Shapley value, which con­
+siders both positive and negative contributions. In this model context, 
+SHAP enables the elucidation of the influence of specific samples and 
+features on the predicted outcome, facilitating the quantification of the 
+local interpretations of the model. To simplify the input to z, SHAP 
+operates by mapping x to z through the function x = hx(z). By utilizing z, 
+the original model f(x) can be approximated as a linear function of a 
+binary variable (Eqs. (6)-(7)). 
+f(x) = g(z) = ϕ0 +
+∑
+M
+i=1
+ϕizi
+(6) 
+where z = {0, 1}M, M represents the count of input features, φ0 = f 
+(hx(0)), and φi is the feature attribution value. 
+ϕi =
+∑
+S∈F\{i}
+|S|!(M −|S|! −1)!
+M!
+[fx(S ∪{i}) −fx(S)]
+(7) 
+where F denotes the set of non-zero inputs in z, while S denotes a subset 
+of F that excludes the ith feature. The term φi refers to the SHAP value, 
+which is an aggregate metric for additive feature attributions. Currently, 
+SHAP stands out due to its unique combination of properties including 
+local accuracy, accounting for missing values, and consistency with its 
+application (Scott et al., 2018).
+The deep SHAP algorithm is utilized for interpreting the predictions 
+made by deep learning models, in which, a baseline value, typically the 
+average of input features or a zero-value matrix, is selected as a refer­
+ence point to evaluate the relative contribution of each feature to the 
+output, and assess how it impacts the output in relation to this baseline 
+value. For deep neural networks, the interpretation proceeds layer by 
+layer from input to output layers, enabling more precise quantification 
+of the contribution of each node or feature. Ultimately, every input 
+feature is assigned a SHAP value that quantifies its impact on the 
+model’s output (Wang et al., 2022).
+After loading the categories of the classification dataset and orga­
+nizing the tensor dimensions, the number of pixels and channels were 
+obtained, which were then pre-processed to construct a model predic­
+tion function. The SHAP interpretability analysis algorithm was utilized 
+to generate input images with distinct characteristics throughout the 
+life-cycle of AGS. Considering both accuracy and computational effi­
+ciency, the batch size was set to 50, and the number of iterations was set 
+at 8000, while a 64 × 64 px blur masking method was defined to mask 
+the local area on the input image. By visualizing the heatmap, one could 
+observe the contributions predicted by the model, where red indicated 
+positive effects and blue represented negative effects. Moreover, darker 
+colors indicated more significant effects. These procedures were also 
+implemented using the SHAP library embedded in Python 3.10.12.
+2.6. Prediction and statistics of AGS over its life-cycle
+The prediction pattern was utilized to predict a new image using the 
+trained model, which was loaded from a checkpoint file and provided 
+with a fresh image for inference. To assess the actual predictive per­
+formance of this model and validate its generalization capability, the 
+AGS images throughout their entire life-cycle were collected from 
+another MBR and categorized into seven batches of more than 50 images 
+each, resulting in 362 valid data points for analysis. Subsequently, the 
+acquired microscopic images were predicted by setting an Intersection 
+over Union (IoU) threshold of 0.7 to select the best detection outcome in 
+the candidate boxes with considerable overlap, and these results were 
+then saved in a designated directory. Additionally, global variables were 
+defined to record the number of categories predicted for each input 
+image, while batch statistics on the accumulated number of categories 
+across iterations were used as functions. By implementing intelligent 
+identification and automatic statistical functions, the role of this model 
+in practical application scenarios has been significantly enriched, and 
+the monitoring efficiency over the entire life-cycle of AGS can be greatly 
+improved.
+3. Results and discussion
+3.1. Model training and testing
+During the process of model training and testing, the box loss was 
+used to monitor the regression of the detection box and predict the 
+discrepancy between the detection and calibration boxes. In contrast, 
+classification loss (cls loss) was employed to evaluate the classification 
+accuracy and determine whether the anchor frame matched with its 
+corresponding calibration classification. Additionally, distributional 
+feature learning loss (dfl loss) was implemented to track the correlation 
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+5 
+
+
+<!-- Page 6 -->
+between different feature areas and probability distribution within the 
+dataset. As the iteration count increased, these various loss metrics 
+gradually decreased in value within the training set until they eventually 
+converged to a single final curve. The results indicated that when Mosaic 
+data enhancement was disabled during the last 10 epochs of training, 
+there was a certain decrease in all types of losses, suggesting that this 
+operation effectively improved model accuracy (Fig. 3(a–c)). The 
+depicted results from model training demonstrated a comprehensive 
+training stage with well-suited chosen model parameters (Fig. 3(d–f)).
+The effectiveness of the detector is commonly assessed through the 
+mean average precision (mAP) across various classes. In this study, the 
+metric was derived from ranking detection scores specific to each class 
+(Everingham et al., 2010), and the IoU measured the accuracy of object 
+detection in a particular dataset, which was the ratio of the predicted 
+frames to the actual frames in object detection. The mAP50 set IoU to 
+0.5, calculated AP for each class of images, and then averaged them 
+across all classes, therefore, mAP50-95 could be understood as an 
+average value calculated at the intervals of 0.05 from 0.5 to 0.95 at 
+different IoUs. With an increase in iterations, there was a gradual 
+improvement in precision, recall, mAP50, and mAP50-95 indicators, 
+which initially fluctuated but eventually approached a plateau close to 1 
+(Fig. 3(g) and (h)). The final model achieved an mAP50 score of 0.985 
+(Fig. 3(i)), while the mAP50-95 reached 0.837 (Fig. 3(j)). In reality, 
+Kong et al. utilized the YOLO model to identify microorganisms in 
+microscopic images of activated sludge, bolstering its detection capa­
+bilities by incorporating deformable convolutional networks and 
+attention mechanisms (Kong and Shen, 2023). Their model achieved an 
+mAP50 score of 0.937. Notably, in this experiment, the mAP50 score 
+reached an impressive 0.985, demonstrating that our model exhibits 
+exceptionally high accuracy at an IoU threshold of 0.5. Overall, the 
+evaluation results demonstrated that the model trained with the pro­
+vided data exhibited effective performance leading to accurate predic­
+tion outcomes.
+3.2. Confusion matrix
+A confusion matrix primarily serves the purpose of juxtaposing the 
+classification results with actual measurements, which can effectively 
+illustrate the accuracy of the classification outcomes and is a widely used 
+tool for visually evaluating the effectiveness of supervised learning al­
+gorithms. Moreover, the most commonly employed metric for assessing 
+imbalanced classification performance is derived from the confusion 
+matrix (Luque et al., 2019). In the resulting matrix shown in Fig. 4, the 
+main diagonal line represents the proportion of correctly predicted 
+values compared to their true counterparts, while other positions indi­
+cate different types of mis-classifications presented in a 5 × 5 format.
+Background, as a category, refers to the background part of an image 
+that is typically distinguished from the target or foreground. As illus­
+trated in Fig. 4, both IS and CS images exhibited the highest correct 
+prediction rate in the test set, reaching 0.97 each. However, approxi­
+mately 0.03 images of IS and CS were misclassified as GS due to their 
+similarity at the critical values since GS represents the subsequent stage 
+of IS in its life-cycle. Additionally, when granule sizes were closely 
+aligned, GS and CS displayed rough edges and appeared similar to each 
+other. The correct prediction rate for GS images was 0.96 with around 
+0.04 GS images being mistakenly classified as CS for similar reasons 
+mentioned earlier. On the other hand, MS images had the lowest correct 
+prediction rate at 0.94, where approximately 0.02 MS images were 
+wrongly identified as GS while another 0.04 MS images were mis­
+classified as CS due to their resemblance with AGS before and after this 
+particular stage of development, and smaller ones being predicted as GS 
+while larger ones being labeled as CS. In all instances where the back­
+ground was incorrectly predicted as the target, AGS accounted for the 
+proportions of 0.38, 0.38, 0.15, and 0.08 across different stages of its 
+life-cycle depending on granule size, indicating that larger granules 
+occupied more image area, resulting in higher probability of being 
+classified correctly. Research indicates that the improved YOLOv7 un­
+derwater object detection model achieves accuracy rates of 81% for 
+conch species, 90% for sea urchin species, 89% for scallop species, and 
+89% for starfish species (Liu et al., 2023). Due to the particularities of 
+Fig. 3. The results of various loss functions and evaluation indexes in the process of 100 rounds of model iteration: (a), (b) and (c) are the results of iterations of box 
+loss, cls loss and dlf loss on the training set, respectively; (d), (e) and (f) are the results of iterations of box loss, cls loss and dlf loss on the test set, respectively; (g) and 
+(h) are the results of precision and recall on the test set; (i) and (j) are the results of mAP 50 and mAP50-95 on the test set.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+6 
+
+
+<!-- Page 7 -->
+the underwater environment, such as poor lighting conditions, optical 
+properties of water, and dynamically changing backgrounds, the 
+distinction between targets and backgrounds becomes challenging. In 
+this study, the interference from the background was minimal, hence the 
+probability of AGS being correctly identified and classified was higher, 
+which was also related to the standardized collection method of AGS 
+micrographs.
+3.3. Analysis of the model evaluation parameter
+The precision rate measures the accuracy of a model’s predictions for 
+positive samples, that is, the proportion of true positives among the 
+predicted positive samples. The recall rate reflects the model’s ability to 
+identify actual positive samples, which is the proportion of true positives 
+among the actual positive samples. There is a trade-off between preci­
+sion and recall; increasing precision may decrease recall, and vice versa. 
+The confidence threshold is used to adjust this trade-off by setting a 
+Fig. 4. Normalization results of all classes in the confusion matrix.
+Fig. 5. Precision, recall and F1-score curves of AGS with different life-cycle under different confidence thresholds: (a) and (b) show the changing trends of precision 
+and recall of various classes at different confidence levels, respectively; (c) shows the changing trend of F1-score.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+7 
+
+
+<!-- Page 8 -->
+standard for accepting prediction results. A high threshold increases 
+precision but may decrease recall, while a low threshold increases recall 
+but may decrease precision. The F1 score, as the harmonic mean of 
+precision and recall, comprehensively evaluates model performance. Its 
+value ranges from 0 to 1, with higher values indicating a better balance 
+between precision and recall, thus avoiding performance bias caused by 
+solely pursuing one of these metrics. In practical applications, an 
+appropriate confidence threshold should be set according to the task 
+requirements to achieve the desired precision and recall, and the overall 
+performance of the model should be measured using the F1 score (Reda 
+et al., 2020). The results of analyzing the model evaluation parameters 
+are shown in Fig. 5.
+When the confidence interval of IS and MS was 0.4–0.6, the precision 
+gradually reached 1, while, the corresponding precision for GS and CS 
+also gradually reached 1 for confidence interval of 0.8–1.0. Among 
+them, IS showed the fastest growth rate, which indicated lower false 
+detection rates for IS and MS features, making them easier to be accu­
+rately recognized by the model. In the confidence interval of 0.8–1.0, 
+compared to GS and CS, IS was found to be more distinguishable from 
+other AGS stages, indicating a lower false detection rate. This observa­
+tion aligns with the fact that IS and MS represent relatively smaller- 
+grained AGS targets, which are more susceptible to background inter­
+ference and partial occlusion in images (Qian et al., 2022). For IS and 
+MS, a precision of 1 could be achieved even with a confidence level of 
+0.4–0.6, suggesting that under certain specific conditions, models can 
+still yield accurate detection results even with lower confidence levels. 
+This highlights the importance of not solely relying on confidence levels 
+to assess detection performance in practical applications, but rather 
+integrating other metrics and actual scenarios for a comprehensive 
+evaluation. However, when the confidence threshold was set at 0.942, 
+all classes achieved the maximum value of 1 (Fig. 5(a)). As recall is 
+generally negatively correlated with confidence levels, setting a 
+threshold of 0 resulted in the maximum average recall for all classes 
+(Fig. 5(b)). The smaller granule size and dense distribution of IS in im­
+ages led to a higher recall rate for detecting smaller AGS granules when 
+using low confidence intervals. When the confidence interval was set 
+between 0.8 and 1.0, MS and CS had higher recall rates than IS and GS, 
+with IS showing a significant decline. MS and CS, with their larger size 
+and distinct features, resisted background noise and occlusion better, 
+leading to higher recall rates. Conversely, IS had higher recall rates at 
+lower confidence levels due to less stringent detection criteria, allowing 
+more potential targets to be identified. However, at high confidence 
+levels, IS’s recall rate dropped significantly, indicating the model’s 
+limitation in recognizing smaller-grained IS targets, which are more 
+affected by background interference and occlusion. This highlighted the 
+need to balance the confidence threshold. Setting it too high increases 
+false negatives, especially for small targets, while setting it too low in­
+creases false positives (Thatikonda et al., 2024). Thus, finding a balance 
+between recall and false positive rates is crucial to optimize the model’s 
+performance. In summary, the higher recall rates for MS and CS at high 
+confidence levels revealed the different characteristics of targets with 
+varying granularities, while the significant drop in IS’s recall rate 
+emphasized the importance of balancing the confidence threshold in 
+practical applications.
+In this study, we determined that the confidence threshold should be 
+set at 0.671. Setting the confidence threshold at 0.671 means that only 
+predictions with a confidence level of 67.1% or higher were considered 
+as positive samples. This threshold was used to balance precision and 
+recall, ensuring that the model’s predictions were both reliable and 
+capable of capturing a sufficient number of actual positive instances. 
+The average F1 score of 0.95 indicated that the model performed well in 
+minimizing false positives and false negatives (Fig. 5(c)), thereby 
+achieving a high level of overall performance. Therefore, it is recom­
+mended to use a confidence threshold of 0.671 when making predictions 
+on new images to ensure optimal prediction accuracy.
+3.4. Cluster analysis
+The t-SNE technique, a machine learning method for visualizing and 
+reducing the dimensionality of data, excels in preserving the integrity of 
+relationships and structures in high dimensional data when it is pro­
+jected onto a lower dimensional space (Pouyet et al., 2018). This tech­
+nique is commonly employed to visually explore complex datasets and 
+uncover patterns or clusters that may not be immediately discernible in 
+the original high-dimensional space (Silva and Melo-Pinto, 2023). In this 
+section, it was used to analyze the clusters for all classes with the results 
+shown in Fig. 6.
+As shown in Fig. 6, the features of AGS in the test set across its four 
+different life-cycle stages were simplified to two dimensions and pre­
+sented as four clusters. Overall, all types exhibited independent spatial 
+distributions with low levels of coupling, indicating that the experi­
+mental classification criteria for the AGS life-cycle were reasonable. 
+Specifically, CS showed the tightest distribution and a high degree of 
+cohesion, suggesting a consistent pattern of morphological features. In 
+contrast, GS exhibited the most dispersed distribution and showed 
+specific coupling relationships with the other three categories. This 
+implied that AGS, at various stages of development, diversified in 
+appearance due to a variety of external conditions and internal devel­
+opmental laws, leading to changes from light to dark colors and from 
+rough to smooth edges. The corresponding complexity results confirmed 
+that each class in the confusion matrix was predicted as GS. On the other 
+hand, IS and MS only showed certain coupling relationships with adja­
+cent life-cycle categories while maintaining similar morphological fea­
+tures within their respective clusters. This distribution pattern indicated 
+that, despite certain interactions between adjacent stages, each stage 
+retained unique characteristics identifiable through cluster analysis. The 
+spatial independence and specific coupling patterns provided valuable 
+insights into the dynamics of AGS development and confirmed the 
+robustness of the classification method used in this study.
+3.5. SHapley additive exPlanations (SHAP)
+In the context of machine learning models, SHAP elucidates the 
+impact of each sample and feature on the respective predicted value 
+(Wang et al., 2024). By utilizing the SHapley value, it can quantify the 
+local interpretation of the model, providing insights into the rationale 
+behind the decision-making for a specific sample (Qi et al., 2025). In this 
+section, it was first loaded the test images from each life-cycle, their 
+dimensions were sorted out, and then a model prediction function was 
+constructed after preprocessing. Considering the computation time and 
+pixel granularity, an appropriate number of iterations were set to 
+initialize the explainer, and the corresponding Shapley values were 
+calculated for each category, test image, and pixel, and finally the heat 
+map was generated as shown in Fig. 7.
+The model primarily focused on capturing global features of small- 
+grained images and edge features of large-grained images. As shown 
+in Fig. 7, the global features in the IS and GS test images significantly 
+influenced the model’s predictions for MS. Specifically, the global fea­
+tures in IS and GS images, such as color variations and rough edges, 
+provided the model with key information to distinguish between these 
+two stages. The presence of these features enabled the model to more 
+accurately identify the MS stage, as images in the MS stage typically had 
+different colors and smoother edges. Furthermore, the edge features 
+contained in the MS test images also had an adverse effect on the 
+model’s predictions for IS and GS. This indicated that there were sig­
+nificant morphological differences between IS, GS, and MS. IS and GS 
+could be distinguished by their color variations and rough edges, while 
+MS was characterized mainly by dark brown or black colors and smooth 
+edges. This finding further validated the rationality of the aforemen­
+tioned classification criteria. The internal structure and detailed features 
+in the CS test images had a significant impact on the predictions for IS, as 
+AGS fragments from CS re-emerged as IS AGS, thereby initiating a new 
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+8 
+
+
+<!-- Page 9 -->
+life-cycle iteration. This process not only revealed the dynamic changes 
+in the AGS life-cycle but also emphasized the model’s capability in 
+capturing key features of these changes.
+In summary, the model captures key features of different stages, 
+effectively distinguishing each life-cycle phase of AGS. These findings 
+not only validate the rationality of the classification criteria but also 
+provide a new perspective for understanding the life-cycle of AGS.
+3.6. Model prediction and statistics
+To validate the practical application of the model, images of AGS 
+were collected from the AGS-MBR reactor over one week in the labo­
+ratory. Microscopic imaging was performed under consistent equipment 
+and environmental conditions. The resulting images were then imported 
+into the model for prediction, as illustrated in Fig. 8.
+The AGS with larger sizes, such as MS and CS, are more likely to be 
+detected and less likely to be missed (Fig. 8(a)–(c)). Conversely, the AGS 
+with smaller sizes, such as IS and GS, have a higher probability of being 
+missed (Fig. 8(d)–8(f)). When there is a certain degree of gap between 
+the sludge granules, the prediction accuracy improves. However, if the 
+gap is too small, instances of missed detection may occur. The prediction 
+performance was enhanced under clean background conditions, but 
+might be influenced by complex interference in the surrounding envi­
+ronment. The counting results were derived based on these predicted 
+outcomes, and the various types could be counted in multiple batches, 
+with the calculation time varying according to the computing power. In 
+this model, preprocessing of each image required 2.6–3.4 ms, inference 
+took 10.0–10.4 ms, and post-processing for statistical overlay consumed 
+Fig. 6. The t-SNE cluster analysis of all classes.
+Fig. 7. Analysis of the SHAP feature interpretability of all classes.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+9 
+
+
+<!-- Page 10 -->
+1.6–1.8 ms, summing up to a total processing time of 14.2–15.6 ms. The 
+model was used to develop statistical functions for performing analysis 
+on AGS samples collected from the four previously mentioned stages, 
+where each day’s sample constituted a separate batch. The results are 
+presented in Fig. 9.
+As depicted in Fig. 9, the number of IS was the highest in each batch, 
+with a total exceeding 700, followed by GS, while MS and CS exhibit the 
+lowest number. This distribution suggested that the overall AGS was 
+currently in a fragmentation phase, undergoing regeneration and 
+gradual growth. Although IS had the highest count in the reactor, 
+exceeding 700, the number alone could not serve as the sole criterion for 
+determining the most dominant category, given that IS typically had a 
+smaller granularity. In contrast, CS, being the category with the largest 
+granularity, had a total count surpassing that of MS, indicating that the 
+volume proportion of CS was certainly greater than that of MS. There­
+fore, it could be inferred that a significant portion of AGS in the reactor 
+was currently in the CS state. The breakdown of CS into the IS state(Yang 
+et al., 2023) likely accounted for the increased number of IS instances. 
+At present, the number of MS in the MBR was not substantial, and it did 
+not represent a dominant state. Under these circumstances, managers 
+should consider measures such as increasing the organic load and con­
+trolling hydraulic shear forces to promote AGS granulation, thereby 
+increasing the proportion of MS AGS in the system (Lin et al., 2020). The 
+statistical function of the model intuitively presents the quantity of each 
+type of AGS in each batch and the total number of each type throughout 
+the entire cycle, reflecting its real-time status in the MBR system. This 
+provides valuable guidance for managers in selecting appropriate 
+operating parameters and enhancing the maintenance efficiency of the 
+MBR.
+4. Conclusions
+This study developed a YOLOv8-based machine learning model for 
+identifying and classifying AGS life-cycle stages. Utilizing a standardized 
+microscopy image acquisition method, the model achieved mAP50 of 
+0.985 and mAP50-95 of 0.837, indicating high precision and robustness. 
+t-SNE analysis revealed distinct clustering of AGS features across stages, 
+while SHAP analysis highlighted the model’s proficiency in capturing 
+Fig. 8. The new AGS image import model was used to predict: (a), (b) and (c) are main predictions for some larger targets; (d), (e) and (f) are main predictions for 
+some smaller targets and mixed-size targets.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+10 
+
+
+<!-- Page 11 -->
+global features in fine-grained images and edge features in coarse- 
+grained images, thereby validating the classification rationality. 
+Enhanced with global variables and attention mechanisms, the model 
+significantly improved detection efficiency and accuracy, enabling real- 
+time AGS monitoring in MBR system and providing batch counting 
+functionality for classification. The AGS in this study was cultured in a 
+continuous-flow MBR system, whereas in SBR system, retraining the 
+model and selecting appropriate YOLO modules for specific datasets are 
+recommended for reliable detection. Additionally, while AI can effec­
+tively assess AGS status, translating these assessments into operational 
+decisions requires extensive practical experience and consideration of 
+multiple operational parameters. In summary, this study developed a 
+YOLOv8-based machine learning model that provides an efficient and 
+reliable solution for the automatic detection and classification of AGS 
+life-cycles. These findings not only offer technical support for optimizing 
+AGS-MBR system management but also pave new avenues for the 
+application of artificial intelligence in wastewater treatment.
+CRediT authorship contribution statement
+Yu Zeng: Writing – original draft, Software, Methodology, Investi­
+gation, Formal analysis, Data curation. Chenguang Zhao: Writing – 
+original draft, Software, Methodology, Investigation, Formal analysis, 
+Data curation. Danling Ma: Investigation, Data curation. Liying Bin: 
+Methodology, Formal analysis. Weirui Chen: Resources. Ping Li: Soft­
+ware, Project administration. Bing Tang: Writing – original draft, 
+Validation, Supervision, Funding acquisition, Conceptualization.
+Declaration of competing interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgments
+This work was financially supported by the Key Technologies 
+Research 
+and 
+Development 
+Program 
+of 
+Guangzhou 
+[No. 
+2023B03J1284]. The author would also like to thank the Analysis and 
+Test Center of Guangdong University of Technology for their skillful 
+analysis of our samples.
+Data availability
+No data was used for the research described in the article.
+References
+Alexey, B., Chien-Yao, W., Hong-Yuan Mark, L., 2020. YOLOv4: optimal speed and 
+accuracy of object detection. arXiv - CS - Computer Vision and Pattern Recognition.
+Alvi, M., Batstone, D., Mbamba, C.K., Keymer, P., French, T., Ward, A., Dwyer, J., 
+Cardell-Oliver, R., 2023. Deep learning in wastewater treatment: a critical review. 
+Water Res. 245, 120518. https://doi.org/10.1016/j.watres.2023.120518.
+Bengtsson, S., de Blois, M., Wil´en, B.M., Gustavsson, D., 2019. A comparison of aerobic 
+granular sludge with conventional and compact biological treatment technologies. 
+Environ. Technol. 40, 2769–2778. https://doi.org/10.1080/ 
+09593330.2018.1452985.
+Campo, R., Lubello, C., Lotti, T., Di Bella, G., 2021. Aerobic granular sludge-membrane 
+bioreactor (ags-mbr) as a novel configuration for wastewater treatment and fouling 
+mitigation: a Mini-Review. Membranes 11. https://doi.org/10.3390/ 
+membranes11040261.
+Chicco, D., Warrens, M.J., Jurman, G., 2021. The coefficient of determination R-squared 
+is more informative than SMAPE, MAE, MAPE, MSE and RMSE in regression analysis 
+evaluation. PeerJ Comput. Sci. 7, e623. https://doi.org/10.7717/peerj-cs.623.
+Dai, C.C., Bin, L.Y., Tang, B., Li, P., Huang, S.S., Fu, F.L., Yin, Q., 2020. Promoting the 
+granulation process of aerobic granular sludge in an integrated moving bed biofilm- 
+membrane bioreactor under a continuous-flowing mode. Sci. Total Environ. 703, 
+135482. https://doi.org/10.1016/j.scitotenv.2019.135482.
+de Sousa Rollemberg, S.L., Mendes Barros, A.R., Milen Firmino, P.I., Bezerra dos 
+Santos, A., 2018. Aerobic granular sludge: cultivation parameters and removal 
+mechanisms. Bioresour. Technol. 270, 678–688. https://doi.org/10.1016/j. 
+biortech.2018.08.130.
+Everingham, M., Van Gool, L., Williams, C.K.I., Winn, J., Zisserman, A., 2010. The pascal 
+visual object classes (VOC) challenge. Int. J. Comput. 88, 303–338. https://doi.org/ 
+10.1007/s11263-009-0275-4.
+Gao, W., Zong, C., Wang, M., Zhang, H., Fang, Y., 2024. Intelligent identification of rice 
+leaf disease based on YOLO V5-EFFICIENT. Crop Prot. 183, 106758. https://doi.org/ 
+10.1016/j.cropro.2024.106758.
+Han, X., Niu, X., Jin, Y., Yu, J., 2024. Rapid cultivation of aerobic granular sludge for 
+shale gas flowback water treatment by bioaugmentation with inoculating 
+multifunctional fungal pellets. J. Clean. Prod. 457, 142483. https://doi.org/ 
+10.1016/j.jclepro.2024.142483.
+Hanwen, L., Shifeng, Z., Jiacheng, S., Xingqiu, H., Weiran, H., Kechen, Z., Zhenguo, L., 
+2019. DARTS+: improved differentiable architecture search with early stopping. 
+arXiv - CS - Computer Vision and Pattern Recognition. https://arxiv.org/abs/1 
+909.06035.
+Hu, Q., Cheng, L., Liu, J., Zhang, Z., Wei, M., Luo, C., Zhang, Y., Chen, H., Hu, Z., 2024. 
+Emergence and spread patterns of antibiotic resistance genes during cultivating 
+aerobic granular sludge under different feeding modes. J. Clean. Prod. 455. https:// 
+doi.org/10.1016/j.jclepro.2024.142320.
+Husnain, M., Missen, M., Mumtaz, S., Luqman, M., Coustaty, M., Ogier, J.M., 2019. 
+Visualization of high-dimensional data by pairwise fusion matrices using t-SNE. 
+Symmetry 11 (1), 107. https://doi.org/10.3390/sym11010107.
+Ignacz, G., Bader, L., Beke, A.K., Ghunaim, Y., Shastry, T., Vovusha, H., Carbone, M.R., 
+Ghanem, B., Szekely, G., 2025. Machine learning for the advancement of membrane 
+science and technology: a critical review. J. Membr. Sci. 713, 123256. https://doi. 
+org/10.1016/j.memsci.2024.123256.
+Iorhemen, O.T., Liu, Y., 2021. Effect of feeding strategy and organic loading rate on the 
+formation and stability of aerobic granular sludge. J. Water Process Eng. 39, 101709. 
+https://doi.org/10.1016/j.jwpe.2020.101709.
+Kaiming, H., Jian, S., 2014. Convolutional Neural Networks at Constrained Time Cost. 
+arXiv - CS - Computer Vision and Pattern Recognition.
+Kaiming, H., Xiangyu, Z., Shaoqing, R., Jian, S., 2015. Deep residual learning for image 
+recognition. arXiv - CS - Computer Vision and Pattern Recognition.
+Kirkland, C.M., Krug, J.R., Vergeldt, F.J., van den Berg, L., Velders, A.H., Seymour, J.D., 
+Codd, S.L., Van As, H., de Kreuk, M.K., 2020. Characterizing the structure of aerobic 
+granular sludge using ultra-high field magnetic resonance. Water Sci. Technol. 82, 
+627–639. https://doi.org/10.2166/wst.2020.341.
+Kong, Y., Shen, Z., 2023. Microorganism detection in activated sludge microscopic 
+images using improved YOLO. Appl. Sci. 13. https://doi.org/10.3390/ 
+app132212406.
+Li, J., Cai, A., Wang, D., Chen, C., Ni, Y., 2014. Structure analysis of aerobic granule from 
+a sequencing batch reactor for organic matter and ammonia nitrogen removal. Int. J. 
+Environ. Res. Publ. Health 2427–2436. https://doi.org/10.3390/ijerph110302427.
+Lin, H., Ma, R., Hu, Y., Lin, J., Sun, S., Jiang, J., Li, T., Liao, Q., Luo, J., 2020. Reviewing 
+bottlenecks in aerobic granular sludge technology: slow granulation and low 
+granular stability. Environ. Pollut. 263, 114638. https://doi.org/10.1016/j. 
+envpol.2020.114638.
+Liu, K., Sun, Q., Sun, D., Peng, L., Yang, M., Wang, N., 2023. Underwater target detection 
+based on improved YOLOv7. J. Mar. Sci. Eng. 11. https://doi.org/10.3390/ 
+jmse11030677.
+Luque, A., Carrasco, A., Martín, A., de Las Heras, A.J.P.R., 2019. The Impact of Class 
+Imbalance in Classification Performance Metrics Based on the Binary Confusion 
+Matrix, vol. 91, pp. 216–231. https://doi.org/10.1016/j.patcog.2019.02.023.
+Fig. 9. The image statistics for each stage of the life-cycle of each AGS batch 
+together with the aggregated total for all seven batches.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+11 
+
+
+<!-- Page 12 -->
+Mahmod, N., Wahab, N.A., 2017. Dynamic modelling of aerobic granular sludge artificial 
+neural networks. Int. J. Electr. Comput. Eng. 7. https://doi.org/10.11591/ijece.v7i3. 
+pp1568-1573.
+Morales, N., Mery-Araya, C., Guerra, P., Poblete, R., Chacana-Olivares, J., 2024. 
+Mitigation of membrane fouling in membrane bioreactors using granular and 
+powdered activated carbon: an experimental study. Water 16, 2556. https://doi.org/ 
+10.3390/w16172556.
+Navaneeth, B., Bharat, S., Rama, C., Larry, S.D., 2017. Soft-NMS – improving object 
+detection with one line of code. arXiv - CS - Computer Vision and Pattern 
+Recognition.
+Narayanan, D., Bhat, M., Samuel Paul, N.R., Khatri, N., Saroliya, A., 2024. Artificial 
+intelligence driven advances in wastewater treatment: evaluating techniques for 
+sustainability and efficacy in global facilities. Desalination Water Treat. 320, 
+100618. https://doi.org/10.1016/j.dwt.2024.100618.
+P´erez-Beltr´an, C.H., Robles, A.D., Rodriguez, N.A., Ortega-Gavil´an, F., Jim´enez- 
+Carvelo, A.M., 2024. Artificial intelligence and water quality: from drinking water to 
+wastewater. Trac. Trends Anal. Chem. 172, 117597. https://doi.org/10.1016/j. 
+trac.2024.117597.
+Pouyet, E., Rohani, N., Katsaggelos, A.K., Cossairt, O., Walton, M., 2018. Innovative data 
+reduction and visualization strategy for hyperspectral imaging datasets using t-SNE 
+approach. Pure Appl. Chem. 90, 493–506. https://doi.org/10.1515/pac-2017-0907.
+Qi, X., Wang, S., Fang, C., Jia, J., Lin, L., Yuan, T., 2025. Machine learning and SHAP 
+value interpretation for predicting comorbidity of cardiovascular disease and cancer 
+with dietary antioxidants. Redox Biol. 79, 103470. https://doi.org/10.1016/j. 
+redox.2024.103470.
+Qian, H., Wu, P., Sun, B., Su, S., 2022. AGS-SSD: attention-guided sampling for 3D single- 
+stage detector. Electronics 11 (14), 2079–9292. https://doi.org/10.3390/ 
+electronics11142268.
+Rahman, T.U., Roy, H., Islam, M.R., Tahmid, M., Fariha, A., Mazumder, A., Tasnim, N., 
+Pervez, M.N., Cai, Y., Naddeo, V., Islam, M.S., 2023. The advancement in membrane 
+bioreactor (MBR) technology toward sustainable industrial wastewater 
+management. membranes 13, 181. https://ieeexplore.ieee.org/document 
+/10670627.
+Ranzinger, F., Matern, M., Layer, M., Guthausen, G., Wagner, M., Derlon, N., Horn, H., 
+2020. Transport and retention of artificial and real wastewater particles inside a bed 
+of settled aerobic granular sludge assessed applying magnetic resonance imaging. 
+Water Res. X 7, 100050. https://doi.org/10.1016/j.wroa.2020.100050.
+Reda, Y., Dustin, A., 2020. Probabilistic extension of precision, recall, and f1 score for 
+more thorough evaluation of classification models. Association for computational 
+linguistics 20, 79–91. https://aclanthology.org/2020.eval4nlp-1.9/.
+Redmon, J., Divvala, S., Girshick, R., Farhadi, A., 2016. You only look once: unified, real- 
+time object detection. IEEE Conference on Computer Vision and Pattern Recognition, 
+pp. 779–788.
+Redmon, J., Farhadi, A., 2017. YOLO9000: better, faster, stronger. IEEE conference on 
+computer vision and pattern recognition 29, 6517–6525. https://doi.org/10.1109/ 
+CVPR.2017.690.
+Redmon, J., Farhadi, A., 2018. Yolov3: an incremental improvement. IEEE Conference on 
+computer vision and pattern recognition 15, 1125–1131.
+Santos, P.A.S., Carvalho, M.T.M., 2025. Multi-class segmentation of structural damage 
+and pathological manifestations using YOLOv8 and Segment Anything. Model. 
+Autom. Constr. 172, 106037. https://doi.org/10.1016/j.autcon.2025.106037.
+Scott, L., Su-In, L., 2017. A unified approach to interpreting model predictions. arXiv - CS 
+- Artificial Intelligence.
+Scott, M.L., Gabriel, G.E., Su-In, L., 2018. Consistent individualized feature attribution 
+for tree ensembles. arXiv - CS - Machine learning.
+Silva, R., Melo-Pinto, P., 2023. t-SNE: a study on reducing the dimensionality of 
+hyperspectral data for the regression problem of estimating oenological parameters. 
+Artif. Intell. Agric. 7, 58–68. https://doi.org/10.1016/j.aiia.2023.02.003.
+Thatikonda, M.M.K.P.K., Amsaad, F., 2024. A novel dynamic confidence threshold 
+estimation ai algorithm for enhanced object detection. NAECON 2024 - IEEE 
+National Aerospace and Electronics Conference, pp. 359–363.
+Ul Islam, Q., Khozaei, F., Salah Al Barhoumi, E.M., Baig, I., Ignatyev, D., 2025. 
+Advancing autonomous SLAM systems: integrating YOLO object detection and 
+enhanced loop closure techniques for robust environment mapping. Robot. Auton. 
+Syst. 185, 104871. https://doi.org/10.1016/j.robot.2024.104871.
+Wang, D., Thun´ell, S., Lindberg, U., Jiang, L., Trygg, J., Tysklind, M., 2022. Towards 
+better process management in wastewater treatment plants: process analytics based 
+on SHAP values for tree-based machine learning methods. J. Environ. Manag. 301, 
+113941. https://doi.org/10.1016/j.jenvman.2021.113941.
+Wang, H., Liang, Q., Hancock, J.T., Khoshgoftaar, T.M., 2024. Feature selection 
+strategies: a comparative analysis of SHAP-value and importance-based methods. 
+J. Big Data 11, 44. https://doi.org/10.1186/s40537-024-00905-w.
+Xu, C., Fan, Z., Ma, Y., Huang, Y., Wang, J., Xu, Y., Wu, D., 2025. CE-YOLO: a channel- 
+efficient YOLO algorithm for colorectal polyp detection. Biomed. Signal Process 
+Control 104, 107529. https://doi.org/10.1016/j.bspc.2025.107529.
+Yang, B., Liang, W.F., Bin, L.Y., Chen, W.R., Chen, X.Y., Li, P., Wen, S.L., Huang, S.S., 
+Tang, B., 2023. Insights into the life-cycle of aerobic granular sludge in a continuous 
+flow membrane bioreactor by tracing its heterogeneous properties at different 
+stages. Water Res. 243, 120419. https://doi.org/10.1016/j.watres.2023.120419.
+Yang, L., Zhang, R.Y., Li, L., Xie, X., 2021. SimAM: a Simple, parameter-free attention 
+module for convolutional neural networks. In: Marina, M., Tong, Z. (Eds.), 
+Proceedings of the 38th International Conference on Machine Learning. PMLR, 
+Proceedings of Machine Learning Research, pp. 11863–11874. In: https 
+://proceedings.mlr.press/v139/yang21o.html.
+Zaghloul, M.S., Achari, G., 2022. A review of mechanistic and data-driven models of 
+aerobic granular sludge. J. Environ. Chem. Eng. 10. https://doi.org/10.1016/j. 
+jece.2022.107500.
+Zaghloul, M.S., Iorhemen, O.T., Hamza, R.A., Tay, J.H., Achari, G., 2021. Development 
+of an ensemble of machine learning algorithms to model aerobic granular sludge 
+reactors. Water Res. 189, 116657. https://doi.org/10.1016/j.watres.2020.116657.
+Zhong, S., Zhang, K., Bagheri, M., Burken, J.G., Gu, A., Li, B., Ma, X., Marrone, B.L., 
+Ren, Z.J., Schrier, J., Shi, W., Tan, H., Wang, T., Wang, X., Wong, B.M., Xiao, X., 
+Yu, X., Zhu, J.J., Zhang, H., 2021. Machine learning: new ideas and tools in 
+environmental science and engineering. Environ. Sci. Technol. 55, 12741–12754. 
+https://doi.org/10.1021/acs.est.1c01339.
+Y. Zeng et al.                                                                                                                                                                                                                                    
+Journal of Environmental Management 384 (2025) 125527 
+12 

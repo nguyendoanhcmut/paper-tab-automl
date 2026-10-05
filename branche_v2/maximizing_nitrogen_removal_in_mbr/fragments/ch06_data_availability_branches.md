@@ -1,0 +1,36 @@
+## Data availability
+
+- Tuyên bố khả dụng và quyền tiếp cận cơ sở dữ liệu nghiên cứu
+  - Toàn bộ dữ liệu vận hành thực tế của trạm $\text{MBR}$ được cung cấp theo yêu cầu hợp lý gửi tới tác giả liên hệ.
+  - Bộ dữ liệu bao gồm chuỗi thời gian hơn 1 năm ghi nhận thông số chất lượng nước đầu vào và vận hành chi tiết các ngăn bể.
+- Bảng tổng hợp các giá trị đặc trưng tối ưu và nồng độ mục tiêu cực tiểu hóa (Bảng 4)
+  - Các biến trạng thái vùng kỵ khí tối ưu theo từng thuật toán:
+    - Nhiệt độ ($\text{Tem-An}$): $\text{DE} = 29^\circ\text{C}$, $\text{SMA} = 29^\circ\text{C}$, $\text{MOA} = 20^\circ\text{C}$, $\text{HHO} = 29^\circ\text{C}$.
+    - Độ pH ($\text{pH-An}$): $\text{DE} = 7.30$, $\text{SMA} = 7.03$, $\text{MOA} = 7.035$, $\text{HHO} = 6.97$.
+    - Nồng độ bùn ($\text{MLSS-An}$): $\text{DE} = 4804.97\text{ mg/L}$, $\text{SMA} = 4908.49\text{ mg/L}$, $\text{MOA} = 4630.98\text{ mg/L}$, $\text{HHO} = 6126.58\text{ mg/L}$.
+    - Oxy hòa tan ($\text{DO-An}$): duy trì đồng nhất ở mức $0.20\text{ mg/L}$ qua cả bốn thuật toán.
+    - Thế oxy hóa khử ($\text{ORP-An}$): $\text{DE} = 184.46\text{ mV}$, $\text{SMA} = 265.43\text{ mV}$, $\text{MOA} = 165.61\text{ mV}$, $\text{HHO} = 257.32\text{ mV}$.
+  - Các biến trạng thái bể chuyển đổi/thiếu khí ($\text{Swing-Basin}$):
+    - Nhiệt độ ($\text{Tem-S}$): $\text{DE} = 29.71^\circ\text{C}$, $\text{SMA} = 29.81^\circ\text{C}$, $\text{MOA} = 20.06^\circ\text{C}$, $\text{HHO} = 29.79^\circ\text{C}$.
+    - Độ pH ($\text{pH-S}$): $\text{DE} = 7.01$, $\text{SMA} = 7.18$, $\text{MOA} = 7.10$, $\text{HHO} = 6.95$.
+    - Nồng độ bùn ($\text{MLSS-S}$): $\text{DE} = 4912.48\text{ mg/L}$, $\text{SMA} = 5262.66\text{ mg/L}$, $\text{MOA} = 4873.97\text{ mg/L}$, $\text{HHO} = 5034.03\text{ mg/L}$.
+    - Oxy hòa tan ($\text{DO-S}$): duy trì ở mức $0.20\text{ mg/L}$.
+    - Thế oxy hóa khử ($\text{ORP-S}$): $\text{DE} = -1.71\text{ mV}$, $\text{SMA} = 64.63\text{ mV}$, $\text{MOA} = 123.22\text{ mV}$, $\text{HHO} = 131.01\text{ mV}$.
+  - Các biến trạng thái vùng hiếu khí:
+    - Nhiệt độ ($\text{Tem-Ae}$): $\text{DE} = 29.91^\circ\text{C}$, $\text{SMA} = 26.44^\circ\text{C}$, $\text{MOA} = 23.69^\circ\text{C}$, $\text{HHO} = 29.82^\circ\text{C}$.
+    - Độ pH ($\text{pH-Ae}$): cố định ở mức $7.00$ qua mọi thuật toán.
+    - Nồng độ bùn ($\text{MLSS-Ae}$): $\text{DE} = 8035.04\text{ mg/L}$, $\text{SMA} = 8012.74\text{ mg/L}$, $\text{MOA} = 7459.47\text{ mg/L}$, $\text{HHO} = 7968.15\text{ mg/L}$.
+    - Nồng độ bùn bay hơi ($\text{MLVSS-Ae}$): $\text{DE} = 4958.33\text{ mg/L}$, $\text{SMA} = 5185.49\text{ mg/L}$, $\text{MOA} = 4671.50\text{ mg/L}$, $\text{HHO} = 5072.03\text{ mg/L}$.
+    - Oxy hòa tan ($\text{DO-Ae}$): $\text{DE} = 3.60\text{ mg/L}$, $\text{SMA} = 6.57\text{ mg/L}$, $\text{MOA} = 4.81\text{ mg/L}$, $\text{HHO} = 4.01\text{ mg/L}$.
+    - Chỉ số thể tích bùn ($\text{SVI-Ae}$): $\text{DE} = 124.45\text{ mL/g}$, $\text{SMA} = 123.15\text{ mL/g}$, $\text{MOA} = 133.42\text{ mL/g}$, $\text{HHO} = 125.50\text{ mL/g}$.
+  - Thông số kiểm soát bể $\text{DO-R}$ và dòng bùn hồi lưu:
+    - Oxy hòa tan $\text{DO-R}$: xác lập đồng nhất tại mức $0.20\text{ mg/L}$.
+    - Lưu lượng bùn tuần hoàn ($\text{Sludge-R}$): $\text{DE} = 139.67\text{ m}^3/\text{ngày}$, $\text{SMA} = 138.17\text{ m}^3/\text{ngày}$, $\text{MOA} = 119.88\text{ m}^3/\text{ngày}$, $\text{HHO} = 146.23\text{ m}^3/\text{ngày}$.
+  - Nồng độ chất lượng nước đầu ra cực tiểu hóa tương ứng:
+    - $\text{COD}$: $\text{DE} = 5.59\text{ mg/L}$, $\text{SMA} = 6.16\text{ mg/L}$, $\text{MOA} = 6.19\text{ mg/L}$, $\text{HHO} = 5.96\text{ mg/L}$.
+    - $\text{TN}$: $\text{DE} = 5.06\text{ mg/L}$, $\text{SMA} = 5.35\text{ mg/L}$, $\text{MOA} = 5.55\text{ mg/L}$, $\text{HHO} = 5.26\text{ mg/L}$.
+    - $\text{TP}$: $\text{DE} = 0.06\text{ mg/L}$, $\text{SMA} = 0.05\text{ mg/L}$, $\text{MOA} = 0.05\text{ mg/L}$, $\text{HHO} = 0.06\text{ mg/L}$.
+- Cơ sở lý thuyết và danh mục công trình tham khảo nền tảng
+  - Các công trình nghiên cứu về công nghệ màng $\text{MBR}$ và động học chuyển hóa sinh hóa bùn hoạt tính.
+  - Các phương pháp học máy giải thích được ($\text{SHAP}$, $\text{PDP}$) trong kỹ thuật môi trường và mô hình hóa phi tuyến.
+  - Các thuật toán tối ưu hóa bầy đàn và tiến hóa vi phân áp dụng cho hệ thống xử lý nước thải sinh học đa mục tiêu.

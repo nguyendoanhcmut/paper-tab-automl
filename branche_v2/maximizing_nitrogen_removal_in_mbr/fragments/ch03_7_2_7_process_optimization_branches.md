@@ -1,0 +1,24 @@
+### 2.7 Process optimization
+
+- Thiết lập mục tiêu tối ưu hóa đa biến cho trạm xử lý nước thải $\text{MBR}$
+  - Tinh chỉnh đồng thời các thông số vận hành nhằm cực tiểu hóa nồng độ $\text{COD}$, $\text{TN}$ và $\text{TP}$ trong nước sau xử lý.
+  - Sử dụng mô hình học máy chính xác nhất làm hàm mục tiêu để đánh giá chất lượng nước đầu ra.
+- Các thuật toán tối ưu hóa lấy cảm hứng sinh học mô phỏng hành vi tự nhiên để giải bài toán phi tuyến đa mục tiêu
+  - Thuật toán Tiến hóa vi phân ($\text{DE}$) đóng vai trò làm chuẩn tham chiếu nhờ tính ổn định và khả năng bao quát không gian nghiệm.
+  - Ba thuật toán tiến hóa sinh học hiện đại được đưa vào so sánh: Thuật toán Nấm nhầy ($\text{SMA}$), Thuật toán Thiêu thân ($\text{MOA}$) và Thuật toán Chim ưng Harris ($\text{HHO}$).
+    - **Hình 2.** Minh họa trực quan các thuật toán tối ưu hóa dựa trên hành vi tự nhiên
+      - <img src="assets/fig_02_p6.jpeg" alt="Hình 2" />
+      - **Hình này chứng minh điều gì**
+        - Cơ chế tự nhiên của bốn thuật toán: (a) MOA, (b) DE, (c) HHO và (d) SMA.
+      - **Từ đâu mà thấy được**
+        - Bốn khung hình thể hiện hành vi đàn thiêu thân, đột biến quần thể, chim ưng săn mồi và mạng lưới nấm nhầy.
+- Cơ chế tìm kiếm nghiệm đặc trưng của từng thuật toán tối ưu hóa
+  - Thuật toán $\text{DE}$ áp dụng các toán tử đột biến, lai ghép và chọn lọc, tạo độ biến thiên bằng sai phân tỷ lệ giữa các cá thể ngẫu nhiên để tránh mắc kẹt tại cực trị địa phương.
+  - Thuật toán $\text{SMA}$ mô phỏng quá trình dao động tìm thức ăn của nấm nhầy dựa trên phản hồi âm và dương, cân bằng linh hoạt giữa mở rộng tìm kiếm và khai thác nghiệm sâu.
+  - Thuật toán $\text{MOA}$ tái hiện tập tính kết đôi và bay theo bầy của loài thiêu thân, phân tách quần thể đực - cái để duy trì tính đa dạng di truyền và chống hội tụ sớm.
+  - Thuật toán $\text{HHO}$ mô phỏng chiến thuật vây bắt mồi phối hợp của chim ưng Harris, sử dụng biến năng lượng trốn thoát của con mồi để tự động chuyển pha từ tìm kiếm diện rộng sang tập trung khai thác.
+- Đặc tả chi tiết cấu trúc mạng nơ-ron sâu ($\text{DNN}$) làm nền tảng dự báo
+  - Tầng đầu vào (Input layer) tiếp nhận $18$ biến đặc trưng vận hành đã qua chuẩn hóa thang đo.
+  - Tầng ẩn thứ nhất gồm $128$ hoặc $64$ nơ-ron liên kết đầy đủ, sử dụng hàm kích hoạt ReLU kết hợp hệ số ngắt `dropout` từ $0.2$ đến $0.3$.
+  - Tầng ẩn thứ hai gồm $64$ hoặc $32$ nơ-ron với hàm kích hoạt ReLU và hệ số ngắt `dropout` từ $0.2$ đến $0.3$ để kiểm soát quá khớp.
+  - Tầng đầu ra (Output layer) gồm $3$ nơ-ron với hàm kích hoạt tuyến tính (Linear), thực hiện dự đoán đồng thời các giá trị liên tục của $\text{COD}$, $\text{TN}$ và $\text{TP}$.
