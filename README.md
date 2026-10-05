@@ -94,6 +94,19 @@ The reader modal displays four integrated views for each paper:
 3. Figures Gallery Tab: Displays all high-resolution figures with complete captions and full lightbox view.
 4. Benchmarks Tab: Details model architectures, training hyperparameters, and validation results.
 
+
+## Bilingual Parallel PDF Editions
+
+All 18 papers include verified bilingual parallel PDF editions.
+These editions contain side-by-side Vietnamese and English text.
+All 18 parallel PDF files reside in the `translated/parallel/` directory.
+
+The web research hub supplies two access points for each paper:
+1. The action dropdown menu on each paper card.
+2. The document header buttons inside the interactive reader modal.
+
+Users can open the original English publication or the bilingual edition directly in new browser tabs.
+
 ## Lineage and Verification Guarantee
 
 Every knowledge tree in this repository passed a four-gate verification audit.
@@ -140,6 +153,8 @@ You can switch between Grid View and List View. You can also filter papers by do
 paper-tab-automl/
 ├── index.html                           # Main web research hub interface
 ├── README.md                            # Documentation and master index
+├── translated/                          # Translated documents
+│   └── parallel/                        # 18 bilingual parallel PDF editions
 ├── branche_v2/                          # Research papers knowledge repository
 │   ├── papers_catalog.json              # Complete catalog metadata for 18 papers
 │   ├── <paper_slug>/                    # Paper directories
@@ -147,7 +162,7 @@ paper-tab-automl/
 │   │   ├── <slug>_branches.md           # Full Markdown knowledge tree
 │   │   ├── figures_manifest.json        # Figure metadata and captions
 │   │   └── assets/                      # Extracted figures and diagrams
-│   └── translate/                       # Bilingual and translated documents
+│   └── translate/                       # Markdown translation documents
 ```
 
 ## Citation and License
