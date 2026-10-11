@@ -1,0 +1,61 @@
+Feature Generation
+Figure 1(a) illustrates the feature generation step that uses an LLM to create multiple new feature trans-
+formation programs, leveraging the model’s prior knowledge, reasoning, and in-context learning abilities to
+effectively explore the feature space.
+3.2.1
+
+Input Prompt
+To facilitate the creation of effective and contextually relevant feature discovery programs, we develop
+a structured prompting methodology.
+The prompt is designed to provide comprehensive data-specific
+information, an initial feature transformation program for the evolution starting point, an evaluation function,
+and a well-defined output format (see Appendix B.1 for more details). Our input prompts p are composed of
+the following key elements:
+Instruction.
+The LLM is assigned the task of finding the most relevant features to help solve the given
+task. The task emphasizes using the LLM’s prior knowledge of the dataset’s domain to generate features.
+The LLM is explicitly instructed to generate novel features and provide clear step-by-step reasoning for their
+relevance to the prediction task. Moreover, since LLMs tend to generate simple features, we specifically
+instruct the LLM to generate complex features.
+Dataset Specification.
+After providing the instructions, we present the LLM with the dataset-specific
+information from the metadata M. This information encompasses a detailed description of the intended
+downstream task, along with the feature names C and their corresponding descriptions. In addition, we
+provide a limited number of representative samples from the tabular dataset. To improve the effective
+interpretation of the data, we adopt the serialization approach used in previous works (Dinh et al., 2022;
+Hegselmann et al., 2023; Han et al., 2024). We serialize the data samples as follows:
+Serialize(xi, yi, C) = ‘If c1 is x1
+i , ..., cd is xd
+i . Then Result is yi’.
+(3)
+By providing dataset-specific details, we guide the language model to focus on the most contextually pertinent
+features that directly support the dataset and task objective.
+Evaluation Function.
+The evaluation function, incorporated into the prompt, guides the language model
+to generate feature-transformation programs that align with the performance objectives. These programs
+augment the original dataset with new features, which are evaluated based on the performance of a prediction
+model trained on the augmented data. The model’s evaluation score on the augmented validation set serves
+as an indicator of feature quality. By including the evaluation function in the prompt, the LLM generates
+programs that are inherently aligned with the desired performance criteria.
+In-Context Demonstration.
+Specifically, we sample the k highest-performing demonstrations from
+previous iterations, enabling the LLM to build on successful outputs. The iterative interaction between the
+LLM’s generative outputs and the evaluator’s feedback, informed by these examples, facilitates a systematic
+refinement process. With each iteration, the LLM progressively improves its outputs by leveraging patterns
+and insights identified in previous successful demonstrations.
+4
+
+
+<!-- Page 5 -->
+Published in Transactions on Machine Learning Research (05/2026)
+3.2.2
+
+Feature Sampling
+At each iteration t, we construct the prompt pt by sampling the previous iteration as input to the LLM πθ,
+resulting in the output T1, . . . , Tb = πθ(pt) representing a set of b sampled programs. To promote diversity and
+maintain a balance between exploration (creativity) and exploitation (prior knowledge), we employ stochastic
+temperature-based sampling. Each of the sampled feature transforms (Ti) is executed before evaluation to
+discard error-prone programs. This ensures that only valid, executable feature transformation programs
+are considered in the optimization pipeline. In addition, to ensure computational efficiency, a maximum
+execution time threshold is enforced, and any program that exceeds it is discarded.
+3.3

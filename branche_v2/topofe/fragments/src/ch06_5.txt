@@ -1,0 +1,121 @@
+5.5
+Topology Graph Specialization
+To evaluate whether TOPOFE’s topology graph acquires task-specific knowledge about cross-family transfer utility
+over the course of search, we define the Topology Graph Specialization Score (TGSS). Let W (t) ∈RM×M denote the
+transfer-weight matrix of the topology graph at generation t, where each off-diagonal entry w(t)
+j→i ∈[−1, 1] encodes the
+learned utility of island j as a precursor for saturated island i and is updated according to Eq. 11. TGSS is defined as
+the empirical variance of the off-diagonal transfer weights:
+TGSS(t) =
+1
+M(M −1)
+M
+X
+j,i=1
+j̸=i
+
+w(t)
+j→i −¯w(t)2
+(19)
+where the mean off-diagonal weight is defined as
+¯w(t) =
+1
+M(M −1)
+M
+X
+j,i=1
+j̸=i
+w(t)
+j→i.
+(20)
+TGSS quantifies the structural divergence of the weight matrix from its uniform initialization: TGSS(0) = 0 exactly
+when all weights are equal, and increases as the graph develops differentiated preferences over island pairs. A high
+TGSS indicates that the topology graph has identified strongly productive and strongly unproductive transfer directions
+specific to the current task, concentrating transfer routing accordingly. A near-zero TGSS indicates that all island
+pairs yield approximately equal transfer utility and the graph remains close to its uninformative prior. TGSS directly
+measures whether the adaptive topology mechanism is acquiring task-specific knowledge that distinguishes TOPOFE
+from fixed or random transfer alternatives.
+Figure 2 reports TGSS trajectories across all classification and regression datasets over 10 generations. All datasets begin
+at TGSS(0) = 0 and increase monotonically, confirming that the topology graph consistently specializes away from
+its uniform prior as transfer events accumulate — a necessary precondition for adaptive routing to confer any advantage
+over random precursor selection. Three patterns emerge from the joint analysis. First, TGSS exhibits substantial
+inter-dataset variance at convergence, spanning [0.00, 0.22] for classification and [0.04, 0.24] for regression, confirming
+that the degree of learnable cross-family utility structure is genuinely dataset-dependent instead of a fixed algorithmic
+property. This validates TOPOFE’s adaptive design: a fixed topology would be suboptimal for all datasets, while the
+learned graph adapts to the specific inter-family utility structure of each task. Second, datasets with near-zero TGSS
+12
+
+
+<!-- Page 13 -->
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+Generation t
+0.00
+0.05
+0.10
+0.15
+0.20
+TGSS(t)
+Classification
+adult
+arrhythmia
+balance-scale
+bank
+blood
+breast-w
+car
+cmc
+communities
+covtype
+credit-g
+eucalyptus
+heart
+junglechess
+myocardial
+pc1
+tic-tac-toe
+vehicle
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+Generation t
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+TGSS(t)
+Regression
+bike
+crab
+forest-fires
+housing
+insurance
+wine
+Figure 2: TGSS trajectories across all classification (left) and regression (right) datasets over 10 generations.
+throughout, notably tic-tac-toe and blood dataset (classification) are precisely those where TOPOFE’s performance
+advantage over single-family baselines is smallest, establishing TGSS as a practically useful predictive indicator of
+when cross-family transfer is likely to be beneficial. Conversely, vehicle (classification, TGSS ≈0.22) and forest-fires
+(regression, TGSS ≈0.24) achieve the highest specialization, consistent with their heterogeneous feature interactions
+across multiple operator families that produce strongly differentiated island pair utilities. Third, regression datasets
+exhibit faster early plateau behavior. Most curves flatten after generation 3–4. while classification curves continue
+growing through generation 10. This asymmetry reflects that regression fitness signals are smoother and more stable,
+enabling the bandit-style update rule to reach confident weight estimates in fewer transfer trials, while classification
+tasks present noisier utility landscapes that require sustained transfer sampling to resolve inter-family utility differences.
+This observation motivates task-type-specific transfer budget scheduling as a direction for future work.

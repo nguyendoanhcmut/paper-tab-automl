@@ -1,0 +1,22 @@
+### 4.4. Case Study
+
+- Hiệu năng vượt trội và đáng chú ý trên hai bộ dữ liệu jungle chess và compass:
+  - Khi xem xét kết quả thực nghiệm, mức cải thiện hiệu năng trên các bộ dữ liệu jungle chess và compass đặc biệt ấn tượng và đáng ghi nhận.
+  - Phân tích chuyên sâu về cấu trúc của các đặc trưng được sinh ra nhằm làm sáng tỏ nguyên nhân cốt lõi dẫn đến bước nhảy vọt về hiệu năng này.
+- Phân tích cấu trúc tô-pô (topology structure) cây đặc trưng sâu nhiều tầng (Hình 3):
+  - Thay vì sinh các đặc trưng hoàn toàn độc lập từ không gian đặc trưng nguyên bản, SIGMA thực hiện tái sử dụng đệ quy (recursively reuses) các đặc trưng đã được kiến tạo trước đó và kết hợp chúng từng bước (step by step).
+  - Quá trình kết hợp đệ quy này tạo nên một cấu trúc cây đặc trưng sâu với độ sâu đạt đến $9$ tầng ($\text{depth} = 9$), như được minh họa trong Hình 3(a) trên tập dữ liệu jungle chess.
+  - Khả năng tạo ra các đặc trưng có cấu trúc phân tầng sâu bậc $9$ này là điều vượt ngoài tầm với của các phương pháp AutoFE truyền thống (vốn chỉ dừng lại ở các phép biến đổi nông và tổ hợp đặc trưng phẳng).
+  - Hình mẫu tương tự cũng được ghi nhận trên bộ dữ liệu compass (Hình 3(b)), khẳng định tính nhất quán của cơ chế tái sử dụng đặc trưng.
+  - Các kết quả trên nhấn mạnh rằng SIGMA có khả năng xây dựng đặc trưng có cấu trúc và có khả năng tái sử dụng cao (structured and reusable feature construction), thay vì chỉ dựa vào việc sinh các đặc trưng nông hoặc rời rạc (shallow or independent feature generation).
+- Phân tích bóc tách thành phần (Ablation study) và vai trò của chiến lược EXIT trong việc kiểm soát trùng lặp đặc trưng:
+  - **Hình 4.** Kết quả nghiên cứu bóc tách thành phần (Ablation study) của SIGMA
+    - <img src="assets/fig_04_p10_vector.png" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - EXIT giúp giảm tỷ lệ trùng lặp đặc trưng xuống 30% và tăng tỷ lệ chấp nhận đặc trưng
+    - **Từ đâu mà thấy được**
+      - Biểu đồ (a) Acceptance Rate, (b) Code Error Rate, (c) Duplicate Rate giữa SIGMA full, w/o predefine, w/o track, w/o EXIT
+  - Các chỉ số định lượng ghi nhận từ Hình 4:
+    - Tỷ lệ chấp nhận đặc trưng (Acceptance Rate) (Hình 4(a)): SIGMA đầy đủ đạt $13.0\%$ ($936$ đặc trưng), biến thể không tiền định nghĩa phép toán đạt $13.0\%$ ($936$ đặc trưng), biến thể không theo dõi phép toán đạt $12.5\%$ ($898$ đặc trưng), trong khi biến thể không có EXIT chỉ đạt $9.9\%$ ($714$ đặc trưng).
+    - Tỷ lệ lỗi mã nguồn (Code Error Rate) (Hình 4(b)): SIGMA đầy đủ ghi nhận tỷ lệ lỗi $5.6\%$ ($406$ lỗi), so với $1.4\%$ ($104$ lỗi) khi không tiền định nghĩa phép toán, $1.6\%$ ($116$ lỗi) khi không theo dõi phép toán, và $1.6\%$ ($114$ lỗi) khi không có EXIT.
+    - Tỷ lệ trùng lặp đặc trưng (Duplicate Rate) (Hình 4(c)): Khi không sử dụng EXIT, tỷ lệ trùng lặp đặc trưng lên tới $36.6\%$ ($2634$ đặc trưng); khi kích hoạt EXIT trong SIGMA đầy đủ, tỷ lệ trùng lặp giảm mạnh xuống chỉ còn $6.4\%$ ($462$ đặc trưng), tương ứng mức giảm $30\%$ tỷ lệ trùng lặp và tiết kiệm đáng kể ngân sách sinh đặc trưng.

@@ -1,0 +1,27 @@
+## 7 Conclusion
+
+- **Định vị và mô hình hóa của framework TOPOFE**: TOPOFE là một khung làm việc (framework) kỹ thuật đặc trưng tự động có LLM hướng dẫn (LLM-guided automated feature engineering - AutoFE), mô hình hóa không gian tìm kiếm dưới dạng tiến hóa đa quần đảo có cấu trúc đồ thị (graph-structured multi-island evolution) trên các họ biến đổi dị thể (heterogeneous transformation families).
+  - Giải quyết ba hạn chế nền tảng của các phương pháp AutoFE hiện hữu:
+    - Động lực học tìm kiếm thuần nhất (homogeneous search dynamics).
+    - Truy vấn LLM không trạng thái (stateless LLM querying).
+    - Tô-pô di cư cứng nhắc (rigid migration topology).
+- **Ba cơ chế kiến trúc thành phần**:
+  - **Quần đảo chuyên biệt hóa theo họ (family-specialised islands)**: Bảo tồn tính đa dạng biến đổi (transformation diversity) ngay từ thiết kế cấu trúc (by construction).
+  - **Đồ thị tô-pô có hướng học được (learned directed topology graph)**: Điều hướng quá trình chuyển giao liên họ (cross-family transfer) tập trung vào các cặp quần đảo mang lại hiệu quả thực nghiệm cao (empirically productive island pairs).
+  - **Tổng hợp lai qua LLM kích hoạt bởi bão hòa (saturation-triggered LLM-mediated hybrid synthesis)**: Hiện thực hóa việc chuyển giao dưới dạng sinh chương trình hợp thành (compositional program generation) chính xác tại thời điểm quá trình tìm kiếm cục bộ (local search) bị cạn kiệt.
+- **Hiệu năng thực nghiệm trên các bộ dữ liệu đối chuẩn**:
+  - TOPOFE nhất quán vượt trội hơn toàn bộ các phương pháp cơ sở (baselines) trên 19 bộ dữ liệu chuẩn phân loại (classification benchmarks) và 10 bộ dữ liệu chuẩn hồi quy (regression benchmarks).
+  - Mức cải thiện lớn nhất được ghi nhận trên các tập dữ liệu đòi hỏi tương tác đặc trưng liên họ (cross-family feature interactions).
+- **Chứng minh cơ chế hoạt động qua ba số đo chuyên dụng**:
+  - $\text{MPOC}$ và $\text{EffRank}$ chứng minh tập đặc trưng do TOPOFE tạo ra có độ dư thừa thấp hơn (lower redundancy) và độ bao phủ cao hơn (higher coverage) so với tất cả các phương pháp cạnh tranh.
+  - $\text{TGSS}$ xác nhận đồ thị tô-pô tiếp thu tri thức chuyển giao đặc thù cho tác vụ (task-specific transfer knowledge) một cách đáng tin cậy.
+  - Mức độ chuyên biệt hóa trong $\text{TGSS}$ tương quan trực tiếp với mức tăng hiệu năng so với các baseline đơn họ (single-family baselines).
+- **Tính ổn định và khả năng khái quát hóa kiến trúc**:
+  - Các chương trình đặc trưng (feature programs) chuyển giao đáng tin cậy giữa các mô hình dự đoán có kiến trúc khác biệt (architecturally distinct predictors).
+  - Hiệu năng duy trì tính ổn định qua các mô hình xương sống LLM (LLM backbones) có năng lực khác nhau, khẳng định mức tăng hiệu năng bắt nguồn từ cơ chế kiến trúc chứ không phụ thuộc vào một mô hình cụ thể.
+- **Ý nghĩa cốt lõi và hướng nghiên cứu tương lai**:
+  - Kết quả xác lập luận điểm nền tảng: Tính bổ trợ liên họ (inter-family complementarity) là một đại lượng có thể học và khai thác được (learnable and exploitable quantity) mà các phương pháp AutoFE trước đây hoàn toàn bỏ ngỏ.
+  - Mở ra ba hướng phát triển triển vọng:
+    - Khởi tạo lược đồ họ tự động (automated family schema induction).
+    - Lập lịch chuyển giao đặc thù theo loại tác vụ (task-type-specific transfer scheduling).
+    - Mở rộng sang các bài toán dữ liệu bảng đa phương thức (multi-modal tabular settings).
