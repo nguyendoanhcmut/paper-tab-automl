@@ -1,0 +1,207 @@
+2.3.2. MLP model 
+The model development process is illustrated in Fig. 3. The input 
+layer, four hidden layers, and the output layer comprise the MLP. Each 
+neuron in the input layer represents one of the seven input features. Each 
+of the four hidden layers contained 222 neurons, and each neuron 
+conducted a linear transformation of the input and sent the result to an 
+activation function to generate the output. For a given neuron in layer l, 
+the calculation process is described in Eq. (3) 
+al = f
+(
+Wl⋅a(l−1) + bl )
+(3)  
+where al represents the activation vector at layer l, Wl represents the 
+weight matrix connecting layer l-1 to layer l, bl represents the bias vector 
+at layer l, and f represents the activation function applied element-wise 
+to the linear transformation result. The HPO selects the activation 
+functions for each hidden layer. From the 1st to the 4th hidden layer, 
+Tanh, Tanh, ReLU, and Tanh (shown in Eqs. (4) and (5), respectively) 
+were selected. 
+Tanh(z) = f(z) = ez −e−z
+ez + e−z
+(4)  
+ReLU(z) = f(z) = max(0, z)
+(5)  
+where z represents the input to the activation function, and f(z) repre­
+sents the output. 
+Regarding regression prediction, the only target value was the TMP, 
+which is a continuous value; hence, the output layer of the regression 
+model had only one neuron representing the TMP. Linear activation 
+functions are often used in the output layers of regression tasks. This 
+enabled the network to output the anticipated values directly without 
+additional transformations (Dubey et al., 2022). However, selecting an 
+activation function that matches the features of the challenge and the 
+Fig. 2. Flow chart of the model development process.  
+Table 3 
+Available alternatives and the selected options of hyperparameters in multilayer perceptron (MLP) and long short-term memory (LSTM).  
+Models 
+Number of 
+hidden layers 
+Number of 
+neurons 
+Activation 
+functionsb 
+Loss 
+functions 
+Optimizers 
+Learning 
+rate 
+Dropout 
+rate 
+Weight decay 
+Number of 
+LSTM unitsc 
+MLP 
+Available 
+alternatives 
+1–5 
+8–256 
+ReLU, 
+Sigmoid, Tanh 
+MSE, MAE, 
+Huber 
+Adam, 
+AdaDelta, 
+RMSProp 
+0.0001–0.01 
+0.1–0.5 
+0.000001–0.1 
+– 
+Selected 
+options 
+4 
+222 
+Tanh, Tanh, 
+ReLU, Tanh 
+MSE 
+RMSProp 
+0.0001056 
+0.1410 
+0.000001258 
+– 
+LSTM 
+Available 
+alternatives 
+1–6a 
+8–256 
+ReLU, 
+Sigmoid, Tanh 
+MSE, MAE, 
+Huber 
+Adam, 
+AdaDelta, 
+RMSProp 
+0.0001–0.01 
+0.1–0.5 
+0.000001–0.1 
+5–50 
+Selected 
+options 
+3 
+140 
+ReLU, Tanh, 
+Tanh 
+MSE 
+Adam 
+0.0003677 
+0.1663 
+0.0004726 
+45 
+Simple 
+MLP 
+Selected 
+options 
+1 
+10 
+Tanh 
+MSE 
+RMSProp 
+0.003987 
+– 
+0.0002208 
+–  
+a Including an LSTM layer as the fixed first hidden layer. 
+b The selected activation functions for each hidden layer. 
+c Only in the LSTM model. 
+T. Wang and Y.-Y. Li                                                                                                                                                                                                                          
+
+
+<!-- Page 6 -->
+Science of the Total Environment 912 (2024) 169164
+6
+intended output behavior is essential. For TMP prediction, the value 
+should be positive; hence, the ReLU was chosen as the output layer 
+activation function in this study. The mean square error (MSE) was 
+selected as the loss function for the regression MLP model, as shown in 
+Eq. (6). 
+MSE(y, p) = 1
+n
+∑n
+i=1(yi −pi)2
+(6)  
+where n is the number of samples, yi is the true value of the target 
+variable, and pi is the predicted value. 
+In addition to R2, Root Mean Square Error (RMSE) is a frequently 
+employed metric for assessing the accuracy of a regression prediction. 
+RMSE quantifies the average magnitude of the prediction errors and 
+provides an intuitive understanding of the model accuracy in the same 
+unit as the target variable. The RMSE is obtained by taking the square 
+root of the MSE (Eq. (7)). In the regression conception, the RMSE was 
+calculated on both the training set and the test set to provide a more 
+complete picture of the model performance. 
+RMSE =̅̅̅̅̅̅̅̅̅̅
+MSE
+√
+(7) 
+To provide a more comprehensive analysis and increase the scope of 
+the evaluation, supplementary statistical metrics have been included: 
+adjusted R2 (Eq. (8)), Mean Absolute Error (MAE) (Eq. (9)), and Median 
+Absolute Error (MedAE) (Eq. (10)). 
+Adjusted R2 = 1 −
+(
+1 −R2)
+⋅
+n −1
+n −p −1
+(8)  
+Where R2 is the coefficient of determination, n is the number of samples, 
+and p is the number of predictors (input features) in the model. 
+MAE(y, p) = 1
+n
+∑n
+i=1|yi −pi |
+(9)  
+where n is the number of samples, yi is the true value of the target 
+variable, and pi is the predicted value. 
+MedAE(y, p) = median(|yi −pi |)
+(10)  
+where yi is the true value of the target variable, pi is the predicted value, | 
+yi-pi| is the absolute error between the predicted and true value for each 
+data point, and median represents the median function, which finds the 
+middle value of all the absolute errors when they are sorted in ascending 
+order. By taking into consideration the number of predictors in the 
+model, adjusted R2 provides a more accurate assessment of the explan­
+atory capability of the model. Measuring the average absolute discrep­
+ancy between predicted and observed values, MAE provides a direct 
+indication of the magnitude of the average error. In contrast, the median 
+of these absolute differences is denoted by MedAE, which offers a robust 
+metric that is comparatively less susceptible to outliers present in the 
+dataset. By combining these metrics, a comprehensive framework is 
+established to conduct a rigorous assessment of the predictive capabil­
+ities of the models. RMSProp was selected as the optimizer with a 
+learning rate of 0.0001056. The dropout and weight decay of each 
+hidden layer were 0.1410 and 0.000001258, respectively. 
+Due to the utilization of HPO to ensure a high level of predictive 
+performance, the model in this study has a high level of complexity. 
+Model construction requires a considerable amount of computational 
+power and time. A simple MLP model (s-MLP) was developed as a 
+benchmark for evaluating the performance of ANN models. The 
+employed dataset, as well as the properties of the input and output 
+layers, remain unchanged. However, the s-MLP has just one hidden layer 
+with a range of 1 to 10 neurons. Other HPO configurations, including the 
+activation function, loss function, optimizer, learning rate, weight 
+decay, and trial number, are identical to the MLP model. Due to the 
+straightforward structure, Dropout has not been implemented. After the 
+HPO, the s-MLP contains 10 neurons in the hidden layer, with Tanh as 
+the activation function, MSE as the loss function, RMSProp as the opti­
+mizer, a learning rate of 0.003987, and a weight decay of 0.0002208. 

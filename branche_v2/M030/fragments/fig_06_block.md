@@ -1,0 +1,7 @@
+  - **Hình 6.** Tầm quan trọng tương đối của các biến đầu vào ANN
+    - <img src="assets/fig_06_p8.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - SRT và fCOD có tầm quan trọng tương đối cao nhất đối với mô hình loại bỏ amoni, trong khi phosp thấp nhất.
+    - **Từ đâu mà thấy được**
+      - Ox: tầm quan trọng tương đối, thang đo $0.0$–$1.0$. Oy: 10 biến đầu vào theo thứ tự giảm dần.
+      - Chiều dài thanh ngang đạt cực đại tại SRT ($1.0$), kế tiếp là fCOD ($\sim 0.95$), và thấp nhất tại phosp ($\sim 0.64$).

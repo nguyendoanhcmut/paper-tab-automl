@@ -1,0 +1,7 @@
+    - **Hình 2.** Các thông số đầu vào và ký hiệu viết tắt
+      - <img src="assets/fig_02_p3_vector.png" alt="Hình 2" />
+      - **Hình này chứng minh điều gì**
+        - Cấu trúc rẽ nhánh chuẩn hóa tên gọi đầy đủ tương ứng từng ký hiệu viết tắt cho nhóm điều kiện vận hành và đặc tính nước vào.
+      - **Từ đâu mà thấy được**
+        - Hướng đọc từ trái sang phải: khối "Operating conditions" bên trái nối mũi tên sang DO, ORP và MLSS.
+        - Khối "Influent characteristics" ở giữa nối mũi tên sang TOC, TN, TP, COD, $\text{NH}_4$ và SS.

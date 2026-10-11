@@ -1,0 +1,7 @@
+  - **Hình 7.** Tương quan PCA giữa các biến và loại bỏ amoni
+    - <img src="assets/fig_07_p9.jpeg" alt="Hình 7" />
+    - **Hình này chứng minh điều gì**
+      - Các thành phần PC1–PC3 lượng hóa tương quan giữa biến vận hành và loại bỏ amoni qua góc kẹp véc-tơ ($0^\circ$ thuận, $90^\circ$ độc lập, $180^\circ$ nghịch).
+    - **Từ đâu mà thấy được**
+      - Trục tọa độ: 3 vòng tròn tương quan biểu diễn các cặp PC1 ($22.9\ \%$), PC2 ($17.8\ \%$) và PC3 ($9.8\ \%$) trong dải $[-1.0, 1.0]$.
+      - Véc-tơ removal (giải thích biến thiên $\ge 0.4$) nằm cùng góc phần tư với temp và ammonia, ngược hướng với perm và fCOD.

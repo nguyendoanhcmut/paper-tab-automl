@@ -1,0 +1,129 @@
+## 1. Introduction
+
+- Vị thế then chốt của ngành palm oil (PO - dầu cọ) và thách thức phát sinh nước thải công nghiệp:
+  - Malaysia là quốc gia sản xuất và xuất khẩu palm oil (PO - dầu cọ) lớn thứ $2$ trên thế giới sau Indonesia (Kushairi et al. 2018).
+  - PO và palm kernel oil (dầu nhân cọ) chiếm $34\%$ tổng sản lượng dầu và mỡ (oil and fat) trên toàn cầu, giữ vai trò thiết yếu đối với việc duy trì an ninh dinh dưỡng cho dân số thế giới.
+  - Ngành công nghiệp PO giữ vai trò động lực đối với tăng trưởng nông nghiệp và kinh tế của Malaysia, đóng góp đáng kể vào gross domestic product (GDP - tổng sản phẩm quốc nội), gross national income (GNI - tổng thu nhập quốc dân), dự trữ ngoại hối và việc làm (Kushairi et al. 2018).
+  - Sản lượng PO cao kéo theo phát sinh khối lượng nước thải công nghiệp rất lớn: quá trình chiết xuất $1\text{ tấn}$ crude PO (dầu cọ thô) đòi hỏi từ $5$ đến $7\text{ tấn}$ ($5000\text{–}7000\text{ kg}$) nước, với hơn $50\%$ lượng nước này trở thành palm oil mill effluent (POME - nước thải nhà máy chế biến dầu cọ) (Ahmad et al. 2015).
+- Thành phần, tác động môi trường của POME và yêu cầu pháp lý về xử lý nước thải:
+  - Nước thải POME bao gồm các dòng thải bắt nguồn từ $3$ công đoạn chế biến chính trong nhà máy (Liew et al. 2015):
+    - Sterilizer condensate (nước ngưng tụ từ nồi tiệt trùng).
+    - Clarification wastewater (nước thải từ công đoạn làm trong/lắng).
+    - Hydrocyclone wastewater (nước thải từ thiết bị tách xoáy thủy lực).
+  - POME có bản chất tự nhiên là không độc (non-toxic), nhưng việc xả thải trực tiếp POME chưa qua xử lý ra sông suối kích hoạt quá trình phân hủy tự nhiên, làm cạn kiệt nhanh chóng nồng độ dissolved oxygen (DO - oxy hòa tan) trong nước sông.
+  - Hiện tượng cạn kiệt oxy hòa tan dẫn đến suy thoái nghiêm trọng sinh vật thủy sinh và hệ sinh thái tự nhiên.
+  - Việc áp dụng các công nghệ xử lý nước thải tiên tiến cho POME là yêu cầu bắt buộc nhằm đáp ứng các quy chuẩn do chính phủ Malaysia ban hành thông qua Environmental Quality Acts (EQA - Đạo luật Chất lượng Môi trường) năm $1978$.
+- Ưu thế của membrane technology (công nghệ màng) và trở ngại fouling (tắc nghẽn màng) trong hệ thống MBR:
+  - Membrane technology (công nghệ màng) ngày càng khẳng định tầm quan trọng trong xử lý nước thải đô thị, sinh hoạt và công nghiệp bao gồm POME nhờ các ưu thế vận hành:
+    - Simplicity of operation (vận hành đơn giản).
+    - Lower weight (khối lượng thiết bị nhẹ hơn).
+    - Reduced space requirements (giảm yêu cầu diện tích mặt bằng).
+    - High efficiency (hiệu suất xử lý cao).
+  - Membrane bioreactor (MBR - bể phản ứng sinh học màng) đã chứng minh độ tin cậy như một hệ thống lọc xử lý nước thải POME (Teow et al. 2023).
+  - Fouling (hiện tượng tắc nghẽn màng) là trở ngại chính của hệ thống MBR, làm gia tăng mức tiêu thụ năng lượng và chi phí bảo trì (Ghani et al. 2018).
+  - Hiện tượng fouling xảy ra khi các vật liệu rắn bít nghẽn membrane pores (các lỗ rỗng của màng), dẫn đến suy giảm permeate flux (thông lượng thấm) và làm tăng transmembrane pressure (TMP - áp suất qua màng).
+- Các yếu tố ảnh hưởng và phương pháp kiểm soát hiện tượng fouling:
+  - Hiện tượng fouling có thể giảm thiểu bằng cách kiểm soát các biến số tắc nghẽn khác nhau (Li et al. 2022).
+  - Fouling chịu ảnh hưởng của một số thông số hệ thống (Stuckey 2012):
+    - Membrane form (dạng/cấu hình màng).
+    - Hydrodynamic conditions (điều kiện thủy động lực học).
+    - Composition of the biological system (thành phần của hệ sinh học).
+    - Operating conditions of the reactor and the chemical system (điều kiện vận hành của lò phản ứng và hệ hóa chất).
+  - Về phương diện vận hành, fouling có thể được quản lý và giảm thiểu thông qua các kỹ thuật (Yusuf et al. 2019):
+    - Air bubble / aeration control (kiểm soát sục khí / bọt khí).
+    - Backwashing (rửa ngược).
+    - Relaxation (gián đoạn hút / khoảng nghỉ).
+    - Chemical cleaning (tẩy rửa hóa chất).
+  - Do hệ thống MBR chứa nhiều biến số và thể hiện tính phi tuyến cao bởi bản chất phức tạp của các biến gây tắc nghẽn, việc xây dựng các mô hình toán học nhằm mục đích dự đoán là công cụ có giá trị cao để hỗ trợ ra quyết định tác động đến hiệu năng hệ thống (Xiong et al. 2019).
+- Vai trò của machine learning (ML - học máy) trong tối ưu hóa và dự đoán hệ thống:
+  - Thuật toán machine learning (ML - học máy) hướng đến phát triển các mô hình có khả năng dự đoán các giá trị mới dựa trên dữ liệu lịch sử.
+  - Thuật toán ML gồm $2$ nhóm tổng quát (Garza-Ulloa 2022):
+    - Linear regression (mô hình hồi quy tuyến tính).
+    - Nonlinear regression (mô hình hồi quy phi tuyến).
+  - Đối với mô hình phi tuyến, các phương pháp thường được sử dụng gồm (Basha & Rajput 2019):
+    - $k$-nearest neighbour ($k$-NN - $k$-láng giềng gần nhất).
+    - Decision trees (cây quyết định).
+    - Support vector machines (SVM - máy vector hỗ trợ).
+    - Artificial neural networks (ANN - mạng nơ-ron nhân tạo).
+  - Mô hình dự đoán giữ vai trò không thể thiếu trong tối ưu hóa thông số thông qua (Bunmahotama et al. 2017):
+    - Xử lý dữ liệu độc lập.
+    - Dự báo đầu ra dựa trên các tập dữ liệu đầu vào.
+    - Điều chỉnh vận hành của một chuỗi thiết bị.
+    - Cung cấp các quyết định sản xuất kịp thời và tự động hóa.
+  - Mô hình hóa giúp tinh giản vận hành, tiết kiệm nhân lực và giảm tiêu thụ năng lượng trong hệ thống; do đó mô hình dự đoán chính xác có vai trò then chốt trong hỗ trợ ra quyết định tác động trực tiếp đến hiệu năng hệ thống.
+- Đặc tính của artificial neural networks (ANN - mạng nơ-ron nhân tạo) và thách thức hyperparameter optimization (HPO - tối ưu hóa siêu tham số):
+  - ANN là thuật toán ML uy tín, nổi bật nhờ hiệu quả trong mô hình hóa các quá trình phức tạp và phi tuyến.
+  - Khái niệm ANN được lấy cảm hứng từ cơ chế hoạt động của bộ não con người sinh học trong các quá trình giải quyết vấn đề.
+  - Các ưu điểm kỹ thuật nổi bật của ANN bao gồm (Hemeida et al. 2020):
+    - Strong learning capacity (năng lực học tập mạnh mẽ).
+    - Parallelism (tính song song).
+    - Robustness in handling noise (độ bền vững khi xử lý dữ liệu chứa nhiễu).
+  - $2$ cấu trúc ANN phổ biến nhất trong lĩnh vực xử lý nước thải:
+    - Multilayer perceptron (mạng perceptron đa tầng) hoặc feed-forward neural network (FFNN - mạng nơ-ron truyền thẳng).
+    - Radial basis function neural network (RBFNN - mạng nơ-ron hàm cơ sở xuyên tâm).
+  - Thách thức hàng đầu khi xây dựng mô hình dự đoán hiệu quả bằng ANN nằm ở quy trình tinh chỉnh các hyperparameters (siêu tham số) (Feurer & Hutter 2019; Probst 2019b; Pannakkong et al. 2022).
+  - Phần lớn kỹ thuật ML, bao gồm ANN, đều chứa các hyperparameters đòi hỏi cấu hình cụ thể; việc tinh chỉnh các hyperparameters để xác định cấu hình tối ưu nhằm tối thiểu hóa loss value (giá trị hàm mất mát) được định nghĩa là hyperparameter optimization (HPO - tối ưu hóa siêu tham số) (Feurer & Hutter 2019).
+- Tầm quan trọng của HPO và tính đa dạng thuật toán:
+  - HPO giữ vai trò trọng yếu trong việc nâng cao hiệu năng và reproducibility (khả năng tái lập) của các mô hình ML (Vincent & Jidesh 2023).
+  - HPO thu hút sự quan tâm thương mại đáng kể gắn liền với sự gia tăng ứng dụng ML trong công nghiệp, thường được triển khai trong các công cụ nội bộ và dịch vụ đám mây ML (ML cloud services).
+  - HPO đóng vai trò nguồn lực cốt lõi cho các nhà phân tích dữ liệu và nghiên cứu để thấu hiểu các hyperparameters của ML (Ali et al. 2023).
+  - Đạt được cấu hình lý tưởng chỉ trong một vài lần thử nghiệm là bài toán đầy thách thức nhưng mang tính quyết định, đòi hỏi tiếp cận phù hợp.
+  - Các nghiên cứu chuyên sâu đã đề xuất phương pháp tinh chỉnh hyperparameters cho nhiều thuật toán ML:
+    - Decision tree (cây quyết định) (Alawad et al. 2018).
+    - Support vector machine (máy vector hỗ trợ) (Duarte & Wainer 2017).
+    - Deep neural network (mạng nơ-ron sâu) (Zhou et al. 2019).
+    - Random forest (RF - rừng ngẫu nhiên) (Probst 2019b).
+    - FFNN (mạng nơ-ron truyền thẳng) (Ibrahim & Wahab 2022).
+  - Việc tinh chỉnh chuẩn xác hyperparameters làm gia tăng hiệu năng của quá trình huấn luyện ML (Nematzadeh et al. 2022).
+  - Không tồn tại một quy tắc chung duy nhất cho mọi bài toán (no one-size-fits-all rule); quá trình tối ưu hóa phụ thuộc vào độ phức tạp của hệ thống được mô hình hóa.
+- Các hạn chế cố hữu của phương pháp HPO truyền thống (mặc định, trial-and-error, OVAT):
+  - Tiếp cận đơn giản nhất với nỗ lực tối thiểu là sử dụng các giá trị khuyến nghị từ nghiên cứu trước hoặc giá trị mặc định do các thư viện ML cung cấp, nhưng các giá trị này không hoạt động tối ưu trên tất cả các mô hình và đòi hỏi hiệu chỉnh theo dữ liệu đầu vào mới hoặc cập nhật (Lujan-Moreno et al. 2018; Probst 2019a).
+  - HPO truyền thống thường được tiến hành qua phương pháp trial-and-error (thử và sai), trong đó các nghiên cứu thường chỉ tập trung lựa chọn số lượng nơ-ron mà bỏ qua các hyperparameters khác (Badrnezhad & Mirza 2014; Onukwuli et al. 2021).
+  - Tiếp cận trial-and-error không thực tế đối với người lập mô hình thiếu kinh nghiệm khi đối mặt với không gian cấu hình rộng lớn, đồng thời không đảm bảo tìm được giá trị hyperparameters tối ưu.
+  - Phương pháp one-variable-at-a-time (OVAT - thay đổi từng biến tại một thời điểm) được áp dụng để xác định số nơ-ron tối ưu nhờ tính thân thiện và yêu cầu chuyên môn tối thiểu (Pakravan et al. 2015; Said et al. 2018).
+  - Ví dụ thực tế: Jawad et al. (2021) đã huấn luyện riêng lẻ hàm kích hoạt log-sigmoid và tan-sigmoid với số nơ-ron dao động từ $1$ đến $20$.
+  - Tuy nhiên, quy trình OVAT tiêu tốn nhiều thời gian và công sức, đặc biệt khi khảo sát đồng thời nhiều tham số (Elfghi 2016).
+  - Đối với $3$ mức giá trị khác nhau cho mỗi biến của ANN, ước tính cần tới khoảng $245$ ($= 3^5$) cấu hình hyperparameters khác nhau (Ibrahim et al. 2020).
+- Tiềm năng của kỹ thuật design of experiment (DoE - thiết kế thí nghiệm) trong HPO:
+  - Kỹ thuật design of experiment (DoE - thiết kế thí nghiệm / quy hoạch thực nghiệm) đã được áp dụng thành công như một công cụ mô hình hóa và tối ưu hóa cho các bài toán phức tạp và phi tuyến trong công nghiệp (Pashaei et al. 2023).
+  - DoE được ưa chuộng nhờ các đặc tính:
+    - Reliability (độ tin cậy cao).
+    - Simplicity (tính đơn giản).
+    - Systematic strategies (chiến lược có hệ thống).
+    - Low trial requirements (yêu cầu số lần thử nghiệm thấp).
+    - Reduced processing time (giảm thời gian xử lý tính toán).
+  - DoE khắc phục hiệu quả hạn chế tiêu tốn thời gian khi xem xét toàn bộ các tổ hợp hyperparameters, đặc biệt khi liên quan đến mixed parameters (các tham số hỗn hợp gồm dạng số và dạng phân loại).
+  - DoE cung cấp thông tin phong phú hơn nhờ khám phá không gian thiết kế lớn hơn một cách trực quan (dạng $2\text{D}$ và $3\text{D}$), tạo phương tiện thuận tiện để nhận diện các tương tác giữa các hyperparameters.
+- Ứng dụng DoE và response surface methodology (RSM - phương pháp bề mặt đáp ứng) trong tối ưu hóa hyperparameters:
+  - Full factorial design (thiết kế nhân tố toàn phần) đã được Kechagias et al. (2018) sử dụng cho HPO để tối ưu hóa số nơ-ron trong lớp ẩn, learning rate (tốc độ học) và momentum constant (hằng số xung lượng).
+  - Full factorial design xác định chính xác các ảnh hưởng chính và ảnh hưởng tương tác của hyperparameters, nhưng bị giới hạn ở các mô hình tuyến tính và số lượng thí nghiệm gia tăng theo cấp số nhân khi số yếu tố tăng lên.
+  - Thiết kế nhân tố thường áp dụng cho $3$ mục tiêu chính (Chen et al. 2013):
+    - Screening factors (sàng lọc các yếu tố).
+    - Optimization (tối ưu hóa).
+    - Stability testing (kiểm tra độ ổn định).
+  - Response surface methodology (RSM - phương pháp bề mặt đáp ứng) là công cụ không thể thiếu khi xuất hiện độ cong (curvature) do các mối quan hệ bậc cao hơn.
+  - Lujan-Moreno et al. (2018) và Probst (2019b) đã áp dụng phương pháp luận DoE để tinh chỉnh các hyperparameters của RF như `ntree`, `mtry`, `replace`, `nodesize`, `classwt`, `cutoff` và giá trị `maxnodes`, kết hợp thiết kế tuyến tính (factorial design) cho sàng lọc và thiết kế phi tuyến (RSM) cho tinh chỉnh.
+- So sánh các dạng quy hoạch RSM và các khoảng trống nghiên cứu cần giải quyết:
+  - Trong các thiết kế RSM, phổ biến nhất là central composite design (CCD - thiết kế tâm xoay phức hợp) và Box–Behnken designs (BBD - thiết kế Box–Behnken).
+  - Nghiên cứu của Pashaei et al. (2023) so sánh CCD và BBD, chỉ ra CCD nổi bật nhờ khả năng ứng dụng cao và hiệu năng vượt trội chỉ với một số ít điểm thử nghiệm.
+  - Nourbakhsh et al. (2014) chỉ tạo ra $52$ thiết lập khác nhau bằng CCD cho $5$ loại hyperparameters (số nơ-ron, training epochs (số chu kỳ huấn luyện), step size (kích thước bước), tỷ lệ phần trăm huấn luyện và momentum coefficient (hệ số xung lượng)), xây dựng mô hình bậc hai với mean-square error (MSE - sai số bình phương trung bình) là đáp ứng.
+  - Kết quả từ Nourbakhsh et al. (2014) chỉ ra step size, momentum coefficient và training epochs ảnh hưởng đáng kể đến quá trình phát triển mô hình.
+  - Tuy nhiên, nghiên cứu của Nourbakhsh et al. (2014) tồn tại $2$ hạn chế lớn:
+    - Chưa xét đến bất kỳ yếu tố phân loại (categorical factors) nào.
+    - Chưa so sánh phương pháp truyền thống với kỹ thuật RSM đề xuất về thời gian xử lý tối ưu hóa và độ chính xác mô hình, do đó tính công bằng và hiệu quả của phương pháp RSM chưa thể xác lập dứt khoát.
+  - Thực tế này nhấn mạnh nhu cầu mở rộng hiểu biết về các hyperparameters hỗn hợp liên quan đến hiệu năng mô hình dự đoán trên nhiều dạng ML khác nhau bằng cách tiếp cận RSM.
+- Mục tiêu và đóng góp của nghiên cứu đề xuất:
+  - Nghiên cứu đề xuất phương pháp tiếp cận tối ưu hóa kết hợp DoE và RSM với các mô hình ANN để dự đoán permeate flux (thông lượng thấm) của submerged membrane bioreactors (SMBRs - bể phản ứng sinh học màng ngập nước).
+  - Khảo sát và ứng dụng đồng thời $2$ cấu trúc mạng phổ biến: thuật toán FFNN và thuật toán RBFNN.
+  - Kết hợp đồng thời các hyperparameters dạng số (numerical) và dạng phân loại (categorical) nhằm đạt độ chính xác mô hình cao.
+  - So sánh đối chứng toàn diện kết quả của ANN khi sử dụng tối ưu hóa RSM đề xuất và tối ưu hóa OVAT nhằm đạt hiểu biết đầy đủ về năng lực dự đoán chính xác và cải thiện hiệu năng huấn luyện ANN.
+- Dữ liệu thực nghiệm và hệ thống chỉ số kiểm định hiệu năng mô hình:
+  - Đánh giá hiệu năng mô hình dựa trên tập dữ liệu vào - ra thực tế thu thập từ trạm xử lý SMBR đối với nước thải POME.
+  - Độ chính xác mô hình được phân tích thông qua các sai số thống kê hiệu năng tiêu chuẩn:
+    - Correlation coefficient ($R$ - hệ số tương quan).
+    - Coefficient of determination ($R^2$ - hệ số xác định).
+    - Mean-square error ($MSE$ - sai số bình phương trung bình).
+    - Root-mean-square error ($RMSE$ - căn bậc hai của sai số bình phương trung bình).
+  - Tổng số lần lặp lại (total number of repetitions) và computational time (thời gian tính toán) được đo lường và so sánh đối chứng.
+  - Trình bày kết quả áp dụng $2$ loại kỹ thuật HPO (RSM và OVAT) cho các thuật toán học mạng nơ-ron (FFNN và RBFNN) để chứng minh các ý nghĩa thực tiễn của phương pháp HPO đề xuất.
+  - Các phát hiện từ mô phỏng và thực nghiệm từ việc áp dụng HPO trên tập dữ liệu POME được thảo luận thấu đáo.

@@ -1,0 +1,1338 @@
+<!-- Page 1 -->
+Journal of Water Process Engineering 46 (2022) 102521
+Available online 5 January 2022
+2214-7144/© 2021 Elsevier Ltd. All rights reserved.
+Modeling nutrient removal by membrane bioreactor at a sewage treatment 
+plant using machine learning models 
+Muhammad Yaqub, Wontae Lee * 
+Department of Environmental Engineering, Kumoh National Institute of Technology, Republic of Korea   
+A R T I C L E I N F O  
+Keywords: 
+Multilayer perceptron 
+Machine learning 
+Nutrient removal 
+Wastewater treatment 
+Extreme gradient boost 
+A B S T R A C T  
+This study developed machine learning (ML) models to predict nutrient removal using an anaerobic-anoxic-oxic 
+membrane bioreactor (A2O-MBR). An extreme gradient boosting (XGBoost) model was applied using a grid 
+search strategy (Grid-XGBoost) to predict the removal of nutrients, including ammonium (NH4), total phosphorus 
+(TP), and total nitrogen (TN). The models were validated against a commonly used multilayer perceptron (MLP) 
+neural network. The input parameters were divided into operating conditions, including dissolved oxygen, 
+oxidation-reduction potential, and mixed liquor suspended solids. These conditions were also partitioned based 
+on influent characteristics such as NH4, TN, TP, total organic content, chemical oxygen demand, and suspended 
+solids. A total of nine models were developed for each ML technique using the operating conditions and influent 
+characteristics as separate datasets and combining them for each target nutrient. It was observed that using only 
+operating conditions or influent characteristics as input parameters for XGBoost and MLP yielded poor results. 
+Moreover, a significant improvement in the predictive efficacy of the model was observed when all parameters 
+for the target nutrient removal predictions were considered. The prediction of NH4 by the XGBoost model had the 
+highest R2 values of 0.763, 0.814, and 0.876 when the operating conditions, influent characteristics, and com­
+bined dataset were used as input parameters, respectively. Overall, the ensemble XGBoost model demonstrated 
+better performance than the MLP model in all cases. However, the performance of both the models was found to 
+be inadequate for predicting TN and TP removal in any scenario. The proposed XGBoost model is a reliable and 
+robust ML technique for predicting NH4 removal, which may contribute to decision-making in advance to 
+improve the efficacy of an A2O-MBR system.   
+1. Introduction 
+Eutrophication is the nutrient-based water pollution that primarily 
+results from the discharge of phosphorus and nitrogen compounds dis­
+charged from natural or anthropogenic processes [1]. Primary sources of 
+eutrophication are the anthropogenic activities, including discharge 
+from agricultural sites, fossil fuel combustion, wastewater treatment, 
+and stormwater runoff from urban areas. This form of pollution causes 
+changes in taste, odor, color, and opacity of natural water, and biodi­
+versity degradation and depletion of oxygen in water resources [2,3]. 
+Thus, the removal of nutrients from streams is an important research 
+area. Biological, chemical, and membrane technologies have been used 
+to remove nutrients from wastewater [4–7]. Biological methods are 
+unable to meet effluent standards for total nitrogen (TN) and total 
+phosphorus (TP) [8], whereas chemical treatments increase sludge 
+production [5]. A membrane-based method integrated with chemical 
+and biological processes has shown promise as a method for nutrient 
+removal, thus increasing the technical and economic feasibility of the 
+system [9]. Membrane bioreactors are an attractive option for potable 
+reuse because of their ecological footprint, pathogen reduction, and low 
+capital costs. The anaerobic-anoxic-oxic membrane bioreactor (A2O- 
+MBR) has achieved outstanding results by effectively applying a step- 
+feed anoxic-oxic process for nutrient removal [10,11]. Additionally, 
+using floating plastic carriers with an anoxic-oxic step feed process in 
+Abbreviations: NH4, ammonium; A2O-MBR, anaerobic-anoxic-oxic membrane bioreactor; ANN, artificial neural network; COD, chemical oxygen demand; R2, 
+coefficient of determination; DO, dissolved oxygen; MAPE, mean absolute percentage error; MAE, mean absolute error; MLSS, mixed liquor suspended solids; MLP, 
+multilayer perceptron; ORP, oxidation-reduction potential; PVDF, polyvinylidene fluoride; RMSE, root mean square error; SS, suspended solids; TN, total nitrogen; 
+TOC, total organic carbon; TP, total phosphorous; XGBoost, extreme gradient boosting; WWTP, wastewater treatment plant. 
+* Corresponding author. 
+E-mail address: wtlee@kumoh.ac.kr (W. Lee).  
+Contents lists available at ScienceDirect 
+Journal of Water Process Engineering 
+journal homepage: www.elsevier.com/locate/jwpe 
+https://doi.org/10.1016/j.jwpe.2021.102521 
+Received 27 August 2021; Received in revised form 6 December 2021; Accepted 13 December 2021   
+
+
+<!-- Page 2 -->
+Journal of Water Process Engineering 46 (2022) 102521
+2
+aerobic units can improve existing wastewater treatment plants [12]. 
+This study was aimed to investigate the A2O-MBR system for nutrient 
+removal in a full-scale wastewater treatment plant. 
+The operating conditions and influent characteristics can optimize 
+the nutrient removal efficiency of the A2O-MBR system. This may be 
+carried out by a one-factor-at-a-time modeling technique mainly used to 
+optimize and control wastewater treatment systems [13,14]. Using a 
+series of laboratory experiments in conventional modeling methods is 
+expensive and time-consuming [15] and cannot model complex mech­
+anisms of A2O-MBR [16]. Machine learning tools are capable of 
+resolving the difficulties encountered in conventional modeling ap­
+proaches [17]. Artificial neural network (ANN) modeling methods can 
+efficiently model complex and non-linear biological wastewater treat­
+ment systems compared to traditional modeling techniques [18]. Pre­
+vious studies have demonstrated the effectiveness of machine learning 
+models in simulating wastewater treatment systems for heavy metal 
+removal, and modeling water bodies and soil for heavy metals adsorp­
+tion [19]. An ANN model was effectively used to track the nutrient 
+removal efficiency of tidal flow in constructed wetlands and the partial 
+nitrification process [20,21]. The hypochlorous acid production process 
+was successfully optimized using ANN and response surface methodol­
+ogy [22]. Previous studies have reliably predicted copper removal from 
+wastewater through adsorption using ANN models [23] and heavy metal 
+contamination using the ensemble model [24]. Others have used ANN 
+model in micellar-enhanced ultrafiltration to predict heavy metal 
+removal from wastewater with more accurately [25–27]. The applica­
+tion of these models with genetic algorithms to optimize the biogas and 
+methane production processes resulted in an up-flow anaerobic sludge 
+blanket pilot plant with relatively accurate predictions [28]. Nutrient 
+removal in an electrically enhanced MBR was successfully traced to 
+determine its relationship with wastewater treatment inputs [29] and 
+predict chemical oxygen demand (COD) in a multi-stage biological 
+treatment system for petroleum refinery wastewater [30]. The support 
+vector machine and accelerating genetic algorithm optimized the A2O 
+system for nutrient removal in a full-scale wastewater treatment plant 
+[31]. Moreover, a Q-learning-based technique was implemented to 
+maximize the biological phosphorus removal using an influent response 
+control approach [13]. 
+In a previous study, researchers applied the long short-term memory 
+(LSTM) model to predict the nutrient removal efficiency of an A2O-MBR 
+at a wastewater treatment plant. They predicted the relationship be­
+tween dissolved oxygen (DO), oxidation-reduction potential (ORP), 
+mixed liquor suspended solids (MLSS), total organic content (TOC), TN, 
+TP, COD, ammonium (NH4), suspended solids (SS), and the nutrient 
+removal efficiency of the plant [32]. A LSTM model was developed using 
+input parameters to predict the nutrients (NH4, TN, and TP) as output in 
+a single model. In addition, only two statistical values were calculated to 
+assess the performance of the proposed LSTM model: mean-square-error 
+(MSE) and root-MSE-observation standard deviation ratio (RSR). This 
+demonstrates the lack of two key aspects: (1) separately investigating 
+the individual effects of operating conditions and influent characteristics 
+to predict the removal of a specific nutrient; and (2) a comparative study 
+with other machine learning models and model validation using limited 
+performance matrices. A multilayer perceptron (MLP) supplements a 
+feed-forward neural network where data flows in the forward direction 
+from the input to the output layer and is mainly used for prediction and 
+approximation. Extreme gradient boosting (XGBoost) offers several 
+advanced features for model tuning, computing environments, and al­
+gorithm enhancement. This technique supports fine-tuning and the in­
+clusion of regularization parameters and can perform three main forms 
+of gradient boosting (GB): GB, regularized GB, and stochastic GB. 
+The XGBoost and MLP models were not applied to simulate the A2O- 
+MBR to predict nutrient removal efficiency. In this study, we used 
+multiple input scenarios to develop the XGBoost and MLP models to 
+evaluate the features selected to enhance the learning capacity of a 
+machine learning model to predict individual nutrients in wastewater 
+treatment systems. This study aimed to: (i) develop XGBoost and MLP 
+models to predict nutrient removal under different input and output 
+scenarios; (ii) validate the proposed XGBoost and MLP models based on 
+performance measuring statistics; and (iii) compare XGBoost, MLP, and 
+previously proposed LSTM models to identify the optimal model to 
+predict nutrient removal by A2O-MBR at a wastewater treatment plant. 
+2. Methodology 
+2.1. Description of the selected wastewater treatment plant 
+For one year of operation, we monitored the nutrient removal per­
+formance (for NH4, TN, and TP) of an A2O-MBR at a wastewater treat­
+ment plant in Okcheon, Republic of Korea. The block diagram in Fig. 1 
+shows that the treatment system contains a primary sedimentation tank; 
+anaerobic, anoxic, and oxic membrane reactors; and a clarifier. The 
+primary sedimentation tank received the influent to increase the acidi­
+fication and hydrolysis of particulate matter, thus maintaining a con­
+stant inflow to the anaerobic reactor. The mixers were used in the 
+anaerobic and anoxic reactors to improve the treatment efficiency and to 
+adapt to the microbial conditions through reaction kinetics. The total 
+membrane surface area and nominal pore size of the MBR were 
+64,000m2 and 0.4 μm, respectively. The membrane was made of poly­
+vinylidene fluoride (PVDF). The MBR was constructed using numerous 
+hollow-fiber membrane modules positioned in an anoxic reactor with air 
+diffusers to maintain the DO concentration; a suction pump was used for 
+continuous MBR membrane filtration. When the transmembrane pres­
+sure increased above 40 kPa, the membrane module was removed from 
+the reactor and washed using water and a 0.5% sodium hypochlorite 
+solution. In addition, the standard limit of the MLSS concentration in the 
+oxic-MBR was maintained. The operating conditions and influent char­
+acteristics monitored at WWTP were: DO, ORP, MLSS, TOC, TP, TN, 
+COD, NH4, and SS. The controllable operating conditions and influent 
+characteristics provide essential information regarding the oxidizable 
+matter parameters, which play a vital role in wastewater treatment [33]. 
+Nitrogen and phosphorus-based nutrients are pollutants of concern due 
+to their adverse impact on the aquatic environment [34]. All parameters 
+were considered in the development of an ML model to establish a 
+relationship between the input parameters and targeted nutrient 
+removal in the A2O-MBR system. 
+2.2. Analytical methods 
+The temperature, ORP, DO, and pH were measured using installed 
+online sensors and recorded, and the TOC and TN concentrations were 
+also analyzed using an online analyzer (Shimadzu TOC-L). The MLSS, 
+COD, NH4, SS, and TP were tested using standard water and wastewater 
+analysis methods [35]. Each parameter was monitored and recorded 
+Influent
+Primary 
+sedimentation
+Anaerobic
+Anoxic
+MBR
+Clarifier
+Effluent
+Sludge 
+disposal
+Fig. 1. Schematic block diagram of the wastewater treatment plant.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 3 -->
+Journal of Water Process Engineering 46 (2022) 102521
+3
+every hour throughout the one-year study period. 
+2.3. Prediction models 
+Fig. 2 presents the input parameters and their abbreviations. We 
+developed two machine-learning predictive models, XGBoost and MLP 
+models, using different input and output scenarios, to predict the 
+nutrient removal efficiency of a WWTP (Fig. 3). A comprehensive 
+description of these models is provided in the following sections. 
+2.3.1. XGBoost model 
+A potential improvement of gradient boosting to a scalable end-to- 
+end tree-boosting structure has been introduced and applied in engi­
+neering and science [36]. XGBoost is often used because it enables easy 
+tuning of the model hyperparameters [37]. To minimize errors, con­
+ventional approaches rely on literature recommendations, user experi­
+ence, and trial-and-error methods [38]. In contrast, in XGBoost models, 
+the booster parameters, including max_depth, boosting iterations, eta, 
+and gamma, are used to optimize the grid-search approach. max_depth is 
+used to manage the depth of a tree, reducing the chance of overfitting 
+Total organic carbon 
+(TOC)
+Total nitrogen (TN)
+Total phosphorous 
+(TP)
+Chemical oxygen 
+demand (COD)
+Ammonium (NH4)
+Suspended solids 
+(SS)
+Dissolved oxygen 
+(DO)
+Oxidation reduction 
+potential (ORP)
+Mixed liquor 
+suspended solids 
+(MLSS)
+Operating 
+conditions
+Influent 
+characteristics
+Fig. 2. Input parameters of the dataset with their abbreviations.  
+Dataset
+DO+ORP+MLSS
+DO+ORP+MLSS
+DO+ORP+MLSS
+TOC+TN+TP+COD+NH4+SS
+TOC+TN+TP+COD+NH4+SS
+TOC+TN+TP+COD+NH4+SS
+DO+ORP+MLSS+TOC+TN+TP+COD+NH4
+NH4
+Models input 
+Models 
+TN
+TP
+NH4
+TN
+TP
+M1
+M2
+M3
+M4
+M5
+M6
+M7
+M8
+M9
+DO+ORP+MLSS+TOC+TN+TP+COD+NH4
+DO+ORP+MLSS+TOC+TN+TP+COD+NH4
+NH4
+TN
+TP
+Fig. 3. Proposed framework of two developed models for different input and output scenarios.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 4 -->
+Journal of Water Process Engineering 46 (2022) 102521
+4
+and upgrading the loss function within a specified limit. In addition, 
+iteration boosting may also help combat model overfitting. The feature 
+weights are adjusted by eta, which is known as the learning rate, to 
+attain the optimum values. Gamma is applied to control regularization to 
+minimize overfitting and manage each iteration's weight and bias 
+changes [39]. The XGBoost model suggests developments in the con­
+ventional decision-tree method for regression models. Generally, a 
+regularized objective loss function, f(L), for the Lth iteration is calculated 
+using Eq. (1). 
+f(L) =
+∑
+n
+i=1
+l
+(
+yi, yp
+L
+)
++
+∑
+L
+j=1
+φ
+(
+f j
+)
+(1)  
+where, n denotes the number of samples; yL
+p denotes the prediction of 
+the ith sample at iteration L; l represents the loss function; and φ ex­
+presses the regularization event. φ is calculated using Eq. (2). 
+φ(f) = γN + 1
+2 σ
+∑
+N
+j=1
+ω2
+j
+(2)  
+where, N denotes the number of leaf nodes, and σ and ω are constants 
+used to manage regularization. The number of trees in the regression 
+model was optimized to produce accurate predictions for a specific 
+iteration number [39]. 
+2.3.2. Multiple layer perceptron (MLP) model 
+The feed-forward back-propagation neural network approach con­
+tains more than one perceptron and comprises an input, output, and one 
+or more hidden layers [40]. The training step of the MLP model is 
+essential in model development to determine the relationship between 
+the input and output. The training of the model is conducted in three 
+steps: (1) feed-forward; (2) error computation; and (3) back-propagation 
+of error. During the feed-forward step, the input dataset is multiplied by 
+randomly selected weights and passed to the hidden layers. The pre­
+dictions from the model are then calculated, with bias adding at each 
+layer. To minimize the calculated error, between the model-predicted 
+and actual results by back-propagating, the weights or hyper- 
+parameters (HPs) and biases are tuned during the training step [41]. 
+The details of the computational steps are provided in Eq. (3) as an 
+Table 1 
+Statistical analyses of the dataset.   
+Statistical analysis of the dataset 
+Minimum 
+Median 
+Mean 
+Maximum 
+Skewness 
+Inputs 
+TOC  
+0.06  
+25.98  
+26.782  
+101.72  
+0.681 
+TN  
+5.179  
+24.17  
+23.573  
+44.206  
+−0.198 
+TP  
+0.625  
+2.218  
+2.291  
+6.045  
+0.615 
+COD  
+20.307  
+124.637  
+125.00  
+311.62  
+0.312 
+NH4  
+0.105  
+17.158  
+16.527  
+35.146  
+−0.697 
+SS  
+0.825  
+35.492  
+35.785  
+161.25  
+1.140 
+DO  
+0.02  
+0.643  
+1.248  
+6.299  
+1.009 
+ORP  
+−57.282  
+−35.999  
+−34.414  
+11.000  
+0.968 
+MLSS  
+2208.333  
+8204.62  
+8008.792  
+17,966.67  
+0.702  
+Outputs 
+NH4  
+2.392  
+98.984  
+97.608  
+99.995  
+−7.843 
+TN  
+15.977  
+68.963  
+67.484  
+93.861  
+−1.119 
+TP  
+7.207  
+91.419  
+86.094  
+100  
+−1.949  
+Table 2 
+Statistical performance matrices for XGBoost models testing dataset.  
+Models 
+Statistical performance matrices 
+MAE 
+RMSE 
+MAPE 
+R2 
+md 
+M1  
+0.00197  
+0.00307  
+1.34028  
+0.764  
+0.926 
+M2  
+0.00433  
+0.01478  
+2.40112  
+0.364  
+0.553 
+M3  
+0.00127  
+0.00128  
+2.23807  
+0.354  
+0.577 
+M4  
+0.00024  
+0.00004  
+0.34383  
+0.814  
+0.971 
+M5  
+0.00172  
+0.00234  
+1.81703  
+0.372  
+0.615 
+M6  
+0.00029  
+0.00006  
+0.18869  
+0.429  
+0.663 
+M7  
+0.00033  
+0.00008  
+0.02333  
+0.877  
+0.998 
+M8  
+0.00919  
+0.06678  
+4.51399  
+0.565  
+0.654 
+M9  
+0.00086  
+0.00058  
+1.05474  
+0.596  
+0.730  
+Fig. 4. Scatter plots between actual and predicted values for different scenarios.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 5 -->
+Journal of Water Process Engineering 46 (2022) 102521
+5
+example neuron function in MLP modeling: 
+y = f
+( ∑
+n
+i=1
+Wixi + b
+)
+(3)  
+where, xi denotes inputs; y represents the output; f is the activation 
+function; Wi is the weight of the neuron; and b represents the bias. The 
+error between the model-predicted and actual results may be minimized 
+by varying the weights and biases through an iterative process. In this 
+study, MLP models were developed to verify the proposed XGBoost 
+models for a comparative study; further information on the MLP model 
+can be found in previous studies [39,42]. 
+2.4. Data analysis and preparation 
+In ML models, data analysis is essential for understanding trends 
+within a dataset. Input data (operating parameters) and influent 
+wastewater characteristics (TOC, TN, TP, COD, NH4-N, SS, DO, ORP, and 
+MLSS) were obtained through an experimental study. To evaluate the 
+efficiency of the A2O-MBR system at a WWTP, the removal of each 
+nutrient (i.e., NH4, TN, and TP) was separately investigated. The total 
+number of observations and variables was 7897 and 9, respectively. The 
+removal of NH4 showed minimum outliers and reduced noise; therefore, 
+the trend was smoother than that of TN and TP. This means that the 
+expected learning of the ML models will be more accurate because of the 
+minor deviation from the mean value in the dataset. Table 1 presents the 
+statistical analyses of the experimental datasets, showing a slight 
+negative and positive skewness in the inputs such as TN, NH4, TOC, TP, 
+COD, ORP, and MLSS. There was a largely negative in NH4, TN, and TP 
+for the output parameters and less positive skewness input parameter 
+were SS and DO. 
+3. Models development 
+All input parameters were divided into influent characteristics and 
+operating conditions. The dataset was divided into three scenarios: the 
+first scenario (M1, M2, and M3) considered the operating conditions; the 
+second scenario (M4, M5, and M6) considered input parameters; and the 
+third scenario (M7, M8, and M9) considered the operating conditions 
+along with the influent characteristics (see Fig. 2). In each scenario, 
+three models were developed for XGBoost and MLP for each nutrient 
+removal prediction. To identify the optimal model, the performances of 
+the developed models were compared, focusing on the input parameters. 
+To evaluate the model performance, several input scenarios (M1, M2, 
+M3, M4, M5, M6, M7, M8, and M9) were considered, which were created 
+on the basis of the operating conditions and influent characteristics. To 
+determine the most economical model, one scenario was eliminated in 
+each evaluation run. 
+The input dataset was divided into scenarios to investigate the 
+importance of the features selected in each set for nutrient removal from 
+wastewater. Fig. 3 illustrates the scheme of the developed models, 
+XGBoost and MLP. Each scenario was defined by input variables. The 
+first scenario contained three inputs for each model; second scenario 
+contained six inputs; and third scenario contained nine inputs. Similarly, 
+the output variable, which focuses on nutrient removal, was considered 
+as a single node in the output layer. 
+3.1. Development of XGBoost model 
+Python software version 3.9 (2021-06-05) was used for XGBoost 
+model development. The library known as “sklearn” was used to split the 
+data into training and testing datasets through the train_test_split and 
+(a)
+Testing dataset
+0
+100
+200
+300
+400
+500
+600
+700
+800
+la
+u
+dis
+e
+R
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+40
+Residual_M1 
+Residual_M4 
+Residual_M7 
+(b)
+Testing dataset
+0
+100
+200
+300
+400
+500
+600
+700
+800
+la
+u
+dis
+e
+R
+-50
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+40
+50
+Residual_M2 
+Residual_M5 
+Residual_M8 
+(c)
+Testing dataset
+0
+100
+200
+300
+400
+500
+600
+700
+800
+la
+u
+dis
+e
+R
+-70
+-60
+-50
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+40
+50
+Residual_M3 
+Residual_M6 
+Residual_M9 
+Fig. 5. Residual plots of XGBoost models for different scenarios.  
+Table 3 
+Statistical performance matrices for MLP model testing dataset.  
+Models 
+Statistical performance matrices 
+MAE 
+RMSE 
+MAPE 
+R2 
+md 
+M1  
+0.00063  
+0.00031  
+0.12996  
+0.703  
+0.849 
+M2  
+0.00617  
+0.03003  
+4.28550  
+0.231  
+0.476 
+M3  
+0.00534  
+0.02256  
+0.78303  
+0.182  
+0.501 
+M4  
+0.00302  
+0.00719  
+1.39672  
+0.787  
+0.908 
+M5  
+0.00359  
+0.01021  
+0.14649  
+0.223  
+0.523 
+M6  
+0.00139  
+0.00153  
+1.43102  
+0.275  
+0.567 
+M7  
+0.00179  
+0.00254  
+0.84586  
+0.782  
+0.942 
+M8  
+0.00988  
+0.07707  
+5.60890  
+0.312  
+0.594 
+M9  
+0.00460  
+0.01675  
+3.93755  
+0.414  
+0.632  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 6 -->
+Journal of Water Process Engineering 46 (2022) 102521
+6
+subset functions. Hyperparameter tuning is an important step in devel­
+oping a model, and various techniques such as Grid Search, Random 
+Search or Bayes Search can be used to obtain optimum parameters. 
+Because limited number of combinations was considered for this study 
+therefore we selected “GridSearch” technique as used in the literature 
+[43]. To obtain the optimal hyperparameters for the XGBoost model, the 
+“GridSearch” method was applied using n_estimators (10–1000). Large 
+datasets were randomly divided into training and testing, such as 90% 
+and 10%, respectively. The model parameters were as: base_score = 0.1, 
+booster = ‘gbtree’, colsample_bylevel = 1, colsample_bynode = 1, col­
+sample_bytree = 1, gamma = 0, gpu_id = −1, importance_type = ‘gain’, 
+interaction_constraints = “, learning_rate = 0.001, max_delta_step = 0, 
+max_depth = 9, min_child_weight = 1, monotone_constraints = ‘()’, 
+n_estimators = 1000, n_jobs = 4, num_parallel_tree = 2, random_state =
+5, reg_alpha = 0, reg_lambda = 1, scale_pos_weigh t = 1, subsample = 1, 
+tree_method = ‘exact’, validate_parameters = 1, verbosity = 0, and 
+activation function was sigmoid function because dataset varies be­
+tween 0 and 1. These hyperparameters were tuned using Grid-Search 
+with the XGBoost model to achieve minimum error, and the optimum 
+values were considered in the development of the XGBoost model. 
+3.2. Development of MLP model 
+Python software version 3.9 (2021-06-05) was used to develop an 
+MLP model. The input dataset was randomly divided into training and 
+testing and fed to the model with one hidden layer. A different number 
+of neurons was tested for each scenario. The tuning of the MLP model 
+hyperparameters was primarily conducted using the trial-and-error 
+method, which identified major hyperparameters such as the learning 
+rate, number of neurons in the hidden layer, random state, and itera­
+tions. A random state was employed to replicate a similar dataset for 
+each run, and a pseudo-random number was randomly generated. The 
+learning rate is another important hyperparameter that regulates the 
+variation in the model response based on the generated error and helps 
+adjust the weights of the model. The model performance was tested by 
+plotting the residual and R2 values for the testing dataset. The proposed 
+MLP model was developed by importing libraries such as “sklearn.pre­
+processing” to scale the dataset from sklearn.model_selection imported 
+from train_test_split, and sklearn.neural_network known as the MLPRe­
+gressor. As we have a large dataset, it was randomly divided into 90% 
+for training and 10% for testing. The rectified linear activation function 
+(ReLU) was selected to overcome the vanishing gradient problem, 
+allowing models to learn faster and perform better, because it is the 
+default activation function when developing MLP models. The following 
+key hyperparameters were tuned against each model scenario by vary­
+ing their values to achieve the best predicted results: hidden_layer_sizes 
+= (4–30), activation = “ReLU,” solver = “lbfgs,” alpha = (0.01–000001), 
+random_state = (3–19), max_iter = (100−100), and warm_start = True. 
+3.3. Model performance matrices 
+The performance of the developed predictive models was evaluated 
+based on statistical metrics, such as the root mean squared error (RMSE), 
+mean absolute percentage error (MAPE), mean absolute error (MAE), 
+coefficient of determination (R2), and modified index of agreement 
+(md). These performance matrices were calculated using the following 
+Eqs. (4)–(8): 
+MAE = 1
+n
+∑
+n
+i=1
+[pi −yi]
+(4)  
+RMSE =̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+1
+n
+∑
+n
+i=1
+[pi −yi]2
+√
+(5)  
+MAPE = 1
+n
+∑
+n
+i=1
+[
+(pi −yi)/yi
+]
+(6)  
+R2 = 1 −
+∑(pi −yi)2
+∑(pi −ua)2
+(7)  
+Fig. 6. Scatter plots between actual and model-predicted values for different scenarios.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 7 -->
+Journal of Water Process Engineering 46 (2022) 102521
+7
+md = 1 −
+∑
+n
+i=1
+[yi −pi]
+/
+∑
+n
+i=1
+[pi −y ] + [yi −y ]
+(8)  
+where, n denotes the total number of datasets; yi represents the actual 
+values; pi indicates the predicted values; ua is the mean of pi values; y is 
+the average of the actual values; and i indicates the number of 
+observations. 
+4. Results and discussion 
+4.1. XGBoost model predictions 
+Following adequate training of the XGBoost model, the predictive 
+capability and reliability of the model was tested by feeding an unseen 
+testing dataset containing 790 rows. The prediction results of the pro­
+posed XGBoost model were evaluated based on the MAE, RMSE, MAPE, 
+R2, and md values, as presented in Table 2. If the error is zero, there is a 
+good fit between the model-predicted and actual results; however, this is 
+very unlikely. The results showed the best model learning for NH4 pre­
+dictions under all scenarios, which may be due to the consistent dataset 
+trends. However, higher variations in the dataset resulted in a relatively 
+lower accuracy compared to the other nutrients. Therefore, the model 
+predictions for these nutrients were less accurate, as suggested by the 
+model performance matrices for the unseen testing dataset. The best 
+MAE, RMSE, MAPE, R2, and md values occurred in the M1, M4, and M7 
+models for the testing dataset. The RMSE results showed that the 
+smallest values were observed in the NH4 removal prediction by the 
+A2O-MBR system; the other statistical performance measurements sup­
+ported these results. This demonstrates that modeling can efficiently 
+predict NH4 removal. The prediction results for TN and TP may also be 
+considered concurrently. However, it is important to include other fac­
+tors that may significantly impact their removal. 
+The MAE, RMSE, MAPE, R2, and md values of the developed XGBoost 
+M1 model were 0.00197, 0.0031, 1.34, 0.764, and 0.926, respectively. 
+These values demonstrate the model performance in ascending order of 
+M7 > M4 > M1; the remaining models showed poor results. The most 
+optimal model was M7, as it traced input and output relationships 
+accurately, demonstrating the importance of considering the operating 
+conditions, influent characteristics, and factors that may enhance model 
+predictions. The XGBoost predictive model showed how effectively NH4 
+removal by the A2O-MBR system could be predicted by applying the 
+proposed M7 model. 
+Fig. 4 presents the scatter plots of the predicted and experimental 
+values. As shown in Fig. 4, the actual and model-predicted values closely 
+match in the M1 model, whereas a significant fluctuation occurs in the 
+M2 and M3 models. Similarly, the M4 model performed better than the 
+M1 model by predicting with an accuracy of more than 80%. In contrast, 
+the M5 and M6 models showed nearly the same results as the M1 and M2 
+models. The last scenario considered all parameters, including the 
+operating conditions and influent characteristics, producing higher 
+predictive results. The model learning pattern was best for NH4 pre­
+dictions. In contrast, despite improvements in the TN and TP pre­
+dictions, the predictive accuracy was below 60% for these nutrients. 
+These results indicate that the overall NH4 predictions were within the 
+acceptable range for all selected scenarios, while models developed to 
+predict other nutrients showed poor results. This may be associated with 
+the high deviation within the dataset, which decreased the model 
+learning capability, producing poor predictions for TN and TP. Thus, to 
+increase the learning competence of a machine learning model, data 
+analysis is essential when deciding the pre-treatment of the dataset and 
+the specific type of machine learning model. 
+The NH4 removal predictions were reasonably better than TN and 
+TP, with approximately 56% and 59% prediction accuracy, respectively, 
+which is close to, but below the acceptable limit of 70%. As a result, an 
+XGBoost model identifies the relationships for accurately measured and 
+collected datasets without extensive deviation. It may help analyze the 
+nutrient concentrations in the effluent and assist decision-makers in 
+changing the controllable parameters and maintaining the effluent 
+standards. Therefore, the proposed model may predict the nutrient 
+removal of an A2O-MBR system in WWTP and contribute to optimizing 
+the system. The results demonstrate that the XGBoost model may predict 
+the NH4 removal efficiency of WWTP if an accurately measured dataset 
+is input into the model. 
+To support the discussion, residual plots were established for all the 
+(a)
+Testing dataset
+0
+100
+200
+300
+400
+500
+600
+700
+800
+la
+u
+dis
+e
+R
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+40
+Residual M1
+Residual M4 
+Residual_M7 
+(b)
+Testing dataset
+0
+100
+200
+300
+400
+500
+600
+700
+800
+la
+u
+dis
+e
+R
+-70
+-60
+-50
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+40
+50
+Residual_M2 
+Residual_M5 
+Residual_M8 
+(c)
+Testing dataset
+0
+100
+200
+300
+400
+500
+600
+700
+800
+la
+u
+dis
+e
+R
+-80
+-70
+-60
+-50
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+40
+Residual_M3 
+Residual_M6 
+Residual_M9 
+Fig. 7. Residual plots of MLP models for different scenarios.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 8 -->
+Journal of Water Process Engineering 46 (2022) 102521
+8
+defined scenarios. The residuals of the model-predicted and actual re­
+sults are compared in the following section. As shown in Fig. 5, separate 
+plots were established for each nutrient for comparative evaluation and 
+to illustrate the model accuracy. The residuals between model-predicted 
+(M1, M4, and M7) and actual testing values were at a minimum for the 
+prediction of NH4, which ranged between 0 ± 10. In contrast, the TN and 
+TP predictions were less accurate, with the high residual values fluctu­
+ating at ±25. This shows that the proposed XGBoost models (M1, M4, 
+and M7) were the most optimal models for NH4 removal by the A2O-MBR 
+system, whereas the models failed to predict the TN and TP removal 
+efficiency of the system. These results support the discussion above, 
+based on the statistical performance values and scatter plots of the 
+testing dataset. 
+4.2. MLP model predictions 
+We developed the MLP model by changing the number of neurons in 
+the input layer as predetermined for each scenario. There was one 
+hidden layer and one output layer with one neuron. The primary 
+concern in developing an MLP model is the selection of the activation 
+function and output layer. The error signal was back-propagated to 
+update the model; this continued until the results were below the 
+specified loss function mean square error. The objective was to attain the 
+lowest value of the loss function while training the model for each 
+scenario. Therefore, the optimum architecture differed for each model as 
+determined by the trial-and-error method. The trials were conducted by 
+adjusting the hyperparameters until the overfitting and underfitting 
+problems were insignificant. Table 3 presents the performance results 
+for each scenario based on the statistical measurements. 
+Although MLP models were comparatively less accurate, their 
+prediction trends were similar to XGBoost. The MLP model predictions 
+for NH4 were good, which was attributed to the consistent trends in the 
+dataset. However, the predictions for the other nutrients showed less 
+accurate results because of the high variations in their datasets. The best 
+MAE, RMSE, MAPE, R2, and md values occurred in the M1, M4, and M7 
+models. The RMSE results showed that the minimum error occurred in 
+the prediction of NH4 removal by the A2O-MBR system; the other sta­
+tistical performance measurements supported these results. This dem­
+onstrates that the model accurately predicted NH4 removal. The MAE, 
+RMSE, MAPE, R2, and md values of the proposed MLP M1 model were 
+0.00063, 0.00031, 0.1299, 0.703, and 0.849, respectively. The R2 values 
+were used to rank model performance in the ascending order of M4 > M7 
+> M1; the other models showed poor results. The most optimum model 
+was M4 because it accurately traced input and output relationships and 
+proved that the considering influent characteristics were important. The 
+performance of the model improved with the addition of other param­
+eters. The MLP model was able to predict NH4 removal using the A2O- 
+MBR system within acceptable limits. A difference between the MLP and 
+XGBoost models is that the operating conditions and influent charac­
+teristics affect nutrient removal in the MLP model. However, in the MLP 
+model, influent parameters were more important because 78% accuracy 
+was achieved using only the influent characteristics. 
+Fig. 6 shows the scatter plots of the actual and model-predicted 
+values. Actual and model-predicted values closely matched in the M1 
+model, whereas significant fluctuations were observed in the M2 and M3 
+models. Similarly, the M4 model performed better than M1 by predicting 
+the nutrient removal with more than 78% accuracy. In contrast, the M5 
+and M6 models showed nearly the same results as the M1 and M2 models. 
+The last scenario considered all parameters, including the operating 
+conditions and influent characteristics, resulting in more accurate 
+Fig. 8. Violin plots for residual of MLP and XGBoost models at various input and output scenarios.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 9 -->
+Journal of Water Process Engineering 46 (2022) 102521
+9
+predictive results for the XGBoost models; however, this was not the case 
+for MLP. The learning of the MLP model was the best for NH4 pre­
+dictions, whereas the TN and TP predictions showed accuracies of 
+approximately 30% and 40%, respectively. These results indicate that 
+overall NH4 predictions exceeded 70% accuracy across all selected 
+scenarios, while the models developed to predict other nutrients showed 
+poor results. This may be associated with the high deviation in the 
+dataset, which decreased the learning capability of the model and pro­
+duced low-accuracy predictions for TN and TP removal. The XGBoost 
+model can support the analysis of nutrient concentrations in effluent and 
+enables decision-makers to modify controllable parameters to meet 
+standard limits. The proposed models may assist in predicting NH4 
+removal accurately, while further research is required to accurately 
+model TN and TP in the A2O-MBR system. Future studies may include 
+other parameters to identify the most suitable relationship that will help 
+predict the TN and TP removal efficiency within a WWTP with a good 
+level of accuracy and confidence. 
+To support the discussion, residual plots for all selected scenarios 
+were prepared, where each nutrient was considered individually. The 
+residuals between the model-predicted and actual results are illustrated 
+and compared in the following section and are presented in Fig. 7. The 
+residuals between the predictions by the M1, M4, and M7 models and the 
+actual testing values were very similar for NH4, fluctuating at ±10. In 
+contrast, the TN and TP predictions were less accurate, as evidenced by 
+the high residuals that fluctuated between 0 ± 25 and +20 to −40, 
+respectively. Therefore, it is clear that the proposed MLP models (M1, 
+M4, and M7) were the most optimum models for predicting NH4 removal 
+by the A2O-MBR system. However, the models failed to predict the TN 
+and TP removal efficiently. These results support the discussion above, 
+based on the statistical performance of the testing dataset and scatter 
+plots. 
+4.3. Comparative study of the proposed models 
+The XGBoost and MLP models were compared using residual plots 
+between model-predicted and actual values of all developed models. 
+Fig. 8 presents the violin plots of the residual error for all scenarios of the 
+MLP and XGBoost models. In the violin plots, the middle of each density 
+curve is a small box plot, with the rectangle showing the ends of the first 
+and third quartiles and the central dot as the median. In the violin plot, 
+the wider and skinnier sections in the distribution shape of a residual 
+plot represent a higher and lower probability, respectively. The shape of 
+the distribution (extremely skinny on each end and wide in the middle) 
+indicates that the weights of the residual values are highly concentrated 
+around the median. The violin plot of residuals between the predicted 
+and actual values showed the lowest interquartile range in the case of 
+the M1, M4, and M7 for both the MLP and XGBoost models. The per­
+formance of the proposed models was found to be in the order of M7 >
+Fig. 9. Regression plots with 95% confidence interval and expanded plots for the best proposed (a) XGBoost and (b) MLP models.  
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 10 -->
+Journal of Water Process Engineering 46 (2022) 102521
+10
+M4 > M1. However, the overall performance of XGBoost was compara­
+tively better than that of MLP, as the minimum residual distribution for 
+NH4 was observed. Moreover, the XGBoost predictions by M8 and M9 for 
+TN and TP (considering the influent characteristics and operating con­
+ditions) are reasonable compared to MLP predictions. The predictions 
+for NH4 removal almost matched the actual results, although some 
+variations were observed. Based on the evaluation of different scenarios, 
+the M1, M4, and M7 models demonstrated better performance, as evi­
+denced by the lower statistical values for other XGBoost and MLP 
+models. Therefore, the best models were considered based on other 
+performance statistical values to validate the proposed models for pre­
+dicting NH4 removal by A2O-MBR. 
+Tables 2 and 3 present the comparative analysis of the proposed 
+models, XGBoost and MLP, compared using performance matrices, 
+including MAE, RMSE, MAPE, and R-Sq. The predictions for NH4 
+removal almost matched the actual results, although some variations 
+were observed at the beginning of the data collection. Based on the 
+evaluation of different scenarios, the M1, M4, and M7 models demon­
+strated better performance, as evidenced by the lower statistical values 
+for other XGBoost and MLP models. This indicates that the predictions 
+for NH4 were more accurate than the predicted results for TN and TP. 
+The data visualization trend for NH4 removal was less noisy and more 
+stable than TN and TP removal by A2O-MBR. Although the best model 
+learning occurred to predict NH4 removal by the XGBoost and MLP 
+models, the overall results of the XGBoost model were superior to the 
+MLP mode. Therefore, the model designed based on the M1, M4, and M7 
+models demonstrated the best results, as observed by the training, 
+testing, and performance measuring statistics. 
+As shown in Fig. 9, the regression plots of the best models (M1, M4, 
+and M7) using the XGBoost and MLP models were drawn to observe how 
+well the predictions matched the actual results. In the XGBoost models, 
+the plots showing the NH4 removal predictions best fit the observations, 
+while the TN and TP removal predictions were less accurate for the A2O- 
+MBR system. The R2 values of the M1, M4, and M7 models developed by 
+the XGBoost technique were 0.764, 0.813, and 0.877, respectively. The 
+MLP models for the same set of scenarios showed R2 values of 0.703, 
+0.787, and 0.782 for the M1, M4, and M7 models, respectively. This in­
+dicates that the XGBoost performs better than the MLP models for a 
+similar set of scenarios, predicting NH4 removal when using an A2O- 
+MBR system. 
+These findings align with previous research that developed the LSTM 
+model to predict nutrient removal efficiency using an A2O-MBR system. 
+The proposed LSTM model successfully traces the input-output rela­
+tionship by considering one model's NH4, TN, and TP outputs [32]. In 
+this study, we tested an ensemble model of machine learning, XGBoost, 
+and compared it with an MLP neural network by considering different 
+scenarios of input parameters and one nutrient at a time. The objective 
+was to explore the significance of the features when the operating 
+conditions and influent characteristics were considered separately. It 
+was observed that all features were important in modeling the A2O-MBR 
+system to predict the removal of individual nutrients. The results show 
+that the XGBoost model can trace the input-output relationship to pre­
+dict nutrient removal efficiency in a WWTP. A previous study demon­
+strated that XGBoost is an efficient model (compared to other machine 
+learning tools) to predict manganese removal from water [44]. These 
+results support the concept that machine learning modeling may be used 
+in complex wastewater treatment applications to inform decision- 
+makers concerning plant operation and optimization to meet environ­
+mental regulations. Although an element of “surprise” is high in pre­
+dictive machine learning models, the use of analytics tools, best 
+algorithms, selection of hyperparameters, and training and validation of 
+models with an unseen dataset can help overcome the failure of models. 
+5. Conclusion 
+An ensemble model known as XGBoost was developed and validated 
+against MLP neural networks to predict NH4, TN, and TP removal using 
+an A2O-MBR system at a WWTP. To validate and compare the model 
+predictions, different scenarios were modeled using the XGBoost 
+method, and a similar set of scenarios were tested for the MLP model. 
+These scenarios were defined by considering the operating conditions 
+(DO, ORP, and MLSS) and influent parameters (TOC, TN, TP, COD, NH4- 
+N, and SS) separately or in combination. The effects of these scenarios 
+were tested across nine models (M1–M9), which were developed using 
+the XGBoost and MLP techniques. The predictive capability of the pro­
+posed XGBoost model was the maximum after tuning the HPs to predict 
+NH4 removal (M1, M4, and M7). The NH4 removal predictions were the 
+most accurate because the dataset was less noisy, more stable, and had 
+minimum outliers. The proposed models provided the most accurate 
+results for the unseen testing datasets. In contrast, the TN and TP 
+removal predictions were comparatively inaccurate because of the high 
+deviation in their datasets. The MLP models were tested with the same 
+scenarios to validate the XGBoost models. The same set of scenarios 
+showed better results (M1, M4, and M7) in both the models. These results 
+were supported by the statistical performance values such as MAE, 
+RMSE, MAPE, R2, and md. Therefore, modeling the A2O-MBR system at 
+a WWTP is accurate when the datasets have minimal noise. This study is 
+an extension of a previous study in which the LSTM model was used to 
+simulate the same system to predict the removal of all nutrients as one 
+output. In comparison, these models provided further insight into 
+different modeling scenarios, where it was possible to determine which 
+model best predicted a specific scenario. In future studies, it may help to 
+predict nutrient removal by an A2O-MBR system and forecast the 
+tentative concentration of nutrients in advance for wastewater treat­
+ment systems. The findings of this study can be beneficial for researchers 
+in controlling operable parameters at WWTP. 
+CRediT authorship contribution statement 
+Muhammad Yaqub, Experimental work, data curation, original draft 
+writing, data analysis, software modeling, review, editing, and funding; 
+Wontae Lee; supervision and revision. 
+Declaration of competing interest 
+The authors declare no conflict of interest. 
+Acknowledgements 
+This research was supported by a National Research Foundation of 
+Korea 
+(NRF) 
+grant 
+(NRF-2020R1F1A1076676 
+and 
+NRF- 
+2021R1I1A1A0105783111) from the Korean government (MSIT). 
+References 
+[1] W. Hu, C. Li, C. Ye, J. Wang, W. Wei, Y. Deng, Research progress on ecological 
+models in the field of water eutrophication: CiteSpace analysis based on data from 
+the ISI web of science database, Ecol. Model. 410 (2019), 108779. 
+[2] P.J.G. Nieto, E. García-Gonzalo, J.R.A. Fern´andez, C.D. Mu˜niz, Water 
+eutrophication assessment relied on various machine learning techniques: a case 
+study in the englishmen Lake (Northern Spain), Ecol. Model. 404 (2019) 91–102. 
+[3] D.-P. H¨ader, A.T. Banaszak, V.E. Villafa˜ne, M.A. Narvarte, R.A. Gonz´alez, E. 
+W. Helbling, Anthropogenic pollution of aquatic ecosystems: emerging problems 
+with global implications, Sci. Total Environ. 136586 (2020). 
+[4] OVIVO, Municipal wastewater/Aerobic Treatment/ Nutrient Removal, 2019. http 
+s://www.ovivowater.com/solution/municipal/municipal-wastewater/aerobic-t 
+reatment-nutrient-removal/. (Accessed 29 September 2019). 
+[5] J.T. Bunce, E. Ndam, I.D. Ofiteru, A. Moore, D.W. Graham, A review of phosphorus 
+removal technologies and their applicability to small-scale domestic wastewater 
+treatment systems, Front. Environ. Sci. 6 (2018) 8. 
+[6] C.M. Mehta, W.O. Khunjar, V. Nguyen, S. Tait, D.J. Batstone, Technologies to 
+recover nutrients from waste streams: a critical review, Crit. Rev. Environ. Sci. 
+Technol. 45 (2015) 385–427. 
+[7] M. Marchetto, Technologies used in the wastewater treatment for nutrient removal, 
+Int. J. Waste Resour. 03 (2013) 2–5, https://doi.org/10.4172/2252- 
+5211.1000125. 
+M. Yaqub and W. Lee                                                                                                                                                                                                                         
+
+
+<!-- Page 11 -->
+Journal of Water Process Engineering 46 (2022) 102521
+11
+[8] Water Online, Biological Nutrient Removal, 2020. https://www.wateronline.com/ 
+doc/biological-nutrient-0001. (Accessed 13 May 2020). 
+[9] T. Yan, Y. Ye, H. Ma, Y. Zhang, W. Guo, B. Du, Q. Wei, D. Wei, H.H. Ngo, A critical 
+review on membrane hybrid system for nutrient recovery from wastewater, Chem. 
+Eng. J. 348 (2018) 143–156. 
+[10] H.U. Xiang, X.I.E. Li, S. Hojae, S. Zhang, Y. Dianhai, Biological nutrient removal in 
+a full scale anoxic/anaerobic/aerobic/pre-anoxic-MBR plant for low C/N ratio 
+municipal wastewater treatment, Chinese J. Chem. Eng. 22 (2014) 447–454. 
+[11] Y. Shen, D. Yang, Y. Wu, H. Zhang, X. Zhang, Operation mode of a step-feed 
+anoxic/oxic process with distribution of carbon source from anaerobic zone on 
+nutrient removal and microbial properties, Sci. Rep. 9 (2019) 1153. 
+[12] S. Ge, Y. Zhu, C. Lu, S. Wang, Y. Peng, Full-scale demonstration of step feed concept 
+for improving an anaerobic/anoxic/aerobic nutrient removal process, Bioresour. 
+Technol. 120 (2012) 305–313. 
+[13] J.-W. Pang, S.-S. Yang, L. He, Y.-D. Chen, G.-L. Cao, L. Zhao, X.-Y. Wang, N.-Q. Ren, 
+An influent responsive control strategy with machine learning: Q-learning based 
+optimization method for a biological phosphorus removal system, Chemosphere 
+234 (2019) 893–901. 
+[14] M. Fan, J. Hu, R. Cao, W. Ruan, X. Wei, A review on experimental design for 
+pollutants removal in water treatment with the aid of artificial intelligence, 
+Chemosphere 200 (2018) 330–343. 
+[15] B. Tak, B. Tak, Y. Kim, Y. Park, Y. Yoon, G. Min, Optimization of color and COD 
+removal from livestock wastewater by electrocoagulation process: application of 
+box-behnken design (BBD), J. Ind. Eng. Chem. 28 (2015) 307–315. 
+[16] Z. Ye, J. Yang, N. Zhong, X. Tu, J. Jia, J. Wang, Tackle environmental challenges in 
+pollution controls using artificial intelligence: a review, Sci. Total Environ. 134279 
+(2019). 
+[17] G. Hasani, H. Daraei, B. Shahmoradi, F. Gharibi, A. Maleki, K. Yetilmezsoy, 
+G. McKay, A novel ANN approach for modeling of alternating pulse current 
+electrocoagulation-flotation (APC-ECF) process: humic acid removal from aqueous 
+media, Process Saf. Environ. Prot. 117 (2018) 111–124. 
+[18] A. Poznyak, I. Chairez, T., Poznyak, and control in environmental engineering: 
+biological and chemical systems with uncertain models, Annu. Rev. Control 48 
+(2019), https://doi.org/10.1016/j.arcontrol.2019.07.003. 
+[19] Z.M. Yaseen, An insight into machine learning models era in simulating soil, water 
+bodies and adsorption heavy metals: review, challenges and solutions, 
+Chemosphere 130126 (2021). 
+[20] P. Antwi, D. Zhang, L. Xiao, F.T. Kabutey, F.K. Quashie, W. Luo, J. Meng, J. Li, 
+Modeling the performance of single-stage nitrogen removal using anammox and 
+partial nitritation (SNAP) process with back-propagation neural network and 
+response surface methodology, Sci. Total Environ. 690 (2019) 108–120, https:// 
+doi.org/10.1016/j.scitotenv.2019.06.530. 
+[21] W. Li, L. Cui, Y. Zhang, Z. Cai, M. Zhang, W. Xu, X. Zhao, Y. Lei, X. Pan, J. Li, Using 
+a Back-propagation artificial neural network to predict nutrient removal in tidal 
+flow constructed wetlands, Water. 10 (2018) 83. 
+[22] M. Yaqub, C. Woo, W. Lee, Optimization of hypochlorous acid generation by HCl 
+electrolysis through response surface methodology and artificial neural networks, 
+J. Environ. Chem. Eng. 9 (2021) 105826. 
+[23] S.K. Bhagat, K. Pyrgaki, S.Q. Salih, T. Tiyasha, U. Beyaztas, S. Shahid, Z.M. Yaseen, 
+Prediction of copper ions adsorption by attapulgite adsorbent using tuned-artificial 
+intelligence model, Chemosphere 276 (2021), 130162. 
+[24] S.K. Bhagat, T.M. Tung, Z.M. Yaseen, Heavy metal contamination prediction using 
+ensemble model: case study of bay sedimentation, Australia, J. Hazard. Mater. 403 
+(2021), 123492. 
+[25] M. Yaqub, S.H. Lee, Micellar enhanced ultrafiltration (MEUF) of mercury- 
+contaminated wastewater: experimental and artificial neural network modeling, 
+J. Water Process Eng. 33 (2020), 101046. 
+[26] M. Yaqub, S.H. Lee, Experimental and neural network modeling of micellar 
+enhanced ultrafiltration for arsenic removal from aqueous solution, Environ. Eng. 
+Res. (2020), https://doi.org/10.4491/eer.2019.261. 
+[27] M. Yaqub, S.H. Lee, W. Lee, Investigating micellar-enhanced ultrafiltration (MEUF) 
+of mercury and arsenic from aqueous solution using response surface methodology 
+and gene expression programming, Sep. Purif. Technol. 281 (2022), 119880, 
+https://doi.org/10.1016/j.seppur.2021.119880. 
+[28] K. Yetilmezsoy, F.I. Turkdogan, I. Temizel, A. Gunay, Development of ann-based 
+models to predict biogas and methane productions in anaerobic treatment of 
+molasses wastewater, Int. J. Green Energy. 10 (2013) 885–907. 
+[29] A. Giwa, S. Daer, I. Ahmed, P.R. Marpu, S.W. Hasan, Experimental investigation 
+and artificial neural networks ANNs modeling of electrically-enhanced membrane 
+bioreactor for wastewater treatment, J. Water Process Eng. 11 (2016) 88–97. 
+[30] G. Hayder, M.Z. Ramli, M.A. Malek, A. Khamis, N.M. Hilmin, Prediction model 
+development for petroleum refinery wastewater treatment, J. Water Process Eng. 4 
+(2014) 1–5. 
+[31] F. Fang, B. Ni, W. Li, G. Sheng, H. Yu, A simulation-based integrated approach to 
+optimize the biological nutrient removal process in a full-scale wastewater 
+treatment plant, Chem. Eng. J. 174 (2011) 635–643. 
+[32] M. Yaqub, H. Asif, S. Kim, W. Lee, Modeling of a full-scale sewage treatment plant 
+to predict the nutrient removal efficiency using a long short-term memory (LSTM) 
+neural network, J. Water Process Eng. 37 (2020), 101388. 
+[33] M. Bourouache, R. Mimouni, A.A. Alla, F. Hamadi, A. El Boulani, B. Bihadassen, 
+Bacteriological and physicochemical quality of treated wastewater of the mzar 
+treatment plant, Appl. Water Sci. 9 (2019) 86. 
+[34] S. Sengupta, T. Nawaz, J. Beaudry, Nitrogen and phosphorus recovery from 
+wastewater, Curr. Pollut. Rep. 1 (2015) 155–166. 
+[35] X. Zhou, Z. Zhang, Y. Li, Four-stage biofilm anaerobic–anoxic–oxic–oxic system for 
+strengthening the biological treatment of coking wastewater: COD removal 
+behaviors and biokinetic modeling, RSC Adv. 7 (2017) 23714–23726. 
+[36] T. Chen, C. Guestrin, Xgboost: A scalable tree boosting system, in: Proc. 22nd Acm 
+Sigkdd Int. Conf. Knowl. Discov. Data Min, ACM, 2016, pp. 785–794. 
+[37] P. Probst, A.-L. Boulesteix, B. Bischl, Tunability: importance of hyperparameters of 
+machine learning algorithms, J. Mach. Learn. Res. 20 (2019) 1–32. 
+[38] D. Nielsen, Tree Boosting With xgboost-why Does xgboost Win "Every" Machine 
+Learning Competition?, 2016. 
+[39] S.K. Bhagat, T. Tiyasha, S.M. Awadh, T.M. Tung, A.H. Jawad, Z.M. Yaseen, 
+Prediction of sediment heavy metal at the australian bays using newly developed 
+hybrid artificial intelligence models, Environ. Pollut. 268 (2021), 115663. 
+[40] H.-A. Tayebi, M. Ghanei, K. Aghajani, M. Zohrevandi, Modeling of reactive orange 
+16 dye removal from aqueous media by mesoporous silica/crosslinked polymer 
+hybrid using RBF, MLP and GMDH neural network models, J. Mol. Struct. 1178 
+(2019) 514–523. 
+[41] J.C. Principe, N.R. Euliano, W.C. Lefebvre, Neural and Adaptive Systems: 
+Fundamentals through Simulations, Wiley, New York, 2000. 
+[42] Z.M. Yaseen, A.M. Al-Juboori, U. Beyaztas, N. Al-Ansari, K.-W. Chau, C. Qi, M. Ali, 
+S.Q. Salih, S. Shahid, Prediction of evaporation in arid and semi-arid regions: a 
+comparative study using different machine learning models, Eng. Appl. Comput. 
+Fluid Mech. 14 (2020) 70–89. 
+[43] S.K. Bhagat, M. Paramasivan, M. Al-Mukhtar, T. Tiyasha, K. Pyrgaki, T.M. Tung, Z. 
+M. Yaseen, Prediction of lead (Pb) adsorption on attapulgite clay using the 
+feasibility of data intelligence models, Environ. Sci. Pollut. Res. 1–19 (2021). 
+[44] S.K. Bhagat, T. Tiyasha, T.M. Tung, R.R. Mostafa, Z.M. Yaseen, Manganese (Mn) 
+removal prediction using extreme gradient model, Ecotoxicol. Environ. Saf. 204 
+(2020), 111059. 
+M. Yaqub and W. Lee                                                                                                                                                                                                                         

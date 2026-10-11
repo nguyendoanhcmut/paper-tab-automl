@@ -1,0 +1,99 @@
+3.1
+Intra-island Evolution
+
+3.1.1
+Multi-island Decomposition
+The feature program space P is not homogeneous: programs naturally cluster into semantically coherent regions
+according to the class of operations they employ, each encoding a distinct inductive bias about how predictive signal is
+constructed from raw features.
+Definition 1 (Transformation Family). A transformation family Pi ⊆P is a semantically coherent subset of feature
+programs sharing the same inductive bias about how predictive signal is constructed from raw features, i.e., programs
+that apply the same class of primitive operations.
+We consider five canonical transformation families: arithmetic interactions P1 (products, ratios, and differences),
+statistical aggregates P2 (group-level means, standard deviations, counts, and medians), temporal features P3 (lags,
+rolling windows, and exponential moving averages), relational encodings P4 (frequency counts, target encodings,
+and rank-based transforms), and nonlinear univariate maps P5 (logarithmic, exponential, binned, and polynomial
+transformations). These families may overlap (i.e., Pi ∩Pj̸ = ∅in general) but each represents a structurally distinct
+region of P. The partition is also extensible to additional transformation families as needed. Together, they induce an
+approximate cover P ≈SM
+i=1 Pi, which decomposes the monolithic search space into M semantically typed subspaces,
+each amenable to specialized search.
+However, in a single evolutionary population, high-scoring programs from a dominant family rapidly saturate the
+experience buffer, confining subsequent LLM proposals to that family’s neighbourhood and leaving orthogonal families
+permanently unexplored. TOPOFE addresses this through a structured multi-island decomposition that assigns a
+dedicated subpopulation to each Pi, preserving family-specific inductive biases and preventing any single family from
+monopolizing the search budget.
+Definition 2 (Island). Island i at generation t is a tuple I(t)
+i
+= (Π(t)
+i , Ai, H(t)
+i , ρ(t)
+i ), where: (i) Π(t)
+i
+⊂Pi is the
+current population of at most nmax feature programs, ranked by fitness ˆΦ, (ii) Ai ⊂Pi is a long-term archive of elite
+4
+
+
+<!-- Page 5 -->
+programs discovered by island i, (iii) H(t)
+i
+is the accept/reject history used to adapt the mutation prompt, and (iv)
+ρ(t)
+i
+∈Rs is a prompt-memory vector encoding a compact“prefer/avoid" signal derived from H(t)
+i .
+These four components maintain the island’s complete search state: Π(t)
+i
+drives local search, A(t)
+i
+accumulates the best
+discoveries and serves as the in-context demonstration pool for LLM proposals, H(t)
+i
+provides the raw signal for prompt
+adaptation, and ρ(t)
+i
+translates that signal into natural-language guidance injected into every LLM call.
+
+3.1.2
+LLM-guided Intra-island Evolution (Specialized Exploration)
+At each generation t, island i independently evolves its population via two LLM-guided operators, both conditioned on
+the island’s metadata context M and prompt memory ρ(t)
+i :
+• Mutation samples a single parent p ∼Π(t)
+i
+with probability proportional to ˆΦ(p) and prompts the LLM to
+produce a modified program p′ ∈Pi that improves on p while respecting the signals encoded in ρ(t)
+i .
+• Crossover samples two parent programs (pa, pb) ∼Π(t)
+i
+and presents them as in-context demonstrations. The
+LLM is then prompted to synthesize a child program p′ ∈Pi that combines compositional elements from both
+parents.
+Both operators pass through a unified validation and fitness pipeline: each candidate p′ is checked for syntactic validity
+and semantic admissibility under M, then evaluated via oracle ˆΦ. The population Π(t+1)
+i
+retains the top-nmax programs
+by fitness, and A(t)
+i
+and ρ(t)
+i
+are updated following the rules defined in §3.2.
+
+3.1.3
+Global Objective
+The multi-island system assembles the final feature set by pooling elites across all islands:
+S∗= arg max
+S ⊆S
+i Ai
+ˆΦ(S),
+s.t. |S| ≤d′
+max,
+K
+X
+i=1
+|Π(t)
+i | ≤B,
+(7)
+where B is the total evaluation budget and each retained program must contribute non-redundant predictive signal:
+ˆΦ({p} | S∗\ {p}) > 0 ∀p ∈S∗.

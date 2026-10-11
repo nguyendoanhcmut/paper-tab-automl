@@ -1,0 +1,7 @@
+    - **Hình 4.** Đồ thị phân tán giữa giá trị thực tế và dự đoán
+      - <img src="assets/fig_04_p4.jpeg" alt="Hình 4" />
+      - **Hình này chứng minh điều gì**
+        - Cột mô hình NH4 (M1, M4, M7) có các điểm bám sát đường hồi quy đỏ vượt trội so với TN và TP ở cả ba kịch bản.
+      - **Từ đâu mà thấy được**
+        - Ox: giá trị thực tế (Actual), dải đo $0$–$100$. Oy: giá trị dự đoán (Predicted), dải đo $0$–$100$.
+        - Cột trái (M1, M4, M7 của NH4): dữ liệu tập trung sát đường hồi quy đỏ; hai cột còn lại (TN: M2, M5, M8; TP: M3, M6, M9) phân tán rộng ra xa.

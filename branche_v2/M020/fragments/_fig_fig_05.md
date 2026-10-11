@@ -1,0 +1,7 @@
+    - **Hình 5.** Dự đoán TMP và mất mát MSE của MLP và LSTM
+      - <img src="assets/fig_05_p10.jpeg" alt="Hình 5" />
+      - **Hình này chứng minh điều gì**
+        - MLP hội tụ MSE huấn luyện thấp hơn (~$4.9$ so với ~$8.8$) và bám sát TMP thực nghiệm hơn LSTM.
+      - **Từ đâu mà thấy được**
+        - (a), (b): Trục Ox là Epochs ($0$–$1000$), Oy là Loss MSE; đường loss MLP (a) giảm về ~$4.9$, LSTM (b) giảm về ~$8.8$.
+        - (c), (d): Trục Ox là Test samples, Oy là TMP ($0$–$30\text{ kPa}$); Predicted TMP (xanh) của MLP khớp Actual TMP (cam) chặt chẽ hơn LSTM.

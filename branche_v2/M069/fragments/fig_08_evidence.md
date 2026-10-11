@@ -1,0 +1,8 @@
+* **Hình 7.** So sánh thông số vận hành ($HRT$, $SRT$, $F_{\text{air}}$, $NLR$) và xác suất tái sử dụng ($p_{\text{reuse}}$) giữa thực nghiệm và điều khiển nâng cao (Operational parameters and probability of reuse for experimental conditions and advanced control strategy).
+  * <img src="assets/fig_08_p17.jpeg" alt="Hình 7" />
+  * **Hình này chứng minh điều gì**
+    * Chiến lược điều khiển nâng cao (advanced control strategy) tối ưu hóa đồng thời $4$ thông số ($HRT$, $SRT$, $F_{\text{air}}$, $NLR$) giúp nâng cao và duy trì ổn định xác suất tái sử dụng nước vượt ngưỡng tuân thủ ($p_{\text{reuse}} > 0{,}50$) xuyên suốt cả $4$ giai đoạn theo mùa, khắc phục tình trạng vi phạm thường xuyên ở điều kiện thực nghiệm cơ sở.
+    * Điều biến động học các thông số (kéo dài $HRT$, điều chỉnh $SRT$, và chủ động tiết giảm $F_{\text{air}}$ khi nhu cầu thấp) vừa đảm bảo chất lượng nước đầu ra vừa nâng cao hiệu quả tài nguyên và tiết kiệm năng lượng sục khí.
+  * **Từ đâu mà thấy được**
+    * Trên cả $4$ giai đoạn (a–d), xác suất tái sử dụng sau điều khiển ($p_{\text{reuse\_control}}$, tam giác xanh lá đậm) luôn nằm trên ngưỡng tiêu chuẩn $p_{\text{reuse}} = 0{,}50$ (đường đứt đoạn xanh lá) và đạt mức cao ($0{,}70\text{--}0{,}95$), trong khi điều kiện thực nghiệm ($p_{\text{reuse\_current}}$, tam giác rỗng) thường xuyên rớt xuống dưới $0{,}50$ (dao động $0{,}10\text{--}0{,}40$).
+    * Đồ thị ghi nhận sự điều chỉnh thích ứng: $HRT$ được tăng linh hoạt từ $1{,}2\text{--}1{,}6\text{ d}$ lên $2\text{--}6\text{ d}$ ở các thời điểm tải cao, $SRT$ được giữ ổn định quanh $3\text{--}6\text{ d}$, và $F_{\text{air}}$ được kiểm soát tối ưu ($2{,}7\text{--}7{,}0\text{ vvm}$) theo biến động của $NLR$ ($8\text{--}30\text{ kg N}\cdot\text{d}^{-1}$) qua từng thời kỳ vận hành.

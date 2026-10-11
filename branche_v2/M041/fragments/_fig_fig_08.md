@@ -1,0 +1,8 @@
+    - **Hình 7.** Đối sánh hiệu suất khử thực nghiệm và đầu ra ANN cho Amonia và Phosphate
+      - <img src="assets/fig_08_p10.png" alt="Hình 7" />
+      - **Hình này chứng minh điều gì**
+        - Đường cong ANN bám sát dữ liệu thực nghiệm qua toàn bộ các dao động cực đại và cực tiểu ($0 - 90\\%$).
+      - **Từ đâu mà thấy được**
+        - Ox: Thứ tự dữ liệu theo pH ($0 - 45$) hoặc TOC ($0 - 35$); Oy: Hiệu suất loại bỏ ($0 - 100\\%$).
+        - Đồ thị (a)–(d): Đường hồng (ANN Output) đi qua chính xác các điểm thực nghiệm (vuông xanh).
+        - Cả ba tập Train, Test và Validation đều phân bố trùng khít với đường mô phỏng ANN.

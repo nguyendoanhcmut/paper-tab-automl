@@ -1,0 +1,7 @@
+    - **Bảng 2.** So sánh với các nghiên cứu mô hình hóa MBR vi tảo gần đây
+      - <img src="assets/table_02_p15.png" alt="Bảng 2" />
+      - **Bảng này chứng minh điều gì**
+        - Nghiên cứu hiện tại áp dụng đồng thời ANN, RSM và NSGA-II để xử lý dinh dưỡng trong MBR vi tảo với độ chính xác cao.
+      - **Từ đâu mà thấy được**
+        - Cột "System" và "Algorithms": hàng "Present work" tích hợp cả 3 phương pháp cho khử dinh dưỡng, so với chỉ MLP-ANN dự báo nghẽn màng (Wang et al.) hay nước rỉ rác (Asrami et al.).
+        - Cột "Results": hàng "Present work" khẳng định mô hình và tối ưu hóa đạt độ chính xác đáng kể ("significant level of precision") trên hệ MBR vi tảo.

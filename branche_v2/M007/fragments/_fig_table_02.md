@@ -1,0 +1,7 @@
+    - **Bảng 2.** Đánh giá hiệu suất 9 mô hình XGBoost trên tập kiểm tra
+      - <img src="assets/table_02_p4.png" alt="Bảng 2" />
+      - **Bảng này chứng minh điều gì**
+        - Ba mô hình $M_1, M_4, M_7$ có độ chính xác vượt trội ($R^2 \ge 0.764$, $md \ge 0.926$), trong khi các mô hình còn lại đều có hiệu suất dự báo thấp ($R^2 \le 0.596$).
+      - **Từ đâu mà thấy được**
+        - Cột "$R^2$" và "md": hàng $M_7$ đạt cao nhất ($0.877$ và $0.998$), kế tiếp là $M_4$ ($0.814$ và $0.971$) và $M_1$ ($0.764$ và $0.926$); hàng $M_3$ có $R^2$ thấp nhất ($0.354$).
+        - Cột sai số (MAE, RMSE, MAPE): hàng $M_4$ có MAE ($0.00024$) và RMSE ($0.00004$) nhỏ nhất, hàng $M_7$ có MAPE nhỏ nhất ($0.02333$); hàng $M_8$ có sai số lớn nhất ($\text{RMSE} = 0.06678$, $\text{MAPE} = 4.51399$).

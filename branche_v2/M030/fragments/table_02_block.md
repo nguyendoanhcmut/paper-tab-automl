@@ -1,0 +1,7 @@
+  - **Bảng 2.** Hiệu suất loại bỏ các chất ô nhiễm của MBR.
+    - <img src="assets/table_02_p4.png" alt="Bảng 2" />
+    - **Bảng này chứng minh điều gì**
+      - BOD đạt hiệu suất loại bỏ trung bình cao nhất $98\ \%$, trong khi COD đạt trung bình $79\ \%$, trung vị $82\ \%$.
+    - **Từ đâu mà thấy được**
+      - Các cột "Ammonia ($\text{mg N-NH}_3\ \text{L}^{-1}$)", "BOD ($\text{mg O}_2\ \text{L}^{-1}$)" và "COD ($\text{mg O}_2\ \text{L}^{-1}$)" tại phần "MBR permeate (removal)".
+      - Giá trị tốt nhất ở cột BOD với mức khử trong ngoặc đạt $98\ \%$ (Mean) và $99\ \%$ (Max); thấp nhất ở COD với $-3\ \%$ (Min); cột Ammonia ghi nhận $90\ \%$ (Mean).

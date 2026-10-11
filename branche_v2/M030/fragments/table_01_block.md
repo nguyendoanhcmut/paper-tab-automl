@@ -1,0 +1,7 @@
+  - **Bảng 1.** Đặc tính và điều kiện vận hành của hệ MBR
+    - <img src="assets/table_01_p3.png" alt="Bảng 1" />
+    - **Bảng này chứng minh điều gì**
+      - Bảng xác lập cấu hình màng MF tấm phẳng ($70\text{ m}^2$, $0.4\text{ }\mu\text{m}$) cùng tải trọng và chế độ sục khí cố định cho bể pilot $8\text{ m}^3$.
+    - **Từ đâu mà thấy được**
+      - Cột Parameters phân tách hai nhóm: đặc tính màng lọc và điều kiện vận hành hệ thống.
+      - Cột Value và Unit chỉ rõ sục khí $45\text{ N m}^3\text{ h}^{-1}$, HRT $5.6\text{ h}$, SRT $40\text{ d}$, tải hữu cơ $13\text{ kg COD d}^{-1}$ và lưu lượng thấm $0.5\text{ m}^3\text{ h}^{-1}$.

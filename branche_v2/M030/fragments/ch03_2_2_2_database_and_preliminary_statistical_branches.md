@@ -1,0 +1,82 @@
+### 2.2. Database and preliminary statistical analysis
+
+- Dữ liệu quan trắc do nhà máy lọc dầu (oil refinery) cung cấp, ban đầu bao gồm $1131$ mẫu dữ liệu (samples) được thu thập trong suốt $4$ năm quan trắc ($4\text{ years of monitoring}$).
+  - Mỗi mẫu đại diện cho một ngày vận hành ($1\text{ day}$) và bao quát một tập hợp gồm $30$ biến số ($30\text{ variables}$):
+    - Áp suất qua màng (TMP - transmembrane pressure).
+    - Nhiệt độ (temperature).
+    - Lưu lượng dòng thấm (permeate flowrate).
+    - Độ thấm của màng (membrane permeability).
+    - Thời gian lưu bùn (SRT - sludge retention time).
+    - Độ lọc của bùn (sludge filterability).
+    - Khả năng lắng của bùn (sedimentability).
+    - Chất rắn lơ lửng bay hơi trong bùn lỏng (MLVSS - mixed liquor volatile suspended solids).
+    - Chất rắn lơ lửng trong bùn lỏng (MLSS - mixed liquor suspended solids).
+    - Các chất polyme ngoại bào (EPS - extracellular polymeric substances).
+    - Các sản phẩm vi sinh vật hòa tan (SMP - soluble microbial products).
+    - $\text{pH}$.
+    - Tổng cacbon hữu cơ ($\text{TOC}$ - total organic carbon) dòng vào và dòng ra.
+    - Nhu cầu oxy sinh hóa ($\text{BOD}$ - biochemical oxygen demand) dòng vào và dòng ra.
+    - Nhu cầu oxy hóa học ($\text{COD}$ - chemical oxygen demand) dòng vào và dòng ra.
+    - Nồng độ amoniac ($\text{ammonia}$) dòng vào và dòng ra.
+    - Độ đục ($\text{turbidity}$) dòng vào và dòng ra.
+    - Độ kiềm ($\text{alkalinity}$) dòng vào và dòng ra.
+    - Clorua ($\text{chloride}$) dòng ra.
+    - Độ màu ($\text{color}$) dòng ra.
+    - Độ dẫn điện ($\text{conductivity}$) dòng ra.
+    - Nồng độ sunphua ($\text{sulphide}$) dòng vào.
+    - Nồng độ photpho ($\text{phosphorous}$) dòng vào.
+    - Nồng độ dầu mỡ ($\text{OG}$ - oil and grease) dòng vào.
+- Quá trình chọn lọc biến số nhằm cân bằng giữa thông tin cơ chế và số lượng mẫu khả dụng:
+  - Do các mẫu chứa dữ liệu bị khuyết (missing data) không thể sử dụng để xây dựng các mô hình đa biến (multivariate models), việc lựa chọn biến số hướng tới hai mục tiêu:
+    - Thu được các thông tin liên quan đến các cơ chế xử lý của hệ thống MBR (MBR treatment mechanisms).
+    - Giữ lại số lượng mẫu lớn nhất có thể (keep the greatest possible number of samples).
+  - $14$ biến số được lựa chọn cho mô hình bao gồm:
+    - $\text{SRT}$.
+    - Độ lọc của bùn (sludge filterability).
+    - $\text{MLVSS}$.
+    - $\text{pH}$.
+    - Nhiệt độ (temperature).
+    - Độ thấm của màng (membrane permeability).
+    - Nồng độ dòng vào của $\text{COD}$ (influent COD).
+    - Nồng độ dòng vào của photpho (influent phosphorous).
+    - Nồng độ dòng vào của amoniac (influent ammonia).
+    - Nồng độ dòng vào của sunphua (influent sulphides).
+    - Nồng độ dòng vào của dầu mỡ (influent oil and grease - $\text{OG}$).
+    - Nồng độ dòng ra của $\text{COD}$ trong dòng thấm (effluent COD).
+    - Hiệu suất loại bỏ $\text{COD}$ (COD removal).
+    - Hiệu suất loại bỏ amoniac (ammonia removal).
+  - Giới hạn liên quan đến độ kiềm (alkalinity):
+    - Độ kiềm là biến số quan trọng để khảo sát quá trình khử amoniac do đóng vai trò thiết yếu trong phản ứng nitrat hóa (nitrification).
+    - Tuy nhiên, độ kiềm không được đo đạc với tần suất đủ cao để có thể khả thi đưa vào mô hình.
+- Tinh lọc dữ liệu và thu giảm kích thước mẫu quan trắc:
+  - Do các biến số được chọn không được đo lường với cùng tần suất, tập dữ liệu vẫn xuất hiện nhiều khoảng trống dữ liệu khuyết.
+  - Các mẫu không chứa đầy đủ phép đo cho tất cả $14$ biến số đã chọn đều bị loại bỏ khỏi cơ sở dữ liệu.
+  - Cơ sở dữ liệu cuối cùng sau khi tinh lọc bao gồm $479$ mẫu dữ liệu hoàn chỉnh ($479\text{ samples}$), thu giảm từ $1131$ mẫu ban đầu và bao quát trọn vẹn $14$ biến số.
+- Khảo sát và xử lý các giá trị ngoại lai (outliers):
+  - Giá trị ngoại lai được khảo sát bằng đồng thời hai phương pháp:
+    - Phương pháp khoảng tứ phân vị (IQR - interquartile range) [40].
+    - Phương pháp nhận diện Hampel (Hampel identifier methods) [41].
+  - Tất cả các trường hợp ngoại lai đều được kiểm tra riêng lẻ từng trường hợp (individually examined) đối chiếu với báo cáo vận hành do nhà máy lọc dầu cung cấp cùng với dữ liệu quan trắc, nhằm xác minh xem có sự cố vận hành (operational problem) nào giải thích cho các giá trị cực trị hay không, tránh gây sai lệch kết quả.
+  - Toàn bộ các quan sát bị phân loại là ngoại lai đều được giữ lại trong tập dữ liệu (kept in the dataset):
+    - Các giá trị này phản ánh các điều kiện vận hành không điển hình (atypical operating conditions).
+    - Việc giữ lại giúp bổ sung thông tin quan trọng cho việc kiểm soát quá trình (process control).
+- Thống kê mô tả và phân phối xác suất của 14 biến số trong cơ sở dữ liệu cuối cùng ($n = 479$, Table 3):
+  - Bảng 3 trình bày các thông số thống kê mô tả (descriptive statistics) cho $14$ biến số đã chọn:
+    - Độ lọc của bùn ($\text{Filt}$): giá trị nhỏ nhất $\text{Min} = 5.00\text{ mL } 5\text{ min}^{-1}$, cực đại $\text{Max} = 26.0\text{ mL } 5\text{ min}^{-1}$, trung vị $\text{Median} = 11.0\text{ mL } 5\text{ min}^{-1}$, trung bình $\text{Mean} = 11.6\text{ mL } 5\text{ min}^{-1}$, độ lệch chuẩn $\text{sd} = 4.44\text{ mL } 5\text{ min}^{-1}$, phương sai $\text{Variance} = 19.7$, hệ số biến thiên $\text{Coef. of variation} = 0.38$, hệ số bất đối xứng $\text{Coef. of skewness} = 0.69$.
+    - $\text{MLVSS}$: $\text{Min} = 2150\text{ mg L}^{-1}$, $\text{Max} = 12{,}500\text{ mg L}^{-1}$, $\text{Median} = 7200\text{ mg L}^{-1}$, $\text{Mean} = 7185\text{ mg L}^{-1}$, $\text{sd} = 2004\text{ mg L}^{-1}$, $\text{Variance} = 4{,}016{,}661$, $\text{Coef. of variation} = 0.28$, $\text{Coef. of skewness} = 0.08$.
+    - $\text{pH}$: $\text{Min} = 5.61$, $\text{Max} = 10.5$, $\text{Median} = 7.70$, $\text{Mean} = 8.10$, $\text{sd} = 0.98$, $\text{Variance} = 0.96$, $\text{Coef. of variation} = 0.12$, $\text{Coef. of skewness} = 0.70$.
+    - Nồng độ amoniac dòng vào ($\text{Influent ammonia}$): $\text{Min} = 11.2\text{ mg L}^{-1}$, $\text{Max} = 82.8\text{ mg L}^{-1}$, $\text{Median} = 29.1\text{ mg L}^{-1}$, $\text{Mean} = 29.9\text{ mg L}^{-1}$, $\text{sd} = 8.42\text{ mg L}^{-1}$, $\text{Variance} = 70.9$, $\text{Coef. of variation} = 0.28$, $\text{Coef. of skewness} = 1.61$.
+    - Nồng độ sunphua dòng vào ($\text{Influent sulphides}$): $\text{Min} = 1.00\text{ mg L}^{-1}$, $\text{Max} = 21.5\text{ mg L}^{-1}$, $\text{Median} = 6.40\text{ mg L}^{-1}$, $\text{Mean} = 7.20\text{ mg L}^{-1}$, $\text{sd} = 3.26\text{ mg L}^{-1}$, $\text{Variance} = 10.6$, $\text{Coef. of variation} = 0.45$, $\text{Coef. of skewness} = 1.11$.
+    - Nồng độ dầu mỡ dòng vào ($\text{Influent OG}$): $\text{Min} = 0.60\text{ ppm}$, $\text{Max} = 48.4\text{ ppm}$, $\text{Median} = 11.6\text{ ppm}$, $\text{Mean} = 11.4\text{ ppm}$, $\text{sd} = 6.35\text{ ppm}$, $\text{Variance} = 40.3$, $\text{Coef. of variation} = 0.56$, $\text{Coef. of skewness} = 1.69$.
+    - Nồng độ photpho dòng vào ($\text{Influent phosp.}$): $\text{Min} = 0.01\text{ mg L}^{-1}$, $\text{Max} = 1.50\text{ mg L}^{-1}$, $\text{Median} = 0.20\text{ mg L}^{-1}$, $\text{Mean} = 0.30\text{ mg L}^{-1}$, $\text{sd} = 0.16\text{ mg L}^{-1}$, $\text{Variance} = 0.03$, $\text{Coef. of variation} = 0.61$, $\text{Coef. of skewness} = 3.23$.
+    - Nồng độ $\text{COD}$ dòng vào ($\text{Influent COD}$): $\text{Min} = 144\text{ mg L}^{-1}$, $\text{Max} = 1617\text{ mg L}^{-1}$, $\text{Median} = 563\text{ mg L}^{-1}$, $\text{Mean} = 594\text{ mg L}^{-1}$, $\text{sd} = 249\text{ mg L}^{-1}$, $\text{Variance} = 62{,}188$, $\text{Coef. of variation} = 0.42$, $\text{Coef. of skewness} = 1.00$.
+    - Nồng độ $\text{COD}$ dòng ra trong dòng thấm ($\text{Permeate COD}$): $\text{Min} = 17.0\text{ mg L}^{-1}$, $\text{Max} = 384\text{ mg L}^{-1}$, $\text{Median} = 102\text{ mg L}^{-1}$, $\text{Mean} = 112\text{ mg L}^{-1}$, $\text{sd} = 48.1\text{ mg L}^{-1}$, $\text{Variance} = 2317$, $\text{Coef. of variation} = 0.43$, $\text{Coef. of skewness} = 1.31$.
+    - Hiệu suất loại bỏ amoniac ($\text{Ammonia removal}$): $\text{Min} = 15.8\,\%$, $\text{Max} = 99.4\,\%$, $\text{Median} = 94.2\,\%$, $\text{Mean} = 91.7\,\%$, $\text{sd} = 10.0\,\%$, $\text{Variance} = 100$, $\text{Coef. of variation} = 0.11$, $\text{Coef. of skewness} = -4.09$.
+    - Hiệu suất loại bỏ $\text{COD}$ ($\text{COD removal}$): $\text{Min} = 19.3\,\%$, $\text{Max} = 96.9\,\%$, $\text{Median} = 81.0\,\%$, $\text{Mean} = 79.3\,\%$, $\text{sd} = 10.2\,\%$, $\text{Variance} = 104$, $\text{Coef. of variation} = 0.13$, $\text{Coef. of skewness} = -2.17$.
+    - Nhiệt độ ($\text{Temp.}$): $\text{Min} = 23.4\,^\circ\text{C}$, $\text{Max} = 39.2\,^\circ\text{C}$, $\text{Median} = 29.0\,^\circ\text{C}$, $\text{Mean} = 28.9\,^\circ\text{C}$, $\text{sd} = 3.40\,^\circ\text{C}$, $\text{Variance} = 11.5$, $\text{Coef. of variation} = 0.12$, $\text{Coef. of skewness} = 0.33$.
+    - Thời gian lưu bùn ($\text{SRT}$): $\text{Min} = 30\text{ d}$, $\text{Max} = 80\text{ d}$, $\text{Median} = 30\text{ d}$, $\text{Mean} = 42\text{ d}$, $\text{sd} = 15\text{ d}$, $\text{Variance} = 217$, $\text{Coef. of variation} = 0.36$, $\text{Coef. of skewness} = 0.52$.
+    - Độ thấm của màng ($\text{Perm.}$): $\text{Min} = 87.9\text{ L h}^{-1}\text{ m}^{-2}\text{ bar}^{-1}$, $\text{Max} = 1463\text{ L h}^{-1}\text{ m}^{-2}\text{ bar}^{-1}$, $\text{Median} = 179\text{ L h}^{-1}\text{ m}^{-2}\text{ bar}^{-1}$, $\text{Mean} = 276\text{ L h}^{-1}\text{ m}^{-2}\text{ bar}^{-1}$, $\text{sd} = 232\text{ L h}^{-1}\text{ m}^{-2}\text{ bar}^{-1}$, $\text{Variance} = 53{,}783$, $\text{Coef. of variation} = 0.84$, $\text{Coef. of skewness} = 2.27$.
+  - Đặc tính phân phối và độ lệch chuẩn của dữ liệu:
+    - Hiệu suất loại bỏ amoniac và $\text{COD}$ có hệ số bất đối xứng âm mạnh (skewness lần lượt là $-4.09$ và $-2.17$), thể hiện phân phối lệch trái với phần lớn các giá trị đạt mức cao và đuôi phân phối kéo dài về vùng hiệu suất thấp.
+    - Photpho dòng vào ($\text{skewness} = 3.23$), độ thấm của màng ($\text{skewness} = 2.27$), dầu mỡ dòng vào ($\text{skewness} = 1.69$), amoniac dòng vào ($\text{skewness} = 1.61$), và $\text{COD}$ trong dòng thấm ($\text{skewness} = 1.31$) có hệ số bất đối xứng dương lớn, thể hiện phân phối lệch phải.
+    - $\text{MLVSS}$ có hệ số bất đối xứng xấp xỉ không ($\text{skewness} = 0.08$), phản ánh phân phối gần như đối xứng hoàn hảo quanh giá trị trung bình ($7185\text{ mg L}^{-1}$) và trung vị ($7200\text{ mg L}^{-1}$).

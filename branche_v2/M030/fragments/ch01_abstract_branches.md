@@ -1,0 +1,53 @@
+## Abstract
+
+- Bể phản ứng sinh học màng (MBR - Membrane bioreactors) đã được ứng dụng để xử lý nước thải nhà máy lọc dầu (oil refinery wastewater).
+  - Để cho phép tái sử dụng nước (water reuse), nồng độ amoniac (ammonia concentration) phải đạt mức đủ thấp.
+  - Việc thấu hiểu và kiểm soát quá trình khử amoniac là thiết yếu, và mô hình hóa trí tuệ nhân tạo (AI - artificial intelligence modelling) là một giải pháp thay thế tiềm năng.
+- Các mô hình Mạng nơ-ron nhân tạo (ANN - Artificial Neural Networks) và Phân tích thành phần chính (PCA - Principal Components Analysis) được áp dụng để xác định các biến số đóng góp nhiều nhất vào hiệu quả khử amoniac và dự đoán động thái của nó; đồng thời Kiểm soát quá trình thống kê đa biến (MSPC - Multivariate Statistical Process Control) được sử dụng để phát hiện và chẩn đoán các điều kiện khử amoniac ở mức thấp.
+  - Nghiên cứu sử dụng dữ liệu quan trắc trong $4$ năm từ một hệ thống MBR quy mô pilot xử lý nước thải thực tế của nhà máy lọc dầu.
+- Mô hình ANN và PCA xác định các biến số ảnh hưởng đến hiệu quả khử amoniac:
+  - Độ thấm của màng (membrane permeability) cùng với nồng độ COD và dầu mỡ (oil and grease) trong dòng vào (influent) đóng góp làm giảm hiệu quả khử amoniac.
+  - Nhiệt độ (temperature) và thời gian lưu bùn (SRT - sludge retention time) đóng góp làm tăng hiệu quả khử amoniac.
+- Mô hình ANN dự đoán hiệu quả khử amoniac từ tập hợp các điều kiện vận hành với độ chính xác cao, đạt hệ số xác định $R^2 = 0.868$.
+- Biểu đồ kiểm soát $Q$ ($Q$ control chart) của mô hình MSPC phát hiện được hơn $50\,\%$ các đợt vận hành có hiệu quả khử amoniac dưới $90\,\%$, và phát hiện $100\,\%$ các đợt vận hành có hiệu quả khử dưới $85\,\%$, tạo điều kiện cho các can thiệp có mục tiêu cụ thể hơn.
+- ANN và MSPC là các công cụ giá trị hỗ trợ việc ra quyết định liên quan đến kiểm soát khử amoniac, giúp thấu hiểu, quản lý, dự đoán và phát hiện sớm các vấn đề về hiệu suất trong hệ thống MBR.
+
+### Notation
+
+- AI: Trí tuệ nhân tạo (artificial intelligence).
+- ANN: Mạng nơ-ron nhân tạo (Artificial Neural Networks).
+- BNR: Khử chất dinh dưỡng sinh học (biological nutrient removal).
+- BOD: Nhu cầu oxy sinh hóa (biochemical oxygen demand).
+- CAS: Bùn hoạt tính truyền thống (conventional activated sludge).
+- COD: Nhu cầu oxy hóa học (chemical oxygen demand).
+- DO: Oxy hòa tan (dissolved oxygen).
+- ELM: Máy học cực trị (extreme learning machine).
+- EPS: Các chất polyme ngoại bào (extracellular polymeric substances).
+- ESE: Khoa học và Kỹ thuật Môi trường (Environmental Science and Engineering).
+- FL: Logic mờ (fuzzy logic).
+- HRT: Thời gian lưu thủy lực (hydraulic retention time).
+- IQR: Khoảng tứ phân vị (interquartile range).
+- MAE: Sai số tuyệt đối trung bình (mean absolute error).
+- MBR: Bể phản ứng sinh học màng (membrane bioreactors).
+- MF: Vi lọc (microfiltration).
+- ML: Học máy (machine learning).
+- MLSS: Chất rắn lơ lửng trong bùn lỏng (mixed liquor suspended solids).
+- MLVSS: Chất rắn lơ lửng bay hơi trong bùn lỏng (mixed liquor volatile suspended solids).
+- MSE: Sai số toàn phương trung bình (Mean Squared Error).
+- MSPC: Kiểm soát quá trình thống kê đa biến (Multivariate Statistical Process Control).
+- NAS: Bùn hoạt tính làm giàu vi sinh vật nitrat hóa (nitrifying-enriched activated sludge).
+- OLR: Tải trọng hữu cơ (organic loading rate).
+- OMBR: Bể phản ứng sinh học màng thẩm thấu (osmotic membrane bioreactor).
+- PAC: Than hoạt tính dạng bột (powdered activated carbon).
+- PC: Các thành phần chính (principal components).
+- PCA: Phân tích thành phần chính (Principal Components Analysis).
+- PES: Polyether sulfone.
+- $R^2$: Hệ số xác định (coefficient of determination).
+- RF: Rừng ngẫu nhiên (random forest).
+- SMP: Sản phẩm vi sinh vật hòa tan (soluble microbial products).
+- SRT: Thời gian lưu bùn (sludge retention time).
+- SVM: Máy vectơ hỗ trợ (support vector machines).
+- TMP: Áp suất qua màng (transmembrane pressure).
+- TOC: Tổng cacbon hữu cơ (total organic carbon).
+- UCL: Giới hạn kiểm soát trên (upper control limit).
+- WWTP: Trạm xử lý nước thải (wastewater treatment plant).

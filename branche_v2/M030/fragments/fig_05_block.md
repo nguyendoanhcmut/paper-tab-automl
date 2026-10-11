@@ -1,0 +1,7 @@
+  - **Hình 5.** Scree plot và giá trị $R^2$ của mô hình PCA
+    - <img src="assets/fig_05_p7.jpeg" alt="Hình 5" />
+    - **Hình này chứng minh điều gì**
+      - 3 thành phần chính đầu tiên tối ưu để giữ lại thông tin với eigenvalue $> 1$ và $R^2 > 0.75$.
+    - **Từ đâu mà thấy được**
+      - Panel (a): PC 1–3 có eigenvalue $> 1$ ($3.04$, $2.43$, $1.18$) và giải thích lần lượt $22.9\ \%$, $17.8\ \%$, $9.8\ \%$ biến thiên.
+      - Panel (b): Cột $R^2$ vượt $0.75$ ở PC 3; điểm cải thiện $R^2$ giảm từ $1.00$ xuống dưới $0.10$ ở PC 4.

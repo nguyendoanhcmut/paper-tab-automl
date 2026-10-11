@@ -1,0 +1,8 @@
+    - **Hình 7.** Quá trình ra quyết định dự đoán TMP của mô hình MLP
+      - <img src="assets/fig_07_p12.jpeg" alt="Hình 7" />
+      - **Hình này chứng minh điều gì**
+        - Quỹ đạo dự đoán phân kỳ mạnh nhất qua Temp, OLR và Flux; các biến SS, EPSc, EPSp và MLSS hầu như không làm lệch mức TMP trung bình.
+      - **Từ đâu mà thấy được**
+        - Ox: Model output value, dải $-5$ đến $20$. Oy: 7 biến đầu vào từ đáy lên gồm SS, EPSc, EPSp, MLSS, Temp, OLR, Flux.
+        - Đường đen thẳng đứng ở trục giữa (mốc $\approx 6$) đại diện giá trị TMP trung bình xuất phát tại đáy.
+        - Các đường tích lũy tản rộng dần từ Temp lên Flux thành dải màu xanh lam ($< 5$) và đỏ hồng ($> 10$ đến $> 20$).

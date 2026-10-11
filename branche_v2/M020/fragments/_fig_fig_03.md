@@ -1,0 +1,7 @@
+    - **Hình 3.** Cấu trúc mô hình mạng MLP và LSTM
+      - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+      - **Hình này chứng minh điều gì**
+        - MLP gồm 4 lớp Fully connected xen kẽ 4 Dropout; LSTM gồm 1 lớp LSTM tiếp nối 2 lớp Fully connected xen kẽ Dropout.
+      - **Từ đâu mà thấy được**
+        - Hướng đọc từ trên xuống: từ Input layer tách thành hai nhánh MLP (trái) và LSTM (phải), cùng dẫn về Output layer.
+        - Khung MLP chứa 4 khối Fully connected layer xen kẽ Dropout; khung LSTM có khối LSTM layer tiếp nối 2 khối Fully connected layer xen kẽ Dropout.

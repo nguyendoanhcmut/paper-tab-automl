@@ -1,0 +1,74 @@
+3.2
+Prompt Adaptation Memory
+While the LLM’s pretrained knowledge provides a strong prior over feature programs, effective search requires the pro-
+posal mechanism to adapt online to each island’s evolving landscape. Without adaptation, the LLM repeatedly proposes
+programs in regions already known to be unproductive, wasting evaluation budget. We introduce Prompt Adaptation
+Memory (PAM), a lightweight per-island mechanism that continuously shapes the LLM’s proposal distribution from
+accumulated search experience without any parameter update. PAM operates through three coordinated update rules
+applied after every generation.
+
+3.2.1
+Prompt-memory Update
+Let H+
+i (t) and H−
+i (t) denote the accepted and rejected subsets of the sliding history window [t −W, t]. Operator types
+concentrated among accepted programs are reinforced as prefer signals, those concentrated among rejected programs
+are flagged as avoid signals. Formally:
+ρ(t+1)
+i
+= Summarize
+
+H+
+i (t), H−
+i (t), ρ(t)
+i
+
+,
+(8)
+where Summarize(·) is an LLM call that produces a compact natural-language string (e.g., “prefer ratio features with
+lagged denominators, avoid log transforms of sparse columns") prepended to all subsequent prompts for island i.
+
+3.2.2
+Elite Archive Update
+After each generation, A(t)
+i
+merges newly accepted programs, re-ranks by ˆΦ, and truncating to capacity |A|max:
+A(t+1)
+i
+= TopK
+
+A(t)
+i
+∪{p : at = 1}, |A|max, ˆΦ
+
+.
+(9)
+5
+
+
+<!-- Page 6 -->
+Candidates whose normalized tree-edit distance to any existing archive member falls below δmin are discarded before
+insertion, enforcing structural novelty. The archive serves as both the in-context demonstration pool for intra-island
+proposals and the candidate source for cross-island synthesis.
+
+3.2.3
+Proposal Conditioning
+Every LLM call for island i at generation t is conditioned on:
+Context(t)
+i
+=
+
+M, ρ(t)
+i , Sample
+
+A(t)
+i , n
+
+,
+(10)
+where M grounds the proposal in domain knowledge, ρ(t)
+i steers it with accumulated search preferences, and
+Sample(A(t)
+i , n) exemplifies it with the m highest-scoring programs discovered so far. This three-way conditioning
+closes the feedback loop introduced above: history shapes memory, memory steers proposals, and accepted proposals
+enrich the archive.

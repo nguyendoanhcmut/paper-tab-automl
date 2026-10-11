@@ -1,0 +1,939 @@
+<!-- Page 1 -->
+Machine learning-based prediction of effluent COD and transmembrane 
+pressure in anaerobic membrane bioreactor during transfer station landfill 
+leachate treatment
+Jokha Mohd Haji
+, Shengzi Duan , Xudan Yang , Wei Chen *
+School of Metallurgy and Environment, Central South University, Changsha 410083, PR China
+A R T I C L E I N F O
+Keywords:
+Transfer station landfill leachate
+Anaerobic membrane bioreactor
+ML algorithms
+Chemical Oxygen demand
+Membrane fouling
+A B S T R A C T
+The application of machine learning (ML) offers significant advantages in predicting critical performance metrics 
+during wastewater treatment, enabling optimized operational control and mitigating challenges such as mem­
+brane fouling. This study employed ML methods to evaluate COD removal and membrane fouling in a mesophilic 
+anaerobic membrane bioreactor (AnMBR) for transfer station landfill leachate treatment operated for 120 days. 
+The system achieved ≥80% COD removal at organic loading rate (OLR) of 6.4 kg COD/m³ ⋅d and hydraulic 
+retention time (HRT) of 6.5 days. Artificial neural networks (ANN), random forest (RF), and extreme gradient 
+boosting (XGBoost) were developed to predict effluent COD and transmembrane pressure (TMP). RF achieved the 
+strongest predictive performance for both effluent COD (R² = 0.96; RMSE = 331.50 mg/L) and TMP (R² = 0.88; 
+RMSE = 3.86 kPa). SHapley Additive exPlanations (SHAP) analysis identified OLR, HRT and oxidation reduction 
+potential (ORP) as the main model-associated predictors for effluent COD, while effluent NH4
++-N, effluent pH and 
+ORP contributed most strongly to TMP prediction. These results show that integrating AnMBR operation with 
+interpretable ML-based predictive modelling can provide useful diagnostic insights for optimizing leachate 
+treatment performance and membrane fouling management.
+1. Introduction
+Rapid urbanization and rising living standards have driven a sharp 
+increase in municipal solid waste, placing significant strain on urban 
+waste management systems. Urban waste management generally in­
+volves three interconnected stages: front-end collection, mid-end 
+transfer, and end-of-life treatment [1]. Waste transfer stations serve as 
+a key link between waste collection and final disposal [2]. Leachate 
+generated at these stations is compositionally complex, typically con­
+taining high levels of organic matter, ammonia, soluble microbial 
+products (SMP), suspended solids, and toxic substances [3,4]. Without 
+proper treatment, such pollutants can severely impact soil, surface 
+water, groundwater, and the atmosphere [5]. In practice, leachate 
+management at transfer stations is frequently constrained by limited 
+space [2], economic barriers to advanced treatment technologies, and, 
+in some cases, insufficient regulatory enforcement. Consequently, 
+transfer station landfill leachate is often stored inadequately or dis­
+charged without minimal treatment, increasing environmental risks [1].
+Anaerobic membrane bioreactor (AnMBR) technology has received 
+increased attention as a promising approach for the treatment and reuse 
+of industrial and municipal high-strength wastewaters [3], owing to its 
+high-quality effluent, compact footprint, and potential for energy re­
+covery [6,7]. However, membrane fouling remains the most critical 
+challenge limiting the stable and cost-effective operation of AnMBR [8, 
+9]. Fouling leads to elevated transmembrane pressure (TMP), reduced 
+permeate flux, and increased maintenance cost, ultimately affecting the 
+long-term feasibility of AnMBR application [10,11]. To mitigate mem­
+brane fouling, various control strategies have been explored, including 
+influent pre-treatment, increased aeration intensity, and chemical con­
+ditioning of mixed liquor [9,12]. Nevertheless, these approaches are 
+often energy-intensive, economically unattractive, or insufficient to 
+highly variable waste streams like landfill leachate [13].
+Recent advances in Machine learning (ML) have demonstrated 
+strong capabilities in modelling complex, nonlinear relationships 
+inherent in environmental systems. ML methods, such as artificial neural 
+networks (ANNs) [14], support vector regression (SVR) [15], extreme 
+gradient boosting (XGBoost), and random forest (RF) [12,16], have been 
+widely applied to monitor and optimize wastewater treatment processes 
+* Corresponding author.
+E-mail address: dvchen@csu.edu.cn (W. Chen). 
+Contents lists available at ScienceDirect
+Journal of Environmental Chemical Engineering
+journal homepage: www.elsevier.com/locate/jece
+https://doi.org/10.1016/j.jece.2026.123811
+Received 14 May 2026; Received in revised form 16 June 2026; Accepted 24 June 2026  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+Available online 25 June 2026 
+2213-3437/© 2026 Elsevier Ltd. All rights are reserved, including those for text and data mining, AI training, and similar technologies. 
+
+
+<!-- Page 2 -->
+[17,18,8], enabling prediction of pollutant removal efficiency, effluent 
+quality, and real-time early warning and improved process control [19]. 
+Despite these advances, most ML applications have focused on relatively 
+stable municipal or industrial systems [3,20,8,21], with limited atten­
+tion to highly variable, high-strength waste streams such as landfill 
+leachates, where influent composition and loading conditions can fluc­
+tuate sharply over time [18,13,14]. Moreover, existing models are often 
+trained for interpolation within historical data ranges and may lack 
+robustness under sudden loading fluctuations or operational distur­
+bances [22]. These limitations are particularly critical in AnMBR sys­
+tems, where treatment performance and membrane fouling evolution 
+are strongly influenced by time-dependent interactions among influent 
+quality, operating conditions, and microbial community dynamics [20, 
+23]. Thus, there is a clear need for adaptive, dynamic modelling 
+frameworks capable of integrating real-time sensor data and reliably 
+predicting system behaviour under varying operating scenarios.
+In response, this study integrates 120-day AnMBR operation for 
+transfer-station leachate treatment with interpretable, data-driven ML 
+models. The reactor was operated under systematically varied hydraulic 
+retention time (HRT) and organic loading rate (OLR) conditions to 
+evaluate COD removal, nitrogen transformation and membrane fouling 
+behaviour. Fouling development was assessed through operational 
+monitoring, antifouling performance evaluation, and characterization of 
+foulant composition and particle size distribution. Microbial community 
+structure and functional shifts were also analysed to better understand 
+the linkages among microbial dynamics, reactor performance and 
+fouling development. Three ML algorithms, namely RF, ANN and 
+XGBoost, were developed to predict effluent COD and TMP using 
+routinely monitored influent, effluent and operational parameters. 
+Model hyperparameters were optimized using randomized search and 5- 
+fold cross-validation. Model interpretation was performed using SHap­
+ley Additive exPlanations (SHAP) to identify the variables most strongly 
+associated with COD and TMP predictions. The aim of this study is 
+therefore to provide a quantitative operational boundary, a reversed 
+foulant predictor, and an interpretable, sensor-lite diagnostic framework 
+for understanding and predicting AnMBR performance during the 
+treatment of high-strength and highly variable transfer-station landfill 
+leachate. By integrating long-term reactor operation, microbial com­
+munity analysis and interpretable ML models, this work provides useful 
+diagnostic insights into the OLR-HRT operating window, COD removal 
+behaviour and membrane fouling development, thereby supporting 
+more sustainable and robust AnMBR-based leachate management at 
+waste transfer facilities.
+2. Materials and methods
+2.1. Leachate characteristics and inoculum
+The leachate used in this study was obtained from a municipal solid 
+waste transfer station in Changsha City, Hunan Province. The key 
+physicochemical properties of leachate are summarized in Table S1
+(Supplementary Material).
+2.2. Reactor configuration and operating conditions
+A laboratory-scale AnMBR with a total volume of 5.0 L (effective 
+working volume 4 L) was fabricated from transparent acrylic. The sys­
+tem was inoculated with anaerobic sludge accounting for 30% of the 
+working capacity. The initial HRT was set at 15 d, corresponding to a 
+feed flow rate of 0.33 L/d. The reactor was operated at mesophilic 
+temperature (35 ± 2 ◦C). A polyvinylidene fluoride hollow fiber mem­
+brane module with a surface area of 712 cm² and a pore size of 0.1 µm 
+was employed for filtration, operated intermittently with a 4-min suc­
+tion followed by a 1-min relaxation period, controlled by a peristaltic 
+pump.
+The operation of AnMBR spanned 120 days and was divided into 
+three phases, each characterized by distinct HRT and OLR settings to 
+simulate real operating scenarios. Phase I (start-up and adaptation, 1–28 
+d) involved a gradual HRT reduction from 15 to 9.5 d, with influent 
+concentration increased stepwise from 20% to 100% of the raw leachate. 
+Consequently, OLR rose from a low level to approximately 4.5 kg COD/ 
+m³ ⋅d. Phase II (stable operation, days 29–103) saw a further HRT 
+decrease from 9.5 to 6.5 days, while the influent remained at 100% 
+concentration; OLR was maintained between 5.0 and 6.0 kg COD/m³ ⋅d. 
+Phase III (shock loading test, 104–120 d) was designed to evaluate 
+system resilience under sudden organic overload. During this phase, 
+HRT was held constant at 5 d, influent concentration was kept at 100%, 
+and OLR was sustained within 7.5–8.0 kg COD/m³ ⋅d. Throughout the 
+experiment, sludge was withdrawn daily and other parameters were 
+monitored at different frequencies according to their analytical re­
+quirements and operational relevance. COD, NH4
++-N, and pH were 
+measured every 2 days, while ORP was measured daily. TMP was 
+continuously monitored using an online pressure transducer, and daily 
+representative TMP values were logged for model development. EPS and 
+SMP were extracted and analyzed weekly, and microbial samples were 
+collected at the end of each operational stage. The above parameters 
+were measured in a single time, as the high sampling frequency offsets 
+the lack of formal replication.
+2.3. Analytical methods
+COD analysis was conducted by the potassium dichromate oxidation 
+method as per the requirements listed in GB11914–89 and APHA stan­
+dard procedure. The concentration of NH4
++-N was measured by color­
+imetry, utilizing Nessler’s reagent to determine NH4
++-N concentrations at 
+all stages of reactor operation. pH and ORP were measured using a 
+digital pH meter (PHS-3C) and ORP meter (Pe−20k), EPS and SMP were 
+extracted following previous work [7]. Loosely bound EPS (Lb-EPS) was 
+obtained by vortexing and centrifugation, whereas tightly bound EPS 
+(Tb-EPS) was extracted by thermal treatment followed by centrifuga­
+tion. Protein and polysaccharide concentrations were analyzed using the 
+Lowry and anthracene-sulfuric acid methods, respectively. Fouling 
+conditions were continuously recorded by TMP. The sludge properties 
+were analyzed in terms of particle size distribution using the Mastersizer 
+3000 and Zeta potential using the Zetasizer Nano ZS. Fluorescence 
+excitation-emission matrix spectroscopy was used to analyze the dis­
+solved organic matter content.
+To study microbial dynamics in the AnMBR, sludge samples were 
+collected at the end of each operational stage from the membrane- 
+adhered sludge, representing the biofilm/cake-layer community 
+directly involved in fouling development. DNA was extracted, and the 
+V4 region of bacterial and archaeal 16S rRNA genes was amplified using 
+universal primers 515 F (5′-GTGCCCAGCMGCCGCGG−3′) and 806 R (5′- 
+GGACTACHVGGGTWTCTAAT−3′). High-throughput sequencing was 
+performed by Majorbio (Shanghai, China), and bioinformatic analysis 
+was conducted on the Majorbio Bioinformatics Cloud Platform to obtain 
+microbial composition and diversity indices. Sequencing data were then 
+used to identify community shifts associated with operational phase 
+transitions and membrane fouling behaviour [12].
+2.4. ML algorithms for prediction of Effluent COD and TMP
+The data set was collected from the long-term operation of AnMBR 
+experiment over 120 days. From this dataset, six input parameters for 
+each target variable (Effluent COD and TMP), were selected based on 
+Pearson correlation and domain knowledge of AnMBR operation system. 
+For effluent COD prediction, the model inputs comprised influent COD, 
+influent NH4
++-N, influent pH, OLR, ORP, and HRT. For TMP prediction, 
+the input variables consisted of influent COD, influent NH4
++-N, effluent 
+NH4
++-N, effluent pH, OLR and ORP. Prior to model development, the raw 
+data were examined to ensure completeness and consistency. The 
+dataset was divided into training and testing subsets using an 80:20 
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+2 
+
+
+<!-- Page 3 -->
+ratio. To avoid data leakage and improve performance robustness, 
+missing values in all pre-processing steps were handled using median 
+imputation, as the median is less affected by outliers and skewed dis­
+tributions. Near-zero variance features were removed, followed by Yeo- 
+Johnson transformation and Z-score standardization to improve model 
+stability (Eq. 1) were fitted only on the training set and then applied to 
+the testing set using the same parameters [14]. In addition, a chrono­
+logical splitting was applied, whereby the Phase III (shock-loading) data 
+served as the test set for a supplementary generalization assessment, 
+while data from Phases I–II were used for training. 
+Xstd = X −μ
+σ
+(1) 
+where X is the raw data, μ is the mean value of the feature, and σ is the 
+standard deviation.
+To better understand the relationships among variables and mini­
+mize potential multicollinearity, Pearson correlation analysis was con­
+ducted [16]. The Pearson correlation coefficient (r) quantifies the 
+strength and direction of linear associations between continuous fea­
+tures and is calculated using the formula shown in Eq. 2: 
+r =
+∑N
+i=1(Xi −X)(Yi −Y)̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+∑N
+i=1 (Xi −X)2
+√̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+∑N
+i=1 (Yi −Y)2
+√
+(2) 
+where Xi and Yi are the observed values, X and Y represent their means 
+and N is the sample size.
+Based on established thresholds, strong (r > 0.68) and moderate 
+(0.36 ≤r ≤0.68) correlations were identified among the variables. The 
+high collinearity was observed between features (OLR and HRT). 
+Sensitivity analyses were conducted and these variables were retained 
+for effluent COD prediction due to their distinct operational significance 
+in the AnMBR system. This combination of statistical analysis and 
+process-based understanding guided the selection of input variables for 
+effluent COD and TMP prediction, improving model interpretability and 
+predictive performance.
+2.5. Model development and selection
+Three ML algorithms, ANN (multilayer perception), RF, and XGBoost 
+were developed predictive models for effluent COD and TMP in the 
+AnMBR system. These models were selected due to their proven capa­
+bility in capturing complex nonlinear relationships [14,16] between 
+operational variables and system performance in wastewater treatment 
+processes [12,24]. To enhance model generalization and reduce over­
+fitting, hyperparameters for each algorithm were optimized separately 
+using randomized search combined with five-fold cross-validation 
+(K=5) on the training dataset [19]. Cross-validation results guided 
+hyperparameter selection during the tuning phase, while final model 
+performance was evaluated on the independent test set to provide an 
+unbiased assessment of the model generalization capability. Model 
+performance was quantified using the coefficient of determination (R2) 
+and root mean square error (RMSE), as defined in Eqs. 3 and 4: 
+R2 = 1 −
+∑
+N
+i=1
+(yi−
+ˆyi)2
+∑
+N
+i=1
+(yi−yi)2
+(3) 
+RMSE =̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅
+∑
+N
+i=1
+(ˆyi −yi)2
+N
+√
+√
+√
+√
+(4) 
+where N is the total number of observations or data points., yi is the 
+observed (true) value of the target variable for the sample, and ˆyi is the 
+predicted value of the target variable for the sample and yi is the mean 
+(average) of all values.
+2.6. SHAP interpretation method
+Shapley Additive exPlanations (SHAP) is an interpretable ML 
+approach derived from cooperative game theory that quantifies the 
+contribution of each input feature to a model prediction. SHAP repre­
+sents a complex model as an additive explanation model while satisfying 
+key properties such as local accuracy, consistency, and missingness. The 
+contribution of each feature is expressed through its SHAP value, which 
+reflects the marginal impact of that feature on the prediction across all 
+possible feature combinations [19]. This enables a transparent and 
+theoretically grounded interpretation of feature importance. The SHAP 
+value for a feature is defined as Eq. 5, and SHAP approximates the model 
+f(x) with an additive explanation model g(z) 
+f(x) ≈g(z) = ∅0 +
+∑
+M
+i=1
+∅izi
+(5) 
+where M is the total number of features, φ0 is the base value, and φi is the 
+SHAP value representing the contribution of feature i to the prediction. 
+This formulation quantifies the average marginal contribution of feature 
+iii, providing a reliable measure of its influence on the model prediction.
+3. Results and discussion
+3.1. Organic removal efficiency in AnMBR systems
+The AnMBR system demonstrated consistent performance across all 
+operational stages despite variations in HRT and OLR. During the start- 
+up and adaptation phase (days 1–28, Fig. 1a), influent COD concentra­
+tion increased while HRT decreased from 15 to 9.5 days. Effluent COD 
+remained below 900 mg/L, with COD removal efficiency rising from 
+90% to 99%, indicating effective microbial adaptation. Over this period, 
+OLR increased from 0.42 to 4.65 kg/m³d. During the stable operation 
+phase (days 29–103), HRT was reduced further to 6.5 days with 100% 
+raw leachate as the influent. Despite intermittent fluctuations in influent 
+COD concentration, removal efficiency remained remarkably high, 
+suggesting that the reactor was approaching its treatment capacity. At 
+this phase, the AnMBR exhibited robust and stable performance. Under 
+the shock loading phase (days 104–120), the system experienced highly 
+stressful conditions, with effluent COD peaking at approximately 
+5500 mg/L and OLR ranging from 7.5 to 8.0 kg COD/m³ ⋅d. COD 
+removal efficiency declined to 84–88%, which can be attributed to 
+organic overload and potential leachate toxicity [19].
+As presented in Fig. 1b, effluent NH4
++-N concentrations remained 
+persistently high throughout the experiment, averaging 1300 mg/L. 
+This implies that under strictly anaerobic conditions, the AnMBR 
+exhibited very limited capacity for NH4
++-N removal [25], despite 
+achieving effective organic matter removal [26]. Similar behaviour has 
+been reported for various anaerobic membrane systems treating 
+high-strength wastewater [27]. To overcome this limitation, integrating 
+AnMBR with aerobic post treatment units, such as nitrification or partial 
+ammonia oxidation processes, was thus recommended by previous 
+studies [28,29] to enhance overall nitrogen removal performance.
+3.2. Membrane fouling behaviour and particle characteristics
+Fig. 2a shows TMP dynamics under varying HRT conditions. At the 
+end of each operating phase, the membrane was cleaned to restore 
+permeability before the next phase was started. Physical cleaning was 
+applied after Phase I, sodium hypochlorite cleaning was applied after 
+Phase II, and citric acid cleaning was applied after Phase III. These 
+cleaning steps reduced the accumulated hydraulic resistance and 
+returned TMP close to the initial baseline level. At an HRT of 9.5 d, TMP 
+remained stable at around 1–2 kPa, indicating minimal fouling during 
+the system adaptation phase. However, when HRT was reduced to 7.5 d, 
+TMP increased sharply to approximately 35 kPa, suggesting pronounced 
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+3 
+
+
+<!-- Page 4 -->
+fouling, likely attributable to the accumulation of total solids [12]. 
+Further reduction of HRT to 6.5 d led to a steady TMP rise of 0.77 
+kPa/day, reaching about 32.5 kPa. Membrane recovery performance is 
+shown in Fig. 2b, where the filtration resistance slopes (K-values) 
+significantly decreased after cleaning. Fig. 2c reveals quantified infor­
+mation regarding EPS-SMP accumulation. Fine particles (~32.3 µm) 
+primarily influence cake layer development, with TMP effectively 
+capturing fouling behaviour for AnMBRs.
+A distinct increase was observed within SMP, LB-EPS, and TB-EPS as 
+HRT was reduced from 9.5 d to 5 d (Fig. S1). The EEM fluorescence 
+spectroscopy was further used to examine the influence of organic fou­
+lants at reduced HRT (Fig. 2d (i-iv)). In combination with fluorescent 
+aromatic proteins, SMP, and humic-like substances, it was observed that 
+a reduction in HRT caused higher fluorescence intensity. Physical 
+cleaning resumed permeability to a certain extent, whereas chemical 
+cleaning by sodium hypochlorite and citric acid achieved the most 
+effective recovery (Fig. S2). This was visually confirmed by SEM images 
+in Fig. 2e (i-vi) where the removal of embedded foulants and the re- 
+exposure of membrane pores underscore the dominant contribution of 
+chemical cleaning in restoring membrane functionality. In summary, 
+TMP effectively captures fouling phenomena in AnMBRs, with particular 
+emphasis on HRT optimization to mitigate fouling and maintain supe­
+rior membrane performance.
+3.3. Composition and functional roles of microbial communities
+The microbial community in the AnMBR showed significant shifts 
+over the operational period, closely following reactor performance and 
+environmental variation. The microbial community analysis, including 
+phylum/class-level composition and functional predictions, is shown in 
+Fig. S3. Firmicutes remained abundant facilitating efficient decomposi­
+tion of organic compounds. In contrast, the proportion of Proteobacteria 
+decreased, reflecting reduced degradation of refractory organics and 
+increased production of humic-like substances under shorter HRT. 
+Meanwhile, the relative abundance of Chloroflexi rose from 6.6% to 
+37.5%, while groups related to Anaerolineaceae became more abundant, 
+which might indicate their involvement in sludge structure, EPS pro­
+duction, biofilm formation and development of cake layers. These 
+compositional changes in microbial community clearly indicate a strong 
+interplay between microbial community structure and reactor operation 
+in the AnMBR system [12,30]. Enrichment of functionally relevant mi­
+crobial groups supported stable process performance even under 
+elevated loading conditions. In relation to membrane fouling, these 
+microbial shifts were interpreted together with TMP, EPS/SMP, EEM, 
+particle-size, SEM, and cleaning-response results Fig. 2(b-e). The com­
+bined evidence thus establishes a consistent pathway: operational stress 
+(HRT reduction) → selective enrichment of fouling-associated taxa in 
+the membrane-adhered sludge → enhanced EPS/SMP secretion → 
+aggravated cake-layer formation and pore blocking → TMP rise.
+3.4. ML model performance
+3.4.1. Data characteristics and correlation analysis
+Distinct variability patterns among operational parameters and those 
+of water quality were identified using descriptive statistics (Table S2). 
+Influent COD had moderate variability with 10684 mg/L and a CV of 
+26.2%, indicating organic loading conditions fluctuated greatly. Effluent 
+COD had a substantially greater relative CV of 90.6%, indicating wide- 
+ranging treatment performance under different operational phases, 
+particularly during shock loading. The conditions within the anaerobic 
+system remained stable as demonstrated by a consistent negative ORP 
+(−510 to −378 mV) and low CV (6.1%) indicating stable reducing 
+conditions exist in the reactor. In contrast, TMP exhibited a high degree 
+of variability CV (82%) indicating that membrane fouling develops non- 
+linearly and is dependent upon the phase duration which makes pre­
+dictive modelling very difficult [10]. The increase in effluent NH4
++-N 
+Fig. 1. (a) Changes of COD removal rate with HRT and OLR. (b) Changes of influent and Effluent NH4
++-N concentration in the system.
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+4 
+
+
+<!-- Page 5 -->
+compared to that of the influent indicate that nitrogen accumulation was 
+occurring in the system and that there was little capacity for nitrogen 
+removal under strictly anaerobic conditions.
+The Pearson correlation analysis between the input parameters 
+selected for the two predictive models is shown in Fig. 3. For the effluent 
+COD prediction model, the strongest correlation combinations include 
+HRT and OLR with r = −0.98, Influent COD and OLR with r = 0.91, and 
+Influent COD and Influent NH4
++-N with r = 0.97. This is mainly because 
+OLR is calculated directly from influent concentrations and flow rates, 
+resulting in inherent mathematical coupling; the very strong negative 
+correlation between HRT and OLR (r = −0.98) reflects their inverse 
+mathematical relationship (OLR = (COD×Q)/V vs. HRT = V/Q). 
+Meanwhile, Influent pH shows weak correlations with other inputs 
+(r = −0.40–0.17), 
+indicating 
+it 
+provides 
+unique, 
+independent 
+Fig. 2. Anti-fouling performance and spatial characteristics of membrane fouling: (a) Changes of TMP with HRT (b) TMP changes in different cleaning steps; (c) 
+Particle size distribution of mixed liquor sludge and cake sludge. (d) Fluorescence EEM of membrane contaminants (SMP, LB-EPS, and TB-EPS) at different HRT. (e) 
+SEM images of membrane modules after different cleaning steps ((i) sludge; (ii) clean membrane; (iii) fouled membrane(iv) Physical cleaning; (v) Sodium hypo­
+chlorite cleaning; (vi) Citric acid cleaning.
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+5 
+
+
+<!-- Page 6 -->
+information.
+For TMP prediction, the correlation pattern differs significantly. The 
+strongest correlations include Effluent NH4
++-N with r = −0.63, ORP with 
+r = 0.61, and Effluent pH with r = −0.57, while raw influent parameters 
+show only weak correlations (r = −0.44). This indicates membrane 
+fouling is driven by biological transformation products and redox state 
+rather than raw wastewater characteristics [19]. The weak correlations 
+between influent parameters and TMP further emphasize that mem­
+brane fouling is multifaceted and complex, posing a challenge to TMP 
+prediction and validating the application of ML for capturing these 
+nonlinear relationships.
+3.4.2. Hyperparameter optimization results
+To maximize predictive accuracy while preventing overfitting, 
+hyperparameter optimization was performed using randomized search 
+with 5-fold cross-validation (CV). This approach systematically explores 
+the hyperparameter space to identify configurations that optimize 
+generalization performance. Table 1 summarizes the optimized hyper­
+parameters and corresponding mean cross-validation scores for both 
+prediction targets.
+For effluent COD prediction, RF demonstrated superior stability 
+during CV, achieving the highest R² (0.94) and lowest RMSE 
+(396.65 mg/L). XGBoost performed comparably (CV R² = 0.92), while 
+ANN showed greater prediction variability (CV R² = 0.87). XGBoost 
+exhibited comparable performance (cross-validation R² =
+0.92), 
+whereas the artificial neural network (ANN) showed relatively lower 
+predictive stability (cross-validation R² = 0.87). For TMP prediction, 
+XGBoost attained the highest cross-validation performance in the 
+transformed target space, with R² = 0.69 and RMSE = 0.54 kPa, fol­
+lowed by RF (R² = 0.62, RMSE = 0.59 kPa), while the ANN yielded 
+weaker cross-validation results (R² = 0.47, RMSE = 0.73 kPa). However, 
+the performance of XGBoost raises concerns regarding potential over­
+fitting due to its model complexity compared to the small size of the TMP 
+dataset. Thus, although XGBoost had slightly superior cross-validation 
+performance, RF provided the strongest generalization for TMP 
+prediction.
+3.4.3. Test set performance evaluation
+The final models were retrained using the complete training dataset 
+with optimized configurations and subsequently evaluated on the in­
+dependent test data set to assess true generalization capability. For 
+effluent COD prediction (Fig. 4a-c and Table 2), all three models ach­
+ieved high accuracy, with the predicted values tightly clustering around 
+the 1:1 line. RF delivered the most stable performance, with low residual 
+variance and symmetric residuals around zero (Fig. S4a-c), indicating 
+robust generalization across the effluent COD range. XGBoost achieved 
+similar R² = 0.96 but showed larger deviations at higher effluent COD 
+values, suggesting reduced stability under extreme loading. ANN 
+exhibited a wider prediction spread, particularly at mid- to high-COD 
+levels, reflecting lower sensitivity to nonlinear trends, consistent with 
+Fig. 3. Pearson Correlation coefficient heatmap for effluent COD and TMP.
+Table 1 
+Optimized hyperparameters and Cross-validation performance during hyper­
+parameter tuning.
+target
+model
+optimized hyperparameters
+CV 
+R²
+CV RMSE
+effluent 
+COD
+RF
+n_estimators = 800, max_depth 
+= 8, max_features = 0.8
+0.94
+396.65 mg/ 
+L
+XGBoost
+n_estimators = 800, max_depth 
+= 5, learning_rate = 0.0046
+0.92
+431.45 mg/ 
+L
+ANN
+Layers = (128, 64, 32), 
+learning_rate = 0.01, batch_size 
+= 8
+0.87
+573.60 mg/ 
+L
+TMP
+RF
+n_estimators = 200, max_depth 
+= 12, max_features = 0.7, 
+min_samples_leaf = 2, bootstrap 
+= false
+0.62
+0.59 kPa
+XGBoost
+n_estimators = 800, max_depth 
+= 4, learning_rate = 0.10, 
+subsample = 0.9, 
+colsample_bytree = 0.8
+0.69
+0.54 kPa
+ANN
+Layers = (64), activation = relu, 
+learning_rate = 0.0032, batch_size 
+= 32, alpha = 0.001
+0.47
+0.73 kPa
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+6 
+
+
+<!-- Page 7 -->
+studies showing that ensemble tree-based methods [20] often outper­
+form or match ANN for robust, stable COD/BOD prediction in waste­
+water treatment systems.
+TMP prediction is more challenging because membrane fouling is 
+governed by nonlinear, dynamic and time-dependent processes 
+involving biological activity, EPS accumulation, cake layer formation, 
+and physicochemical interactions (Fig. 4d–f and Table 2). After model 
+optimization, RF achieved the best TMP prediction performance (R² =
+0.88, RMSE = 3.86 kPa), while XGBoost and ANN yielded weaker 
+generalization, with R² values of 0.56 and 0.54 and RMSE values of 7.50 
+and 7.59 kPa, respectively. The predicted versus observed plots showed 
+that RF predictions aligned more closely with the 1:1 line than those 
+from XGBoost and ANN. XGBoost closely fitted the training data but 
+exhibited larger deviations on the test set, indicating overfitting and 
+reduced transferability to unseen observations. ANN predictions were 
+more dispersed, suggesting a limited capacity to capture the nonlinear 
+TMP response under the available dataset.
+Residual analysis confirmed these patterns (Fig. S4d–f). RF produced 
+the most compact residual distribution for TMP among the three models, 
+although some deviations remained at higher TMP magnitudes, indi­
+cating increased uncertainty under more severe fouling conditions. 
+XGBoost displayed larger residual errors despite its strong training 
+performance, supporting the interpretation that the model captured 
+training-specific patterns rather than stable fouling dynamics. ANN re­
+siduals were also widely scattered, reflecting weaker generalization for 
+TMP prediction. Overall, the residual spread was greater for TMP than 
+for effluent COD, confirming that fouling prediction is more uncertain 
+than COD prediction. This behaviour is consistent with previous mem­
+brane fouling studies, where data-driven models may perform well 
+under normal operating conditions but become less reliable during 
+abrupt or severe fouling development [8,31].
+Overall, effluent COD (R² > 0.90) proved more predictable than TMP 
+(R² = 0.80–0.50), consistent with COD being governed by relatively 
+deterministic, load-dependent kinetics, whereas TMP reflects highly 
+nonlinear and stochastic fouling mechanisms influenced by biological 
+activity, EPS accumulation, and physicochemical conditions [8]. RF is 
+therefore best suited for COD monitoring due to its stability and accu­
+racy, while ANN provides superior robustness for TMP prediction under 
+variable loading. XGBoost poor TMP generalization underscores the 
+importance of independent test-set validation for complex models 
+applied to limited environmental datasets, a point emphasized in recent 
+guidance on secure and accurate modelling of anaerobic membrane 
+bioreactors. The combined use of predicted-versus-observed plots and 
+residual analysis offers a comprehensive assessment of both accuracy 
+and reliability.
+Additionally, we evaluated extrapolation under unseen operating 
+conditions, the chronological data splitting was applied. Data from 
+Phases I–II were used for model training, while Phase III data served as 
+an independent test set. After data cleaning and alignment, the training 
+set contained 103 samples and the Phase III test set contained 16 sam­
+ples. This test was used only to assess extrapolation under shock loading 
+and was reported separately from the main random 80:20 split results. 
+The Phase III shock-loading extrapolation test showed a marked decline 
+in model performance compared with the random 80:20 split (Table S3). 
+Effluent COD and TMP prediction by RF, ANN, and XGBoost produced 
+Phase III R² negative values, indicating that the models could not reli­
+ably extrapolate to unseen shock-loading conditions and performed 
+Fig. 4. Model prediction performance in scatter plots of predicted versus observed values: (a-c) Effluent COD prediction showing (a) RF (b) XGBoost, and (c) ANN 
+results; (d-f) TMP prediction showing (d) RF (e) XGBoost, and (f) ANN results.
+Table 2 
+Summary of the performance metrics for all three models testing datasets on 
+effluent COD and TMP prediction.
+Target Variable
+Model
+Test R²
+Test RMSE
+Effluent COD
+RF
+0.96
+331.50 mg/L
+XGBoost
+0.96
+351.76 mg/L
+ANN
+0.90
+510.37 mg/L
+TMP
+RF
+0.88
+3.86 kPa
+XGBoost
+0.56
+7.50 kPa
+ANN
+0.54
+7.59 kPa
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+7 
+
+
+<!-- Page 8 -->
+worse than a simple mean-based prediction for the Phase III subset. 
+Therefore, the high random-split performance should be interpreted as 
+strong interpolation ability within the observed operational domain, 
+rather than robust extrapolation capacity.
+3.5. SHAP feature importance analysis
+Since RF provided the strongest independent test-set performance for 
+both effluent COD and TMP, SHAP analysis was applied to the final RF 
+models to explain model-level predictive associations [19]. The mean 
+absolute SHAP values are shown in Fig. S5, while the SHAP summary 
+plots are presented in Fig. 5. For Effluent COD prediction, Fig. 5a, the 
+important features in the prediction were ranked in the following order 
+of importance: OLR > HRT > ORP > influent NH₄⁺-N > influent COD 
+> influent pH. OLR showed the largest contribution to the model output, 
+with high OLR values generally associated with positive SHAP values 
+and higher predicted Effluent COD. Low OLR values mainly contributed 
+negative SHAP values, indicating lower predicted Effluent COD. This 
+pattern is consistent with the operational role of organic loading, where 
+higher loading can increase the treatment burden on the reactor and 
+reduce COD removal efficiency. HRT showed an opposite tendency, 
+where longer HRT values were generally associated with negative SHAP 
+values and lower predicted COD, consistent with longer contact time 
+and improved biodegradation [20]. ORP also contributed to COD pre­
+diction, with more reducing conditions generally associated with lower 
+predicted COD, reflecting a more favourable anaerobic environment for 
+organic matter degradation. Since OLR, HRT and influent COD are 
+operationally related, these SHAP rankings were interpreted as 
+model-learned associations rather than independent causal effects.
+For TMP prediction, SHAP interpretation of the RF model also 
+indicated a distinct hierarchy of feature importance (Fig. 5b). The var­
+iables were ordered as follows: effluent NH4
++-N > effluent pH > ORP 
+> influent pH > influent COD > influent NH4
++-N. The effluent NH4
++-N 
+values were generally associated with positive SHAP values, indicating 
+higher predicted TMP, while lower effluent NH4
++-N values contributed to 
+lower predicted TMP. This association was interpreted cautiously as a 
+diagnostic signal of the reactor’s biological and chemical state rather 
+than direct evidence that NH4
++-N caused fouling. Ammonia and free 
+ammonia have been reported to inhibit anaerobic microbial activity and 
+affect sludge properties. Free-ammonia pretreatment can promote 
+sludge solubilization and hydrolysis [32], while free-ammonia concen­
+tration affects EPS production and sludge physicochemical properties 
+[33]. In nitrogen-removal MBR systems, EPS and microbial metabolites, 
+including proteins, polysaccharides and humic substances, contributed 
+to more severe membrane fouling [34]. It is also reported that EPS 
+composition and microbial community shifts were closely related to 
+nitrogen-removal stability and sludge aggregation [35].
+Effluent pH and ORP also contributed to TMP prediction, suggesting 
+that acid-base conditions and redox status were associated with the 
+fouling state captured by the model. pH reflects several indirect but 
+operationally relevant fouling-related processes in high-strength 
+AnMBR systems, including free ammonia equilibrium that may inhibit 
+methanogenic activity and influence the release of SMP, surface charge/ 
+gelation propensity of EPS that affect cake-layer compactness and 
+filtration resistance, and inorganic precipitation that participate in 
+composite organic-inorganic fouling layers. Since effluent NH4
++-N and 
+effluent pH are downstream or synchronously measured variables, the 
+TMP model should be interpreted as a diagnostic soft-sensing model 
+rather than a strict forward-looking early-warning model. The SHAP 
+results therefore provide interpretable associations between routinely 
+monitored process variables and TMP behaviour, but they do not 
+establish independent mechanistic causality.
+While the experimental and ML based predictions yield encouraging 
+results, several considerations warrant mention regarding the scope of 
+this study. The models were developed using data from a single 
+laboratory-scale reactor (4 L working volume) treating leachate from 
+one transfer station thus, direct extrapolation to full-scale systems or 
+different leachate compositions should be undertaken with caution. The 
+120-day operational period, although informative, covers a narrower 
+range of conditions than typical long-term industrial applications. 
+Furthermore, the SHAP analysis is confined to the available input vari­
+ables and does not encompass other biologically or physicochemical 
+relevant parameters that may influence process behaviour. Another 
+limitation is the presence of collinearity especially OLR, HRT and 
+influent COD. This may affect the interpretation of feature importance 
+therefore, SHAP results were used to support model interpretation 
+rather than to establish causal mechanisms. Additionally, the current 
+models predict effluent COD and TMP without directly incorporating 
+microbial community dynamics or fouling composition data. Future 
+efforts should prioritize data collection from diverse AnMBR configu­
+rations to enhance model generalizability and enable transfer learning. 
+Integrating multi-frequency data streams, online monitoring, and bio­
+logical indicators would further improve the capacity to predict rapid 
+performance transitions and membrane fouling characteristics.
+4. Conclusion
+This study integrated experimental analysis with ML modelling to 
+elucidate organic matter transformation and membrane fouling 
+behavior in AnMBR systems treating high-strength wastewater (transfer 
+station landfill leachate). The results demonstrated that operational 
+parameters, particularly HRT and OLR, strongly influenced COD 
+removal efficiency (>80% across all phases), while elevated loading 
+periods triggered rapid TMP increases from 2 kPa to 32.5 kPa, under­
+scoring the acute sensitivity of fouling dynamics to operational distur­
+bances. RF achieved the strongest overall predictive performance for 
+Fig. 5. SHAP additive plots for Features importance for prediction. (a) Features importance for prediction of Effluent COD (b) Features importance for prediction of 
+Transmembrane Pressure (TMP).
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+8 
+
+
+<!-- Page 9 -->
+both targets. For Effluent COD, RF provided the best accuracy with R² 
+= 0.96 and RMSE = 331.50 mg/L. For TMP prediction, RF clearly out­
+performed XGBoost and ANN on the independent test set, achieving R² 
+= 0.88 and RMSE = 3.86 kPa, compared with R² = 0.560 and RMSE 
+= 7.50 kPa for XGBoost and R² = 0.54 and RMSE = 7.59 kPa for ANN. 
+SHAP analysis identified OLR, HRT and ORP as important model- 
+associated predictors for effluent COD, while effluent NH4
++-N, effluent 
+pH and ORP contributed most strongly to TMP prediction. These find­
+ings indicate that interpretable ML models can provide useful diagnostic 
+insights for AnMBR performance optimization and membrane fouling 
+management. The models were more reliable for interpolation within 
+the observed operational range, while larger multi-site datasets and 
+broader shock-loading validation are still needed before industrial 
+deployment.
+CRediT authorship contribution statement
+Shengzi Duan: Investigation, Data curation. Xudan Yang: Writing – 
+original draft, Validation, Supervision, Conceptualization. Wei Chen: 
+Writing – review & editing, Writing – original draft, Visualization, 
+Validation, Supervision, Project administration, Funding acquisition, 
+Data curation, Conceptualization. Haji Jokha: Writing – original draft, 
+Project administration, Methodology, Investigation, Data curation.
+Declaration of Competing Interest
+The authors declare that they have no known competing financial 
+interests or personal relationships that could have appeared to influence 
+the work reported in this paper.
+Acknowledgements
+This work was supported by the National Natural Science Foundation 
+of China (22576236) and the Fundamental Research Funds for the 
+Central Universities of Central South University.
+Appendix A. Supporting information
+Supplementary data associated with this article can be found in the 
+online version at doi:10.1016/j.jece.2026.123811.
+Data availability
+Data will be made available on request.
+References
+[1] F. Dai, Y. Chen, Integrated dynamic municipal solid waste transfer station location 
+decision study based on the dynamic MSW generation, Environ. Dev. Sustain. 25 
+(2022) 6033–6047.
+[2] Y. Fu, D. Su, S. Ma, Y. Xiao, Research progress of leachate treatment in waste 
+transfer station, E3S Web Conf. 520 (2024) 02027.
+[3] S.M.A. Abuabdou, W. Ahmad, N.C. Aun, M.J.K. Bashir, A review of anaerobic 
+membrane bioreactors (AnMBR) for the treatment of highly contaminated landfill 
+leachate and biogas production: Effectiveness, limitations and future perspectives, 
+J. Clean. Prod. 255 (2020) 120215.
+[4] P.M. Chin, A.N. Naim, F. Suja, M.F. Ahmad Usul, Impact of effluent from the 
+leachate treatment plant of Taman Beringin solid waste transfer station on the 
+quality of Jinjang River, Processes 8 (12) (2020) 1553.
+[5] M.D. Vaverkov´a, J. Elbl, E. Koda, D. Adamcov´a, A. Bilgin, V. Kˇríˇz, Chemical 
+composition and hazardous effects of leachate from the active municipal solid 
+waste landfill surrounded by farmlands, Sustainability 12 (2020) 4531.
+[6] L. Issa, O. El Kik, M. El-Fadel, AnMBR technology for landfill leachate treatment: A 
+framework towards improved performance, Rev. Environ. Sci. Bio/Technol. 21 
+(2022) 517–538.
+[7] Z. Wu, Y. Liu, J. Yao, X. Zheng, S.M. Wandera, R. Dong, Y.-Y. Li, W. Qiao, The 
+materials flow and membrane filtration performance in treating the organic 
+fraction of municipal solid waste leachate by a high solid type of submerged 
+anaerobic membrane bioreactor, Bioresour. Technol. 329 (2021) 124927.
+[8] D.J. Kovacs, Z. Li, B.W. Baetz, Y. Hong, S. Donnaz, X. Zhao, P. Zhou, H. Ding, 
+Q. Dong, Membrane fouling prediction and uncertainty analysis using machine 
+learning: A wastewater treatment plant case study, J. Membr. Sci. 660 (2022) 
+120817.
+[9] J. Yang, Pathways and challenges in effectively controlling membrane fouling in 
+anaerobic membrane bioreactors, Crit. Rev. Environ. Sci. Technol. 54 (2024) 
+1651–1671.
+[10] N. AlSawaftah, W.H. Abuwatfa, N. Darwish, G.A. Husseini, A review on membrane 
+biofouling: prediction, characterization, and mitigation, Membranes 12 (12) 
+(2022) 1271.
+[11] O. Birrenbach, F. Faust, M. Ebrahimi, R. Fan, P. Czermak, Recovery and 
+purification of protein aggregates from cell lysates using ceramic membranes: 
+Fouling analysis and modeling of ultrafiltration, Front. Chem. Eng. 3 (2021) 
+656345.
+[12] C. Niu, Z. Zhang, T. Cai, Y. Pan, X. Lu, G. Zhen, Sludge bound-EPS solubilization 
+enhance CH4 bioconversion and membrane fouling mitigation in electrochemical 
+anaerobic membrane bioreactor: Insights from continuous operation and 
+interpretable machine learning algorithms, Water Res. 264 (2024) 122243.
+[13] M. Nabi, D. Gao, H. Liang, L. Cheng, W. Yang, Y. Li, Landfill leachate treatment by 
+graphite engineered anaerobic membrane bioreactor: Performance enhancement 
+and membrane fouling mitigation, Environ. Res. 214 (2022) 114010.
+[14] T. Wang, Y.-Y. Li, Predictive modeling based on artificial neural networks for 
+membrane fouling in a large pilot-scale anaerobic membrane bioreactor for 
+treating real municipal wastewater, Sci. Total. Environ. 912 (2024) 169164.
+[15] R. S, S. S, P. Tuppad, Enhanced wastewater parameter prediction using 
+comprehensive regression framework: Leveraging feature engineering and 
+hyperparameter optimization with machine learning, Procedia Comput. Sci. 260 
+(2025) 822–830.
+[16] G. Ye, J. Wan, Y. Bai, Y. Wang, B. Zhu, Z. Zhang, Z. Deng, Prediction of the effluent 
+chemical oxygen demand and volatile fatty acids for anaerobic treatment based on 
+different feature selections machine-learning methods from lab-scale to pilot-scale, 
+J. Clean. Prod. 437 (2024) 140679.
+[17] S. Cairone, S.W. Hasan, K.-H. Choo, C.-W. Li, T. Zarra, V. Belgiorno, V. Naddeo, 
+Integrating artificial intelligence modeling and membrane technologies for 
+advanced wastewater treatment: Research progress and future perspectives, Sci. 
+Total. Environ. 944 (2024) 173999.
+[18] M.A.P. Cechinel, J. Neves, J.V.R. Fuck, R.C. De Andrade, N. Spogis, H.G. Riella, 
+N. Padoin, C. Soares, Enhancing wastewater treatment efficiency through machine 
+learning-driven effluent quality prediction: A plant-level analysis, J. Water Process. 
+Eng. 58 (2024) 104758.
+[19] G. Ye, J. Wan, Z. Deng, Y. Wang, B. Zhu, Z. Yan, S. Ji, Machine learning-based 
+prediction of biological oxygen demand and unit electricity consumption in 
+different-scale wastewater treatment plants, J. Environ. Chem. Eng. 12 (2024) 
+111849.
+[20] J. Ariunbaatar, R. Bair, O. Ozcan, H. Ravishankar, G. Esposito, P.N.L. Lens, D. 
+H. Yeh, Performance of AnMBR in treatment of post-consumer food waste: Effect of 
+hydraulic retention time and organic loading rate on biogas production and 
+membrane fouling, Front. Bioeng. Biotechnol. 8 (2021) 594936.
+[21] F. Schmitt, R. Banu, I.-T. Yeom, K.-U. Do, Development of artificial neural networks 
+to predict membrane fouling in an anoxic-aerobic membrane bioreactor treating 
+domestic wastewater, Biochem. Eng. J. 133 (2018) 47–58.
+[22] M.A. Khan, H.H. Ngo, W. Guo, S.W. Chang, D.D. Nguyen, S. Varjani, Y. Liu, 
+L. Deng, C. Chen, Selective production of volatile fatty acids at different pH in an 
+anaerobic membrane bioreactor, Bioresour. Technol. 283 (2019) 120–128.
+[23] S. Saha, A. Hussain, J. Lee, E. Lee, H.S. Lee, An integrated leachate bed reactor- 
+anaerobic membrane bioreactor system (LBR-AnMBR) for food waste stabilization 
+and biogas recovery, Chemosphere 311 (2023) 137054.
+[24] J. Yang, J. Jia, J. Wang, Q. Zhou, R. Zheng, Multivariate optimization of the 
+electrochemical degradation for COD and TN removal from wastewater: An inverse 
+computation machine learning approach, Sep. Purif. Technol. 295 (2022) 121129.
+[25] S.Z. Zhang, S. Chen, H. Jiang, A back propagation neural network model for 
+accurately predicting the removal efficiency of ammonia nitrogen in wastewater 
+treatment plants using different biological treatment processes, Water Res. 222 
+(2022) 118908.
+[26] X. Wu, C. Wang, D. Wang, A. Tawfik, R. Xu, Z. Yu, F. Meng, Achieving 
+simultaneous removal of carbon and nitrogen by an integrated process of anaerobic 
+membrane bioreactor and flow-through biofilm reactor, Eng. Microbiol. 4 (2024) 
+100136.
+[27] F.O. Agyeman, Y. Han, W. Tao, Elucidating the kinetics of ammonia inhibition to 
+anaerobic digestion through extended batch experiments and stimulation- 
+inhibition modeling, Bioresour. Technol. 340 (2021) 125744.
+[28] Y. Pu, J. Tang, T. Zeng, Y. Hu, J. Yang, X.C. Wang, J. Huang, A.E.-F. Abomohra, 
+Pollutant removal and energy recovery from swine wastewater using anaerobic 
+membrane bioreactor: A comparative study with up-flow anaerobic sludge blanket, 
+Water 14 (15) (2022) 2438.
+[29] B. Xu, T.C. Albert Ng, S. Huang, M. He, K. Lee, H.Y. Ng, Underestimation of 
+extracellular lipid contribution to fouling in anaerobic membrane bioreactors, ACS 
+Sustain. Chem. & Eng. 11 (7) (2023) 3036–3043.
+[30] B.E. Bueno, García, V.S. Rea, F.T. Saia, G.B. Gregoracci, G.C. Dacanal, J.B. van Lier, 
+M. Zaiat, Treatment of sugarcane vinasse in AnMBR and UASB: Process 
+performance and microbial community comparison, Front. Bioeng. Biotechnol. 12 
+(2024) 1489807.
+[31] W.H. Abuwatfa, N. AlSawaftah, N. Darwish, W.G. Pitt, G.A. Husseini, A Review on 
+membrane fouling prediction using artificial neural networks (ANNs), Membranes 
+13 (7) (2023) 685.
+[32] C. Zhang, Y. Qin, Q. Xu, X. Liu, Y. Liu, B.-J. Ni, Q. Yang, D. Wang, X. Li, Q. Wang, 
+Free ammonia-based pretreatment promotes short-chain fatty acid production from 
+waste activated sludge, ACS Sustain. Chem. & Eng. 6 (2018) 9120–9129.
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+9 
+
+
+<!-- Page 10 -->
+[33] H. Sun, Y. Li, W. Tang, H. Chang, C. Chen, C. Cai, Responses of nitrogen removal, 
+extracellular polymeric substances (EPSs), and physicochemical properties of 
+activated sludge to different free ammonia (FA) concentrations, Water 14 (2022) 
+620.
+[34] L. Liu, Y. Wang, Y. Liu, J. Wang, C. Zheng, W. Zuo, Y. Tian, J. Zhang, Insight into 
+key interactions between diverse factors and membrane fouling mitigation in 
+anaerobic membrane bioreactor, Environ. Pollut. 347 (2024) 123750.
+[35] Y. Men, L. Liu, S. Wang, Y. Bi, F. Meng, C. Qiu, D. Wang, J. Yu, Y. Yang, 
+Extracellular polymeric substances and microbial community shift during the start- 
+up of a single-stage partial nitritation/anammox process, Water Environ. Res. 95 
+(2023) 10931.
+J.M. Haji et al.                                                                                                                                                                                                                                  
+Journal of Environmental Chemical Engineering 14 (2026) 123811 
+10 

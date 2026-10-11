@@ -1,0 +1,8 @@
+    - **Hình 4.** Quá trình HPO và mức độ quan trọng siêu tham số của MLP, LSTM
+      - <img src="assets/fig_04_p8.jpeg" alt="Hình 4" />
+      - **Hình này chứng minh điều gì**
+        - Optimizer chi phối vượt trội hiệu năng mô hình, đạt độ quan trọng 0.36 ở MLP và 0.52 ở LSTM.
+        - Quá trình HPO đạt giá trị $R^2$ tiệm cận đỉnh (> 0.85) chỉ sau số ít lượt thử nghiệm ban đầu.
+      - **Từ đâu mà thấy được**
+        - (a), (b): Trục Ox Trial (0–1000), Oy $R^2$ (-1–1.0); đường Best Value đỏ nhanh chóng vượt 0.85 và đi ngang sát 1.0.
+        - (c), (d): Trục Oy Hyperparameters, Ox Importance for Objective Value ($R^2$); Optimizer đứng đầu ở cả hai mô hình (0.36 và 0.52).

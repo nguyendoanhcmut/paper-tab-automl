@@ -1,0 +1,7 @@
+    - **Hình 6.** Đối sánh nồng độ thực nghiệm và đầu ra ANN cho Amonia và Phosphate
+      - <img src="assets/fig_07_p9.png" alt="Hình 6" />
+      - **Hình này chứng minh điều gì**
+        - Đầu ra ANN mô phỏng chính xác các bước nhảy nồng độ của Ammonia Nitrogen ($2 - 16\text{ mg/L}$) và Phosphate ($0.2 - 3.1\text{ mg/L}$).
+      - **Từ đâu mà thấy được**
+        - Ox: số mẫu theo pH ($0 - 45$) hoặc theo TOC ($0 - 35$). Oy: nồng độ Ammonia ($0 - 22\text{ mg/L}$) và Phosphate ($-0.5 - 4.5\text{ mg/L}$).
+        - Đường ANN Output (màu tím) nối trùng khít qua từng điểm Experimental Data (vuông xanh) trên cả 4 đồ thị (a)–(d).

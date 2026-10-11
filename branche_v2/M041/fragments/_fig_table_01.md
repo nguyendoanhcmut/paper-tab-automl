@@ -1,0 +1,7 @@
+    - **Bảng 1.** Cấu trúc tối ưu và thông số độ chính xác của mạng ANN
+      - <img src="assets/table_01_p9.png" alt="Bảng 1" />
+      - **Bảng này chứng minh điều gì**
+        - Mô hình ANN đạt cấu trúc tối ưu với 2 lớp ẩn (từ $[2\ 4]$ đến $[5\ 2]$ nơ-ron) kết hợp hàm Logsigmoid/Tansigmoid cho các biến Ammonia nitrogen và Phosphate.
+      - **Từ đâu mà thấy được**
+        - Cột "Structure" và "Transfer function" thể hiện số nơ-ron lớp ẩn và hàm kích hoạt tương ứng cho từng biến mô phỏng.
+        - Cột "$R$" ghi nhận giá trị tương quan cao cho cả 4 mô hình, từ $0.99647$ (dòng 3) đến $0.99791$ (dòng 2).

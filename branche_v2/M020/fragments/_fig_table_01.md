@@ -1,0 +1,8 @@
+    - **Bảng 1.** Cấu hình và hiệu quả xử lý của AnMBR pilot
+      - <img src="assets/table_01_p3.png" alt="Bảng 1" />
+      - **Bảng này chứng minh điều gì**
+        - Hệ thống AnMBR pilot ($5000\ \text{L}$) đạt hiệu suất xử lý COD $>85\ \%$, giữ nồng độ COD nước ra $<50\ \text{mg/L}$.
+        - Quá trình phân hủy kỵ khí thu hồi khí sinh học giàu $\text{CH}_4$ ($76\text{--}79\ \%$) với sản lượng $0.06\text{--}0.10\ \text{L/L}$ nước thải.
+      - **Từ đâu mà thấy được**
+        - Cột "Description", hai nhóm thông số đầu: thể tích bể $5000\ \text{L}$, HRT $48\text{--}6\ \text{h}$, màng sợi rỗng PVDF $72\ \text{m}^2$ (kích thước lỗ $0.4\ \mu\text{m}$).
+        - Cột "Description", nhóm "Wastewater treatment performance": COD nước ra $<50\ \text{mg/L}$, COD removal $>85\ \%$, biogas $0.06\text{--}0.10\ \text{L/L}$ nước thải, và tỷ lệ $\text{CH}_4$ $76\text{--}79\ \%$.

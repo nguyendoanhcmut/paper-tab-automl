@@ -1,0 +1,52 @@
+### 2.1. Pilot-scale MBR: configuration and performance
+
+- Hệ thống MBR quy mô pilot (pilot-scale MBR) trong nghiên cứu trường hợp được lắp đặt tại một nhà máy lọc dầu ở Brazil và được giám sát vận hành liên tục trong suốt thời gian $4\text{ năm}$ ($4\text{ years}$).
+- Cấu hình thiết bị bao gồm một bể sinh học (biological tank) tích hợp module màng vi lọc (microfiltration - MF) dạng tấm phẳng (submerged flat sheet) làm từ vật liệu polyether sulfone (PES) do Kubota sản xuất (Fig. 1).
+  - **Hình 1.** Sơ đồ cấu hình hệ thống pilot MBR màng đặt ngập
+    - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Bể sinh học và màng tích hợp chung, nước sau lọc rút trực tiếp từ module MF qua cảm biến $P$ và $F$.
+    - **Từ đâu mà thấy được**
+      - Hướng dòng từ trái sang phải: Feed tank qua bơm vào Biological and membrane tank.
+      - Module MF đặt ngập dưới mực nước, đường Permeate gắn đồng hồ đo áp suất $P$ và lưu lượng $F$.
+- Nước thải từ nhà máy lọc dầu được nạp vào đơn vị pilot MBR sau chuỗi các bước tiền xử lý (pretreatment steps):
+  - Tách dầu và nước (water and oil separation).
+  - Tuyển nổi (flotation).
+  - Lọc cát (sand filtering).
+  - Châm định lượng hydrogen peroxide ($\text{H}_2\text{O}_2$) nhằm kiểm soát nồng độ sulphide.
+- Toàn bộ các đặc tính thiết kế và điều kiện vận hành cơ bản của hệ thống pilot được quy định và tổng kết tại Bảng 1 (Table 1).
+  - **Bảng 1.** Đặc tính và điều kiện vận hành của hệ MBR
+    - <img src="assets/table_01_p3.png" alt="Bảng 1" />
+    - **Bảng này chứng minh điều gì**
+      - Bảng xác lập cấu hình màng MF tấm phẳng ($70\text{ m}^2$, $0.4\text{ }\mu\text{m}$) cùng tải trọng và chế độ sục khí cố định cho bể pilot $8\text{ m}^3$.
+    - **Từ đâu mà thấy được**
+      - Cột Parameters phân tách hai nhóm: đặc tính màng lọc và điều kiện vận hành hệ thống.
+      - Cột Value và Unit chỉ rõ sục khí $45\text{ N m}^3\text{ h}^{-1}$, HRT $5.6\text{ h}$, SRT $40\text{ d}$, tải hữu cơ $13\text{ kg COD d}^{-1}$ và lưu lượng thấm $0.5\text{ m}^3\text{ h}^{-1}$.
+- Động lực cho quá trình lọc qua màng (driving force for permeation) là áp suất thủy tĩnh (hydrostatic pressure) tạo bởi cột nước trong bể màng.
+- Hệ thống sục khí (aeration system) đảm nhiệm vai trò kép:
+  - Cung cấp oxy đáp ứng nhu cầu của các quá trình sinh học trong bể.
+  - Kiểm soát hiện tượng tắc nghẽn màng (fouling control) nhờ ứng suất cắt (shear stress) tạo bởi dòng bọt khí dâng lên.
+- Lưu lượng dòng thấm (permeate flow) được duy trì thông qua chu kỳ vận hành gián đoạn với $1\text{ phút}$ nghỉ (relaxation) sau mỗi $9\text{ phút}$ lọc liên tục.
+- Quy trình làm sạch hóa học (chemical cleaning) của màng được triển khai định kỳ:
+  - Màng được làm sạch phục hồi (recovery cleaning) định kỳ bằng dung dịch sodium hypochlorite ($\text{NaClO}$) nồng độ $5000\text{ mg L}^{-1}$.
+  - Thời gian ngâm rửa hóa chất kéo dài $24\text{ h}$.
+  - Quá trình rửa hóa chất được kích hoạt bất cứ khi nào hệ thống không thể duy trì được lưu lượng dòng thấm với áp suất thủy tĩnh cực đại tạo bởi cột nước trong bể màng.
+- Hiệu năng vận hành của hệ thống MBR được đánh giá thông qua quan trắc định kỳ theo ba nhóm chỉ tiêu chính:
+  - Điều kiện vận hành (operating conditions): áp suất qua màng (transmembrane pressure - TMP), nhiệt độ (temperature), lưu lượng dòng thấm (permeate flowrate), độ thấm của màng (membrane permeability), thời gian lưu bùn (sludge retention time - SRT) và $\text{pH}$.
+  - Đặc tính bùn hoạt tính (sludge characteristics): nồng độ chất rắn lơ lửng bay hơi trong hỗn dịch bùn (MLVSS), nồng độ chất rắn lơ lửng trong hỗn dịch bùn (MLSS), khả năng lọc của bùn (sludge filterability), khả năng lắng (sedimentability), các chất polymer ngoại bào (extracellular polymeric substances - EPS) và sản phẩm vi sinh vật hòa tan (soluble microbial products - SMP).
+  - Đặc tính của dòng nạp và dòng thấm đầu ra (feed and effluent characteristics): nhu cầu oxy sinh hóa (BOD), nhu cầu oxy hóa học (COD), tổng carbon hữu cơ (TOC), độ kiềm (alkalinity), ammonia, chloride, sulphide, phosphorous, dầu và mỡ (OG), độ đục (turbidity), độ màu (color) và độ dẫn điện (conductivity).
+- Phương pháp luận và quy chuẩn phân tích đo đạc các chỉ tiêu:
+  - Các thông số hóa lý (physicochemical parameters) được đo đạc theo Tiêu chuẩn Phương pháp Kiểm tra Nước và Nước thải (*Standard Methods for Examination of Water and Wastewater*) [37].
+  - Khả năng lọc của bùn (sludge filterability) được xác định theo phương pháp khuyến nghị của hãng Kubota (Filter Test — FT):
+    - Lấy $50\text{ mL}$ hỗn dịch bùn đem lọc qua giấy lọc Whatman 42 ($185\text{ mm}$) được gấp nếp với sự hỗ trợ của một phễu đơn giản.
+    - Thể tích dịch lọc thu được trong $5\text{ phút}$ đầu tiên được ghi nhận là độ lọc của bùn ($\text{mL } 5\text{ min}^{-1}$).
+  - Độ thấm của màng (membrane permeability) được tính toán bằng cách chia lưu lượng dòng thấm đo được cho tích của diện tích màng và áp suất tác dụng lên hệ thống.
+- Hiệu quả loại bỏ các chất ô nhiễm trong nước thải của hệ pilot MBR được trình bày tại Bảng 2 (Table 2).
+  - **Bảng 2.** Hiệu suất loại bỏ các chất ô nhiễm của MBR.
+    - <img src="assets/table_02_p4.png" alt="Bảng 2" />
+    - **Bảng này chứng minh điều gì**
+      - BOD đạt hiệu suất loại bỏ trung bình cao nhất $98\ \%$, trong khi COD đạt trung bình $79\ \%$, trung vị $82\ \%$.
+    - **Từ đâu mà thấy được**
+      - Các cột "Ammonia ($\text{mg N-NH}_3\ \text{L}^{-1}$)", "BOD ($\text{mg O}_2\ \text{L}^{-1}$)" và "COD ($\text{mg O}_2\ \text{L}^{-1}$)" tại phần "MBR permeate (removal)".
+      - Giá trị tốt nhất ở cột BOD với mức khử trong ngoặc đạt $98\ \%$ (Mean) và $99\ \%$ (Max); thấp nhất ở COD với $-3\ \%$ (Min); cột Ammonia ghi nhận $90\ \%$ (Mean).
+- Các mức hiệu suất loại bỏ quan sát được hoàn toàn phù hợp và tương đồng với các dữ liệu đã công bố về xử lý nước thải nhà máy lọc dầu sử dụng hệ MBR quy mô pilot [38,39].

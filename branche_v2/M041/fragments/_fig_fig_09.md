@@ -1,0 +1,7 @@
+    - **Hình 8.** So sánh đầu ra ANN và RSM với dữ liệu thực nghiệm
+      - <img src="assets/fig_09_p11.png" alt="Hình 8" />
+      - **Hình này chứng minh điều gì**
+        - Đường ANN bám sát dữ liệu thực nghiệm nồng độ và hiệu suất xử lý ammonia nitrogen lẫn phosphate theo pH và TOC.
+      - **Từ đâu mà thấy được**
+        - Ox: số thứ tự mẫu theo pH (a, b) hoặc TOC (c, d); Oy: nồng độ và hiệu suất xử lý.
+        - Ký hiệu ANN (hình vuông) bám khít điểm thực nghiệm (hình tròn), trong khi đường RSM lệch tại các đỉnh cực trị.

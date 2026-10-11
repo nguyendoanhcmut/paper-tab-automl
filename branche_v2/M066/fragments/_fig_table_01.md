@@ -1,0 +1,7 @@
+    - **Bảng 1.** Siêu tham số tối ưu và hiệu suất kiểm định chéo
+      - <img src="assets/table_01_p6.png" alt="Bảng 1" />
+      - **Bảng này chứng minh điều gì**
+        - Cung cấp cấu hình siêu tham số và kết quả CV ($R^2$, RMSE) của 3 mô hình cho COD và TMP.
+      - **Từ đâu mà thấy được**
+        - Cột "optimized hyperparameters" liệt kê các tham số tối ưu cho RF, XGBoost và ANN.
+        - Cột "$\text{CV } R^2$" và "CV RMSE" ghi nhận RF đạt $R^2 = 0.94$ (COD); XGBoost đạt $R^2 = 0.69$, RF đạt $R^2 = 0.62$ (TMP).

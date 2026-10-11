@@ -1,0 +1,8 @@
+    - **Hình 3.** Khung kiến trúc các kịch bản đầu vào và đầu ra
+      - <img src="assets/fig_03_p3_vector.png" alt="Hình 3" />
+      - **Hình này chứng minh điều gì**
+        - Thiết kế đơn đầu ra độc lập: mỗi mô hình ($M_1$–$M_9$) dự đoán riêng một chỉ tiêu $\text{NH}_4$, $\text{TN}$ hoặc $\text{TP}$.
+        - Chi tiết hóa các biến đầu vào: $M_1$–$M_3$ nhận 3 biến, $M_4$–$M_6$ nhận 6 biến, $M_7$–$M_9$ nhận 8 biến.
+      - **Từ đâu mà thấy được**
+        - Đọc từ trái sang phải: khối Dataset dẫn vào cột Models input, qua mũi tên lớn chỉ sang cột Models.
+        - Các hàng $M_1, M_4, M_7$ xuất ra $\text{NH}_4$; $M_2, M_5, M_8$ xuất ra $\text{TN}$; $M_3, M_6, M_9$ xuất ra $\text{TP}$.

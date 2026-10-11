@@ -1,0 +1,7 @@
+    - **Hình 5.** (tiếp theo) Đồ thị phần dư và kiểm định mô hình RSM
+      - <img src="assets/fig_06_p8.png" alt="Hình 5 (tiếp theo)" />
+      - **Hình này chứng minh điều gì**
+        - Mô hình RSM dự báo sát nồng độ ammonia nitrogen theo pH (c, d) và phosphate theo TOC, pH (e–h).
+      - **Từ đâu mà thấy được**
+        - Panel (c, e, g): Ox giá trị thực nghiệm ($0$–$16\text{ mg/L}$ ammonia nitrogen, $0$–$3.5\text{ mg/L}$ phosphate), Oy RSM dự báo; các điểm bám sát Equality Line.
+        - Panel (d, f, h): Ox RSM dự báo, Oy phần dư; các điểm phân tán sát Zero Line trong khoảng $[-1.5, 1.1]$ (ammonia) và $[-0.5, 0.4]$ (phosphate).

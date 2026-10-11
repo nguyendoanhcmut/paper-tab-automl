@@ -1,0 +1,7 @@
+    - **Hình 4.** Đồ thị phân tán dự đoán COD và TMP
+      - <img src="assets/fig_04_p7.jpeg" alt="Hình 4" />
+      - **Hình này chứng minh điều gì**
+        - Cả ba mô hình đều dự đoán COD bám sát đường $1:1$; với TMP, RF duy trì độ tập trung sát đường $1:1$ trên tập kiểm tra, trong khi XGBoost và ANN phân tán rộng.
+      - **Từ đâu mà thấy được**
+        - Hàng trên (a–c): Điểm Train (xanh) và Test (hồng) của RF, XGBoost, ANN đều phân bố dọc sát đường nét đứt $1:1$ cho COD nước sau xử lý ($0\text{ - }6000\text{ mg/L}$).
+        - Hàng dưới (d–f): Ở dự đoán TMP, panel (d) của RF có điểm Test bám sát đường $1:1$ ($-35\text{ đến }0\text{ kPa}$); panel (e) của XGBoost có điểm Test lệch xa đường chuẩn, panel (f) của ANN phân tán rộng.

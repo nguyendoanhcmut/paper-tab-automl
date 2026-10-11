@@ -1,0 +1,52 @@
+### 4.1. XGBoost model predictions
+
+- Đánh giá khả năng dự đoán và độ tin cậy của mô hình Extreme Gradient Boosting (XGBoost) sau quá trình huấn luyện bằng tập dữ liệu kiểm tra chưa từng thấy (unseen testing dataset) gồm $790$ dòng (chiếm $10\%$ tổng số dữ liệu quan trắc).
+- Bộ tiêu chí đánh giá định lượng hiệu năng mô hình bao gồm $5$ chỉ số thống kê (trình bày tại Bảng 2):
+  - Sai số tuyệt đối trung bình ($\text{MAE}$ / mean absolute error).
+  - Căn bậc hai sai số toàn phương trung bình ($\text{RMSE}$ / root mean square error).
+  - Sai số phần trăm tuyệt đối trung bình ($\text{MAPE}$ / mean absolute percentage error).
+  - Hệ số xác định ($R^2$ / coefficient of determination).
+  - Chỉ số đồng thuận hiệu chỉnh ($m_d$ / modified index of agreement).
+  - Trạng thái khớp hoàn hảo (good fit) giữa giá trị dự đoán và kết quả thực tế xảy ra khi sai số bằng $0$, tuy nhiên kịch bản sai số triệt tiêu bằng $0$ là điều gần như không thể đạt được trong điều kiện vận hành thực tế.
+- Khả năng học và độ chính xác dự đoán vượt trội đối với ammonium ($\text{NH}_4$) so với tổng nitơ ($\text{TN}$ / total nitrogen) và tổng phốt pho ($\text{TP}$ / total phosphorus):
+  - Mô hình XGBoost thể hiện năng lực học tập tốt nhất đối với bài toán dự đoán $\text{NH}_4$ ở tất cả các kịch bản khảo sát, nhờ tập dữ liệu quan trắc $\text{NH}_4$ duy trì xu hướng biến thiên nhất quán và ổn định.
+  - Mức độ biến động và sai lệch cao trong tập dữ liệu của $\text{TN}$ và $\text{TP}$ làm suy giảm khả năng học của thuật toán, dẫn đến độ chính xác dự đoán của các chất dinh dưỡng này thấp hơn rõ rệt trên tập kiểm tra.
+  - Các giá trị tối ưu nhất của $\text{MAE}$, $\text{RMSE}$, $\text{MAPE}$, $R^2$, và $m_d$ đều ghi nhận ở các mô hình dự đoán $\text{NH}_4$ ($M_1$, $M_4$, và $M_7$).
+  - Giá trị $\text{RMSE}$ nhỏ nhất xuất hiện ở bài toán dự đoán loại bỏ $\text{NH}_4$ của hệ thống $A^2O\text{-MBR}$ (anaerobic-anoxic-oxic membrane bioreactor / bể phản ứng sinh học màng kỵ khí - thiếu khí - hiếu khí), khẳng định mô hình hóa XGBoost có thể dự đoán hiệu quả quá trình loại bỏ $\text{NH}_4$.
+  - Quá trình loại bỏ $\text{TN}$ và $\text{TP}$ có thể được xem xét đồng thời, nhưng cần tích hợp thêm các yếu tố ảnh hưởng trọng yếu khác chi phối cơ chế sinh học của chúng để nâng cao độ chính xác.
+- Đánh giá chi tiết hiệu năng $9$ mô hình XGBoost theo $3$ kịch bản thông số đầu vào (Bảng 2):
+  - Kịch bản 1 ($M_1$–$M_3$): Chỉ sử dụng $3$ thông số điều kiện vận hành (operating conditions gồm oxy hòa tan $\text{DO}$, thế oxy hóa - khử $\text{ORP}$, và chất rắn lơ lửng trong bùn lỏng $\text{MLSS}$):
+    - Mô hình $M_1$ (dự đoán $\text{NH}_4$): $\text{MAE} = 0.00197$, $\text{RMSE} = 0.0031$ ($0.00307$), $\text{MAPE} = 1.34\%$ ($1.34028$), $R^2 = 0.764$, và $m_d = 0.926$.
+    - Mô hình $M_2$ (dự đoán $\text{TN}$): $\text{MAE} = 0.00433$, $\text{RMSE} = 0.01478$, $\text{MAPE} = 2.40112$, $R^2 = 0.364$, và $m_d = 0.553$.
+    - Mô hình $M_3$ (dự đoán $\text{TP}$): $\text{MAE} = 0.00127$, $\text{RMSE} = 0.00128$, $\text{MAPE} = 2.23807$, $R^2 = 0.354$, và $m_d = 0.577$.
+  - Kịch bản 2 ($M_4$–$M_6$): Chỉ sử dụng $6$ thông số đặc tính nước thải đầu vào (influent characteristics gồm $\text{TOC}$, $\text{TN}$, $\text{TP}$, $\text{COD}$, $\text{NH}_4\text{-N}$, và $\text{SS}$):
+    - Mô hình $M_4$ (dự đoán $\text{NH}_4$): $\text{MAE} = 0.00024$, $\text{RMSE} = 0.00004$, $\text{MAPE} = 0.34383$, $R^2 = 0.814$, và $m_d = 0.971$, đạt độ chính xác dự đoán vượt trên $80\%$ và vượt trội hơn mô hình $M_1$.
+    - Mô hình $M_5$ (dự đoán $\text{TN}$): $\text{MAE} = 0.00172$, $\text{RMSE} = 0.00234$, $\text{MAPE} = 1.81703$, $R^2 = 0.372$, và $m_d = 0.615$.
+    - Mô hình $M_6$ (dự đoán $\text{TP}$): $\text{MAE} = 0.00029$, $\text{RMSE} = 0.00006$, $\text{MAPE} = 0.18869$, $R^2 = 0.429$, và $m_d = 0.663$.
+  - Kịch bản 3 ($M_7$–$M_9$): Tích hợp đồng thời toàn bộ $9$ thông số (kết hợp cả điều kiện vận hành và đặc tính nước thải đầu vào):
+    - Mô hình $M_7$ (dự đoán $\text{NH}_4$): $\text{MAE} = 0.00033$, $\text{RMSE} = 0.00008$, $\text{MAPE} = 0.02333$, $R^2 = 0.877$ ($0.876$), và $m_d = 0.998$, là cấu hình tối ưu nhất toàn diện trong nghiên cứu.
+    - Mô hình $M_8$ (dự đoán $\text{TN}$): $\text{MAE} = 0.00919$, $\text{RMSE} = 0.06678$, $\text{MAPE} = 4.51399$, $R^2 = 0.565$, và $m_d = 0.654$, có độ chính xác tiệm cận khoảng $56\%$.
+    - Mô hình $M_9$ (dự đoán $\text{TP}$): $\text{MAE} = 0.00086$, $\text{RMSE} = 0.00058$, $\text{MAPE} = 1.05474$, $R^2 = 0.596$, và $m_d = 0.730$, có độ chính xác tiệm cận khoảng $59\%$.
+  - Hiệu năng của các mô hình dự đoán $\text{NH}_4$ xếp theo thứ tự tăng dần là $M_7 > M_4 > M_1$, trong khi các mô hình dự đoán chất dinh dưỡng còn lại đều cho kết quả kém.
+  - Cấu hình $M_7$ tối ưu nhất nhờ khả năng mô phỏng và truy vết chính xác mối quan hệ phi tuyến phức tạp giữa các biến đầu vào và đầu ra, chứng minh tính cấp thiết của việc xem xét đồng thời cả điều kiện vận hành và đặc tính dòng vào.
+- Phân tích tương quan thực tế và dự đoán qua đồ thị phân tán (scatter plots, Hình 4):
+  - Giá trị thực nghiệm và giá trị dự đoán của mô hình $M_1$ bám rất sát đường hồi quy chuẩn, trong khi xuất hiện sự phân tán và dao động rất lớn ở mô hình $M_2$ và $M_3$.
+  - Mô hình $M_4$ vượt trội hơn $M_1$ với độ chính xác đạt trên $80\%$; ngược lại, $M_5$ và $M_6$ ghi nhận kết quả dao động gần như tương tự với $M_1$ và $M_2$.
+  - Kịch bản kết hợp toàn bộ thông số (Kịch bản 3) đem lại kết quả dự đoán cao nhất; trong đó quy luật học của mô hình đạt tối ưu đối với $\text{NH}_4$, còn độ chính xác dự đoán của $\text{TN}$ và $\text{TP}$ dù có cải thiện vẫn nằm dưới ngưỡng $60\%$.
+  - Mọi cấu hình mô hình dự đoán $\text{NH}_4$ đều nằm trong dải sai số chấp nhận được, trong khi các mô hình cho các chất dinh dưỡng khác thể hiện kết quả kém do độ lệch lớn trong tập dữ liệu làm giảm năng lực học; nhấn mạnh tầm quan trọng của phân tích tiền xử lý dữ liệu trước khi chọn loại thuật toán học máy.
+- Giới hạn chấp nhận kỹ thuật và khả năng ứng dụng thực tế:
+  - Khả năng dự đoán loại bỏ $\text{NH}_4$ vượt trội rõ rệt so với $\text{TN}$ ($\approx 56\%$) và $\text{TP}$ ($\approx 59\%$), vốn tiệm cận nhưng vẫn nằm dưới ngưỡng giới hạn chấp nhận được tối thiểu là $70\%$.
+  - Mô hình XGBoost xác định hiệu quả các mối tương quan quy luật khi dữ liệu đầu vào được đo đạc và thu thập chính xác, không bị biến động hay phân tán dữ liệu quá mức.
+  - Hỗ trợ công tác phân tích nồng độ dinh dưỡng dòng ra tại trạm xử lý nước thải ($\text{WWTP}$ / wastewater treatment plant), trợ giúp người vận hành chủ động điều chỉnh các thông số kiểm soát được nhằm đảm bảo quy chuẩn xả thải và tối ưu hóa hệ thống $A^2O\text{-MBR}$.
+- Đánh giá phân bố sai số qua biểu đồ phần dư (residual plots) củng cố hiệu năng mô hình:
+  - Phân tích sai số phần dư (residual) giữa kết quả dự đoán của mô hình và giá trị kiểm tra thực nghiệm cho từng chất dinh dưỡng nhằm định lượng độ chính xác:
+    - Nhóm mô hình dự đoán $\text{NH}_4$ ($M_1$, $M_4$, và $M_7$) có sai số phần dư đạt mức tối thiểu, dao động chặt chẽ quanh trục $0$ trong phạm vi $0 \pm 10$.
+    - Nhóm mô hình dự đoán $\text{TN}$ và $\text{TP}$ kém chính xác hơn rõ rệt với sai số phần dư dao động phân tán lớn trong khoảng $\pm 25$ (và mở rộng sâu đến $-70$ hoặc $-80$ đối với $\text{TP}$).
+    - Khẳng định các mô hình XGBoost đề xuất ($M_1, M_4, M_7$) là giải pháp tối ưu nhất cho bài toán dự đoán loại bỏ $\text{NH}_4$ trong hệ thống $A^2O\text{-MBR}$, trong khi chưa đáp ứng yêu cầu dự đoán hiệu suất loại bỏ $\text{TN}$ và $\text{TP}$.
+    - **Hình 7.** Biểu đồ phần dư của các mô hình MLP
+      - <img src="assets/fig_07_p7_vector.png" alt="Hình 7" />
+      - **Hình này chứng minh điều gì**
+        - Sai số phần dư của nhóm $\text{NH}_4$ ($M_1, M_4, M_7$) tập trung hẹp sát $0$ ($\pm 10$), trong khi nhóm $\text{TN}$ và $\text{TP}$ phân tán rộng và lệch âm lớn.
+      - **Từ đâu mà thấy được**
+        - Ox: tập dữ liệu kiểm tra (Testing dataset), dải $0$–$800$. Oy: phần dư (Residual), dải $-80$ đến $50$.
+        - Đồ thị (a) $\text{NH}_4$ gom chặt giữa hai đường đứt nét xanh $\pm 10$; đồ thị (b) $\text{TN}$ phân tán $\pm 25$; đồ thị (c) $\text{TP}$ lệch âm từ $+20$ đến $-40$ với điểm cực trị tới $-80$.

@@ -1,0 +1,21 @@
+## 5. Conclusion
+
+- Phát triển và kiểm chứng mô hình học quần thể (ensemble model) XGBoost đối chứng với mạng nơ-ron đa tầng ($MLP$ / multilayer perceptron) nhằm dự đoán hiệu suất loại bỏ ammonium ($\text{NH}_4$), tổng nitơ ($\text{TN}$ / total nitrogen), và tổng phốt pho ($\text{TP}$ / total phosphorus) bằng hệ thống $A^2O\text{-MBR}$ tại trạm xử lý nước thải ($\text{WWTP}$ / wastewater treatment plant).
+- Thiết lập và so sánh các kịch bản mô hình hóa khác nhau dựa trên việc xem xét riêng rẽ hoặc kết hợp giữa các thông số điều kiện vận hành và đặc tính nước thải đầu vào:
+  - Nhóm điều kiện vận hành (operating conditions): oxy hòa tan ($\text{DO}$ / dissolved oxygen), thế oxy hóa - khử ($\text{ORP}$ / oxidation-reduction potential), và nồng độ chất rắn lơ lửng trong hỗn hợp bùn lỏng ($\text{MLSS}$ / mixed liquor suspended solids).
+  - Nhóm thông số dòng vào (influent parameters): tổng carbon hữu cơ ($\text{TOC}$ / total organic carbon), tổng nitơ ($\text{TN}$), tổng phốt pho ($\text{TP}$), nhu cầu oxy hóa học ($\text{COD}$ / chemical oxygen demand), ammonium dạng nitơ ($\text{NH}_4\text{-N}$), và chất rắn lơ lửng ($\text{SS}$ / suspended solids).
+  - Kiểm định hiệu quả của các kịch bản qua $9$ mô hình ($M_1$–$M_9$) được xây dựng bằng cả hai kỹ thuật XGBoost và MLP.
+- Khả năng dự đoán của mô hình XGBoost đề xuất đạt mức tối ưu nhất sau khi tinh chỉnh các siêu tham số ($\text{HPs}$ / hyperparameters) đối với bài toán dự đoán loại bỏ $\text{NH}_4$ ($M_1$, $M_4$, và $M_7$).
+  - Dự đoán hiệu suất loại bỏ $\text{NH}_4$ đạt độ chính xác cao nhất nhờ tập dữ liệu có đặc tính ít nhiễu hơn, ổn định hơn và có lượng giá trị ngoại lai tối thiểu (minimum outliers).
+  - Các mô hình đề xuất mang lại kết quả có độ chính xác cao nhất trên tập dữ liệu kiểm tra chưa từng thấy (unseen testing datasets).
+- Dự đoán hiệu suất loại bỏ $\text{TN}$ và $\text{TP}$ tương đối kém chính xác hơn (comparatively inaccurate) do độ lệch và phân tán cao (high deviation) trong các tập dữ liệu tương ứng.
+- Mô hình MLP được kiểm thử trên cùng các kịch bản để đối chứng và kiểm chứng mô hình XGBoost:
+  - Cùng một tập hợp kịch bản ($M_1$, $M_4$, và $M_7$) thể hiện kết quả vượt trội ở cả hai mô hình XGBoost và MLP.
+  - Các kết quả được củng cố và chứng minh qua các giá trị đánh giá hiệu năng thống kê gồm sai số tuyệt đối trung bình ($\text{MAE}$ / mean absolute error), căn bậc hai sai số toàn phương trung bình ($\text{RMSE}$ / root mean square error), sai số phần trăm tuyệt đối trung bình ($\text{MAPE}$ / mean absolute percentage error), hệ số xác định ($R^2$), và chỉ số đồng thuận điều chỉnh ($m_d$ / modified index of agreement).
+  - Khẳng định mô hình hóa hệ thống $A^2O\text{-MBR}$ tại $\text{WWTP}$ đạt độ tin cậy và chính xác cao khi tập dữ liệu có mức độ nhiễu tối thiểu.
+- Đóng góp khoa học và so sánh với nghiên cứu tiền nhiệm:
+  - Nghiên cứu là bước mở rộng phát triển từ nghiên cứu trước đây vốn ứng dụng mô hình mạng bộ nhớ ngắn hạn dài ($\text{LSTM}$ / long short-term memory) để mô phỏng cùng hệ thống nhằm dự đoán sự loại bỏ của tất cả chất dinh dưỡng dưới dạng một đầu ra duy nhất (one output).
+  - Các mô hình XGBoost và MLP trong nghiên cứu này cung cấp hiểu biết sâu sắc hơn về các kịch bản mô hình hóa khác nhau, cho phép xác định rõ cấu hình mô hình nào tối ưu nhất cho từng kịch bản cụ thể.
+- Khuyến nghị vận hành và định hướng nghiên cứu tiếp theo:
+  - Trong các nghiên cứu tương lai, phương pháp mô hình hóa có thể hỗ trợ dự đoán loại bỏ chất dinh dưỡng bằng hệ thống $A^2O\text{-MBR}$ và dự báo sớm nồng độ dinh dưỡng tiềm năng dự kiến (tentative concentration) cho các hệ thống xử lý nước thải.
+  - Các phát hiện từ nghiên cứu mang lại giá trị thiết thực cho các nhà nghiên cứu và người vận hành trong việc kiểm soát các thông số vận hành điều khiển được (operable parameters) tại trạm xử lý nước thải ($\text{WWTP}$).

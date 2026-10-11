@@ -1,0 +1,7 @@
+    - **Hình 6.** Đồ thị phân tán thực tế và dự đoán mô hình MLP
+      - <img src="assets/fig_06_p6.jpeg" alt="Hình 6" />
+      - **Hình này chứng minh điều gì**
+        - Mô hình $M_4$ bám sát thực tế tốt nhất ($>78\%$), trong khi việc tích hợp toàn bộ thông số ở $M_7$–$M_9$ không cải thiện được độ phân tán của MLP.
+      - **Từ đâu mà thấy được**
+        - Ox: giá trị thực tế (Actual), dải đo $0$–$100$. Oy: giá trị dự đoán (Predicted), dải đo $30$–$105$.
+        - Cột $\text{NH}_4$ ($M_1, M_4, M_7$): dữ liệu gom sát đường hồi quy đỏ (chặt nhất ở $M_4$); hai cột $\text{TN}$ ($M_2, M_5, M_8$) và $\text{TP}$ ($M_3, M_6, M_9$) phân tán rộng thành đám mây ngang.

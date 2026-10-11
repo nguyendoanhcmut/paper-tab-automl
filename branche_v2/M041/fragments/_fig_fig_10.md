@@ -1,0 +1,8 @@
+    - **Hình 9.** Biểu đồ tần số phân bố sai số (phần dư) giữa ANN và RSM
+      - <img src="assets/fig_10_p12.png" alt="Hình 9" />
+      - **Hình này chứng minh điều gì**
+        - ANN có độ tin cậy vượt trội khi tập trung phần lớn dự báo sát sai số 0 và không có sai số cực biên.
+      - **Từ đâu mà thấy được**
+        - Trục $Oy$ biểu thị tần số mẫu; trục $Ox$ biểu diễn các khoảng sai số phần dư.
+        - Đồ thị a (ANN): cột tâm sát mốc 0 đạt đỉnh cao nhất ($\approx 66$), phân bố dốc đứng và đối xứng.
+        - Đồ thị b (RSM): đỉnh bị phân tách ($\approx 47$ và $55$), dải phân bố dàn trải và có ngoại lai ở rìa phải.

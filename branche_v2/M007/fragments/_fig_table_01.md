@@ -1,0 +1,8 @@
+    - **Bảng 1.** Phân tích thống kê mô tả của bộ dữ liệu
+      - <img src="assets/table_01_p4.png" alt="Bảng 1" />
+      - **Bảng này chứng minh điều gì**
+        - 9 thông số đầu vào biến thiên trên dải rộng (như $\text{MLSS}$ từ $2208.333$ đến $17,966.67$), còn 3 thông số đầu ra duy trì giá trị trung bình cao ($\text{NH}_4$ đạt $97.608$, $\text{TP}$ đạt $86.094$).
+      - **Từ đâu mà thấy được**
+        - Cột "Minimum" và "Maximum": hàng $\text{MLSS}$ ($2208.333$–$17,966.67$) và $\text{COD}$ ($20.307$–$311.62$) có khoảng giá trị rộng nhất ở nhóm Inputs.
+        - Cột "Mean": nhóm Outputs ghi nhận giá trị trung bình cao nhất ở $\text{NH}_4$ ($97.608$), tiếp theo là $\text{TP}$ ($86.094$) và $\text{TN}$ ($67.484$).
+        - Lưu ý: hình ghi Median, văn bản ghi standard deviation.

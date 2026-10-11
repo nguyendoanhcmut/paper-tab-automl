@@ -1,0 +1,7 @@
+    - **Hình 2.** Đồ thị bề mặt 3D nồng độ và hiệu suất khử Amonia Nitơ
+      - <img src="assets/fig_02_p5.png" alt="Hình 2" />
+      - **Hình này chứng minh điều gì**
+        - Thời gian lưu kéo dài đến $20\text{ ngày}$ chi phối việc hạ nồng độ amonia về sát $0\text{ mg/L}$, ít bị TOC tác động.
+      - **Từ đâu mà thấy được**
+        - (a, b): Trục Time ($0$–$20\text{ ngày}$) và TOC ($40$–$120\text{ mg/L}$); mặt cong dốc mạnh theo trục thời gian.
+        - (c, d): Trục pH ($5$–$9$) và Time ($0$–$20\text{ ngày}$); mặt cong dạng vòm uốn phi tuyến rõ rệt theo trục pH.

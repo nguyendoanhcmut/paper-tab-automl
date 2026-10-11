@@ -1,0 +1,7 @@
+  - **Hình 8.** Dự đoán hiệu suất loại bỏ amoni bằng mô hình ANN
+    - <img src="assets/fig_08_p10.jpeg" alt="Hình 8" />
+    - **Hình này chứng minh điều gì**
+      - Sai số dự đoán thấp và duy trì tương quan tuyến tính trên toàn dải loại bỏ amoni, dữ liệu tập trung nhiều nhất ở khoảng $30$–$60$.
+    - **Từ đâu mà thấy được**
+      - Ox: Real Ammonia Removal, thang đo $0$–$100$. Oy: Predicted Ammonia Removal, thang đo $0$–$100$.
+      - Các điểm dữ liệu bám sát đường chéo đỏ $1:1$; góc phải dưới ghi nhận hệ số xác định $R^2 = 0.8679$.

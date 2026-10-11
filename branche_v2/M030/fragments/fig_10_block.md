@@ -1,0 +1,7 @@
+  - **Hình 10.** Đồ thị đóng góp thống kê Q khi mất kiểm soát
+    - <img src="assets/fig_10_p11.jpeg" alt="Hình 10" />
+    - **Hình này chứng minh điều gì**
+      - Ba thông số SRT, fCOD và temp luôn chiếm tỷ trọng đóng góp chủ đạo vào thống kê Q trên toàn bộ 25 mẫu quan trắc mất kiểm soát.
+    - **Từ đâu mà thấy được**
+      - Ox: mẫu quan trắc (Sample) $345$–$413$. Oy: tỷ lệ đóng góp (Contribution), thang đo $0\%$–$100\%$.
+      - Ba dải màu dưới cùng gồm SRT (tím đậm, $\sim 15\text{--}22\%$), fCOD (tím nhạt, $\sim 15\text{--}20\%$) và temp (cam đậm, $\sim 13\text{--}18\%$), cộng dồn luôn vượt $50\%$ chiều cao mỗi cột.

@@ -1,0 +1,7 @@
+    - **Hình 1.** Đồ thị đường đồng mức nồng độ và hiệu suất khử Amonia Nitơ
+      - <img src="assets/fig_01_p4.png" alt="Hình 1" />
+      - **Hình này chứng minh điều gì**
+        - Nồng độ Amonia Nitơ giảm từ $15\text{ mg/L}$ xuống $< 5\text{ mg/L}$, hiệu suất khử tăng từ $0\,\%$ lên $> 80\,\%$ khi tăng thời gian lên $15$–$20\text{ ngày}$.
+      - **Từ đâu mà thấy được**
+        - Panel (a, b): Ox là TOC ($40$–$120\text{ mg/L}$), Oy là Time ($0$–$20\text{ ngày}$); hiệu suất (b) đạt $80\,\%$ khi TOC $> 100\text{ mg/L}$ và Time $> 15\text{ ngày}$.
+        - Panel (c, d): Ox là pH ($5$–$9$), Oy là Time ($0$–$20\text{ ngày}$); hiệu suất (d) đạt $80$–$100\,\%$ (vùng màu đỏ) khi Time $> 15\text{ ngày}$.

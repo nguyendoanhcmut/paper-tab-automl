@@ -1,0 +1,7 @@
+  - **Hình 1.** Thuật toán mô hình hồi quy logistic kiểm soát amoni MPBR
+    - <img src="assets/fig_02_p5_vector.png" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Thuật toán LR gắn trực tiếp mục tiêu mô hình hóa với bài toán tái sử dụng nước thông qua dự đoán và kiểm soát $NH_4\text{-}N_{eff}$.
+    - **Từ đâu mà thấy được**
+      - Tiêu đề thuật toán Fig. 1 xác định rõ phạm vi ứng dụng: "water reuse - ammonium nitrogen prediction and control at the MPBR effluent".
+      - Mũi tên vector điều hướng kết nối thuật toán mô hình với hệ sinh thái vận hành MPBR.

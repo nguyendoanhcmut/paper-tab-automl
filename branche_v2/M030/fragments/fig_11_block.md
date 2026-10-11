@@ -1,0 +1,8 @@
+  - **Hình 11.** Kiểm định Wilcoxon-Mann-Whitney cho hai trạng thái vận hành
+    - <img src="assets/fig_11_p11.jpeg" alt="Hình 11" />
+    - **Hình này chứng minh điều gì**
+      - Hiệu suất khử amoni và nhiệt độ giảm rõ rệt khi mất kiểm soát, củng cố sự phân tách trên cả 4 biến.
+    - **Từ đâu mà thấy được**
+      - Panels A, C: Khử amoni giảm từ trung vị $\sim 97\ \%$ xuống $\sim 88\ \%$; nhiệt độ giảm từ $\sim 29.5\ ^\circ\text{C}$ xuống $\sim 25\ ^\circ\text{C}$.
+      - Panels B, D: SRT bị ghìm ở mức đáy $30\text{ d}$; COD đầu vào tăng từ trung vị $\sim 420\text{ mg/L}$ lên $\sim 610\text{ mg/L}$ (ngoại lai $> 1200\text{ mg/L}$).
+      - Lưu ý: hình ghi p < 0.01%, văn bản ghi 1 %.

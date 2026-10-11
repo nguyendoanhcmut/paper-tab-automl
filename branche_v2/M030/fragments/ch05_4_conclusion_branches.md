@@ -1,0 +1,23 @@
+## 4. Conclusion
+
+- Các kỹ thuật học máy và thống kê đa biến bao gồm ANN (Artificial Neural Networks - Mạng nơ-ron nhân tạo), PCA (Principal Components Analysis - Phân tích thành phần chính) và MSPC (Multivariate Statistical Process Control - Kiểm soát quá trình thống kê đa biến) chứng minh tính phù hợp cao trong việc giám sát hệ thống MBR (Membrane Bioreactor - Bể phản ứng sinh học màng) quy mô pilot xử lý nước thải thực tế từ nhà máy lọc dầu (real oil refinery wastewater).
+  - Mô hình hóa bằng PCA và ANN thể hiện hiệu quả rõ rệt trong việc lập bản đồ hành vi của hệ thống MBR liên quan đến quá trình loại bỏ amoni ($\text{NH}_4^+$), đồng thời nhận diện chính xác các yếu tố vận hành quan trọng nhất tác động theo cả hai chiều hướng tích cực và tiêu cực lên hiệu suất xử lý.
+- Các mô hình đã xác định cụ thể các biến số vận hành chi phối hiệu suất loại bỏ amoni:
+  - Thời gian lưu bùn (SRT - Sludge Retention Time), nhiệt độ (temperature) và nồng độ amoni đầu vào (influent concentration of ammonia) là những biến số giúp cải thiện mạnh nhất hiệu suất loại bỏ amoni.
+  - Nồng độ nhu cầu oxy hóa học đầu vào (influent COD - Chemical Oxygen Demand), nồng độ dầu mỡ đầu vào (OG - Oil and Grease) và độ thấm màng (membrane permeability) là những biến số làm suy giảm nhiều nhất hiệu suất loại bỏ amoni.
+- Mô hình ANN được áp dụng thành công để dự đoán định lượng hiệu suất loại bỏ amoni với độ chính xác cao:
+  - Hệ số xác định đạt $R^2 = 0.868$, thể hiện mức sai số thấp giữa giá trị dự đoán của mô hình và giá trị đo đạc thực tế.
+  - ANN chứng minh tính hiệu quả vượt trội trong việc nắm bắt động học phi tuyến của MBR, cho phép dự báo trước (forecast) hiệu suất loại bỏ amoni từ một tập hợp các điều kiện vận hành xác định.
+- Hiệu quả kiểm soát quá trình và giám sát lỗi vận hành của các biểu đồ kiểm soát MSPC:
+  - Biểu đồ kiểm soát $T^2$ Hotelling (Hotelling $T^2$ control chart) không đạt hiệu quả trong việc phát hiện các sự cố vận hành liên quan đến tỷ lệ loại bỏ amoni thấp.
+  - Biểu đồ kiểm soát $Q$ ($Q$ control chart / thống kê sai số phần dư) thể hiện năng lực vượt trội: phát hiện phần lớn các chu kỳ vận hành có hiệu suất loại bỏ amoni trên $90\%$ và phát hiện toàn bộ $100\%$ các giai đoạn vận hành có hiệu suất suy giảm xuống dưới $85\%$.
+  - Biểu đồ kiểm soát $Q$ cho phép kiểm soát chặt chẽ hệ thống xử lý nước thải công nghiệp thông qua việc điều chỉnh kịp thời tỷ lệ $\text{C/N}$ ($\text{C/N}$ ratio), nhiệt độ hoặc SRT, qua đó ngăn chặn hiệu suất loại bỏ amoni rơi xuống các mức suy giảm nghiêm trọng.
+- Sức mạnh tổng hợp (Synergy) giữa ANN và MSPC cùng tiềm năng điều khiển thời gian thực:
+  - Kết quả nghiên cứu khẳng định tiềm năng to lớn của các kỹ thuật AI (Artificial Intelligence - Trí tuệ nhân tạo) và ML (Machine Learning - Học máy) trong giám sát và kiểm soát hệ thống MBR ở quy mô công nghiệp (industrial scale), đóng góp vào việc nâng cao hiệu quả tổng thể của quy trình.
+  - Dù kết quả nghiên cứu được phát triển từ dữ liệu giám sát ngoại tuyến (offline monitoring data), mô hình chỉ ra tính khả thi cao trong việc ứng dụng đánh giá trạng thái hệ thống theo thời gian thực (real-time assessment) ở quy mô công nghiệp, hỗ trợ đưa ra các quyết định vận hành chính xác và tối ưu hóa quy trình xử lý.
+- Khuyến nghị vận hành cho MBR nhà máy lọc dầu và ý nghĩa đối với tái sử dụng nước (Water reuse implications):
+  - Khuyến nghị vận hành tập trung vào việc duy trì SRT đủ dài để bảo tồn vi khuẩn nitrat hóa, kiểm soát chặt chẽ hàm lượng COD và dầu mỡ đầu vào nhằm ổn định tỷ lệ $\text{C/N}$, đồng thời ứng dụng biểu đồ kiểm soát $Q$ để phát hiện sớm các bất thường trước khi xảy ra sự cố chất lượng nước.
+  - Việc kiểm soát ổn định hiệu suất loại bỏ amoni ở mức cao ($\ge 90\%$) là điều kiện tiên quyết để nước sau lọc MBR đáp ứng các tiêu chuẩn khắt khe phục vụ tái sử dụng nước trong nhà máy lọc dầu (như nước bổ cấp cho hệ thống tháp giải nhiệt, hạn chế ăn mòn và cáu cặn sinh học), nâng cao tính tuần hoàn và phát triển bền vững cho nhà máy.
+- Thông tin về dữ liệu và tài trợ của nghiên cứu:
+  - Dữ liệu thô từ nhà máy lọc dầu được bảo mật theo quy định thỏa thuận và sẵn sàng chia sẻ khi có yêu cầu hợp lệ.
+  - Nghiên cứu được hỗ trợ từ các cơ quan tài trợ CAPES, CNPq, FAPEMIG và Đại học Liên bang Minas Gerais (UFMG - Federal University of Minas Gerais).

@@ -1,0 +1,8 @@
+  - **Hình 6.** Nồng độ amoni dòng ra MPBR thực nghiệm qua 4 giai đoạn
+    - <img src="assets/fig_07_p15.jpeg" alt="Hình 6" />
+    - **Hình này chứng minh điều gì**
+      - Phần lớn thời gian ở Period 1–3 đều vượt ngưỡng luật định, trong khi đỉnh bùng phát ở Period 4 đạt tới $35.7\text{ mgN/L}$, cao nhất toàn bộ nghiên cứu.
+    - **Từ đâu mà thấy được**
+      - Trục tọa độ: Ox là thời gian vận hành ($\text{d}$), Oy là $NH_4\text{–}N_{eff}$ ($\text{mgN/L}$); đường ngang xanh biểu diễn ngưỡng pháp lý ($NH_4\text{ legal limit}$).
+      - Panels (a)–(c): Đa số điểm đo $NH_4\text{,exp}$ nằm trên đường giới hạn (đạt $15.2\text{ mgN/L}$ ở Period 1, $12.4\text{ mgN/L}$ ở Period 2 và $8.4\text{ mgN/L}$ ở Period 3).
+      - Panel (d): Suốt 60 ngày đầu hầu hết điểm đo duy trì sát $0\text{ mgN/L}$; từ ngày 70–89 nồng độ tăng vọt liên tiếp qua ngưỡng lên đỉnh $35.7\text{ mgN/L}$ (ngày ~81).

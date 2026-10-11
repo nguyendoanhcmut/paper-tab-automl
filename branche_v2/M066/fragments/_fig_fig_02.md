@@ -1,0 +1,8 @@
+    - **Hình 2.** Đặc tính tắc nghẽn màng và hiệu quả các bước làm sạch
+      - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
+      - **Hình này chứng minh điều gì**
+        - Giảm HRT xuống $7.5\text{ d}$ thúc đẩy tích tụ EPS/SMP khiến TMP tăng lên $\approx 35\text{ kPa}$; rửa hóa chất ($\text{NaOCl}$, axit citric) khôi phục độ thấm và tái lộ cấu trúc lỗ màng.
+      - **Từ đâu mà thấy được**
+        - Đồ thị (a, b): TMP ở $\text{HRT} \ge 9.5\text{ d}$ giữ ở $1$–$2\text{ kPa}$ nhưng tăng lên $35\text{ kPa}$ khi $\text{HRT} = 7.5\text{ d}$; rửa $\text{NaOCl}$ và axit đưa đường TMP theo flux về sát màng mới ($< 5\text{ kPa}$).
+        - Đồ thị (c, d): Bùn bánh chiếm ưu thế bởi hạt mịn $\sim 32.3\ \mu\text{m}$; cường độ huỳnh quang EEM của TB-EPS, SMP và LB-EPS tăng khi HRT giảm từ $9.5\text{ d}$ về $5\text{ d}$.
+        - Ảnh SEM (e): Màng nghẹt (iii) bị bao phủ dày; rửa vật lý (iv) chỉ làm sạch một phần, trong khi rửa $\text{NaOCl}$ (v) và axit citric (vi) khôi phục và làm lộ rõ các lỗ màng.

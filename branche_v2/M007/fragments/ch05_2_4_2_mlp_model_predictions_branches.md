@@ -1,0 +1,51 @@
+### 4.2. MLP model predictions
+
+- Kiến trúc và quy trình phát triển mô hình $\text{MLP}$ (multilayer perceptron - mạng perceptron đa tầng):
+  - Số lượng nơ-ron ở tầng đầu vào (input layer) được điều chỉnh theo thiết lập định trước cho từng kịch bản ($1$ trong $9$ kịch bản).
+  - Cấu trúc mạng gồm $1$ tầng ẩn (hidden layer) và $1$ tầng đầu ra (output layer) chứa duy nhất $1$ nơ-ron.
+  - Trọng tâm chính trong phát triển mô hình $\text{MLP}$ là việc lựa chọn hàm kích hoạt (activation function) và cấu hình tầng đầu ra.
+  - Tín hiệu sai số được lan truyền ngược (back-propagated) để liên tục cập nhật mô hình cho đến khi sai số giảm xuống dưới ngưỡng quy định của hàm mất mát sai số toàn phương trung bình ($\text{MSE}$ / mean square error).
+  - Mục tiêu huấn luyện là đạt giá trị hàm mất mát nhỏ nhất trong từng kịch bản khảo sát.
+  - Kiến trúc tối ưu có sự khác biệt giữa các mô hình và được xác định thông qua phương pháp thử và sai (trial-and-error method).
+  - Các thử nghiệm điều chỉnh siêu tham số (hyperparameters) được thực hiện liên tục cho đến khi hiện tượng quá khớp (overfitting) và thiếu khớp (underfitting) được kiểm soát ở mức không đáng kể.
+  - Kết quả hiệu suất dự đoán của từng kịch bản dựa trên các thước đo thống kê được tổng hợp trong Bảng $3$.
+- Hiệu suất tổng quan và so sánh giữa các chỉ tiêu dinh dưỡng:
+  - Mặc dù độ chính xác của các mô hình $\text{MLP}$ nhìn chung thấp hơn so với $\text{XGBoost}$, xu hướng dự đoán tổng thể giữa hai kỹ thuật này là tương đồng.
+  - Dự đoán của mô hình $\text{MLP}$ đạt kết quả tốt đối với amoni ($\text{NH}_4$), nhờ vào xu hướng biến thiên nhất quán và ổn định trong tập dữ liệu (consistent trends in the dataset).
+  - Dự đoán đối với các chất dinh dưỡng còn lại gồm tổng nitơ ($\text{TN}$) và tổng phốt pho ($\text{TP}$) kém chính xác hơn do tập dữ liệu có độ biến động rất cao (high variations).
+  - Các giá trị tối ưu của các chỉ số sai số tuyệt đối trung bình ($\text{MAE}$), căn bậc hai sai số toàn phương trung bình ($\text{RMSE}$), phần trăm sai số tuyệt đối trung bình ($\text{MAPE}$), hệ số xác định ($R^2$), và chỉ số thống nhất Willmott ($m_d$) xuất hiện ở các mô hình $\text{M1}$, $\text{M4}$, và $\text{M7}$.
+  - Sai số $\text{RMSE}$ đạt giá trị nhỏ nhất trong việc dự đoán hiệu suất loại bỏ $\text{NH}_4$ của hệ thống $A^2O\text{-MBR}$, được củng cố đồng bộ bởi toàn bộ các thước đo hiệu suất thống kê khác, chứng minh mô hình dự đoán chính xác hiệu suất loại bỏ $\text{NH}_4$.
+- Đánh giá định lượng mô hình $\text{MLP}$ tối ưu:
+  - Mô hình $\text{MLP}$ $\text{M1}$ đề xuất đạt các thông số thống kê gồm: $\text{MAE} = 0.00063$, $\text{RMSE} = 0.00031$, $\text{MAPE} = 0.1299$, $R^2 = 0.703$, và $m_d = 0.849$.
+  - Thứ tự hiệu suất của mô hình dựa trên giá trị $R^2$ được xếp hạng theo chiều $\text{M4} > \text{M7} > \text{M1}$; tất cả các mô hình còn lại đều cho kết quả kém (poor results).
+  - Mô hình tối ưu nhất là $\text{M4}$ do phản ánh chính xác mối tương quan giữa thông số đầu vào và đầu ra, chứng minh vai trò then chốt của việc xem xét các đặc tính nước thải đầu vào (influent characteristics).
+  - Hiệu suất dự đoán của mô hình gia tăng khi bổ sung thêm các thông số đầu vào khác.
+  - Mô hình $\text{MLP}$ có khả năng dự đoán hiệu suất loại bỏ $\text{NH}_4$ trong hệ thống $A^2O\text{-MBR}$ trong các giới hạn cho phép chấp nhận được (within acceptable limits).
+- Vai trò của các nhóm biến đầu vào và so sánh với mô hình $\text{XGBoost}$:
+  - Khác biệt cơ bản giữa $\text{MLP}$ và $\text{XGBoost}$ là ở mô hình $\text{MLP}$, cả điều kiện vận hành và đặc tính nước đầu vào đều chi phối khả năng loại bỏ chất dinh dưỡng.
+  - Tuy nhiên, trong mô hình $\text{MLP}$, các thông số đặc tính nước đầu vào quan trọng hơn hẳn khi có thể đạt độ chính xác $78\%$ chỉ bằng việc sử dụng riêng rẽ nhóm đặc tính này.
+  - Đồ thị phân tán giữa giá trị thực nghiệm và giá trị dự đoán của mô hình (Hình $6$):
+    - Giá trị thực tế và giá trị dự đoán bám sát nhau ở mô hình $\text{M1}$, trong khi dao động đáng kể xuất hiện ở các mô hình $\text{M2}$ và $\text{M3}$.
+    - Mô hình $\text{M4}$ vượt trội hơn $\text{M1}$ khi dự đoán hiệu suất loại bỏ chất dinh dưỡng với độ chính xác trên $78\%$.
+    - Các mô hình $\text{M5}$ và $\text{M6}$ cho kết quả gần như tương đương với các mô hình $\text{M1}$ và $\text{M2}$.
+    - Kịch bản tích hợp toàn bộ các thông số (gồm cả điều kiện vận hành và đặc tính nước đầu vào) giúp nâng cao độ chính xác dự đoán ở mô hình $\text{XGBoost}$, nhưng điều này không xảy ra đối với mô hình $\text{MLP}$.
+- Năng lực học tập của mô hình $\text{MLP}$ và định hướng nghiên cứu:
+  - Khả năng học (learning capability) của mô hình $\text{MLP}$ đạt hiệu quả cao nhất ở dự đoán $\text{NH}_4$, trong khi độ chính xác dự đoán $\text{TN}$ và $\text{TP}$ chỉ đạt lần lượt xấp xỉ $30\%$ và $40\%$.
+  - Độ chính xác dự đoán $\text{NH}_4$ vượt trên $70\%$ ở tất cả các kịch bản được khảo sát, trong khi các mô hình dự đoán các chất dinh dưỡng khác thể hiện kết quả yếu kém.
+  - Nguyên nhân chủ yếu xuất phát từ độ lệch dữ liệu lớn (high deviation) trong tập dữ liệu, làm suy giảm năng lực học của mô hình và dẫn đến độ chính xác dự đoán thấp cho $\text{TN}$ và $\text{TP}$.
+  - Mô hình $\text{XGBoost}$ hỗ trợ phân tích nồng độ chất dinh dưỡng trong dòng ra và hỗ trợ các nhà vận hành/quyết định điều chỉnh các thông số kiểm soát nhằm tuân thủ quy chuẩn xả thải.
+  - Các mô hình đề xuất có thể hỗ trợ dự đoán chính xác loại bỏ $\text{NH}_4$, trong khi việc mô hình hóa chính xác $\text{TN}$ và $\text{TP}$ trong hệ thống $A^2O\text{-MBR}$ đòi hỏi các nghiên cứu sâu hơn.
+  - Các nghiên cứu tương lai có thể bổ sung thêm các thông số khác nhằm xác định mối quan hệ tối ưu, giúp dự đoán hiệu suất loại bỏ $\text{TN}$ và $\text{TP}$ tại trạm xử lý nước thải ($\text{WWTP}$) với độ chính xác và độ tin cậy cao.
+- Phân tích sai số phần dư (residuals) và kiểm chứng mô hình:
+  - Các đồ thị phần dư cho từng kịch bản và từng chất dinh dưỡng riêng lẻ (Hình $7$) được phân tích để đối chứng sai số giữa dự đoán mô hình và giá trị thực tế.
+  - Phần dư giữa dự đoán của các mô hình $\text{M1}$, $\text{M4}$, $\text{M7}$ và dữ liệu thử nghiệm thực tế đối với $\text{NH}_4$ là rất tương đồng và chỉ dao động nhỏ trong biên độ $\pm 10$.
+  - Ngược lại, dự đoán cho $\text{TN}$ và $\text{TP}$ kém chính xác hơn rõ rệt với phần dư biến động lớn, dao động lần lượt trong khoảng $0 \pm 25$ và từ $+20$ đến $-40$.
+  - Khẳng định các mô hình $\text{MLP}$ đề xuất ($\text{M1}$, $\text{M4}$, và $\text{M7}$) là các mô hình tối ưu nhất cho bài toán dự đoán loại bỏ $\text{NH}_4$ trong hệ thống $A^2O\text{-MBR}$, nhưng không hiệu quả trong việc dự đoán loại bỏ $\text{TN}$ và $\text{TP}$.
+  - Phân bố phần dư thông qua biểu đồ violin (Hình $8$) phản ánh trực quan sự khác biệt rõ rệt về sai số giữa $\text{NH}_4$ và các chất dinh dưỡng $\text{TN}$, $\text{TP}$ trên cả hai mô hình $\text{MLP}$ và $\text{XGBoost}$:
+    - **Hình 8.** Phân bố phần dư của các mô hình MLP và XGBoost
+      - <img src="assets/fig_08_p8.jpeg" alt="Hình 8" />
+      - **Hình này chứng minh điều gì**
+        - Dải phần dư nén sát $0$ ở nhóm $\text{NH}_4$ và mở rộng với đuôi âm kéo dài ở nhóm $\text{TN}$, $\text{TP}$ trên cả hai mô hình.
+      - **Từ đâu mà thấy được**
+        - Ox: 9 kịch bản mô hình (M1-NH4 đến M9-TP). Oy: sai số phần dư (Residual), vạch chia từ $-80$ đến $40$.
+        - Ba violin đầu ($\text{NH}_4$) dẹt sát vạch $0$; các violin $\text{TN}$ và $\text{TP}$ phình rộng với đuôi âm MLP vượt $-80$, còn XGBoost vượt $-60$.

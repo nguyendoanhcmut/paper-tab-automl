@@ -1,0 +1,8 @@
+  - **Hình 4.** Hệ số độ nhạy theo ngưỡng amoni dòng ra $NH_4\text{–}N_{eff}$
+    - <img src="assets/fig_05_p10.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Hệ số $S$ tăng lũy tiến theo cấp độ nhiễu loạn ($5\text{--}30\%$) trên cả $12$ biến; các yếu tố môi trường duy trì độ nhạy cao liên tục, còn biến vận hành phân hóa mạnh ở các ngưỡng biên $NH_4\text{–}N_{eff}$.
+    - **Từ đâu mà thấy được**
+      - Trục Ox: ngưỡng $NH_4\text{–}N_{eff}$ ($0\text{--}16\text{ mg N}\cdot\text{L}^{-1}$); Oy: hệ số $S$ ($0.0\text{--}1.2$, riêng $S_{Fair}$ $0.0\text{--}2.0$); $5$ đường ứng với mức nhiễu $5\text{--}30\%$.
+      - Panels (a–d, l) so với (e–k): $S_{HRT}$ (a) $< 0.15$ và $S_{PLR}$ (d) $< S_{NLR}$ (c); $S_{Fair}$ (l) tăng vọt lên $1.9$ tại ngưỡng amoni cao ($> 8.0\text{ mg N}\cdot\text{L}^{-1}$); các biến môi trường (e–k) luôn giữ $S$ cao ($0.25\text{--}1.10$).
+      - Lưu ý: hình ghi panel (c) là NLR, (d) là PLR và (l) là Fair; văn bản ghi (Fig. 4a) cho NLR/PLR và (Fig. 4b) cho Fair.

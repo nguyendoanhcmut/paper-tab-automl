@@ -1,0 +1,7 @@
+    - **Hình 4.** Đồ thị bề mặt 3D nồng độ và hiệu suất khử Phosphate
+      - <img src="assets/fig_05_p7.png" alt="Hình 4" />
+      - **Hình này chứng minh điều gì**
+        - Kéo dài thời gian đến $20\text{ ngày}$ hạ nồng độ photphat xuống dưới $1\text{ mg/L}$; chệch khỏi pH 7–8 làm hiệu suất sụt giảm rõ rệt.
+      - **Từ đâu mà thấy được**
+        - Panel (a, b): trục thời gian ($0\text{--}20\text{ ngày}$) và TOC ($40\text{--}120\text{ mg/L}$); hiệu suất (b) tạo vồng cực đại ở $20\text{ ngày}$.
+        - Panel (c, d): trục thời gian ($0\text{--}20\text{ ngày}$) và pH ($5\text{--}10$); nồng độ (c) chạm đáy dưới $1\text{ mg/L}$ và hiệu suất (d) đạt đỉnh tại pH 7–8.

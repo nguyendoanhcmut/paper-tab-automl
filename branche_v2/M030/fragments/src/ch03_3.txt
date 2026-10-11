@@ -1,0 +1,257 @@
+2.3. Multivariate statistical analyses
+Fig. 2 displays a schematic plot of the research methodology, 
+regarding data processing. All models were developed using software R 
+version 4.0.2 [42]. For data importation from Microsoft Excel® 2016, 
+the readxl package was used [43]. More details are described in the 
+following items.
+Fig. 1. MBR pilot plant scheme.
+Table 1 
+MBR characteristics and operating conditions.
+Parameters
+Value
+Unit
+MBR characteristics
+Biological tank volume
+8
+m3
+Membrane area
+70
+m2
+Membrane materials
+Chlorinated polyethylene
+–
+Membrane pore size
+0.4
+μm
+Membrane configuration
+MF/flat sheet
+–
+MBR operating conditions
+Aeration flow
+45
+N m3 h−1
+Hydraulic retention time (HRT)
+5.6
+h
+Sludge retention time (SRT)
+40
+d
+Organic load
+13
+kg COD d−1
+Permeate flow
+0.5
+m3 h−1
+MF: microfiltration.
+A.V. Santos et al.                                                                                                                                                                                                                               
+Journal of Water Process Engineering 67 (2024) 106126 
+3 
+
+
+<!-- Page 4 -->
+
+2.3.1. ANN model development
+The final dataset was preprocessed to have standard deviation one 
+and mean zero, i.e. standardized to Z score, according to Eq. (1). This 
+standardization reduces the large difference between the orders of 
+magnitude of different variables and thus make them more comparable, 
+giving equal importance to each one in the multivariate models [44]. 
+Zi = (xi −μ)/σ
+(1) 
+where Zi represents the standardized score, xi represents a specific var­
+iable, μ represents the mean of the set of variables, and σ represents the 
+standard deviation of the set of variables.
+Once the data were organized and standardized, the ANN model was 
+built in R using NeuralNet [45] and Keras [46] packages. The variables 
+sludge filterability, MLVSS, pH, influent concentrations of ammonia, 
+OG, sulphides, phosphorous and COD, effluent COD, COD removal, 
+temperature, SRT and membrane permeability were passed to the model 
+as input variables and the variable ammonia removal was defined as the 
+output, since the objective is to predict its value and assess its behavior. 
+A multilayer feedforward architecture was applied, and several tests 
+were performed with different network configurations, combining 
+different settings of activation function, number of hidden layers, 
+number of neurons in each layer and number of epochs, to identify the 
+configuration that presented the smallest mean square error (MSE). 
+Based on these tests, it was determined that the network configuration to 
+be used for modelling the MBR would apply the rectifier with dropout 
+activation function; contain two hidden layers, containing 12 and seven 
+neurons, in that order; and 5000 epochs.
+The model was used for two purposes: sensitivity analysis of the MBR 
+ammonia removal capacity to the input variables; and forecasting of the 
+removal achieved from a set of input conditions. So, after importing the 
+data, it was randomly divided into three sets: training, with 60 % of data; 
+validation, with 30 % of data; and test, with 10 % of data. Zhong et al. 
+[18] highlight at their review work the importance of proper model 
+development and interpretation to deliver meaningful results when 
+applying ML to Environmental Science and Engineering (ESE). The au­
+thors stated that “more ‘representative’ data rather than ‘big’ data are 
+more important for obtaining robust, powerful ML models”. Aiming to 
+ensure that the training set was truly representative of the actual 
+behavior of the system and that different ammonia removal conditions 
+were addressed thus, the division of the sets was verified and repeated 
+until the training set covered a wide range of ammonia removal per­
+centages, so that the model could learn its behavior under different 
+conditions. For the sensitivity analysis, the training and validation 
+subsets were used to train and calibrate the network and for the 
+ammonia removal prediction, the test subset was used as input 
+configuration.
+The model performance was evaluated through the statistical pa­
+rameters coefficient of determination (R2), mean absolute error (MAE) 
+and MSE.
+
+2.3.2. PCA model development
+PCA was performed to further explore the relations between the 
+variables and the ammonia removal achieved, specially to analyze 
+whether the correlations indicated by the ANN model were positive or 
+negative. PCA achieves dimensionality reduction by orthogonal trans­
+formation, i.e. the original vector group is transformed into a new vector 
+group that is a linear combination of the original one. The imple­
+mentation principle is shown in Eq. (2) [14–16]. 
+Pi = Zi*cov
+(2) 
+where Zi represents the standardized numerical matrix before PCA, cov is 
+the covariance matrix of Zi, and Pi is the numerical matrix after PCA.
+PCA was computed using the PCA function found in the FactoMineR 
+package [47]. The data was previously standardized to Z score (Eq. 1) 
+and loading plots were built using the factoextra [48], ggplot2 [49] and 
+ggpubr packages [50]. The number of components to keep was deter­
+mined based on Kaiser criterion [51] and the scree test [52]. The quality 
+of the model was also evaluated from its R2 value.
+
+2.3.3. MSPC model development
+Multivariate control charts were built based on a latent-variable 
+based approach for MSPC, using PCA as statistical projection method 
+(MSPC-PCA), as presented by Ferrer [53] and adopted by Taghezouit 
+et al. [35]. The number of components to keep in the PCA model was 
+again determined based on Kaiser criterion and the scree test. The out- 
+of-control criteria applied was a minimum of 90 % of ammonia 
+removal and therefore the dataset was split into two groups: Phase I 
+contained only in-control (removal greater than 90 %) samples from the 
+first three years of monitoring (n = 272); and Phase II contained all 
+samples from the last year of monitoring, both in and out-of-control (n 
+= 150). Phase I dataset was standardized to Z score (Eq. 1) and then used 
+to develop the PCA model from which T2 and Q complementary statistics 
+were derived for each observation. From the two statistics then, the 
+respective multivariate control charts were built, assuming as upper 
+control limits (UCL) the respective 95 % percentiles.
+Next, phase II dataset was standardized to Z score (Eq. 1) and pro­
+jected onto the PCA model developed so that T2 and Q statistics were 
+calculated and plotted on the control charts to be checked against the 
+UCL. For the observations detected to be beyond UCL on the Q-statistic 
+control chart, a diagnostic approach based on contribution plots was 
+performed. The contribution of each variable j for each abnormal 
+observation i was calculated according to Eq. 3 [54]: 
+contj,i =
+e2
+i,j
+∑
+J
+j=1
+e2
+i,j
+(3) 
+Table 2 
+MBR performance regarding pollutants removal.
+Alkalinity (mg L−1)
+Ammonia (mg N-NH3 L−1)
+BOD (mg O2 L−1)
+COD (mg O2 L−1)
+TOC (ppm)
+Turbidity (NTU)
+MBR feed
+n
+225
+360
+10
+755
+705
+155
+Min
+107
+9.50
+44.0
+91.0
+30.6
+1.02
+Max
+502
+82.8
+330
+7070
+850
+236
+Mean
+250
+29.5
+238
+539
+160
+15.2
+Median
+245
+27.3
+256
+463
+144
+8.51
+sd
+61.3
+9.70
+92.5
+350
+76.8
+24.1
+MBR permeate (removal)
+n
+225
+361
+10
+296
+706
+156
+Min
+0.00 (−74 %)
+0.14 (−72 %)
+2.00 (95 %)
+5.96 (−3 %)
+2.63 (−43 %)
+0.28 (42 %)
+Max
+378 (100 %)
+38.6 (99 %)
+8.00 (99 %)
+499 (98 %)
+643 (99 %)
+4.64 (100 %)
+Mean
+68.1 (73 %)
+2.89 (90 %)
+4.50 (98 %)
+106 (79 %)
+30.2 (80 %)
+0.90 (87 %)
+Median
+41.2 (81 %)
+1.39 (95 %)
+4.50 (98 %)
+97.0 (82 %)
+26.9 (82 %)
+0.65 (91 %)
+sd
+70.4 (27 %)
+4.39 (17 %)
+2.32 (1 %)
+64.6 (14 %)
+26.4 (10 %)
+0.71 (11 %)
+n: number of samples; min: minimum; max: maximum; sd: standard deviation. Values in parentheses refer to percentage of removal. Negative removal values are due to 
+sporadic samples in which concentration in the permeate was higher than the concentration in the feed.
+A.V. Santos et al.                                                                                                                                                                                                                               
+Journal of Water Process Engineering 67 (2024) 106126 
+4 
+
+
+<!-- Page 5 -->
+For computing these methodologic steps, the scales [55], rstatix 
+[56], ggplot2 [49] and ggpubr [50] packages were used.

@@ -1,0 +1,7 @@
+    - **Bảng 3.** So sánh định lượng các chỉ số thống kê giữa ANN và RSM
+      - <img src="assets/table_03_p18.png" alt="Bảng 3" />
+      - **Bảng này chứng minh điều gì**
+        - ANN đạt độ chuẩn xác dự báo vượt trội trên cả Ammonia nitrogen và Phosphate với $R^2 > 0.997$ và sai số giảm gần một nửa.
+      - **Từ đâu mà thấy được**
+        - Cột $R^2$: hàng ANN đạt $0.9979$ (Ammonia nitrogen) và $0.9972$ (Phosphate), cao hơn rõ rệt so với RSM ($0.9733$ và $0.9608$).
+        - Cột RMSE và MAE: hàng ANN ghi nhận sai số thấp nhất ở cả hai biến, với RMSE $0.189$ / $0.166$ và MAE $0.142$ / $0.118$.

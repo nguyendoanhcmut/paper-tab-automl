@@ -1,0 +1,40 @@
+### 4.3. Comparative study of the proposed models
+
+- So sánh toàn diện mô hình XGBoost và MLP (Multilayer Perceptron - perceptron đa tầng) thông qua phân tích đồ thị phần dư (residual plots) giữa giá trị dự đoán và giá trị thực tế của toàn bộ các mô hình được phát triển:
+  - Đồ thị violin (violin plots, Fig. 8) biểu diễn sai số phần dư (residual error) cho tất cả các kịch bản của mô hình MLP và XGBoost:
+    - Ở giữa mỗi đường cong mật độ (density curve) là một biểu đồ hộp (box plot) nhỏ, với hình chữ nhật thể hiện giới hạn của tứ phân vị thứ nhất ($Q_1$) và thứ ba ($Q_3$) và điểm chấm ở giữa là giá trị trung vị (median).
+    - Các phần phình rộng và thu hẹp trong hình dạng phân bố của đồ thị phần dư tương ứng đại diện cho xác suất xuất hiện cao hơn và thấp hơn.
+    - Hình dạng phân bố phần dư (rất hẹp ở hai đầu cực trị và phình rộng ở phần giữa) chỉ ra rằng trọng số của các giá trị sai số phần dư tập trung cao độ xung quanh giá trị trung vị.
+  - Phân tích khoảng tứ phân vị (interquartile range): đồ thị violin của phần dư giữa giá trị dự đoán và thực tế đạt khoảng tứ phân vị thấp nhất ở các kịch bản $\text{M1}$, $\text{M4}$ và $\text{M7}$ đối với cả hai mô hình MLP và XGBoost.
+  - Thứ tự hiệu năng tổng thể của các mô hình đề xuất được xác định theo thứ bậc: $\text{M7} > \text{M4} > \text{M1}$.
+- Phân tích tính ổn định, độ nhạy và tính vượt trội của XGBoost so với MLP:
+  - Hiệu năng tổng thể của mô hình XGBoost vượt trội hơn hẳn so với MLP nhờ dải phân bố sai số phần dư đối với $\text{NH}_4$ là nhỏ nhất (minimum residual distribution).
+  - Khả năng khái quát hóa và độ ổn định của XGBoost trong các kịch bản phức tạp: kết quả dự đoán của XGBoost theo kịch bản $\text{M8}$ và $\text{M9}$ đối với $\text{TN}$ và $\text{TP}$ (khi xét đồng thời cả đặc tính nước thải đầu vào và điều kiện vận hành) đạt mức hợp lý hơn so với kết quả dự đoán của MLP.
+  - Dự đoán hiệu suất loại bỏ $\text{NH}_4$ gần như bám sát hoàn toàn với kết quả thực tế, mặc dù có ghi nhận một số sai lệch nhỏ ở giai đoạn đầu của chuỗi thu thập dữ liệu.
+  - Dữ liệu trực quan hóa xu hướng loại bỏ $\text{NH}_4$ ít nhiễu hơn (less noisy) và ổn định hơn (more stable) so với xu hướng loại bỏ $\text{TN}$ và $\text{TP}$ trong hệ thống $A^2O\text{-MBR}$.
+  - Dựa trên đánh giá các kịch bản khác nhau, các mô hình $\text{M1}$, $\text{M4}$ và $\text{M7}$ thể hiện hiệu năng vượt trội nhất, được minh chứng bởi các giá trị sai số thống kê thấp hơn hẳn so với các mô hình XGBoost và MLP khác.
+  - Quá trình học của mô hình (model learning) đạt mức tối ưu nhất khi dự đoán loại bỏ $\text{NH}_4$ ở cả XGBoost và MLP, trong đó kết quả tổng thể của mô hình XGBoost luôn dẫn đầu so với MLP trên cả tập huấn luyện (training), tập kiểm tra (testing) và các chỉ số thống kê đánh giá hiệu năng (performance measuring statistics gồm $\text{MAE}$, $\text{RMSE}$, $\text{MAPE}$ và $R^2$ / $\text{R-Sq}$, trình bày tại Table 2 và Table 3).
+- So sánh hiệu năng mô hình qua đồ thị hồi quy (regression plots) và dải tin cậy $95\%$ (Fig. 9):
+  - Thiết lập đồ thị hồi quy cho các mô hình tốt nhất ($\text{M1}$, $\text{M4}$ và $\text{M7}$) sử dụng kỹ thuật XGBoost và MLP để quan sát độ khớp giữa giá trị dự đoán và kết quả thực nghiệm:
+    - **Hình 9.** Đồ thị hồi quy dải tin cậy 95% của XGBoost và MLP
+      - <img src="assets/fig_09_p9.jpeg" alt="Hình 9" />
+      - **Hình này chứng minh điều gì**
+        - XGBoost vượt trội hơn MLP với hệ số xác định cao hơn trên cả 3 kịch bản ($R^2$ từ $0.764$–$0.877$ so với $0.703$–$0.787$), trong đó M7 của XGBoost đạt độ chính xác cao nhất.
+      - **Từ đâu mà thấy được**
+        - Ox: giá trị thực tế (Actual values), dải $0$–$100$ và dải phóng đại $95$–$100$. Oy: giá trị dự đoán (Predicted by XGBoost/MLP), cùng thang đo.
+        - Đồ thị (a) XGBoost: chú giải ghi R-Sq đạt $0.764$ (M1, sao đỏ), $0.813$ (M4, tam giác lam), $0.877$ (M7, tròn lục); các điểm bám dày sát đường chéo ở dải phóng đại.
+        - Đồ thị (b) MLP: chú giải ghi R-Sq thấp hơn đạt $0.703$ (M1), $0.787$ (M4), $0.782$ (M7); dải tô bóng tin cậy 95% mở rộng và phân tán xa đường hồi quy hơn.
+  - Trong các mô hình XGBoost, đồ thị dự đoán loại bỏ $\text{NH}_4$ khớp tốt nhất với các quan sát thực nghiệm, trong khi các dự đoán loại bỏ $\text{TN}$ và $\text{TP}$ kém chính xác hơn đối với hệ thống $A^2O\text{-MBR}$.
+  - Giá trị $R^2$ của các mô hình $\text{M1}$, $\text{M4}$ và $\text{M7}$ phát triển bằng kỹ thuật XGBoost lần lượt đạt $0.764$, $0.813$ và $0.877$.
+  - Các mô hình MLP trên cùng tập kịch bản tương ứng chỉ đạt giá trị $R^2$ lần lượt là $0.703$ (cho $\text{M1}$), $0.787$ (cho $\text{M4}$) và $0.782$ (cho $\text{M7}$).
+  - Kết quả khẳng định XGBoost hoạt động hiệu quả hơn mô hình MLP trong cùng kịch bản dự đoán hiệu suất loại bỏ $\text{NH}_4$ bằng hệ thống $A^2O\text{-MBR}$.
+- Đối chứng với các nghiên cứu tiền nhiệm (mô hình LSTM) và phân tích vai trò của các đặc trưng:
+  - Kết quả nghiên cứu đồng thuận với các phát hiện trước đây phát triển mô hình bộ nhớ dài-ngắn hạn (LSTM - Long Short-Term Memory) để dự đoán hiệu suất loại bỏ chất dinh dưỡng trong hệ thống $A^2O\text{-MBR}$: mô hình LSTM trước đây đã mô phỏng thành công mối quan hệ giữa biến đầu vào - đầu ra khi xem xét đồng thời cả $3$ đầu ra $\text{NH}_4$, $\text{TN}$ và $\text{TP}$ trong cùng một mô hình $[32]$.
+  - Trong nghiên cứu này, mô hình học máy kết hợp (ensemble ML model) XGBoost được thử nghiệm và so sánh với mạng nơ-ron MLP bằng cách khảo sát từng kịch bản tham số đầu vào và dự đoán độc lập từng chất dinh dưỡng tại một thời điểm:
+    - Mục tiêu là khám phá tầm quan trọng của từng đặc trưng (significance of the features) khi tách biệt giữa điều kiện vận hành và đặc tính nước thải đầu vào.
+    - Kết quả chỉ ra rằng toàn bộ các đặc trưng đều giữ vai trò quan trọng trong việc mô hình hóa hệ thống $A^2O\text{-MBR}$ để dự đoán khả năng loại bỏ từng chất dinh dưỡng riêng lẻ.
+    - XGBoost chứng minh khả năng lần theo và nắm bắt chính xác mối quan hệ phi tuyến phức tạp giữa thông số đầu vào và đầu ra để dự đoán hiệu suất loại bỏ chất dinh dưỡng trong trạm xử lý nước thải ($\text{WWTP}$ / wastewater treatment plant).
+  - So sánh với ứng dụng trong các lĩnh vực xử lý nước khác: nghiên cứu trước đó đã chứng minh XGBoost là mô hình vượt trội (so với các công cụ học máy khác) trong việc dự đoán loại bỏ kim loại mangan ($\text{Mn}$) khỏi môi trường nước $[44]$.
+- Tiềm năng ứng dụng và giải pháp vượt qua thách thức trong mô hình hóa học máy:
+  - Các kết quả củng cố cơ sở khoa học cho thấy mô hình học máy có thể được áp dụng rộng rãi trong các quy trình xử lý nước thải phức tạp nhằm cung cấp thông tin kịp thời cho các nhà vận hành và ra quyết định, hỗ trợ tối ưu hóa quy trình để tuân thủ các quy chuẩn môi trường.
+  - Mặc dù yếu tố "bất ngờ" (surprise / độ bất định không lường trước) trong các mô hình học máy dự đoán là tương đối cao, việc kết hợp các công cụ phân tích dữ liệu, lựa chọn thuật toán tối ưu, tinh chỉnh siêu tham số (selection of hyperparameters), cùng quy trình huấn luyện và kiểm định mô hình trên tập dữ liệu chưa từng thấy (unseen dataset) là chìa khóa then chốt để khắc phục nguy cơ thất bại của mô hình.

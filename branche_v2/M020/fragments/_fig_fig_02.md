@@ -1,0 +1,7 @@
+    - **Hình 2.** Sơ đồ quy trình phát triển và giải thích mô hình TMP.
+      - <img src="assets/fig_02_p5.jpeg" alt="Hình 2" />
+      - **Hình này chứng minh điều gì**
+        - Quy trình 3 giai đoạn nối tiếp: tự động tối ưu siêu tham số (HPO), huấn luyện đối sánh MLP và LSTM và giải thích bằng SHAP.
+      - **Từ đâu mà thấy được**
+        - Luồng xử lý từ trái sang phải liên kết qua mũi tên xanh: Auto-tuning HPO $\to$ Model building & validation $\to$ Model interpretability Analysis based on SHAP.
+        - Khối 1 tối ưu 9 siêu tham số; khối 2 huấn luyện MLP và LSTM dự đoán TMP (đánh giá bằng $R^2$, RMSE); khối 3 phân tích SHAP (Feature importance, Global, Local).

@@ -1,0 +1,7 @@
+    - **Hình 3.** Đồ thị đường đồng mức nồng độ và hiệu suất khử Phosphate
+      - <img src="assets/fig_03_p6.png" alt="Hình 3" />
+      - **Hình này chứng minh điều gì**
+        - Hiệu suất khử phosphate đạt cực đại (> $80\\%$, nồng độ < $1\\text{ mg/L}$) khi thời gian lưu $20\\text{ ngày}$, TOC $120\\text{ mg/L}$ và pH $6.5\\text{--}8.0$.
+      - **Từ đâu mà thấy được**
+        - (a, b) $Ox$: TOC ($40\\text{--}120\\text{ mg/L}$), $Oy$: thời gian ($0\\text{--}20\\text{ ngày}$); hiệu suất tăng từ $0\\%$ lên > $80\\%$ ở góc trên bên phải.
+        - (c, d) $Ox$: pH ($5\\text{--}10$), $Oy$: thời gian ($0\\text{--}20\\text{ ngày}$); nồng độ giảm xuống < $1\\text{ mg/L}$ và hiệu suất cao nhất tại pH $6.5\\text{--}8.0$.

@@ -1,0 +1,8 @@
+    - **Bảng 4.** Độ quan trọng của siêu tham số trong MLP và LSTM.
+      - <img src="assets/table_04_p8.png" alt="Bảng 4" />
+      - **Bảng này chứng minh điều gì**
+        - Optimizers chi phối hiệu năng lớn nhất ở cả hai mô hình ($0.36$ ở MLP và $0.52$ ở LSTM), định hình quá trình hội tụ và tối ưu trọng số.
+        - Yếu tố ảnh hưởng kế tiếp phân hóa: MLP phụ thuộc hàm mất mát ($0.19$), còn LSTM phụ thuộc số lớp ẩn ($0.15$).
+      - **Từ đâu mà thấy được**
+        - Cột "Optimizers" có giá trị lớn nhất trên cả 2 dòng: MLP đạt $0.36$ và LSTM đạt $0.52$.
+        - Giá trị thấp nhất nằm ở cột "Number of hidden layers" đối với MLP ($0.02$) và "Activation functions" đối với LSTM ($0.01$).

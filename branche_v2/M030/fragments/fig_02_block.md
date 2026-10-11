@@ -1,0 +1,8 @@
+  - **Hình 2.** Sơ đồ phương pháp nghiên cứu và xử lý dữ liệu
+    - <img src="assets/fig_02_p6.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Tiền xử lý loại bỏ dữ liệu thiếu thu gọn tập dữ liệu thô từ $n = 1{,}131$ xuống $n = 479$ mẫu.
+      - Ba nhánh phân tích vận hành song song gồm PCA ($n = 479$), ANN ($287/144/48$) và MSPC ($n = 422$, chia $272/150$).
+    - **Từ đâu mà thấy được**
+      - Luồng dọc từ trên xuống: mũi tên từ "Raw data" qua "Variables selection" đến "Elimination of samples with missing data".
+      - Nhánh rẽ ngang phía dưới: ba cột song song gồm "PCA model" (trái), "ANN model" (giữa) và "MSPC control charts" (phải).

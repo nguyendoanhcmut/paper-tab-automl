@@ -1,0 +1,94 @@
+5.6
+Ablation Study
+To quantify the individual contribution of each architectural component in TOPOFE, we conduct a systematic ablation
+study by progressively removing or modifying key mechanisms while holding all other components fixed. We evaluate
+ten variants organised into four groups corresponding to the main architectural decisions: island decomposition,
+migration strategy, transfer mechanism, and saturation detection.
+Island decomposition: (i) Single Pool removes island decomposition and migration, reducing TOPOFE to single-
+population search; (ii) Random Island partitions the population into islands without family-aware assignment. Migration
+strategy: (iii) w/o Inter-island Exchange retains family decomposition but disables cross-island migration; (iv) Static
+Migration replaces saturation-triggered transfer with fixed-interval migration; (v) Stochastic Migration selects precursor
+islands uniformly at random. Transfer mechanism: (vi) Direct Transfer copies programs from the precursor island
+without hybrid synthesis; (vii) Unguided Hybridisation enables hybrid synthesis with randomly selected precursors,
+disabling topology guidance; (viii) w/o Hybridisation preserves topology-guided precursor selection but removes
+LLM-mediated synthesis. Saturation detection: (ix) Correlation-Only replaces the composite saturation criterion with
+a single output-correlation signal; (x) Multi-signal Saturation restores full multi-signal adaptive saturation detection
+without other full-system components.
+Figure 3 summarizes performance degradation across all variants on both task types. The largest drop occurs for Single
+Pool, confirming that unstructured single-population search is the primary bottleneck: without island decomposition,
+search collapses toward dominant transformation patterns, causing premature convergence and reduced diversity. The
+improvement from Random Island to w/o Inter-island Exchange further demonstrates that family-aware decomposition
+contributes meaningful inductive structure beyond simple partitioning, improving local optimization efficiency by
+conditioning LLM proposals on a homogeneous operator context. Migration ablations show that transfer effectiveness
+depends critically on both timing and precursor quality. Static Migration wastes transfer budget when local search
+remains productive, while Stochastic Migration degrades further by introducing structurally unrelated transformations
+that disrupt locally adapted populations. Transfer mechanism ablations confirm the necessity of compositional synthesis:
+Direct Transfer yields limited gains as copied programs remain constrained by their source family’s inductive bias.
+LLM-mediated synthesis overcomes this by generating programs spanning multiple families that are unreachable
+by intra-island search alone. Unguided Hybridization remains suboptimal despite enabling synthesis, demonstrating
+that topology guidance and hybrid synthesis are synergistic — learned precursor selection ensures hybridization
+targets complementary family pairs, maximizing the probability of introducing non-redundant predictive structure.
+Saturation detection ablations confirm that multi-signal stagnation detection is essential. Correlation-Only Saturation
+underperforms because output correlation alone cannot distinguish genuine stagnation from transient redundancy —
+an island may stagnate in performance while maintaining low correlation, or exhibit high correlation from isolated
+redundant proposals while remaining broadly productive. The multi-signal composite criterion correctly discriminates
+these cases, triggering transfer only when local search is genuinely exhausted across all dimensions of diversity and
+performance.
+13
+
+
+<!-- Page 14 -->
+Single Pool
+Random
+Island
+w/o
+Inter-island
+Exchange
+Static
+Migration
+Stochastic
+Migration
+Direct
+Feature
+Transfer
+Unguided
+Cross-Island
+Hybridization
+w/o
+Hybration
+Correlation-Only
+Saturation
+Multi-Signal
+Saturation
+0
+1
+2
+3
+4
+5
+6
+7
+8
+Performance Degradation (%)
+3.58%
+3.28%
+3.15%
+3.06%
+2.87%
+2.84%
+2.79%
+2.83%
+2.88%
+2.55%
+8.24%
+7.86%
+7.59%
+7.38%
+7.29%
+7.21%
+7.14%
+7.08%
+6.75%
+6.42%
+Figure 3: Ablation study of TOPOFE. Each bar reports the performance degradation relative to the full TOPOFE.
+Results are averaged across all datasets.

@@ -1,0 +1,8 @@
+  - **Hình 9.** Phát hiện suy giảm hiệu suất loại bỏ amoni trong MBR
+    - <img src="assets/fig_09_p10.jpeg" alt="Hình 9" />
+    - **Hình này chứng minh điều gì**
+      - Các chu kỳ suy giảm amoni (mẫu 358–362 và 385–405, rơi xuống thấp nhất $\sim 56\ \%$) trùng khớp đồng bộ với cụm vi phạm $\text{UCL}$ trên biểu đồ $Q$.
+    - **Từ đâu mà thấy được**
+      - Panel (a): Biểu đồ $T^2$ có đường $\text{UCL} \approx 9.5$; đa số điểm tại các mẫu 358–362 và 385–405 đều nằm dưới ngưỡng.
+      - Panel (b): Biểu đồ $Q$ có đường $\text{UCL} \approx 18$; cụm chấm đỏ ($Q > \text{UCL}$, đỉnh $\sim 68$) bùng phát tại mẫu 358–362 và 385–405.
+      - Panel (c): Biểu đồ hiệu suất có đường ngưỡng $90\ \%$; các chấm đỏ ($\text{Rem} < 90$) giảm sâu xuống $\sim 78\ \%$ và chạm đáy $\sim 56\ \%$ (mẫu $\sim 395$).

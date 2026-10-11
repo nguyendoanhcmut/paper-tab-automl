@@ -1,0 +1,7 @@
+  - **Hình 2.** Phân bố các thông số thực nghiệm MPBR ngoài trời
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 2" />
+    - **Hình này chứng minh điều gì**
+      - Khoảng biến thiên thực tế của 12 biến đầu vào (thuộc 5 nhóm thông số) và nồng độ amoni đầu ra $NH_4\text{--}N_{eff}$ trong suốt vận hành ngoài trời.
+    - **Từ đâu mà thấy được**
+      - 3 nhóm vận hành và môi trường: $\text{HRT}$ ($0.90\text{--}3.17\text{ d}$), $F_{air}$ ($0.15\text{--}0.27\text{ vvm}$), $\text{SRT}$ ($1.65\text{--}5.92\text{ d}$), tải $\text{NLR}$ ($8.75\text{--}46.82\text{ gN/d}$), $\text{PLR}$ ($0.08\text{--}3.72\text{ gP/d}$), thời tiết $T$ ($12.64\text{--}27.14\ ^\circ\text{C}$) và $\text{PAR}$ ($13\text{--}449\ \mu\text{mol}\cdot\text{m}^{-2}\cdot\text{s}^{-1}$).
+      - 2 nhóm sinh học và dòng ra: hoạt tính vi sinh $\text{DO}$ ($9.01\text{--}14.17\text{ gO}_2/\text{d}$), $\text{DO}_{max}$ ($10.91\text{--}21.27\text{ gO}_2/\text{d}$), mật độ $\text{OD}_{680}$ ($0.16\text{--}1.54$) và nồng độ amoni đầu ra $\text{NH}_4\text{--}\text{N}_{eff}$ ($0.00\text{--}37.15\text{ mgN/L}$).

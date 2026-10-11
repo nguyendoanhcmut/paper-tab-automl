@@ -1,0 +1,7 @@
+    - **Bảng 3.** Hiệu suất thống kê của mô hình MLP trên tập kiểm tra
+      - <img src="assets/table_03_p5.png" alt="Bảng 3" />
+      - **Bảng này chứng minh điều gì**
+        - Mô hình M4 đạt $R^2$ cao nhất ($0.787$), M3 thấp nhất ($0.182$), sai số $\text{RMSE}$ dao động từ $0.00031$ (M1) đến $0.07707$ (M8).
+      - **Từ đâu mà thấy được**
+        - Cột $R^2$: hàng M4 đạt giá trị cao nhất ($0.787$), hàng M3 thấp nhất ($0.182$).
+        - Cột $\text{RMSE}$ và $\text{MAE}$: hàng M1 thấp nhất ($0.00031$ và $0.00063$), hàng M8 cao nhất ($0.07707$ và $0.00988$).

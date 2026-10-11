@@ -1,0 +1,7 @@
+    - **Hình 1.** Sơ đồ nguyên lý hệ thống AnMBR quy mô pilot.
+      - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+      - **Hình này chứng minh điều gì**
+        - Cấu trúc tích hợp tiền xử lý drum screen, bồn đệm điều nhiệt và bể AnMBR đặt màng sợi rỗng PVDF kết hợp sục rửa biogas.
+      - **Từ đâu mà thấy được**
+        - Luồng dòng từ trái sang phải: nước thải qua drum screen vào influent reservoir, liên kết bồn water bath rồi bơm vào bể AnMBR.
+        - Cụm AnMBR: màng sợi rỗng thu effluent, cánh khuấy cơ học và blower tuần hoàn khí biogas từ đỉnh về dàn sục khí đáy màng.

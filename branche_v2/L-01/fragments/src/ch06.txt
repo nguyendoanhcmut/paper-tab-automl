@@ -1,0 +1,312 @@
+5
+Analysis
+5.1
+Efficiency Analysis
+0
+100
+200
+300
+400
+500
+600
+700
+Time (seconds)
+0.83
+0.84
+0.85
+0.86
+Performance
+Pareto Plot: Time vs Performance
+Base LLM
+OpenFe
+CAAFE
+OCTree
+LLM-FE
+Figure 3: Pareto Plot: comparing trade-off be-
+tween performance (accuracy) vs time (in seconds)
+for LLM-FE and other FE baselines.
+Evaluating feature quality through repeated model train-
+ing and validation is a fundamental component of auto-
+mated feature engineering pipelines, used for both classical
+and LLM-based methods. All runtime measurements were
+obtained on a system with 4 NVIDIA RTX8000 GPUs. For
+LLM-based methods, runtime measures the full pipeline
+from the start of the first iteration to the completion of
+the last iteration, including LLM API latency, feature
+program execution, and model training. For classical base-
+lines, runtime includes the complete feature generation,
+selection, and evaluation pipeline. While LLM-FE main-
+tains multiple evolutionary islands, this design does not
+introduce additional computational overhead in practice.
+Furthermore, LLM-FE samples multiple outputs per LLM
+call, reducing the number of API calls. Our Pareto anal-
+ysis (Figure 3) on the larger datasets from Section 4.4
+shows that LLM-FE consistently lies on the Pareto fron-
+tier, achieving higher predictive performance with nearly the same runtime as OCTree and substantially
+less runtime than CAAFE. Competing approaches either require substantially more runtime (CAAFE,
+OpenFE) or fail to reach comparable accuracy (OCTree). Although the base model remains the cheapest
+computationally, it does so at a steep performance deficit. Overall, these results demonstrate that LLM-FE
+offers the best efficiency–performance trade-off among all evaluated methods. It achieves state-of-the-art
+predictive performance on large, complex tabular datasets, with no additional overhead introduced.
+8
+
+
+<!-- Page 9 -->
+Published in Transactions on Machine Learning Research (05/2026)
+5.2
+Bias Mitigation
+LLMs also exhibit a pronounced bias toward a narrow set of simple mathematical operators such as addition,
+subtraction, and absolute value when asked to generate feature transformations (Küken et al., 2024). These
+biases arise from the pretraining corpora, where simple patterns dominate and thus become default strategies.
+As a result, naive LLM-based feature engineering pipelines tend to produce repetitive, low-complexity
+transformations that fail to exploit the richer compositional space of meaningful tabular operations. As
+illustrated in Figure 4, CAAFE also tends to favor simple transformations with multiply and divide
+operations covering up to 75% of the total operators. Despite this inherent bias, LLM-FE regularly discovers
+and retains more sophisticated feature transformations through evolutionary refinement. Operators such as
+groupbythenmean, groupbythenmin, groupbythenmax, residual, and sigmoid emerge far more frequently
+under our evolutionary framework than in direct LLM generation. These higher-level operations capture
+aggregation structure, class-conditional variation, and nonlinear relationships that simple arithmetic cannot
+express. This outcome highlights an important point: while LLMs alone are biased toward oversimplified
+transformations, our evolutionary search mechanism actively counteracts this tendency by (1) promoting
+diversity, (2) evaluating transformations through empirical performance, and (3) iteratively refining candidate
+features. Consequently, LLM-FE not only reduces the risk of memorization but also mitigates operator-
+selection bias, enabling the discovery of expressive, domain-relevant features that would rarely surface through
+naive prompting alone.
+abs
+add
+divide multiply subtract square residual sigmoid groupby
+thenmax
+log
+groupby
+thenmin
+min/
+max
+groupby
+thenmean
+Operator
+0.0
+0.1
+0.2
+0.3
+0.4
+0.5
+Frequency
+Base LLM
+CAAFE
+LLM-FE
+Figure 4: Frequency of Feature Engineering Operators. Comparison of operator usage between LLM-FE and
+simple LLM baselines, highlighting the ability of evolutionary refinement to extract more complex transformations.
+5.3
+Impact of Domain Knowledge and Evolutionary Refinement
+Figure 7 illustrates the qualitative benefits of incorporating domain knowledge into feature engineering. In
+this example, two approaches are contrasted: one without domain knowledge (Figure 7(a)), and LLM-FE
+guided by domain-specific insights through an LLM-based feature engineering (Figure 7(b)). The domain-
+agnostic variant creates arbitrary transformations, such as combining features C1 and C3 using a square
+root of their product and dropping feature C2 without clear justification. In contrast, LLM-FE leverages
+its embedded knowledge to derive interpretable and clinically meaningful features. Figure 5 presents a
+quantitative comparison of model performance on the same dataset, showing that LLM-FE with domain
+knowledge achieves the highest accuracy, outperforming both the base model and LLM-FE without domain
+knowledge. Figure 6 illustrates the validation accuracy trajectory of LLM-FE with and without evolutionary
+refinement across 20 iterations. The variant without refinement shows early improvement but quickly plateaus,
+indicating convergence to a local optimum. In contrast, LLM-FE continues to improve across iterations,
+achieving higher accuracy overall. This comparison highlights the effectiveness of evolutionary refinement in
+enhancing performance by enabling the model to escape local optima and optimize more effectively. Further
+analyses are provided in Appendix E.
+9
+
+
+<!-- Page 10 -->
+Published in Transactions on Machine Learning Research (05/2026)
+0.730
+0.735
+0.740
+0.745
+Accuracy
+Model Performance
+Base
+LLM-FE w/o domain knowledge
+LLM-FE
+Figure 5: Quantitative impact of domain knowl-
+edge on model accuracy. Using domain knowledge
+boosts performance compared to both the base model
+and LLM-FE without domain knowledge.
+0
+5
+10
+15
+20
+Iterations
+0.750
+0.755
+0.760
+0.765
+Accuracy
+Validation Accuracy
+LLM-FE w/o Evolutionary Refinement
+LLM-FE
+Figure 6: Performance Trajectory Analysis for
+LLM-FE w/o evolutionary refinement and LLM-FE.
+LLM-FE demonstrates a better trajectory, highlight-
+ing the advantage of evolutionary refinement.
+ def modify_features(df_input) -> pd.DataFrame:
+    """ 
+     Thought 1: Insulin levels in conjunction with Glucose levels can provide 
+insights into the metabolic state.
+     Feature 1: insulin_glucose_ratio | 
+   
+insulin_glucose_ratio = Insulin / Glucose
+     Thought 2: BMI can be an indicator of potential diabetes risk, especially 
+when combined with age.
+     Feature 2: bmi_age_ratio | bmi_age_ratio = BMI / Age
+    """
+      df_output = df_input.copy()
+     # Calculate Insulin divided by Glucose
+      df_output['insulin_glucose_ratio'] = df_output['Insulin'] / 
+    df_output['Glucose']
+     # Calculate BMI divided by Age
+     df_output['bmi_age_ratio'] = df_output['BMI'] / df_output['Age']
+    
+    return df_output
+(b) LLM-FE
+(a) Feature Engineering without domain knowledge
+ def modify_features(df_input) -> pd.DataFrame:
+    """
+    Introducing a new feature 'C10' as the square root of the
+    product of 'C1' and 'C3' to capture a non-linear relationship 
+    between these variables.
+    Additionally, dropping less informative feature 'C2'.
+    """
+    df_output = df_input.copy()
+    
+    df_output['C10'] = np.sqrt(df_output['C1'] * df_output['C3'])
+    df_output.drop('C2', axis=1, inplace=True)
+    
+    return df_output
+Figure 7:
+Qualitative Analysis on Impact of Domain Knowledge.
+illustrating how LLM-FE (b)
+utilizes domain knowledge to create meaningful features with descriptions , in contrast to feature engineering with-
+out domain insights (a) leading to uninterpretable outputs.
+5.4
+Memorization in Feature Engineering
+Table 4: Comparison of XGBoost with and without
+LLM-FE on five classification datasets.
+Dataset
+Base
+LLM-FE
+kidney-stones
+0.761 ± 0.024
+0.761 ± 0.027
+health-insurance
+0.756 ± 0.001
+0.759 ± 0.001
+pharyngitis
+0.655 ± 0.008
+0.660 ± 0.023
+fico
+0.715 ± 0.006
+0.719 ± 0.009
+acs-income
+0.807 ± 0.002
+0.809 ± 0.003
+Recent work demonstrates that LLMs can unintention-
+ally memorize data under certain conditions (Carlini
+et al., 2021; Bordt et al., 2024), raising concerns about
+whether improvements result from genuine LLM reasoning
+or merely from recalling training examples. To probe this
+issue, we evaluate XGBoost with and without LLM-FE
+using GPT-3.5-Turbo on datasets introduced by Bordt
+et al. (2024), which are explicitly constructed to detect
+memorization and are confirmed to be absent from model pretraining. We further include datasets from
+Hollmann et al. (2024), released after the September 2021 GPT training cutoff and provided on Kaggle
+with hidden splits, making pretraining exposure highly unlikely. As shown in Table 4, LLM-FE delivers
+modest but consistent performance gains across all datasets. This is a notable contrast to naive LLM feature
+generators, which may inadvertently overfit or hallucinate domain relationships. Instead of relying solely on
+the raw outputs of the LLM, LLM-FE iteratively selects, mutates, and evaluates candidate features based on
+downstream model performance. This process acts as a filter, systematically suppressing memorization-driven
+artifacts and promoting features that generalize across repeated evaluations. While memorization remains an
+important risk in LLM-driven tabular workflows, our results indicate that evolutionary refinement provides an
+effective safeguard, underscoring the need for future benchmarks that isolate and stress-test these behaviors.
+10
+
+
+<!-- Page 11 -->
+Published in Transactions on Machine Learning Research (05/2026)
+5.5
+Generalizability Analysis
+Table
+5:
+Performance
+improvement
+by
+LLM-FE using different prediction models and
+LLM backbones. We report the aggregated values
+for accuracy on classification tasks and normalized
+root mean square error on regression tasks. All results
+represent the mean and standard deviation computed
+across five splits. bold: indicates the best perfor-
+mance. TabPFN∗: indicates evaluations using only
+10,000 samples due to its limited processing capacity.
+Method
+LLM
+Classification ↑
+Regression ↓
+XGBoost
+Base
+–
+0.820 ± 0.020
+0.324 ± 0.016
+LLM-FE
+Llama 3.1-8B
+0.832 ± 0.021
+0.310 ± 0.022
+GPT-3.5 Turbo
+0.840 ± 0.022
+0.306 ± 0.015
+MLP
+Base
+–
+0.745 ± 0.034
+0.871 ± 0.027
+LLM-FE
+Llama 3.1-8B
+0.768 ± 0.032
+0.794 ± 0.016
+GPT-3.5 Turbo
+0.791 ± 0.029
+0.631 ± 0.043
+TabPFN∗
+Base
+–
+0.852 ± 0.028
+0.289 ± 0.016
+LLM-FE
+Llama 3.1-8B
+0.856 ± 0.017
+0.288 ± 0.016
+GPT-3.5 Turbo
+0.863 ± 0.018
+0.286 ± 0.015
+To evaluate the generalizability of LLM-FE, we conduct
+a systematic assessment of its performance across mul-
+tiple tabular prediction models and diverse LLM back-
+bones. In particular, we consider two representative LLMs,
+Llama-3.1-8B-Instruct and GPT-3.5-Turbo, and pair
+them with three widely-used tabular prediction models:
+XGBoost (Chen & Guestrin, 2016), a strong tree-based
+baseline for structured data; a Multilayer Perceptron (MLP),
+which provides a simple yet competitive deep-learning ar-
+chitecture for tabular inputs (Gorishniy et al., 2021); and
+TabPFN (Hollmann et al., 2023), a recent transformer-based
+foundation model tailored specifically to tabular learning.
+As summarized in Table 5, our results consistently show
+that LLM-FE identifies informative and task-relevant fea-
+tures that improve the downstream performance of all
+three prediction models under both LLM backbones. More-
+over, we observe that feature sets generated by LLM-FE
+reliably outperform their non-feature-engineering counter-
+parts, suggesting that the method provides robust benefits
+across model classes, backbone choices, and tasks, under-
+scoring its broadly applicable feature-engineering frame-
+work. Appendix D.2 presents additional experiments with
+additional LLMs and predictive models, further demonstrating the generalizability of our method.

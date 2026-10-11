@@ -1,0 +1,7 @@
+    - **Bảng 2.** Phân bố tập dữ liệu huấn luyện và kiểm thử mô hình.
+      - <img src="assets/table_02_p4.png" alt="Bảng 2" />
+      - **Bảng này chứng minh điều gì**
+        - Thống kê miền giá trị (Max, Min, Average, STD) của 7 đặc trưng đầu vào và biến mục tiêu TMP.
+      - **Từ đâu mà thấy được**
+        - Cột Features gồm 7 biến vận hành và sinh hóa; cột Target là áp suất qua màng TMP.
+        - Hàng Min và Max xác định khoảng biến thiên của TMP từ $0.15\text{ kPa}$ đến $25.61\text{ kPa}$ (trung bình $6.57\text{ kPa}$).

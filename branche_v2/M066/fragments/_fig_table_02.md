@@ -1,0 +1,7 @@
+    - **Bảng 2.** Hiệu suất dự báo COD và TMP trên tập kiểm tra
+      - <img src="assets/table_02_p7.png" alt="Bảng 2" />
+      - **Bảng này chứng minh điều gì**
+        - RF đạt kết quả tốt nhất ở cả hai biến đầu ra, trong khi XGBoost và ANN suy giảm khả năng khái quát hóa đối với TMP ($R^2 \le 0.56$, $\text{RMSE} \ge 7.50\text{ kPa}$).
+      - **Từ đâu mà thấy được**
+        - Cột "Target Variable" và "Model": phân chia kết quả cho Effluent COD và TMP qua 3 mô hình (RF, XGBoost, ANN).
+        - Cột "Test $R^2$" và "Test RMSE": ở Effluent COD cả 3 mô hình đạt $R^2 \ge 0.90$; ở TMP, RF đạt $R^2 = 0.88$ ($\text{RMSE} = 3.86\text{ kPa}$), so với XGBoost ($0.56$, $7.50\text{ kPa}$) và ANN ($0.54$, $7.59\text{ kPa}$).

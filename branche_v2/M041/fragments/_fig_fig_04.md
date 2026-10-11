@@ -1,0 +1,7 @@
+    - **Hình 5.** Đồ thị phần dư và tương quan thực tế - dự báo của RSM
+      - <img src="assets/fig_04_p7.png" alt="Hình 5" />
+      - **Hình này chứng minh điều gì**
+        - Mô hình dự báo sát nồng độ ammonia nitrogen ở cả 3 mức TOC ($40$, $80$, $120\text{ mg/L}$).
+      - **Từ đâu mà thấy được**
+        - Panel (a): Ox giá trị thực nghiệm ($0$–$16\text{ mg/L}$), Oy RSM dự báo; các điểm bám sát Equality Line.
+        - Panel (b): Ox RSM dự báo ($0$–$17.5\text{ mg/L}$), Oy phần dư; các điểm phân tán quanh Zero Line.

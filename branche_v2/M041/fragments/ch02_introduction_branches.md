@@ -1,0 +1,50 @@
+## Introduction
+
+* **Thu hồi tài nguyên và bối cảnh kinh tế tuần hoàn trong xử lý nước thải**:
+  * Việc thu hồi nước sạch, năng lượng và các chất dinh dưỡng từ nước thải đóng vai trò là một hợp phần cốt lõi của nền kinh tế tuần hoàn (*circular economy*).
+  * Các vi sinh vật thủy phân (*hydrolytic microorganisms*) hiện diện tự nhiên trong các sinh cảnh đặc thù, tiêu biểu như khoang dạ cỏ của động vật nhai lại (*ruminant animals*).
+  * Thành phần chất ô nhiễm chủ yếu trong nước thải bao gồm nitơ vô cơ (*inorganic nitrogen*), photpho (*phosphorus*), các hợp chất ô nhiễm hữu cơ (*organic pollutants*) và các độc tố khác.
+    * Hiện tượng phú dưỡng (*eutrophication*) là hệ quả trực tiếp xảy ra khi nước thải chưa qua xử lý bị xả thẳng vào các thủy vực tiếp nhận tự nhiên.
+    * Amonia ($\text{NH}_3/\text{NH}_4^+$) và nitrit ($\text{NO}_2^-$) có độc tính rất cao đối với đời sống và hệ sinh thái thủy sinh.
+  * Các phương pháp sinh học (*biological methods*) được ưu tiên lựa chọn hàng đầu trong xử lý nước thải nhờ tính thân thiện với môi trường và hiệu quả kinh tế vượt trội so với các phương pháp xử lý hóa lý khác.
+  * Hệ thống vi tảo - vi khuẩn (*microalgae-bacterial systems*) gần đây thu hút sự quan tâm nghiên cứu sâu rộng nhằm xử lý nước thải sinh hoạt và nước thải công nghiệp.
+    * Hệ vi sinh kết hợp này thường xuyên được áp dụng như một hệ thống sinh học thay thế (*alternative biosystem*) đầy tiềm năng tại các khu vực khí hậu nhiệt đới và cận nhiệt đới.
+    * Vi tảo đã được khai thác và ứng dụng liên tục trong hơn 70 năm qua để xử lý nước thải sinh hoạt nhằm thu hồi hiệu quả nguồn nitơ và photpho.
+
+* **Cơ chế cộng sinh và ưu thế công nghệ của hệ thống MBR vi tảo - vi khuẩn so với bùn hoạt tính truyền thống**:
+  * Hạn chế của hệ thống bùn hoạt tính truyền thống (*conventional activated sludge*):
+    * Quá trình tách dòng nước sau xử lý dựa hoàn toàn vào sự lắng trọng lực của bùn rắn, phụ thuộc vào khả năng tự lắng của sinh khối (*biomass's capacity to settle*).
+    * Đòi hỏi hệ thống sục khí cơ học (*mechanical aeration*) vận hành liên tục với chi phí năng lượng rất tốn kém, đặt ra yêu cầu cấp thiết phải triển khai các giải pháp xử lý có chi phí vận hành hiệu quả hơn.
+  * Cơ chế ưu việt của bể phản ứng sinh học màng (*MBRs - membrane bioreactors*):
+    * Ứng dụng các màng lọc để lưu giữ hoàn toàn các chất rắn lơ lửng (*suspended solids*).
+    * Tách rời hoàn toàn thời gian lưu bùn/hạt rắn (*SRT - particle/solids retention time*) độc lập với thời gian lưu thủy lực (*HRT - hydraulic retention time*), đảm bảo tất cả chất rắn đều có cùng thời gian lưu trong bể.
+  * Hiệu quả loại bỏ sục khí cơ học nhờ cộng sinh tương hỗ giữa vi tảo và vi khuẩn dị dưỡng (*heterotrophic bacteria*):
+    * Dưới điều kiện chiếu sáng, vi tảo quang hợp tạo ra lượng oxy hòa tan ($\text{O}_2$) cần thiết cho vi khuẩn dị dưỡng khoáng hóa các phân tử hữu cơ.
+    * Đồng thời, vi tảo hấp thụ trực tiếp các chất dinh dưỡng vô cơ gồm amoni ($\text{NH}_4^+$), nitrat ($\text{NO}_3^-$) và photphat ($\text{PO}_4^{3-}$) hiện diện trong nước thải.
+    * Đổi lại, vi tảo khép kín chu trình quang hợp bằng cách tiêu thụ khí carbon dioxide ($\text{CO}_2$) phát sinh từ quá trình hô hấp của vi khuẩn, qua đó giảm thiểu đáng kể lượng phát thải khí nhà kính (*greenhouse gases*).
+
+* **Tổng quan các nghiên cứu ứng dụng trí tuệ nhân tạo (ANN, RSM, ML) và tối ưu hóa trong hệ thống xử lý nước thải**:
+  * Các kỹ thuật mạng nơ-ron nhân tạo (*ANN - Artificial Neural Networks*), phương pháp bề mặt đáp ứng (*RSM - Response Surface Methodology*), học máy (*machine learning*) và tối ưu hóa đa mục tiêu (*multi-objective optimization*) đã được triển khai rộng rãi trong nhiều nghiên cứu tính toán và thực nghiệm phục vụ mô hình hóa, dự báo và tối ưu hóa quy trình:
+    * Mô hình hóa bể phản ứng sinh học màng thẩm thấu (*osmotic membrane bioreactor* - Viet và cộng sự): Ứng dụng ANN cho thấy độ tin cậy cao với hệ số xác định $R^2 = 0.93$ cho mô phỏng tắc nghẽn màng (*membrane fouling*), $R^2 = 0.92$ cho dự báo lưu lượng dòng nước (*water flux*), và $R^2 = 0.98$ cho mô hình loại bỏ tổng carbon hữu cơ (*TOC - Total Organic Carbon*).
+    * Cải thiện hiệu suất bể quang sinh học vi tảo (*microalgal photobioreactors* - Mojiri và cộng sự): Ứng dụng ANN nâng cao hiệu quả khử nhiễm với sai số toàn phương trung bình (*MSE*) thấp và $R^2 > 0.99$; các phân tích độc tính xác nhận thời gian tiếp xúc kéo dài ($> 48\text{ h}$) và nồng độ chất ô nhiễm cao ($> 10\text{ mg/L}$) làm suy giảm hàm lượng diệp lục (*chlorophyll*) và protein của vi tảo.
+    * Dự báo các biến chi phối bể phản ứng sinh học màng kỵ khí mẻ (*anaerobic membrane bioreactor-sequencing batch reactors - AnMBR-SBR* - Taheri và cộng sự): Chứng minh hàm thuộc Gauss bốn thành phần (*four-member Gauss membership function*) đạt hiệu năng dự báo vượt trội; kiến trúc tối ưu gồm lớp ẩn chứa 9 nơ-ron được huấn luyện bằng thuật toán Levenberg-Marquardt kết hợp kỹ thuật lan truyền ngược (*back-propagation*) trong mô hình truyền thẳng (*feed-forward*).
+    * Khảo sát hiện tượng tắc nghẽn màng trong bể màng ngập (*submerged membrane bioreactor* - Alipourzadeh và cộng sự): Ứng dụng RSM với mô hình thiết kế hỗn hợp trung tâm (*CCD - Central Composite Design*) được chứng minh là phương pháp tối ưu nhất để dự báo và cải thiện các thông số tắc nghẽn màng.
+    * Ước tính thông số tối ưu khử kim loại nặng bằng vi tảo hấp phụ sinh học (*biosorbent* - Sultana): Mô hình lai RSM kết hợp thuật toán chọn lọc dòng (*RSM-CSA - Clonal Selection Algorithm*) cung cấp nghiệm tối ưu toàn cục, cho kết quả tương đồng với phương pháp hàm thỏa dụng (*RSM-DF - Desirability Function*); thực nghiệm kiểm chứng đạt hiệu suất khử $97\%$ trong điều kiện tối ưu (sai số $< 5\%$ so với dự báo của mô hình).
+    * Mô hình hóa tắc nghẽn màng trong MBR (*Chen và cộng sự*): So sánh mạng lan truyền ngược (*BPNN*) và mạng nơ-ron hồi quy tổng quát (*GRNN*); GRNN đạt độ chính xác cao hơn, trong khi BPNN thể hiện hệ số hồi quy và độ chính xác xuất sắc, chứng minh khả năng của ANN trong việc nắm bắt quan hệ ánh xạ phi tuyến phức tạp giữa năng lượng liên bề mặt (*interfacial energy*) và các thông số vận hành; cả BPNN và GRNN đều đạt hiệu quả định lượng vượt trội so với lý thuyết Derjaguin–Landau–Verwey–Overbeek mở rộng (*XDLVO*), trong đó BPNN vượt trội GRNN về độ chính xác dự báo.
+  * Tích hợp trí tuệ nhân tạo (*AI*) với các chiến lược tối ưu hóa đa dạng cho phép các mô hình dự báo xác lập tổ hợp thông số đầu vào tối ưu; phương pháp ANN giúp đơn giản hóa độ phức tạp vận hành, trong khi RSM cung cấp dữ liệu thực nghiệm chuẩn xác về hiệu năng và đặc tính phát thải trong xử lý nước thải.
+
+* **Khoảng trống nghiên cứu hiện hữu trong y văn (Research Gaps)**:
+  * Khảo sát y văn khẳng định việc ứng dụng phổ biến các mô hình dựa trên dữ liệu (*data-driven models*) để dự báo quy trình xử lý nước thải, tuy nhiên hai khoảng trống nghiên cứu then chốt vẫn chưa được giải quyết:
+    * **Khoảng trống 1 - Thiếu vắng nghiên cứu so sánh đối chứng nghiêm ngặt giữa RSM và ANN**: Đa phần các nghiên cứu trước đây chỉ áp dụng đơn lẻ một phương pháp mô hình hóa—hoặc RSM hoặc ANN một cách cô lập. Thiếu các nghiên cứu so sánh toàn diện đánh giá đồng thời phương pháp tham số/đa thức (RSM) và phi tuyến (ANN) trên cùng một bộ dữ liệu thực nghiệm chuẩn hóa nhằm xác định phương pháp tối ưu hơn cho các dao động sinh học phức tạp của hệ thống MBR vi tảo.
+    * **Khoảng trống 2 - Sự hạn chế của tối ưu hóa đơn mục tiêu và thiếu vắng giải thuật tiến hóa đa mục tiêu**: Các nỗ lực tối ưu hóa trước đây chủ yếu tập trung vào các kỹ thuật đơn mục tiêu (*single-objective techniques*), hoàn toàn không phản ánh được bản chất xung đột (*conflicting nature*) giữa các chỉ số vận hành của bể phản ứng sinh học (việc tối đa hóa hiệu suất loại bỏ một chất ô nhiễm có thể làm suy giảm hiệu suất loại bỏ chất khác hoặc đòi hỏi thời gian lưu quá mức). Tồn tại sự thiếu hụt rõ rệt trong việc ứng dụng các thuật toán tiến hóa đa mục tiêu (*Multi-Objective Evolutionary Algorithms*), đặc biệt là Thuật toán di truyền sắp xếp không bị chi phối II (*NSGA-II - Non-dominated Sorting Genetic Algorithm II*), trong lĩnh vực MBR vi tảo.
+  * **Giải pháp khắc phục của công trình**: Thiết lập một khung nghiên cứu toàn diện (*holistic framework*), vừa so sánh đối chứng độ chính xác dự báo giữa RSM và ANN trên cùng tập dữ liệu, vừa tích hợp mô hình với giải thuật NSGA-II để tạo lập mặt biên Pareto tối ưu (*Pareto optimal front*), cung cấp tập hợp các phương án thỏa hiệp tối ưu (*optimal trade-off solutions*) phục vụ loại bỏ đồng thời cả Amonia Nitơ và Photphat.
+
+* **Mục tiêu nghiên cứu và phương pháp tiếp cận của bài báo**:
+  * Đề xuất phương pháp cải tiến mang tính đột phá nhằm dự báo và nâng cao hiệu quả loại bỏ Amonia Nitơ ($\text{NH}_4^+$-$\text{N}$), nồng độ Photphat ($\text{PO}_4^{3-}$) và Tổng carbon hữu cơ (TOC) trong bể phản ứng sinh học màng vi tảo (*microalgae membrane bioreactor*) thông qua tích hợp kỹ thuật mô hình hóa RSM và ANN.
+  * Mục tiêu cốt lõi của nghiên cứu:
+    * Dự báo và tối đa hóa nồng độ Amonia Nitơ, Photphat cũng như hiệu suất loại bỏ (*removal efficiency*) của chúng trong bể MBR vi tảo.
+    * Khai thác và tái phân tích bộ dữ liệu thực nghiệm từ công trình của Ding và cộng sự (Ding et al.).
+    * Xác định ba biến độc lập (*independent variables*) đầu vào chi phối quá trình gồm: nồng độ TOC đầu vào, thời gian lưu (*time*), và pH.
+    * Triển khai hai phương pháp mô hình hóa RSM và ANN để mô phỏng và định lượng hành vi của nồng độ Amonia Nitơ, nồng độ Photphat và hiệu suất loại bỏ tương ứng.
+    * Kết hợp mô hình hóa RSM với thuật toán NSGA-II trong quy trình tối ưu hóa đa mục tiêu nhằm xác định chế độ vận hành tối ưu nhất (*best processing mode*).
+  * Ý nghĩa điều khiển hệ thống: Khẳng định TOC và pH là các thông số then chốt chi phối hiệu quả loại bỏ dinh dưỡng trong MBR vi tảo; mô hình chứng minh khả năng làm chủ trong việc kiểm soát các biến số biến đổi theo thời gian (*time-varying variables*), đồng thời việc kết hợp RSM và NSGA-II cho phép định vị chuẩn xác các điều kiện vận hành tối ưu nhằm loại bỏ triệt để các chất dinh dưỡng khỏi bể phản ứng sinh học.

@@ -1,0 +1,7 @@
+  - **Hình 1.** Sơ đồ cấu hình hệ thống pilot MBR màng đặt ngập
+    - <img src="assets/fig_01_p3.jpeg" alt="Hình 1" />
+    - **Hình này chứng minh điều gì**
+      - Bể sinh học và màng tích hợp chung, nước sau lọc rút trực tiếp từ module MF qua cảm biến $P$ và $F$.
+    - **Từ đâu mà thấy được**
+      - Hướng dòng từ trái sang phải: Feed tank qua bơm vào Biological and membrane tank.
+      - Module MF đặt ngập dưới mực nước, đường Permeate gắn đồng hồ đo áp suất $P$ và lưu lượng $F$.

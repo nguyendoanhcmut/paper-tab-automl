@@ -1,0 +1,7 @@
+  - **Bảng 3.** 5 kịch bản tích hợp khung điều khiển LR với hệ thống SCADA
+    - <img src="assets/table_03_p18.png" alt="Bảng 3" />
+    - **Bảng này chứng minh điều gì**
+      - Cơ chế bù trừ giữa dữ liệu đo online và mô hình dự đoán: cơ sở hạ tầng cảm biến càng tối giản thì vai trò của cảm biến ảo càng tăng để duy trì đầu vào cho mô hình LR.
+    - **Từ đâu mà thấy được**
+      - Cột "Online measurements": giảm từ đầy đủ 7 biến ($Q$, $TN$, $DO$, $T$, $PAR$, $Q_w$, $X_w$) ở kịch bản A xuống tối thiểu chỉ gồm $Q$ và $T$ ở kịch bản E.
+      - Cột "Predictive models or virtual sensors": chuyển từ không cần ("Not required") ở kịch bản A-B sang ước tính phần lớn biến ($DO$, $PAR$, $TN$, $TP$, $OD_{680}$) ở kịch bản E.

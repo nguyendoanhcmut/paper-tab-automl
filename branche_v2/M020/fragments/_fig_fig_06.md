@@ -1,0 +1,7 @@
+    - **Hình 6.** Tầm quan trọng và tác động của đặc trưng lên MLP.
+      - <img src="assets/fig_06_p11.jpeg" alt="Hình 6" />
+      - **Hình này chứng minh điều gì**
+        - Flux (~$2.2$) và OLR (~$1.8$) chi phối áp đảo dự đoán TMP; giá trị Flux và OLR cao làm tăng mạnh TMP, trong khi nhiệt độ cao làm giảm TMP.
+      - **Từ đâu mà thấy được**
+        - (a) Biểu đồ thanh: trục hoành $\text{Mean}(|\text{SHAP value}|)$ ($0.0\text{--}2.5$), Flux cao nhất (~$2.2$), OLR đứng thứ hai (~$1.8$), vượt xa nhóm Temp (~$0.65$), MLSS (~$0.63$) và EPS/SS ($<0.6$).
+        - (b) Biểu đồ phân tán SHAP: trục hoành SHAP value ($-5\text{--}8$, vạch $0$); điểm đỏ (giá trị cao) của Flux và OLR phân tán mạnh sang dương ($>6\text{--}8$), Temp lệch sang âm (đến $-2$), các biến sinh học co cụm quanh $0$.

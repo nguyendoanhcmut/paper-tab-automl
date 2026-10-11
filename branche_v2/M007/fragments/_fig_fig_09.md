@@ -1,0 +1,8 @@
+    - **Hình 9.** Đồ thị hồi quy dải tin cậy 95% của XGBoost và MLP
+      - <img src="assets/fig_09_p9.jpeg" alt="Hình 9" />
+      - **Hình này chứng minh điều gì**
+        - XGBoost vượt trội hơn MLP với hệ số xác định cao hơn trên cả 3 kịch bản ($R^2$ từ $0.764$–$0.877$ so với $0.703$–$0.787$), trong đó M7 của XGBoost đạt độ chính xác cao nhất.
+      - **Từ đâu mà thấy được**
+        - Ox: giá trị thực tế (Actual values), dải $0$–$100$ và dải phóng đại $95$–$100$. Oy: giá trị dự đoán (Predicted by XGBoost/MLP), cùng thang đo.
+        - Đồ thị (a) XGBoost: chú giải ghi R-Sq đạt $0.764$ (M1, sao đỏ), $0.813$ (M4, tam giác lam), $0.877$ (M7, tròn lục); các điểm bám dày sát đường chéo ở dải phóng đại.
+        - Đồ thị (b) MLP: chú giải ghi R-Sq thấp hơn đạt $0.703$ (M1), $0.787$ (M4), $0.782$ (M7); dải tô bóng tin cậy 95% mở rộng và phân tán xa đường hồi quy hơn.

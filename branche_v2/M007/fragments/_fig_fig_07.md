@@ -1,0 +1,7 @@
+    - **Hình 7.** Biểu đồ phần dư của các mô hình MLP
+      - <img src="assets/fig_07_p7_vector.png" alt="Hình 7" />
+      - **Hình này chứng minh điều gì**
+        - Sai số phần dư của nhóm $\text{NH}_4$ ($M_1, M_4, M_7$) tập trung hẹp sát $0$ ($\pm 10$), trong khi nhóm $\text{TN}$ và $\text{TP}$ phân tán rộng và lệch âm lớn.
+      - **Từ đâu mà thấy được**
+        - Ox: tập dữ liệu kiểm tra (Testing dataset), dải $0$–$800$. Oy: phần dư (Residual), dải $-80$ đến $50$.
+        - Đồ thị (a) $\text{NH}_4$ gom chặt giữa hai đường đứt nét xanh $\pm 10$; đồ thị (b) $\text{TN}$ phân tán $\pm 25$; đồ thị (c) $\text{TP}$ lệch âm từ $+20$ đến $-40$ với điểm cực trị tới $-80$.

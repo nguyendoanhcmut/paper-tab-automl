@@ -1,0 +1,26 @@
+### 3.1. Logistic regression
+
+* Phân tích hồi quy logistic (logistic regression - LR) khẳng định 12 biến dự báo được lựa chọn có tính phù hợp tổng thể cao để định nghĩa các kịch bản nồng độ amoni ($NH_4\text{–}N$), đồng thời không xảy ra hiện tượng đa cộng tuyến (multicollinearity):
+  * Tập biến dự báo đầu vào bao gồm: tải trọng nitơ ($NLR$), tải trọng phospho ($PLR$), thời gian lưu bùn ($SRT$), thời gian lưu thủy lực ($HRT$), lưu lượng sục khí ($F_{air}$), bức xạ quang hợp hoạt dụng trung bình và cực đại ($PAR$, $PAR_{max}$), oxy hòa tan trung bình và cực đại ($DO$, $DO_{max}$), nhiệt độ trung bình và cực đại ($T$, $T_{max}$), cùng mật độ quang tại bước sóng $680\text{ nm}$ ($OD_{680}$).
+  * Mức độ ý nghĩa thống kê của từng hệ số hồi quy riêng lẻ $\beta_i$ có sự biến thiên giữa các ngưỡng nồng độ amoni được đánh giá ($\text{Table S4}$).
+  * Phân tích tương quan ($\text{Table S5}$) xác nhận không có đa cộng tuyến gây nhiễu giữa các biến đầu vào: toàn bộ các hệ số tương quan từng cặp đều thỏa mãn $R_{ij} \le 0{,}70$, tương ứng với hệ số phóng đại phương sai (variance inflation factor - VIF) thỏa mãn:
+    $$\text{VIF} = \frac{1}{1 - R_{ij}^2} < 4$$
+    chứng minh tính phù hợp của các biến đã chọn cho mô hình hóa LR.
+* Các mô hình LR nhận diện các giai đoạn nồng độ amoni dòng ra thấp ($NH_4\text{–}N_{eff}$) với hiệu năng dự báo cao trên tập dữ liệu kiểm tra (test dataset) qua 8 ngưỡng amoni:
+  * Độ nhạy (sensitivity) hoặc độ thu hồi (recall) dao động từ $83{,}45\%$ đến $88{,}89\%$ trên các ngưỡng, chứng minh phần lớn các đợt vận hành thực nghiệm đạt chuẩn hoặc nồng độ amoni thấp đều được phân loại chính xác.
+  * Độ đặc hiệu (specificity) dao động từ $84{,}34\%$ đến $96{,}21\%$, thể hiện khả năng nhận diện các giai đoạn amoni cao hoặc không tuân thủ quy chuẩn với độ tin cậy tương đương.
+  * Các chỉ số đánh giá bổ sung trên tập kiểm tra ($\text{Table S6}$) khẳng định hiệu năng dự báo cân bằng giữa các khía cạnh: độ chính xác dự báo dương (precision) từ $86{,}45\%$ đến $92{,}27\%$, độ chính xác tổng thể (accuracy) từ $86{,}40\%$ đến $94{,}24\%$, diện tích dưới đường cong đặc trưng hoạt động máy thu (ROC-AUC) từ $0{,}867$ đến $0{,}923$, và điểm F1 ($F_1\text{-score}$) từ $86{,}73\%$ đến $90{,}29\%$.
+* Mô hình LR phân loại cho ngưỡng quy chuẩn tái sử dụng nước chính ($NH_4\text{–}N < 1{,}6\text{ mg N}\cdot\text{L}^{-1}$) đạt độ chính xác cao và tính ổn định vững chắc:
+  * Đối với ngưỡng quy định then chốt $NH_4\text{–}N < 1{,}6\text{ mg N}\cdot\text{L}^{-1}$ phục vụ mục đích tái sử dụng nước ($p_{reuse}$), mô hình đạt độ nhạy/recall $88{,}02\%$, độ đặc hiệu $84{,}34\%$, độ chính xác (precision) $86{,}45\%$, độ chính xác tổng thể (accuracy) $86{,}40\%$, ROC-AUC đạt $0{,}867$, và $F_1\text{-score}$ đạt $87{,}23\%$.
+  * Khoảng tin cậy $95\%$ ($95\%\text{ CI}$) cho các chỉ số hiệu năng ($\text{Table S7}$) khẳng định độ ổn định của kết quả phân loại LR.
+  * Kết quả tính toán trên 20 giai đoạn độc lập (independent episodes) cho thấy độ chính xác đạt $95\%$ giữa giá trị đo đạc thực nghiệm và giá trị dự đoán của $NH_4\text{–}N_{eff}$.
+* Kết quả so sánh đối chuẩn chứng minh mô hình LR vượt trội hoàn toàn so với các mô hình học máy cấu trúc như XGBoost và mạng nơ-ron đa lớp (multilayer perceptron - MLP):
+  * Các chỉ số độ khớp (fit metrics) đạt được bởi mô hình XGBoost và MLP ($\text{Table S8}$) kém hơn rõ rệt: độ nhạy $\text{SENS} \le 73{,}39\%$, độ đặc hiệu $\text{SPEC} \le 62{,}68\%$, độ chính xác $\text{Prec} \le 70{,}34\%$, độ chính xác tổng thể $\text{ACC} \le 68{,}36\%$, diện tích dưới đường cong $\text{ROC-AUC} \le 0{,}70$, và điểm F1 $\text{F1-score} \le 71{,}83\%$.
+  * Sự vượt trội về các chỉ số đánh giá ($\text{Table S9}$) củng cố và khẳng định tính hữu hiệu của phương pháp tiếp cận hồi quy logistic được áp dụng trong nghiên cứu này.
+* Đánh giá độ mạnh của mô hình (model robustness) thông qua phân tích lan truyền bất định đo lường (measurement uncertainty) xác định oxy hòa tan ($DO$) là nguồn gây bất định dự đoán lớn nhất:
+  * Bất định đo lường của $DO$, $PAR$ và nhiệt độ ($T$) được đánh giá riêng rẽ cũng như đồng thời bằng cách biểu diễn dưới dạng phân phối chuẩn có độ lệch chuẩn bằng $5\text{--}25\%$ giá trị trung bình danh định, trong khi các biến dự báo còn lại giữ cố định ở mức trung bình.
+  * Xác suất tuân thủ trung bình dự đoán đối với ngưỡng $NH_4\text{–}N < 1{,}6\text{ mg N}\cdot\text{L}^{-1}$ duy trì ổn định ở mức $0{,}47\text{--}0{,}51$, tuy nhiên độ phân tán của dự đoán gia tăng tỷ lệ thuận với mức độ bất định đo lường.
+  * Biến $DO$ có ảnh hưởng chi phối mạnh nhất, với hệ số biến thiên (coefficient of variation - CV) tăng vọt từ $0{,}39$ lên $0{,}85$, so với mức $0{,}12\text{--}0{,}46$ của nhiệt độ và $0{,}08\text{--}0{,}35$ của $PAR$.
+  * Kịch bản lan truyền bất định kết hợp đồng thời $T\text{–}DO\text{–}PAR$ tạo ra hệ số biến thiên $0{,}41\text{--}0{,}83$, khẳng định $DO$ là yếu tố đóng góp chủ đạo vào độ bất định dự đoán ($\text{Table S14}$).
+  * Kết quả này nhấn mạnh tính cấp thiết của việc hiệu chuẩn cảm biến $DO$ định kỳ và kiểm soát chất lượng dữ liệu đo lường.
+  * Các dự đoán dựa trên các biến đầu vào vượt ngoài phạm vi phát triển mô hình (model-development ranges) phải được xem là ngoại suy và gắn cờ khuyến cáo chỉ dùng để tham khảo (advisory use only) cho đến khi được kiểm chứng bổ sung hoặc hiệu chuẩn lại.

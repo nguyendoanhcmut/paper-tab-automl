@@ -1,0 +1,8 @@
+  - **Hình 4.** Sai số MAE và MSE trong huấn luyện mô hình ANN
+    - <img src="assets/fig_04_p7.jpeg" alt="Hình 4" />
+    - **Hình này chứng minh điều gì**
+      - Sai số giảm dốc đứng trong $10\text{--}15$ epoch đầu và tiệm cận ổn định từ epoch $20$ trên cả hai tập dữ liệu.
+    - **Từ đâu mà thấy được**
+      - Ox: số epoch ($0\text{--}100$). Oy: đồ thị trên biểu diễn MSE ($0\text{--}700$), đồ thị dưới biểu diễn MAE ($0\text{--}24$).
+      - MSE tập training giảm từ $\sim 680$ về $\sim 20$, MAE giảm từ $\sim 22$ về $\sim 1.5$; đường cong phẳng dần sau epoch $15$.
+      - Lưu ý: hình ghi MSE khoảng $20\text{--}30$ và MAE khoảng $1\text{--}2$, văn bản ghi bậc $10^{-4}$.

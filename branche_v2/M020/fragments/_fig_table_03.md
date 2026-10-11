@@ -1,0 +1,8 @@
+    - **Bảng 3.** Cấu hình siêu tham số cho MLP và LSTM
+      - <img src="assets/table_03_p5.png" alt="Bảng 3" />
+      - **Bảng này chứng minh điều gì**
+        - MLP chọn $4$ lớp ẩn ($222$ neuron, RMSProp), LSTM chọn $3$ lớp ($140$ neuron, $45$ đơn vị LSTM, Adam), và Simple MLP chọn $1$ lớp ($10$ neuron).
+        - Cả hai mô hình đều chọn loss MSE, learning rate lần lượt là $0.0001056$ (MLP) và $0.0003677$ (LSTM).
+      - **Từ đâu mà thấy được**
+        - Hàng "Selected options" đối chiếu với "Available alternatives" ở cột "Models" (MLP, LSTM, Simple MLP).
+        - Các cột "Number of hidden layers", "Number of neurons", "Optimizers", "Learning rate" và "Number of LSTM units".

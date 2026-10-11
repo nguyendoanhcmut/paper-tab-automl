@@ -1,0 +1,7 @@
+    - **Hình 3.** Bản đồ nhiệt hệ số tương quan Pearson cho COD và TMP
+      - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+      - **Hình này chứng minh điều gì**
+        - Ma trận xác định HRT và OLR tương quan nghịch ($r = -0.98$), COD đầu vào tương quan thuận với $\text{NH}_4^+$ đầu vào ($r = 0.97$) và OLR ($r = 0.91$); TMP tương quan nghịch với $\text{NH}_4^+$ dòng ra ($r = -0.63$), pH dòng ra ($r = -0.57$) và thuận với ORP ($r = 0.61$).
+      - **Từ đâu mà thấy được**
+        - Ma trận $10 \times 10$ ô với thanh màu từ $-1.00$ (xanh đậm) đến $1.00$ (đỏ đậm); đường chéo chính nhận giá trị $1.00$.
+        - Cặp HRT–OLR màu xanh đậm ($-0.98$), Influent COD–Influent NH4 màu đỏ đậm ($0.97$); hàng TMP giao với Effluent NH4 màu xanh ($-0.63$), Effluent pH ($-0.57$) và ORP màu cam đỏ ($0.61$).

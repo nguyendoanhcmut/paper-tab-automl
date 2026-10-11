@@ -1,0 +1,9 @@
+    - **Hình 10.** (tiếp theo) Mặt biên Pareto và không gian biến quyết định
+      - <img src="assets/fig_12_p14.png" alt="Hình 10 (tiếp theo)" />
+      - **Hình này chứng minh điều gì**
+        - Biên Pareto thể hiện sự đánh đổi giữa giảm nồng độ phosphate và tăng hiệu suất khử qua mô hình ANN và RSM.
+        - Tối ưu hóa bằng ANN đạt nồng độ phosphate thấp hơn đáng kể ($\sim 9.5 \times 10^{-3}\text{ mg/L}$) so với RSM ($\sim 0.2015\text{ mg/L}$).
+      - **Từ đâu mà thấy được**
+        - Panel (c) ANN: $\text{Ox}$ nồng độ phosphate ($9.4985 \times 10^{-3}$ - $9.5015 \times 10^{-3}\text{ mg/L}$), $\text{Oy}$ $1/\text{Removal efficiency}$ ($0.01000394$ - $0.01000396\,\%$).
+        - Panel (d) RSM: $\text{Ox}$ nồng độ phosphate ($0.201496$ - $0.201514\text{ mg/L}$), $\text{Oy}$ $1/\text{Removal efficiency}$ ($0.01067439$ - $0.01067447\,\%$).
+        - Xu hướng đường cong dốc xuống: khi nồng độ phosphate tăng thì nghịch đảo hiệu suất giảm (hiệu suất khử tăng).

@@ -1,0 +1,7 @@
+    - **Bảng 5.** So sánh hiệu năng mô hình dự đoán với y văn
+      - <img src="assets/table_05_p9.png" alt="Bảng 5" />
+      - **Bảng này chứng minh điều gì**
+        - Mô hình MLP đạt hiệu năng kiểm tra tốt nhất ($R^2 = 0.9183$, $\text{RMSE} = 2.408\text{ kPa}$), tương đương mức $R^2 > 0.90$ của các nghiên cứu MBR khác.
+      - **Từ đâu mà thấy được**
+        - Hàng "This study", cột "Model performance": MLP đạt $R^2 = 0.9183$ (tập test), cao hơn Simple MLP ($R^2 = 0.8317$) và LSTM ($R^2 = 0.8954$).
+        - Cột "Model performance" các hàng y văn: giá trị cao nhất là Liu et al. ($R^2 = 0.9995$), thấp nhất là Schmitt et al. ($R^2 = 0.85$).

@@ -1,0 +1,8 @@
+    - **Hình 5.** Biểu đồ phần dư của các mô hình XGBoost
+      - <img src="assets/fig_05_p5_vector.png" alt="Hình 5" />
+      - **Hình này chứng minh điều gì**
+        - Phần dư của $M_7$ gom sát nhất quanh trục $0$ trong dải $[-10, 10]$, ít điểm dị biệt hơn rõ rệt so với $M_1$ và $M_4$.
+      - **Từ đâu mà thấy được**
+        - Ox: tập dữ liệu kiểm tra (Testing dataset), dải $0$–$800$. Oy: sai số phần dư (Residual), đường đỏ là vạch $0$.
+        - Đồ thị (a) ($\text{NH}_4$): ký hiệu tam giác $M_7$ nén chặt trong dải $[-10, 10]$ (hai đường nét đứt xanh), đối xứng qua trục $0$.
+        - Đồ thị (b) ($\text{TN}$) và (c) ($\text{TP}$): sai số phân tán rộng vượt xa hai biên xanh $\pm 25$, trong đó $\text{TP}$ rơi sâu đến $-70$.

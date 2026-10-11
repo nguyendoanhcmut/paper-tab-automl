@@ -1,0 +1,7 @@
+    - **Hình 5.** Biểu đồ SHAP về tầm quan trọng của các biến số
+      - <img src="assets/fig_05_p8.jpeg" alt="Hình 5" />
+      - **Hình này chứng minh điều gì**
+        - Xác định thứ bậc đóng góp: OLR chi phối lớn nhất đối với COD nước ra, $\text{Effluent NH}_4^+\text{-N}$ chi phối lớn nhất đối với TMP.
+      - **Từ đâu mà thấy được**
+        - Panel (a): Trục tung xếp độ quan trọng giảm dần ($\text{OLR} > \text{HRT} > \text{ORP}$); OLR có độ phân tán SHAP lớn nhất (đến $> 3000$).
+        - Panel (b): Trục tung xếp $\text{Effluent NH}_4^+\text{-N} > \text{Effluent pH} > \text{ORP}$; dải SHAP của $\text{Effluent NH}_4^+\text{-N}$ trải rộng nhất (đến gần $1{,}0$).

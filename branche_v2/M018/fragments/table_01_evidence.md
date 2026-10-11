@@ -1,0 +1,4 @@
+![Table 1 Summary of AnMBR operational conditions.](assets/table_01_p3.png)
+    - Bảng tóm tắt điều kiện vận hành AnMBR qua $4$ giai đoạn ($\text{Phase I--IV}$) với tổng thời gian $81\text{ ngày}$: $\text{Phase I}$ ($0\text{--}18\text{ ngày}$), $\text{Phase II}$ ($19\text{--}39\text{ ngày}$), $\text{Phase III}$ ($40\text{--}57\text{ ngày}$) và $\text{Phase IV}$ ($58\text{--}81\text{ ngày}$).
+    - Nồng độ $\text{NaCl}$ dòng vào tăng theo từng bậc độ mặn: $0\text{ g/L}$ ($\text{Phase I}$), $5\text{ g/L}$ ($\text{Phase II}$), $10\text{ g/L}$ ($\text{Phase III}$) và $20\text{ g/L}$ ($\text{Phase IV}$).
+    - Nồng độ $\text{COD}$ dòng vào được duy trì ổn định qua các giai đoạn: $1095 \pm 73\text{ mg/L}$ ($\text{Phase I}$), $1133 \pm 52\text{ mg/L}$ ($\text{Phase II}$), $1109 \pm 61\text{ mg/L}$ ($\text{Phase III}$) và $1193 \pm 46\text{ mg/L}$ ($\text{Phase IV}$).

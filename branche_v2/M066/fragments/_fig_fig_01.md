@@ -1,0 +1,7 @@
+    - **Hình 1.** Biến thiên khử COD theo HRT, OLR và nồng độ $\text{NH}_4^+$-N
+      - <img src="assets/fig_01_p4.jpeg" alt="Hình 1" />
+      - **Hình này chứng minh điều gì**
+        - Hiệu suất khử COD duy trì $>80\%$ (tăng từ $90\%$ lên $99\%$ ở ngày 1–28) dù OLR tăng ($0.42$ lên $4.65\text{ kg/m}^3\cdot\text{d}$) và HRT giảm ($15$ xuống $9.5\text{ ngày}$); trong khi $\text{NH}_4^+$-N dòng ra duy trì ở mức cao trung bình $1300\text{ mg/L}$.
+      - **Từ đâu mà thấy được**
+        - Đồ thị (a): HRT giảm và OLR tăng từng bậc (trên); COD dòng ra luôn $<900\text{ mg/L}$ và hiệu suất khử màu đỏ duy trì $>80\%$ (dưới).
+        - Đồ thị (b): $\text{NH}_4^+$-N dòng ra (chấm xanh) tăng dần rồi ổn định quanh $1300\text{ mg/L}$, cao hơn dòng vào (chấm hồng, $\approx 600\text{ mg/L}$).

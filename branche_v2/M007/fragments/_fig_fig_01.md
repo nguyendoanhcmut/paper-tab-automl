@@ -1,0 +1,7 @@
+    - **Hình 1.** Sơ đồ khối quy trình xử lý nước thải Okcheon
+      - <img src="assets/fig_01_p2_vector.png" alt="Hình 1" />
+      - **Hình này chứng minh điều gì**
+        - Dây chuyền xử lý bố trí nối tiếp từ lắng sơ cấp qua Anaerobic, Anoxic, MBR đến Clarifier để tách dòng nước và bùn.
+      - **Từ đâu mà thấy được**
+        - Hướng đọc từ trái sang phải: Influent lần lượt đi qua 5 khối chức năng theo chiều mũi tên.
+        - Tại khối Clarifier, dòng ra tách thành mũi tên xanh phía trên (Effluent) và mũi tên đen phía dưới (Sludge disposal).

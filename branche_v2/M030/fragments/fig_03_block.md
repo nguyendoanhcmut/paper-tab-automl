@@ -1,0 +1,7 @@
+  - **Hình 3.** Kiến trúc mạng ANN và trọng số khớp thần kinh
+    - <img src="assets/fig_03_p6.jpeg" alt="Hình 3" />
+    - **Hình này chứng minh điều gì**
+      - Mô hình thiết lập cấu trúc gồm 13 biến đầu vào, 2 lớp ẩn (12 và 7 nơ-ron), 1 đầu ra removal cùng các số hạng chệch bias.
+    - **Từ đâu mà thấy được**
+      - Đọc từ trái sang phải: 13 biến vận hành đầu vào (từ filt đến perm), qua 2 lớp ẩn (12 và 7 nơ-ron), đến nơ-ron đầu ra removal.
+      - Đường nối màu đen ghi nhận trọng số khớp thần kinh; đường màu xanh lam từ nút tròn $1$ biểu thị các số hạng chệch (bias).

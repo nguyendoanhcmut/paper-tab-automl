@@ -1,0 +1,7 @@
+    - **Hình 8.** Phân bố phần dư của các mô hình MLP và XGBoost
+      - <img src="assets/fig_08_p8.jpeg" alt="Hình 8" />
+      - **Hình này chứng minh điều gì**
+        - Dải phần dư nén sát $0$ ở nhóm $\text{NH}_4$ và mở rộng với đuôi âm kéo dài ở nhóm $\text{TN}$, $\text{TP}$ trên cả hai mô hình.
+      - **Từ đâu mà thấy được**
+        - Ox: 9 kịch bản mô hình (M1-NH4 đến M9-TP). Oy: sai số phần dư (Residual), vạch chia từ $-80$ đến $40$.
+        - Ba violin đầu ($\text{NH}_4$) dẹt sát vạch $0$; các violin $\text{TN}$ và $\text{TP}$ phình rộng với đuôi âm MLP vượt $-80$, còn XGBoost vượt $-60$.

@@ -1,0 +1,7 @@
+    - **Hình 10.** Mặt biên Pareto từ tối ưu hóa đa mục tiêu NSGA-II
+      - <img src="assets/fig_11_p13.png" alt="Hình 10" />
+      - **Hình này chứng minh điều gì**
+        - Cả tối ưu hóa dựa trên ANN (a) và RSM (b) đều tạo thành mặt biên Pareto liên tục thể hiện sự đánh đổi giữa hai mục tiêu.
+      - **Từ đâu mà thấy được**
+        - Đồ thị (a) ANN: nồng độ Ammonia Nitrogen tăng từ $1.98319$ đến $1.983224\text{ mg/L}$ khi $1/\text{Removal efficiency}$ giảm từ $0.01149789$ về $0.01149787\text{ \%}$.
+        - Đồ thị (b) RSM: nồng độ Ammonia Nitrogen tăng từ $1.7221$ đến $1.72223\text{ mg/L}$ khi $1/\text{Removal efficiency}$ giảm từ $0.01122774$ về $0.01122765\text{ \%}$.
