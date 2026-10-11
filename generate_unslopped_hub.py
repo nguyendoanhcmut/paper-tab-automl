@@ -6,8 +6,8 @@ Generates index.html with a high-taste Card Grid Library layout adhering to:
 - ASD-STE100 & Humanizer writing standards
 - 100% SVG primitives (zero emojis)
 - Complete mobile stability & viewport optimization (100dvh full-screen modal, swipeable chips, 0px min-width search)
-- Tab 1: Nghiên cứu cốt lõi (30 bài) with prominent PID badges ([M018], [M002], etc.)
-- Tab 2: Kho tài liệu mở rộng (65 bài - Chờ xử lý) with lightning-fast responsive table/list and direct dual PDF links
+- Tab 1: 30 bài chọn lọc (MBR & ML) with prominent PID badges ([M018], [M002], etc.)
+- Tab 2: Tài liệu tham khảo (65 bài) with lightning-fast responsive table/list and direct dual PDF links
 """
 
 import json
@@ -28,6 +28,9 @@ html_template = f'''<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>AutoML & MBR Research Hub — Thư Viện Tri Thức & Công Nghệ Màng</title>
   
   <!-- Typography: Geist & Geist Mono -->
@@ -1972,10 +1975,10 @@ html_template = f'''<!DOCTYPE html>
 
     <!-- Quantitative Corpus Overview Pills -->
     <div class="stats-pills">
-      <div class="stat-pill"><strong>30</strong> Cốt Lõi</div>
-      <div class="stat-pill"><strong>65</strong> Mở Rộng</div>
+      <div class="stat-pill"><strong>30</strong> Chọn Lọc</div>
+      <div class="stat-pill"><strong>65</strong> Tham Khảo</div>
       <div class="stat-pill"><strong>95</strong> Tổng Số Bài</div>
-      <div class="stat-pill"><strong>2018–2026</strong> Archive</div>
+      <div class="stat-pill"><strong>2018–2026</strong></div>
     </div>
 
     <!-- Theme & Repo Actions -->
@@ -2009,13 +2012,13 @@ html_template = f'''<!DOCTYPE html>
           <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
           <path d="M6 6h10"/><path d="M6 10h10"/>
         </svg>
-        <span>Nghiên cứu cốt lõi (30 bài)</span>
+        <span>30 bài chọn lọc</span>
       </button>
       <button class="hub-tab-btn" id="tabExtendedBtn" data-target="extended">
         <svg class="icon icon-sm" viewBox="0 0 24 24">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
         </svg>
-        <span>Kho tài liệu mở rộng (65 bài - Chờ xử lý)</span>
+        <span>Tài liệu tham khảo (65 bài)</span>
       </button>
     </nav>
 
@@ -2090,8 +2093,8 @@ html_template = f'''<!DOCTYPE html>
 
       <!-- Results Status Info -->
       <div class="results-count-bar">
-        <div>Hiển thị <strong id="visibleCountText" style="color: var(--text);">30</strong> công trình nghiên cứu cốt lõi</div>
-        <div id="filterStatusText">Kho nghiên cứu trọng điểm 2018–2026</div>
+        <div>Hiển thị <strong id="visibleCountText" style="color: var(--text);">30</strong> bài nghiên cứu chọn lọc</div>
+        <div id="filterStatusText">Tài liệu y văn 2018–2026</div>
       </div>
 
       <!-- Research Cards Grid -->
@@ -2104,7 +2107,7 @@ html_template = f'''<!DOCTYPE html>
         <div class="extended-header-row">
           <div class="extended-info-badge">
             <svg class="icon icon-sm" viewBox="0 0 24 24" style="color: var(--accent-bio);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
-            <span>Kho tài liệu mở rộng: <strong id="extCountText">65</strong> bài báo đã sẵn sàng bản dịch song ngữ (-dual.pdf)</span>
+            <span>Tài liệu tham khảo: <strong id="extCountText">65</strong> bài báo có bản dịch song ngữ (-dual.pdf)</span>
           </div>
 
           <!-- Quick Filter for Extended Catalog -->
@@ -2625,9 +2628,9 @@ html_template = f'''<!DOCTYPE html>
         mindmapPlaceholder.style.display = 'block';
         mindmapPlaceholder.innerHTML = `
           <div class="tree-in-progress-notice">
-            <h3>Cây Tri Thức Đang Được Hoàn Thiện Bởi GO1</h3>
-            <p>Bài báo <strong>[${{paper.pid}}] ${{paper.title_vn}}</strong> hiện đang trong quy trình phân tích và chuẩn hóa cây tri thức đa phân tầng.</p>
-            <p>Bản dịch song ngữ toàn văn (VI-EN) đã sẵn sàng. Quý độc giả vui lòng mở đọc trực tiếp bằng nút bấm bên dưới:</p>
+            <h3>Cây tri thức đang được cập nhật</h3>
+            <p>Bài báo <strong>[${{paper.pid}}] ${{paper.title_vn}}</strong> đang trong quá trình trích xuất cấu trúc tri thức.</p>
+            <p>Bản dịch song ngữ toàn văn (VI-EN) đã sẵn sàng. Mở đọc trực tiếp theo nút bên dưới:</p>
             ${{paper.pdf_bilingual ? `
               <a class="btn-pdf bilingual" href="${{encodeURI(paper.pdf_bilingual)}}" target="_blank" style="padding: 9px 18px; font-size: 13px;">
                 <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
@@ -2722,9 +2725,8 @@ html_template = f'''<!DOCTYPE html>
       if (!activePaper.md_file) {{
         treeArticleInner.innerHTML = `
           <div class="tree-in-progress-notice">
-            <h3>Cây Tri Thức Markdown Đang Được Xử Lý</h3>
-            <p>Bài báo <strong>[${{activePaper.pid}}] ${{activePaper.title_vn}}</strong> chưa hoàn thiện bản cây tri thức Markdown do đang được Grand Orchestrator (GO1) hoàn thiện.</p>
-            <p>Vui lòng xem bản dịch song ngữ PDF (VI-EN) đầy đủ ở nút phía trên.</p>
+            <h3>Cây tri thức Markdown đang được xử lý</h3>
+            <p>Bài báo <strong>[${{activePaper.pid}}] ${{activePaper.title_vn}}</strong> chưa có bản Markdown. Xem bản dịch song ngữ PDF (VI-EN) đầy đủ ở nút phía trên.</p>
           </div>
         `;
         return;
@@ -2969,7 +2971,7 @@ html_template = f'''<!DOCTYPE html>
       currentFilter = chip.dataset.filter;
       
       const filterNames = {{
-        all: 'Kho nghiên cứu trọng điểm 2018–2026',
+        all: 'Tài liệu y văn 2018–2026',
         automl: 'Chủ đề: AutoML & AI Giải Thích (XAI)',
         mbr: 'Chủ đề: Công Nghệ Lọc Màng Sinh Học (MBR)',
         anammox: 'Chủ đề: Xử Lý Nitơ Bằng Vi Sinh Anammox',
